@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`AssistantV2`, func() {
 	Describe(`CreateSession(createSessionOptions *CreateSessionOptions) - Operation response error`, func() {
 		version := "testString"
 		createSessionPath := "/v2/assistants/testString/sessions"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -194,7 +194,6 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createSessionPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -231,14 +230,11 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateSession(createSessionOptions *CreateSessionOptions)`, func() {
 		version := "testString"
 		createSessionPath := "/v2/assistants/testString/sessions"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -247,10 +243,65 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"session_id": "SessionID"}`)
+				}))
+			})
+			It(`Invoke CreateSession successfully with retries`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateSessionOptions model
+				createSessionOptionsModel := new(assistantv2.CreateSessionOptions)
+				createSessionOptionsModel.AssistantID = core.StringPtr("testString")
+				createSessionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateSessionWithContext(ctx, createSessionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateSession(createSessionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateSessionWithContext(ctx, createSessionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createSessionPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
@@ -265,7 +316,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateSession(nil)
@@ -284,30 +334,6 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateSessionWithContext(ctx, createSessionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateSession(createSessionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateSessionWithContext(ctx, createSessionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateSession with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
@@ -342,8 +368,42 @@ var _ = Describe(`AssistantV2`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateSession successfully`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateSessionOptions model
+				createSessionOptionsModel := new(assistantv2.CreateSessionOptions)
+				createSessionOptionsModel.AssistantID = core.StringPtr("testString")
+				createSessionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateSession(createSessionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteSession(deleteSessionOptions *DeleteSessionOptions)`, func() {
 		version := "testString"
 		deleteSessionPath := "/v2/assistants/testString/sessions/testString"
@@ -357,7 +417,6 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -369,7 +428,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteSession(nil)
@@ -383,12 +441,6 @@ var _ = Describe(`AssistantV2`, func() {
 				deleteSessionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteSession(deleteSessionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteSession(deleteSessionOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -426,156 +478,10 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "https://assistantv2/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`Message(messageOptions *MessageOptions) - Operation response error`, func() {
 		version := "testString"
 		messagePath := "/v2/assistants/testString/sessions/testString/message"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -584,7 +490,6 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(messagePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -716,6 +621,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageOptionsModel.SessionID = core.StringPtr("testString")
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Context = messageContextModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.Message(messageOptionsModel)
@@ -735,14 +641,11 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-
 	Describe(`Message(messageOptions *MessageOptions)`, func() {
 		version := "testString"
 		messagePath := "/v2/assistants/testString/sessions/testString/message"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -767,14 +670,200 @@ var _ = Describe(`AssistantV2`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message"}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+				}))
+			})
+			It(`Invoke Message successfully with retries`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv2.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv2.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv2.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
+
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv2.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv2.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
+
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv2.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv2.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv2.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageInputOptionsSpelling model
+				messageInputOptionsSpellingModel := new(assistantv2.MessageInputOptionsSpelling)
+				messageInputOptionsSpellingModel.Suggestions = core.BoolPtr(true)
+				messageInputOptionsSpellingModel.AutoCorrect = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputOptions model
+				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
+				messageInputOptionsModel.Restart = core.BoolPtr(true)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
+				messageInputOptionsModel.Debug = core.BoolPtr(true)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
+				messageInputOptionsModel.Export = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInput model
+				messageInputModel := new(assistantv2.MessageInput)
+				messageInputModel.MessageType = core.StringPtr("text")
+				messageInputModel.Text = core.StringPtr("testString")
+				messageInputModel.Intents = []assistantv2.RuntimeIntent{*runtimeIntentModel}
+				messageInputModel.Entities = []assistantv2.RuntimeEntity{*runtimeEntityModel}
+				messageInputModel.SuggestionID = core.StringPtr("testString")
+				messageInputModel.Options = messageInputOptionsModel
+
+				// Construct an instance of the MessageContextGlobalSystem model
+				messageContextGlobalSystemModel := new(assistantv2.MessageContextGlobalSystem)
+				messageContextGlobalSystemModel.Timezone = core.StringPtr("testString")
+				messageContextGlobalSystemModel.UserID = core.StringPtr("testString")
+				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
+				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
+				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextGlobal model
+				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
+				messageContextGlobalModel.System = messageContextGlobalSystemModel
+
+				// Construct an instance of the MessageContextSkillSystem model
+				messageContextSkillSystemModel := new(assistantv2.MessageContextSkillSystem)
+				messageContextSkillSystemModel.State = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageContextSkill model
+				messageContextSkillModel := new(assistantv2.MessageContextSkill)
+				messageContextSkillModel.UserDefined = make(map[string]interface{})
+				messageContextSkillModel.System = messageContextSkillSystemModel
+
+				// Construct an instance of the MessageContext model
+				messageContextModel := new(assistantv2.MessageContext)
+				messageContextModel.Global = messageContextGlobalModel
+				messageContextModel.Skills = make(map[string]assistantv2.MessageContextSkill)
+				messageContextModel.Skills["foo"] = *messageContextSkillModel
+
+				// Construct an instance of the MessageOptions model
+				messageOptionsModel := new(assistantv2.MessageOptions)
+				messageOptionsModel.AssistantID = core.StringPtr("testString")
+				messageOptionsModel.SessionID = core.StringPtr("testString")
+				messageOptionsModel.Input = messageInputModel
+				messageOptionsModel.Context = messageContextModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
+				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.MessageWithContext(ctx, messageOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.Message(messageOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(messagePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully`, func() {
@@ -785,7 +874,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.Message(nil)
@@ -910,6 +998,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageOptionsModel.SessionID = core.StringPtr("testString")
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Context = messageContextModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -918,30 +1007,6 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.Message(messageOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Message with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
@@ -1069,6 +1134,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageOptionsModel.SessionID = core.StringPtr("testString")
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Context = messageContextModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -1090,11 +1156,161 @@ var _ = Describe(`AssistantV2`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Message successfully`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv2.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv2.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv2.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
+
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv2.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv2.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
+
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv2.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv2.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv2.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageInputOptionsSpelling model
+				messageInputOptionsSpellingModel := new(assistantv2.MessageInputOptionsSpelling)
+				messageInputOptionsSpellingModel.Suggestions = core.BoolPtr(true)
+				messageInputOptionsSpellingModel.AutoCorrect = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputOptions model
+				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
+				messageInputOptionsModel.Restart = core.BoolPtr(true)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
+				messageInputOptionsModel.Debug = core.BoolPtr(true)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
+				messageInputOptionsModel.Export = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInput model
+				messageInputModel := new(assistantv2.MessageInput)
+				messageInputModel.MessageType = core.StringPtr("text")
+				messageInputModel.Text = core.StringPtr("testString")
+				messageInputModel.Intents = []assistantv2.RuntimeIntent{*runtimeIntentModel}
+				messageInputModel.Entities = []assistantv2.RuntimeEntity{*runtimeEntityModel}
+				messageInputModel.SuggestionID = core.StringPtr("testString")
+				messageInputModel.Options = messageInputOptionsModel
+
+				// Construct an instance of the MessageContextGlobalSystem model
+				messageContextGlobalSystemModel := new(assistantv2.MessageContextGlobalSystem)
+				messageContextGlobalSystemModel.Timezone = core.StringPtr("testString")
+				messageContextGlobalSystemModel.UserID = core.StringPtr("testString")
+				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
+				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
+				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextGlobal model
+				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
+				messageContextGlobalModel.System = messageContextGlobalSystemModel
+
+				// Construct an instance of the MessageContextSkillSystem model
+				messageContextSkillSystemModel := new(assistantv2.MessageContextSkillSystem)
+				messageContextSkillSystemModel.State = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageContextSkill model
+				messageContextSkillModel := new(assistantv2.MessageContextSkill)
+				messageContextSkillModel.UserDefined = make(map[string]interface{})
+				messageContextSkillModel.System = messageContextSkillSystemModel
+
+				// Construct an instance of the MessageContext model
+				messageContextModel := new(assistantv2.MessageContext)
+				messageContextModel.Global = messageContextGlobalModel
+				messageContextModel.Skills = make(map[string]assistantv2.MessageContextSkill)
+				messageContextModel.Skills["foo"] = *messageContextSkillModel
+
+				// Construct an instance of the MessageOptions model
+				messageOptionsModel := new(assistantv2.MessageOptions)
+				messageOptionsModel.AssistantID = core.StringPtr("testString")
+				messageOptionsModel.SessionID = core.StringPtr("testString")
+				messageOptionsModel.Input = messageInputModel
+				messageOptionsModel.Context = messageContextModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
+				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.Message(messageOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`MessageStateless(messageStatelessOptions *MessageStatelessOptions) - Operation response error`, func() {
 		version := "testString"
 		messageStatelessPath := "/v2/assistants/testString/message"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1103,7 +1319,6 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(messageStatelessPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1233,6 +1448,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageStatelessOptionsModel.AssistantID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Input = messageInputStatelessModel
 				messageStatelessOptionsModel.Context = messageContextStatelessModel
+				messageStatelessOptionsModel.UserID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.MessageStateless(messageStatelessOptionsModel)
@@ -1252,14 +1468,11 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-
 	Describe(`MessageStateless(messageStatelessOptions *MessageStatelessOptions)`, func() {
 		version := "testString"
 		messageStatelessPath := "/v2/assistants/testString/message"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1284,14 +1497,198 @@ var _ = Describe(`AssistantV2`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message"}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+				}))
+			})
+			It(`Invoke MessageStateless successfully with retries`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv2.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv2.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv2.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
+
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv2.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv2.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
+
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv2.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv2.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv2.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageInputOptionsSpelling model
+				messageInputOptionsSpellingModel := new(assistantv2.MessageInputOptionsSpelling)
+				messageInputOptionsSpellingModel.Suggestions = core.BoolPtr(true)
+				messageInputOptionsSpellingModel.AutoCorrect = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputOptionsStateless model
+				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputStateless model
+				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
+				messageInputStatelessModel.MessageType = core.StringPtr("text")
+				messageInputStatelessModel.Text = core.StringPtr("testString")
+				messageInputStatelessModel.Intents = []assistantv2.RuntimeIntent{*runtimeIntentModel}
+				messageInputStatelessModel.Entities = []assistantv2.RuntimeEntity{*runtimeEntityModel}
+				messageInputStatelessModel.SuggestionID = core.StringPtr("testString")
+				messageInputStatelessModel.Options = messageInputOptionsStatelessModel
+
+				// Construct an instance of the MessageContextGlobalSystem model
+				messageContextGlobalSystemModel := new(assistantv2.MessageContextGlobalSystem)
+				messageContextGlobalSystemModel.Timezone = core.StringPtr("testString")
+				messageContextGlobalSystemModel.UserID = core.StringPtr("testString")
+				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
+				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
+				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextGlobalStateless model
+				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
+				messageContextGlobalStatelessModel.System = messageContextGlobalSystemModel
+				messageContextGlobalStatelessModel.SessionID = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextSkillSystem model
+				messageContextSkillSystemModel := new(assistantv2.MessageContextSkillSystem)
+				messageContextSkillSystemModel.State = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageContextSkill model
+				messageContextSkillModel := new(assistantv2.MessageContextSkill)
+				messageContextSkillModel.UserDefined = make(map[string]interface{})
+				messageContextSkillModel.System = messageContextSkillSystemModel
+
+				// Construct an instance of the MessageContextStateless model
+				messageContextStatelessModel := new(assistantv2.MessageContextStateless)
+				messageContextStatelessModel.Global = messageContextGlobalStatelessModel
+				messageContextStatelessModel.Skills = make(map[string]assistantv2.MessageContextSkill)
+				messageContextStatelessModel.Skills["foo"] = *messageContextSkillModel
+
+				// Construct an instance of the MessageStatelessOptions model
+				messageStatelessOptionsModel := new(assistantv2.MessageStatelessOptions)
+				messageStatelessOptionsModel.AssistantID = core.StringPtr("testString")
+				messageStatelessOptionsModel.Input = messageInputStatelessModel
+				messageStatelessOptionsModel.Context = messageContextStatelessModel
+				messageStatelessOptionsModel.UserID = core.StringPtr("testString")
+				messageStatelessOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.MessageStatelessWithContext(ctx, messageStatelessOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.MessageStateless(messageStatelessOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.MessageStatelessWithContext(ctx, messageStatelessOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(messageStatelessPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke MessageStateless successfully`, func() {
@@ -1302,7 +1699,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.MessageStateless(nil)
@@ -1425,6 +1821,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageStatelessOptionsModel.AssistantID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Input = messageInputStatelessModel
 				messageStatelessOptionsModel.Context = messageContextStatelessModel
+				messageStatelessOptionsModel.UserID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -1433,30 +1830,6 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageStatelessWithContext(ctx, messageStatelessOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.MessageStateless(messageStatelessOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageStatelessWithContext(ctx, messageStatelessOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke MessageStateless with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
@@ -1582,6 +1955,7 @@ var _ = Describe(`AssistantV2`, func() {
 				messageStatelessOptionsModel.AssistantID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Input = messageInputStatelessModel
 				messageStatelessOptionsModel.Context = messageContextStatelessModel
+				messageStatelessOptionsModel.UserID = core.StringPtr("testString")
 				messageStatelessOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -1603,157 +1977,159 @@ var _ = Describe(`AssistantV2`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "https://assistantv2/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke MessageStateless successfully`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv2.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv2.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: core.StringPtr(version),
-			})
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv2.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv2.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv2.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv2.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv2.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv2.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageInputOptionsSpelling model
+				messageInputOptionsSpellingModel := new(assistantv2.MessageInputOptionsSpelling)
+				messageInputOptionsSpellingModel.Suggestions = core.BoolPtr(true)
+				messageInputOptionsSpellingModel.AutoCorrect = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputOptionsStateless model
+				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+
+				// Construct an instance of the MessageInputStateless model
+				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
+				messageInputStatelessModel.MessageType = core.StringPtr("text")
+				messageInputStatelessModel.Text = core.StringPtr("testString")
+				messageInputStatelessModel.Intents = []assistantv2.RuntimeIntent{*runtimeIntentModel}
+				messageInputStatelessModel.Entities = []assistantv2.RuntimeEntity{*runtimeEntityModel}
+				messageInputStatelessModel.SuggestionID = core.StringPtr("testString")
+				messageInputStatelessModel.Options = messageInputOptionsStatelessModel
+
+				// Construct an instance of the MessageContextGlobalSystem model
+				messageContextGlobalSystemModel := new(assistantv2.MessageContextGlobalSystem)
+				messageContextGlobalSystemModel.Timezone = core.StringPtr("testString")
+				messageContextGlobalSystemModel.UserID = core.StringPtr("testString")
+				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
+				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
+				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextGlobalStateless model
+				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
+				messageContextGlobalStatelessModel.System = messageContextGlobalSystemModel
+				messageContextGlobalStatelessModel.SessionID = core.StringPtr("testString")
+
+				// Construct an instance of the MessageContextSkillSystem model
+				messageContextSkillSystemModel := new(assistantv2.MessageContextSkillSystem)
+				messageContextSkillSystemModel.State = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageContextSkill model
+				messageContextSkillModel := new(assistantv2.MessageContextSkill)
+				messageContextSkillModel.UserDefined = make(map[string]interface{})
+				messageContextSkillModel.System = messageContextSkillSystemModel
+
+				// Construct an instance of the MessageContextStateless model
+				messageContextStatelessModel := new(assistantv2.MessageContextStateless)
+				messageContextStatelessModel.Global = messageContextGlobalStatelessModel
+				messageContextStatelessModel.Skills = make(map[string]assistantv2.MessageContextSkill)
+				messageContextStatelessModel.Skills["foo"] = *messageContextSkillModel
+
+				// Construct an instance of the MessageStatelessOptions model
+				messageStatelessOptionsModel := new(assistantv2.MessageStatelessOptions)
+				messageStatelessOptionsModel.AssistantID = core.StringPtr("testString")
+				messageStatelessOptionsModel.Input = messageInputStatelessModel
+				messageStatelessOptionsModel.Context = messageContextStatelessModel
+				messageStatelessOptionsModel.UserID = core.StringPtr("testString")
+				messageStatelessOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.MessageStateless(messageStatelessOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
+			AfterEach(func() {
+				testServer.Close()
+			})
 		})
 	})
 	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions) - Operation response error`, func() {
 		version := "testString"
 		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1762,7 +2138,6 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1804,14 +2179,11 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-
 	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions)`, func() {
 		version := "testString"
 		bulkClassifyPath := "/v2/skills/testString/workspace/bulk_classify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1836,10 +2208,86 @@ var _ = Describe(`AssistantV2`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"output": [{"input": {"text": "Text"}, "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "intents": [{"intent": "Intent", "confidence": 10}]}]}`)
+				}))
+			})
+			It(`Invoke BulkClassify successfully with retries`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
+				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1854,7 +2302,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.BulkClassify(nil)
@@ -1878,30 +2325,6 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke BulkClassify with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
@@ -1941,157 +2364,51 @@ var _ = Describe(`AssistantV2`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "https://assistantv2/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke BulkClassify successfully`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv2.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv2.BulkClassifyOptions)
+				bulkClassifyOptionsModel.SkillID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv2.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: core.StringPtr(version),
-			})
+				// Invoke operation
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
+			AfterEach(func() {
+				testServer.Close()
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListLogs(listLogsOptions *ListLogsOptions) - Operation response error`, func() {
 		version := "testString"
 		listLogsPath := "/v2/assistants/testString/logs"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2100,15 +2417,10 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listLogsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2149,14 +2461,11 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 		})
 	})
-
 	Describe(`ListLogs(listLogsOptions *ListLogsOptions)`, func() {
 		version := "testString"
 		listLogsPath := "/v2/assistants/testString/logs"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2165,22 +2474,81 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message"}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListLogs successfully with retries`, func() {
+				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListLogsOptions model
+				listLogsOptionsModel := new(assistantv2.ListLogsOptions)
+				listLogsOptionsModel.AssistantID = core.StringPtr("testString")
+				listLogsOptionsModel.Sort = core.StringPtr("testString")
+				listLogsOptionsModel.Filter = core.StringPtr("testString")
+				listLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListLogs(listLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listLogsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully`, func() {
@@ -2191,7 +2559,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListLogs(nil)
@@ -2214,30 +2581,6 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListLogs(listLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListLogs with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
@@ -2276,154 +2619,46 @@ var _ = Describe(`AssistantV2`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "https://assistantv2/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListLogs successfully`, func() {
 				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
+				// Construct an instance of the ListLogsOptions model
+				listLogsOptionsModel := new(assistantv2.ListLogsOptions)
+				listLogsOptionsModel.AssistantID = core.StringPtr("testString")
+				listLogsOptionsModel.Sort = core.StringPtr("testString")
+				listLogsOptionsModel.Filter = core.StringPtr("testString")
+				listLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListLogs(listLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv2/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv2.NewAssistantV2(&assistantv2.AssistantV2Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv2.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		version := "testString"
 		deleteUserDataPath := "/v2/user_data"
@@ -2437,9 +2672,7 @@ var _ = Describe(`AssistantV2`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["customer_id"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(202)
 				}))
 			})
@@ -2451,7 +2684,6 @@ var _ = Describe(`AssistantV2`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteUserData(nil)
@@ -2464,12 +2696,6 @@ var _ = Describe(`AssistantV2`, func() {
 				deleteUserDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteUserData(deleteUserDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteUserData(deleteUserDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2798,12 +3024,14 @@ var _ = Describe(`AssistantV2`, func() {
 				messageOptionsModel.SetSessionID("testString")
 				messageOptionsModel.SetInput(messageInputModel)
 				messageOptionsModel.SetContext(messageContextModel)
+				messageOptionsModel.SetUserID("testString")
 				messageOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(messageOptionsModel).ToNot(BeNil())
 				Expect(messageOptionsModel.AssistantID).To(Equal(core.StringPtr("testString")))
 				Expect(messageOptionsModel.SessionID).To(Equal(core.StringPtr("testString")))
 				Expect(messageOptionsModel.Input).To(Equal(messageInputModel))
 				Expect(messageOptionsModel.Context).To(Equal(messageContextModel))
+				Expect(messageOptionsModel.UserID).To(Equal(core.StringPtr("testString")))
 				Expect(messageOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewMessageStatelessOptions successfully`, func() {
@@ -3005,11 +3233,13 @@ var _ = Describe(`AssistantV2`, func() {
 				messageStatelessOptionsModel.SetAssistantID("testString")
 				messageStatelessOptionsModel.SetInput(messageInputStatelessModel)
 				messageStatelessOptionsModel.SetContext(messageContextStatelessModel)
+				messageStatelessOptionsModel.SetUserID("testString")
 				messageStatelessOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(messageStatelessOptionsModel).ToNot(BeNil())
 				Expect(messageStatelessOptionsModel.AssistantID).To(Equal(core.StringPtr("testString")))
 				Expect(messageStatelessOptionsModel.Input).To(Equal(messageInputStatelessModel))
 				Expect(messageStatelessOptionsModel.Context).To(Equal(messageContextStatelessModel))
+				Expect(messageStatelessOptionsModel.UserID).To(Equal(core.StringPtr("testString")))
 				Expect(messageStatelessOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewRuntimeEntity successfully`, func() {
@@ -3043,11 +3273,11 @@ var _ = Describe(`AssistantV2`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -3072,13 +3302,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

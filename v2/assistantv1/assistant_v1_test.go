@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`AssistantV1`, func() {
 	Describe(`Message(messageOptions *MessageOptions) - Operation response error`, func() {
 		version := "testString"
 		messagePath := "/v1/workspaces/testString/message"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -194,9 +194,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(messagePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for nodes_visited_details query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -296,10 +294,17 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeVisitedDetailsModel.Title = core.StringPtr("testString")
 				dialogNodeVisitedDetailsModel.Conditions = core.StringPtr("testString")
 
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+
 				// Construct an instance of the LogMessage model
 				logMessageModel := new(assistantv1.LogMessage)
 				logMessageModel.Level = core.StringPtr("info")
 				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
 
 				// Construct an instance of the DialogNodeOutputOptionsElementValue model
 				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
@@ -312,6 +317,10 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputOptionsElementModel.Label = core.StringPtr("testString")
 				dialogNodeOutputOptionsElementModel.Value = dialogNodeOutputOptionsElementValueModel
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
 				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
 				runtimeResponseGenericModel.ResponseType = core.StringPtr("option")
@@ -319,6 +328,7 @@ var _ = Describe(`AssistantV1`, func() {
 				runtimeResponseGenericModel.Description = core.StringPtr("testString")
 				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
 				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the OutputData model
 				outputDataModel := new(assistantv1.OutputData)
@@ -338,6 +348,7 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -358,14 +369,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`Message(messageOptions *MessageOptions)`, func() {
 		version := "testString"
 		messagePath := "/v1/workspaces/testString/message"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -390,16 +398,225 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for nodes_visited_details query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg"}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}]}`)
+					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
+				}))
+			})
+			It(`Invoke Message successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the MessageInput model
+				messageInputModel := new(assistantv1.MessageInput)
+				messageInputModel.Text = core.StringPtr("testString")
+				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv1.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv1.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv1.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
+
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv1.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
+
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv1.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
+
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv1.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv1.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv1.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageContextMetadata model
+				messageContextMetadataModel := new(assistantv1.MessageContextMetadata)
+				messageContextMetadataModel.Deployment = core.StringPtr("testString")
+				messageContextMetadataModel.UserID = core.StringPtr("testString")
+
+				// Construct an instance of the Context model
+				contextModel := new(assistantv1.Context)
+				contextModel.ConversationID = core.StringPtr("testString")
+				contextModel.System = make(map[string]interface{})
+				contextModel.Metadata = messageContextMetadataModel
+				contextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeVisitedDetails model
+				dialogNodeVisitedDetailsModel := new(assistantv1.DialogNodeVisitedDetails)
+				dialogNodeVisitedDetailsModel.DialogNode = core.StringPtr("testString")
+				dialogNodeVisitedDetailsModel.Title = core.StringPtr("testString")
+				dialogNodeVisitedDetailsModel.Conditions = core.StringPtr("testString")
+
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+
+				// Construct an instance of the LogMessage model
+				logMessageModel := new(assistantv1.LogMessage)
+				logMessageModel.Level = core.StringPtr("info")
+				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
+
+				// Construct an instance of the DialogNodeOutputOptionsElementValue model
+				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
+				dialogNodeOutputOptionsElementValueModel.Input = messageInputModel
+				dialogNodeOutputOptionsElementValueModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
+				dialogNodeOutputOptionsElementValueModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
+
+				// Construct an instance of the DialogNodeOutputOptionsElement model
+				dialogNodeOutputOptionsElementModel := new(assistantv1.DialogNodeOutputOptionsElement)
+				dialogNodeOutputOptionsElementModel.Label = core.StringPtr("testString")
+				dialogNodeOutputOptionsElementModel.Value = dialogNodeOutputOptionsElementValueModel
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
+				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
+				runtimeResponseGenericModel.ResponseType = core.StringPtr("option")
+				runtimeResponseGenericModel.Title = core.StringPtr("testString")
+				runtimeResponseGenericModel.Description = core.StringPtr("testString")
+				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
+				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the OutputData model
+				outputDataModel := new(assistantv1.OutputData)
+				outputDataModel.NodesVisited = []string{"testString"}
+				outputDataModel.NodesVisitedDetails = []assistantv1.DialogNodeVisitedDetails{*dialogNodeVisitedDetailsModel}
+				outputDataModel.LogMessages = []assistantv1.LogMessage{*logMessageModel}
+				outputDataModel.Text = []string{"testString"}
+				outputDataModel.Generic = []assistantv1.RuntimeResponseGenericIntf{runtimeResponseGenericModel}
+				outputDataModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageOptions model
+				messageOptionsModel := new(assistantv1.MessageOptions)
+				messageOptionsModel.WorkspaceID = core.StringPtr("testString")
+				messageOptionsModel.Input = messageInputModel
+				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
+				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
+				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.Context = contextModel
+				messageOptionsModel.Output = outputDataModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.MessageWithContext(ctx, messageOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.Message(messageOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(messagePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for nodes_visited_details query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully`, func() {
@@ -410,7 +627,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.Message(nil)
@@ -503,10 +719,17 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeVisitedDetailsModel.Title = core.StringPtr("testString")
 				dialogNodeVisitedDetailsModel.Conditions = core.StringPtr("testString")
 
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+
 				// Construct an instance of the LogMessage model
 				logMessageModel := new(assistantv1.LogMessage)
 				logMessageModel.Level = core.StringPtr("info")
 				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
 
 				// Construct an instance of the DialogNodeOutputOptionsElementValue model
 				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
@@ -519,6 +742,10 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputOptionsElementModel.Label = core.StringPtr("testString")
 				dialogNodeOutputOptionsElementModel.Value = dialogNodeOutputOptionsElementValueModel
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
 				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
 				runtimeResponseGenericModel.ResponseType = core.StringPtr("option")
@@ -526,6 +753,7 @@ var _ = Describe(`AssistantV1`, func() {
 				runtimeResponseGenericModel.Description = core.StringPtr("testString")
 				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
 				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the OutputData model
 				outputDataModel := new(assistantv1.OutputData)
@@ -545,6 +773,7 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -554,30 +783,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.Message(messageOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.MessageWithContext(ctx, messageOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Message with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -673,10 +878,17 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeVisitedDetailsModel.Title = core.StringPtr("testString")
 				dialogNodeVisitedDetailsModel.Conditions = core.StringPtr("testString")
 
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+
 				// Construct an instance of the LogMessage model
 				logMessageModel := new(assistantv1.LogMessage)
 				logMessageModel.Level = core.StringPtr("info")
 				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
 
 				// Construct an instance of the DialogNodeOutputOptionsElementValue model
 				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
@@ -689,6 +901,10 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputOptionsElementModel.Label = core.StringPtr("testString")
 				dialogNodeOutputOptionsElementModel.Value = dialogNodeOutputOptionsElementValueModel
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
 				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
 				runtimeResponseGenericModel.ResponseType = core.StringPtr("option")
@@ -696,6 +912,7 @@ var _ = Describe(`AssistantV1`, func() {
 				runtimeResponseGenericModel.Description = core.StringPtr("testString")
 				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
 				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the OutputData model
 				outputDataModel := new(assistantv1.OutputData)
@@ -715,6 +932,7 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
 				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -737,157 +955,184 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Message successfully`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the MessageInput model
+				messageInputModel := new(assistantv1.MessageInput)
+				messageInputModel.Text = core.StringPtr("testString")
+				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
+				// Construct an instance of the RuntimeIntent model
+				runtimeIntentModel := new(assistantv1.RuntimeIntent)
+				runtimeIntentModel.Intent = core.StringPtr("testString")
+				runtimeIntentModel.Confidence = core.Float64Ptr(float64(72.5))
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
+				// Construct an instance of the CaptureGroup model
+				captureGroupModel := new(assistantv1.CaptureGroup)
+				captureGroupModel.Group = core.StringPtr("testString")
+				captureGroupModel.Location = []int64{int64(38)}
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
+				// Construct an instance of the RuntimeEntityInterpretation model
+				runtimeEntityInterpretationModel := new(assistantv1.RuntimeEntityInterpretation)
+				runtimeEntityInterpretationModel.CalendarType = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.DatetimeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Festival = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.Granularity = core.StringPtr("day")
+				runtimeEntityInterpretationModel.RangeLink = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RangeModifier = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeek = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeWeekend = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDay = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificDayOfWeek = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.SpecificMonth = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificQuarter = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificYear = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.NumericValue = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Subtype = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.PartOfDay = core.StringPtr("testString")
+				runtimeEntityInterpretationModel.RelativeHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.RelativeSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificHour = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificMinute = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.SpecificSecond = core.Float64Ptr(float64(72.5))
+				runtimeEntityInterpretationModel.Timezone = core.StringPtr("testString")
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
+				// Construct an instance of the RuntimeEntityAlternative model
+				runtimeEntityAlternativeModel := new(assistantv1.RuntimeEntityAlternative)
+				runtimeEntityAlternativeModel.Value = core.StringPtr("testString")
+				runtimeEntityAlternativeModel.Confidence = core.Float64Ptr(float64(72.5))
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the RuntimeEntityRole model
+				runtimeEntityRoleModel := new(assistantv1.RuntimeEntityRole)
+				runtimeEntityRoleModel.Type = core.StringPtr("date_from")
+
+				// Construct an instance of the RuntimeEntity model
+				runtimeEntityModel := new(assistantv1.RuntimeEntity)
+				runtimeEntityModel.Entity = core.StringPtr("testString")
+				runtimeEntityModel.Location = []int64{int64(38)}
+				runtimeEntityModel.Value = core.StringPtr("testString")
+				runtimeEntityModel.Confidence = core.Float64Ptr(float64(72.5))
+				runtimeEntityModel.Metadata = make(map[string]interface{})
+				runtimeEntityModel.Groups = []assistantv1.CaptureGroup{*captureGroupModel}
+				runtimeEntityModel.Interpretation = runtimeEntityInterpretationModel
+				runtimeEntityModel.Alternatives = []assistantv1.RuntimeEntityAlternative{*runtimeEntityAlternativeModel}
+				runtimeEntityModel.Role = runtimeEntityRoleModel
+
+				// Construct an instance of the MessageContextMetadata model
+				messageContextMetadataModel := new(assistantv1.MessageContextMetadata)
+				messageContextMetadataModel.Deployment = core.StringPtr("testString")
+				messageContextMetadataModel.UserID = core.StringPtr("testString")
+
+				// Construct an instance of the Context model
+				contextModel := new(assistantv1.Context)
+				contextModel.ConversationID = core.StringPtr("testString")
+				contextModel.System = make(map[string]interface{})
+				contextModel.Metadata = messageContextMetadataModel
+				contextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeVisitedDetails model
+				dialogNodeVisitedDetailsModel := new(assistantv1.DialogNodeVisitedDetails)
+				dialogNodeVisitedDetailsModel.DialogNode = core.StringPtr("testString")
+				dialogNodeVisitedDetailsModel.Title = core.StringPtr("testString")
+				dialogNodeVisitedDetailsModel.Conditions = core.StringPtr("testString")
+
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+
+				// Construct an instance of the LogMessage model
+				logMessageModel := new(assistantv1.LogMessage)
+				logMessageModel.Level = core.StringPtr("info")
+				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
+
+				// Construct an instance of the DialogNodeOutputOptionsElementValue model
+				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
+				dialogNodeOutputOptionsElementValueModel.Input = messageInputModel
+				dialogNodeOutputOptionsElementValueModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
+				dialogNodeOutputOptionsElementValueModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
+
+				// Construct an instance of the DialogNodeOutputOptionsElement model
+				dialogNodeOutputOptionsElementModel := new(assistantv1.DialogNodeOutputOptionsElement)
+				dialogNodeOutputOptionsElementModel.Label = core.StringPtr("testString")
+				dialogNodeOutputOptionsElementModel.Value = dialogNodeOutputOptionsElementValueModel
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
+				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
+				runtimeResponseGenericModel.ResponseType = core.StringPtr("option")
+				runtimeResponseGenericModel.Title = core.StringPtr("testString")
+				runtimeResponseGenericModel.Description = core.StringPtr("testString")
+				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
+				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the OutputData model
+				outputDataModel := new(assistantv1.OutputData)
+				outputDataModel.NodesVisited = []string{"testString"}
+				outputDataModel.NodesVisitedDetails = []assistantv1.DialogNodeVisitedDetails{*dialogNodeVisitedDetailsModel}
+				outputDataModel.LogMessages = []assistantv1.LogMessage{*logMessageModel}
+				outputDataModel.Text = []string{"testString"}
+				outputDataModel.Generic = []assistantv1.RuntimeResponseGenericIntf{runtimeResponseGenericModel}
+				outputDataModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the MessageOptions model
+				messageOptionsModel := new(assistantv1.MessageOptions)
+				messageOptionsModel.WorkspaceID = core.StringPtr("testString")
+				messageOptionsModel.Input = messageInputModel
+				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
+				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
+				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.Context = contextModel
+				messageOptionsModel.Output = outputDataModel
+				messageOptionsModel.UserID = core.StringPtr("testString")
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.Message(messageOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
+			AfterEach(func() {
+				testServer.Close()
+			})
 		})
 	})
 	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions) - Operation response error`, func() {
 		version := "testString"
 		bulkClassifyPath := "/v1/workspaces/testString/bulk_classify"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -896,7 +1141,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -938,14 +1182,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`BulkClassify(bulkClassifyOptions *BulkClassifyOptions)`, func() {
 		version := "testString"
 		bulkClassifyPath := "/v1/workspaces/testString/bulk_classify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -970,10 +1211,86 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"output": [{"input": {"text": "Text"}, "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "intents": [{"intent": "Intent", "confidence": 10}]}]}`)
+				}))
+			})
+			It(`Invoke BulkClassify successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv1.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv1.BulkClassifyOptions)
+				bulkClassifyOptionsModel.WorkspaceID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv1.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(bulkClassifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -988,7 +1305,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.BulkClassify(nil)
@@ -1012,30 +1328,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.BulkClassify(bulkClassifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.BulkClassifyWithContext(ctx, bulkClassifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke BulkClassify with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -1075,157 +1367,51 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke BulkClassify successfully`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the BulkClassifyUtterance model
+				bulkClassifyUtteranceModel := new(assistantv1.BulkClassifyUtterance)
+				bulkClassifyUtteranceModel.Text = core.StringPtr("testString")
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
+				// Construct an instance of the BulkClassifyOptions model
+				bulkClassifyOptionsModel := new(assistantv1.BulkClassifyOptions)
+				bulkClassifyOptionsModel.WorkspaceID = core.StringPtr("testString")
+				bulkClassifyOptionsModel.Input = []assistantv1.BulkClassifyUtterance{*bulkClassifyUtteranceModel}
+				bulkClassifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
+				// Invoke operation
+				result, response, operationErr := assistantService.BulkClassify(bulkClassifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
+			AfterEach(func() {
+				testServer.Close()
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions) - Operation response error`, func() {
 		version := "testString"
 		listWorkspacesPath := "/v1/workspaces"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1234,17 +1420,11 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listWorkspacesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"name"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1285,14 +1465,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions)`, func() {
 		version := "testString"
 		listWorkspacesPath := "/v1/workspaces"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1301,24 +1478,83 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"name"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListWorkspaces successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListWorkspacesOptions model
+				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
+				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
+				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListWorkspaces(listWorkspacesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listWorkspacesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"name"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListWorkspaces successfully`, func() {
@@ -1329,7 +1565,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListWorkspaces(nil)
@@ -1352,30 +1587,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListWorkspaces(listWorkspacesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListWorkspaces with error: Operation request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -1407,11 +1618,50 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListWorkspaces successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListWorkspacesOptions model
+				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
+				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
+				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListWorkspaces(listWorkspacesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions) - Operation response error`, func() {
 		version := "testString"
 		createWorkspacePath := "/v1/workspaces"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1420,9 +1670,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createWorkspacePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1437,6 +1685,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -1444,6 +1696,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -1609,14 +1862,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions)`, func() {
 		version := "testString"
 		createWorkspacePath := "/v1/workspaces"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1641,16 +1891,242 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+				}))
+			})
+			It(`Invoke CreateWorkspace successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the DialogNode model
+				dialogNodeModel := new(assistantv1.DialogNode)
+				dialogNodeModel.DialogNode = core.StringPtr("testString")
+				dialogNodeModel.Description = core.StringPtr("testString")
+				dialogNodeModel.Conditions = core.StringPtr("testString")
+				dialogNodeModel.Parent = core.StringPtr("testString")
+				dialogNodeModel.PreviousSibling = core.StringPtr("testString")
+				dialogNodeModel.Output = dialogNodeOutputModel
+				dialogNodeModel.Context = dialogNodeContextModel
+				dialogNodeModel.Metadata = make(map[string]interface{})
+				dialogNodeModel.NextStep = dialogNodeNextStepModel
+				dialogNodeModel.Title = core.StringPtr("testString")
+				dialogNodeModel.Type = core.StringPtr("standard")
+				dialogNodeModel.EventName = core.StringPtr("focus")
+				dialogNodeModel.Variable = core.StringPtr("testString")
+				dialogNodeModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				dialogNodeModel.DigressIn = core.StringPtr("not_available")
+				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
+				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
+				dialogNodeModel.UserLabel = core.StringPtr("testString")
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+
+				// Construct an instance of the Counterexample model
+				counterexampleModel := new(assistantv1.Counterexample)
+				counterexampleModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsTooling model
+				workspaceSystemSettingsToolingModel := new(assistantv1.WorkspaceSystemSettingsTooling)
+				workspaceSystemSettingsToolingModel.StoreGenericResponses = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsDisambiguation model
+				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
+				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
+				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
+				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
+				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
+				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettings model
+				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
+				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
+				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
+				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
+				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
+
+				// Construct an instance of the WebhookHeader model
+				webhookHeaderModel := new(assistantv1.WebhookHeader)
+				webhookHeaderModel.Name = core.StringPtr("testString")
+				webhookHeaderModel.Value = core.StringPtr("testString")
+
+				// Construct an instance of the Webhook model
+				webhookModel := new(assistantv1.Webhook)
+				webhookModel.URL = core.StringPtr("testString")
+				webhookModel.Name = core.StringPtr("testString")
+				webhookModel.HeadersVar = []assistantv1.WebhookHeader{*webhookHeaderModel}
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntent model
+				createIntentModel := new(assistantv1.CreateIntent)
+				createIntentModel.Intent = core.StringPtr("testString")
+				createIntentModel.Description = core.StringPtr("testString")
+				createIntentModel.Examples = []assistantv1.Example{*exampleModel}
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntity model
+				createEntityModel := new(assistantv1.CreateEntity)
+				createEntityModel.Entity = core.StringPtr("testString")
+				createEntityModel.Description = core.StringPtr("testString")
+				createEntityModel.Metadata = make(map[string]interface{})
+				createEntityModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityModel.Values = []assistantv1.CreateValue{*createValueModel}
+
+				// Construct an instance of the CreateWorkspaceOptions model
+				createWorkspaceOptionsModel := new(assistantv1.CreateWorkspaceOptions)
+				createWorkspaceOptionsModel.Name = core.StringPtr("testString")
+				createWorkspaceOptionsModel.Description = core.StringPtr("testString")
+				createWorkspaceOptionsModel.Language = core.StringPtr("testString")
+				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
+				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
+				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
+				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
+				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
+				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateWorkspace(createWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createWorkspacePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke CreateWorkspace successfully`, func() {
@@ -1661,13 +2137,16 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateWorkspace(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
 
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
@@ -1676,6 +2155,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -1830,30 +2310,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateWorkspace(createWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateWorkspace with error: Operation request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -1864,6 +2320,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -1871,6 +2331,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -2031,11 +2492,201 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateWorkspace successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the DialogNode model
+				dialogNodeModel := new(assistantv1.DialogNode)
+				dialogNodeModel.DialogNode = core.StringPtr("testString")
+				dialogNodeModel.Description = core.StringPtr("testString")
+				dialogNodeModel.Conditions = core.StringPtr("testString")
+				dialogNodeModel.Parent = core.StringPtr("testString")
+				dialogNodeModel.PreviousSibling = core.StringPtr("testString")
+				dialogNodeModel.Output = dialogNodeOutputModel
+				dialogNodeModel.Context = dialogNodeContextModel
+				dialogNodeModel.Metadata = make(map[string]interface{})
+				dialogNodeModel.NextStep = dialogNodeNextStepModel
+				dialogNodeModel.Title = core.StringPtr("testString")
+				dialogNodeModel.Type = core.StringPtr("standard")
+				dialogNodeModel.EventName = core.StringPtr("focus")
+				dialogNodeModel.Variable = core.StringPtr("testString")
+				dialogNodeModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				dialogNodeModel.DigressIn = core.StringPtr("not_available")
+				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
+				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
+				dialogNodeModel.UserLabel = core.StringPtr("testString")
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+
+				// Construct an instance of the Counterexample model
+				counterexampleModel := new(assistantv1.Counterexample)
+				counterexampleModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsTooling model
+				workspaceSystemSettingsToolingModel := new(assistantv1.WorkspaceSystemSettingsTooling)
+				workspaceSystemSettingsToolingModel.StoreGenericResponses = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsDisambiguation model
+				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
+				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
+				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
+				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
+				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
+				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettings model
+				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
+				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
+				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
+				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
+				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
+
+				// Construct an instance of the WebhookHeader model
+				webhookHeaderModel := new(assistantv1.WebhookHeader)
+				webhookHeaderModel.Name = core.StringPtr("testString")
+				webhookHeaderModel.Value = core.StringPtr("testString")
+
+				// Construct an instance of the Webhook model
+				webhookModel := new(assistantv1.Webhook)
+				webhookModel.URL = core.StringPtr("testString")
+				webhookModel.Name = core.StringPtr("testString")
+				webhookModel.HeadersVar = []assistantv1.WebhookHeader{*webhookHeaderModel}
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntent model
+				createIntentModel := new(assistantv1.CreateIntent)
+				createIntentModel.Intent = core.StringPtr("testString")
+				createIntentModel.Description = core.StringPtr("testString")
+				createIntentModel.Examples = []assistantv1.Example{*exampleModel}
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntity model
+				createEntityModel := new(assistantv1.CreateEntity)
+				createEntityModel.Entity = core.StringPtr("testString")
+				createEntityModel.Description = core.StringPtr("testString")
+				createEntityModel.Metadata = make(map[string]interface{})
+				createEntityModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityModel.Values = []assistantv1.CreateValue{*createValueModel}
+
+				// Construct an instance of the CreateWorkspaceOptions model
+				createWorkspaceOptionsModel := new(assistantv1.CreateWorkspaceOptions)
+				createWorkspaceOptionsModel.Name = core.StringPtr("testString")
+				createWorkspaceOptionsModel.Description = core.StringPtr("testString")
+				createWorkspaceOptionsModel.Language = core.StringPtr("testString")
+				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
+				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
+				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
+				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
+				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
+				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateWorkspace(createWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions) - Operation response error`, func() {
 		version := "testString"
 		getWorkspacePath := "/v1/workspaces/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2044,13 +2695,9 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspacePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"stable"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2090,14 +2737,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions)`, func() {
 		version := "testString"
 		getWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2106,20 +2750,78 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"stable"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+				}))
+			})
+			It(`Invoke GetWorkspace successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetWorkspaceOptions model
+				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
+				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
+				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetWorkspace(getWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getWorkspacePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					// TODO: Add check for include_audit query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"stable"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke GetWorkspace successfully`, func() {
@@ -2130,7 +2832,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetWorkspace(nil)
@@ -2152,30 +2853,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetWorkspace(getWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspace with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -2213,11 +2890,49 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetWorkspace successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetWorkspaceOptions model
+				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
+				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
+				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetWorkspace(getWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions) - Operation response error`, func() {
 		version := "testString"
 		updateWorkspacePath := "/v1/workspaces/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2226,11 +2941,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateWorkspacePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2245,6 +2957,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -2252,6 +2968,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -2419,14 +3136,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions)`, func() {
 		version := "testString"
 		updateWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2451,18 +3165,246 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+				}))
+			})
+			It(`Invoke UpdateWorkspace successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the DialogNode model
+				dialogNodeModel := new(assistantv1.DialogNode)
+				dialogNodeModel.DialogNode = core.StringPtr("testString")
+				dialogNodeModel.Description = core.StringPtr("testString")
+				dialogNodeModel.Conditions = core.StringPtr("testString")
+				dialogNodeModel.Parent = core.StringPtr("testString")
+				dialogNodeModel.PreviousSibling = core.StringPtr("testString")
+				dialogNodeModel.Output = dialogNodeOutputModel
+				dialogNodeModel.Context = dialogNodeContextModel
+				dialogNodeModel.Metadata = make(map[string]interface{})
+				dialogNodeModel.NextStep = dialogNodeNextStepModel
+				dialogNodeModel.Title = core.StringPtr("testString")
+				dialogNodeModel.Type = core.StringPtr("standard")
+				dialogNodeModel.EventName = core.StringPtr("focus")
+				dialogNodeModel.Variable = core.StringPtr("testString")
+				dialogNodeModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				dialogNodeModel.DigressIn = core.StringPtr("not_available")
+				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
+				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
+				dialogNodeModel.UserLabel = core.StringPtr("testString")
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+
+				// Construct an instance of the Counterexample model
+				counterexampleModel := new(assistantv1.Counterexample)
+				counterexampleModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsTooling model
+				workspaceSystemSettingsToolingModel := new(assistantv1.WorkspaceSystemSettingsTooling)
+				workspaceSystemSettingsToolingModel.StoreGenericResponses = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsDisambiguation model
+				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
+				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
+				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
+				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
+				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
+				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettings model
+				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
+				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
+				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
+				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
+				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
+
+				// Construct an instance of the WebhookHeader model
+				webhookHeaderModel := new(assistantv1.WebhookHeader)
+				webhookHeaderModel.Name = core.StringPtr("testString")
+				webhookHeaderModel.Value = core.StringPtr("testString")
+
+				// Construct an instance of the Webhook model
+				webhookModel := new(assistantv1.Webhook)
+				webhookModel.URL = core.StringPtr("testString")
+				webhookModel.Name = core.StringPtr("testString")
+				webhookModel.HeadersVar = []assistantv1.WebhookHeader{*webhookHeaderModel}
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntent model
+				createIntentModel := new(assistantv1.CreateIntent)
+				createIntentModel.Intent = core.StringPtr("testString")
+				createIntentModel.Description = core.StringPtr("testString")
+				createIntentModel.Examples = []assistantv1.Example{*exampleModel}
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntity model
+				createEntityModel := new(assistantv1.CreateEntity)
+				createEntityModel.Entity = core.StringPtr("testString")
+				createEntityModel.Description = core.StringPtr("testString")
+				createEntityModel.Metadata = make(map[string]interface{})
+				createEntityModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityModel.Values = []assistantv1.CreateValue{*createValueModel}
+
+				// Construct an instance of the UpdateWorkspaceOptions model
+				updateWorkspaceOptionsModel := new(assistantv1.UpdateWorkspaceOptions)
+				updateWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Name = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Description = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Language = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
+				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
+				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
+				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
+				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
+				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateWorkspace(updateWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateWorkspacePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for append query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke UpdateWorkspace successfully`, func() {
@@ -2473,13 +3415,16 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateWorkspace(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
 
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
@@ -2488,6 +3433,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -2644,30 +3590,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateWorkspace(updateWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateWorkspace with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -2678,6 +3600,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -2685,6 +3611,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -2854,8 +3781,199 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateWorkspace successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the DialogNode model
+				dialogNodeModel := new(assistantv1.DialogNode)
+				dialogNodeModel.DialogNode = core.StringPtr("testString")
+				dialogNodeModel.Description = core.StringPtr("testString")
+				dialogNodeModel.Conditions = core.StringPtr("testString")
+				dialogNodeModel.Parent = core.StringPtr("testString")
+				dialogNodeModel.PreviousSibling = core.StringPtr("testString")
+				dialogNodeModel.Output = dialogNodeOutputModel
+				dialogNodeModel.Context = dialogNodeContextModel
+				dialogNodeModel.Metadata = make(map[string]interface{})
+				dialogNodeModel.NextStep = dialogNodeNextStepModel
+				dialogNodeModel.Title = core.StringPtr("testString")
+				dialogNodeModel.Type = core.StringPtr("standard")
+				dialogNodeModel.EventName = core.StringPtr("focus")
+				dialogNodeModel.Variable = core.StringPtr("testString")
+				dialogNodeModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				dialogNodeModel.DigressIn = core.StringPtr("not_available")
+				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
+				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
+				dialogNodeModel.UserLabel = core.StringPtr("testString")
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+
+				// Construct an instance of the Counterexample model
+				counterexampleModel := new(assistantv1.Counterexample)
+				counterexampleModel.Text = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsTooling model
+				workspaceSystemSettingsToolingModel := new(assistantv1.WorkspaceSystemSettingsTooling)
+				workspaceSystemSettingsToolingModel.StoreGenericResponses = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsDisambiguation model
+				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
+				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
+				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
+				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
+
+				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
+				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
+				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+
+				// Construct an instance of the WorkspaceSystemSettings model
+				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
+				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
+				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
+				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
+				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
+
+				// Construct an instance of the WebhookHeader model
+				webhookHeaderModel := new(assistantv1.WebhookHeader)
+				webhookHeaderModel.Name = core.StringPtr("testString")
+				webhookHeaderModel.Value = core.StringPtr("testString")
+
+				// Construct an instance of the Webhook model
+				webhookModel := new(assistantv1.Webhook)
+				webhookModel.URL = core.StringPtr("testString")
+				webhookModel.Name = core.StringPtr("testString")
+				webhookModel.HeadersVar = []assistantv1.WebhookHeader{*webhookHeaderModel}
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntent model
+				createIntentModel := new(assistantv1.CreateIntent)
+				createIntentModel.Intent = core.StringPtr("testString")
+				createIntentModel.Description = core.StringPtr("testString")
+				createIntentModel.Examples = []assistantv1.Example{*exampleModel}
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntity model
+				createEntityModel := new(assistantv1.CreateEntity)
+				createEntityModel.Entity = core.StringPtr("testString")
+				createEntityModel.Description = core.StringPtr("testString")
+				createEntityModel.Metadata = make(map[string]interface{})
+				createEntityModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityModel.Values = []assistantv1.CreateValue{*createValueModel}
+
+				// Construct an instance of the UpdateWorkspaceOptions model
+				updateWorkspaceOptionsModel := new(assistantv1.UpdateWorkspaceOptions)
+				updateWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Name = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Description = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.Language = core.StringPtr("testString")
+				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
+				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
+				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
+				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
+				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
+				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateWorkspace(updateWorkspaceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions)`, func() {
 		version := "testString"
 		deleteWorkspacePath := "/v1/workspaces/testString"
@@ -2869,7 +3987,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -2881,7 +3998,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteWorkspace(nil)
@@ -2894,12 +4010,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteWorkspace(deleteWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteWorkspace(deleteWorkspaceOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2936,156 +4046,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListIntents(listIntentsOptions *ListIntentsOptions) - Operation response error`, func() {
 		version := "testString"
 		listIntentsPath := "/v1/workspaces/testString/intents"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3094,19 +4058,12 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listIntentsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"intent"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3149,14 +4106,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListIntents(listIntentsOptions *ListIntentsOptions)`, func() {
 		version := "testString"
 		listIntentsPath := "/v1/workspaces/testString/intents"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3165,26 +4119,87 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"intent"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListIntents successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListIntentsOptions model
+				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
+				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.Sort = core.StringPtr("intent")
+				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListIntentsWithContext(ctx, listIntentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListIntents(listIntentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListIntentsWithContext(ctx, listIntentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listIntentsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"intent"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListIntents successfully`, func() {
@@ -3195,7 +4210,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListIntents(nil)
@@ -3220,30 +4234,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListIntentsWithContext(ctx, listIntentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListIntents(listIntentsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListIntentsWithContext(ctx, listIntentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListIntents with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -3284,11 +4274,52 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListIntents successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListIntentsOptions model
+				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
+				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.Sort = core.StringPtr("intent")
+				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListIntents(listIntentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateIntent(createIntentOptions *CreateIntentOptions) - Operation response error`, func() {
 		version := "testString"
 		createIntentPath := "/v1/workspaces/testString/intents"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3297,9 +4328,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createIntentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3350,14 +4379,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateIntent(createIntentOptions *CreateIntentOptions)`, func() {
 		version := "testString"
 		createIntentPath := "/v1/workspaces/testString/intents"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3382,16 +4408,101 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke CreateIntent successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntentOptions model
+				createIntentOptionsModel := new(assistantv1.CreateIntentOptions)
+				createIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createIntentOptionsModel.Intent = core.StringPtr("testString")
+				createIntentOptionsModel.Description = core.StringPtr("testString")
+				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateIntentWithContext(ctx, createIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateIntent(createIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateIntentWithContext(ctx, createIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createIntentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke CreateIntent successfully`, func() {
@@ -3402,7 +4513,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateIntent(nil)
@@ -3435,30 +4545,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateIntentWithContext(ctx, createIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateIntent(createIntentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateIntentWithContext(ctx, createIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateIntent with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -3507,11 +4593,60 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateIntent successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the CreateIntentOptions model
+				createIntentOptionsModel := new(assistantv1.CreateIntentOptions)
+				createIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createIntentOptionsModel.Intent = core.StringPtr("testString")
+				createIntentOptionsModel.Description = core.StringPtr("testString")
+				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateIntent(createIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetIntent(getIntentOptions *GetIntentOptions) - Operation response error`, func() {
 		version := "testString"
 		getIntentPath := "/v1/workspaces/testString/intents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3520,11 +4655,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getIntentPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3564,14 +4696,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetIntent(getIntentOptions *GetIntentOptions)`, func() {
 		version := "testString"
 		getIntentPath := "/v1/workspaces/testString/intents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3580,18 +4709,76 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke GetIntent successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetIntentOptions model
+				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
+				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getIntentOptionsModel.Intent = core.StringPtr("testString")
+				getIntentOptionsModel.Export = core.BoolPtr(true)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetIntentWithContext(ctx, getIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetIntent(getIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetIntentWithContext(ctx, getIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getIntentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke GetIntent successfully`, func() {
@@ -3602,7 +4789,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetIntent(nil)
@@ -3624,30 +4810,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetIntentWithContext(ctx, getIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetIntent(getIntentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetIntentWithContext(ctx, getIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetIntent with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -3685,11 +4847,49 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetIntent successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetIntentOptions model
+				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
+				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getIntentOptionsModel.Intent = core.StringPtr("testString")
+				getIntentOptionsModel.Export = core.BoolPtr(true)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetIntent(getIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateIntent(updateIntentOptions *UpdateIntentOptions) - Operation response error`, func() {
 		version := "testString"
 		updateIntentPath := "/v1/workspaces/testString/intents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3698,11 +4898,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateIntentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3755,14 +4952,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateIntent(updateIntentOptions *UpdateIntentOptions)`, func() {
 		version := "testString"
 		updateIntentPath := "/v1/workspaces/testString/intents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3787,18 +4981,105 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke UpdateIntent successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the UpdateIntentOptions model
+				updateIntentOptionsModel := new(assistantv1.UpdateIntentOptions)
+				updateIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateIntentOptionsModel.Intent = core.StringPtr("testString")
+				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
+				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
+				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
+				updateIntentOptionsModel.Append = core.BoolPtr(true)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateIntentWithContext(ctx, updateIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateIntent(updateIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateIntentWithContext(ctx, updateIntentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateIntentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for append query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke UpdateIntent successfully`, func() {
@@ -3809,7 +5090,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateIntent(nil)
@@ -3844,30 +5124,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateIntentWithContext(ctx, updateIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateIntent(updateIntentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateIntentWithContext(ctx, updateIntentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateIntent with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -3918,8 +5174,58 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateIntent successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the Example model
+				exampleModel := new(assistantv1.Example)
+				exampleModel.Text = core.StringPtr("testString")
+				exampleModel.Mentions = []assistantv1.Mention{*mentionModel}
+
+				// Construct an instance of the UpdateIntentOptions model
+				updateIntentOptionsModel := new(assistantv1.UpdateIntentOptions)
+				updateIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateIntentOptionsModel.Intent = core.StringPtr("testString")
+				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
+				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
+				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
+				updateIntentOptionsModel.Append = core.BoolPtr(true)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateIntent(updateIntentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteIntent(deleteIntentOptions *DeleteIntentOptions)`, func() {
 		version := "testString"
 		deleteIntentPath := "/v1/workspaces/testString/intents/testString"
@@ -3933,7 +5239,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -3945,7 +5250,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteIntent(nil)
@@ -3959,12 +5263,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteIntent(deleteIntentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteIntent(deleteIntentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -4002,156 +5300,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListExamples(listExamplesOptions *ListExamplesOptions) - Operation response error`, func() {
 		version := "testString"
 		listExamplesPath := "/v1/workspaces/testString/intents/testString/examples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4160,17 +5312,11 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listExamplesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4213,14 +5359,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListExamples(listExamplesOptions *ListExamplesOptions)`, func() {
 		version := "testString"
 		listExamplesPath := "/v1/workspaces/testString/intents/testString/examples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4229,24 +5372,85 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListExamples successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListExamplesOptions model
+				listExamplesOptionsModel := new(assistantv1.ListExamplesOptions)
+				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listExamplesOptionsModel.Intent = core.StringPtr("testString")
+				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.Sort = core.StringPtr("text")
+				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListExamplesWithContext(ctx, listExamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListExamples(listExamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListExamplesWithContext(ctx, listExamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listExamplesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListExamples successfully`, func() {
@@ -4257,7 +5461,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListExamples(nil)
@@ -4282,30 +5485,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListExamplesWithContext(ctx, listExamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListExamples(listExamplesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListExamplesWithContext(ctx, listExamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListExamples with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -4346,11 +5525,52 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListExamples successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListExamplesOptions model
+				listExamplesOptionsModel := new(assistantv1.ListExamplesOptions)
+				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listExamplesOptionsModel.Intent = core.StringPtr("testString")
+				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.Sort = core.StringPtr("text")
+				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListExamples(listExamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateExample(createExampleOptions *CreateExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		createExamplePath := "/v1/workspaces/testString/intents/testString/examples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4359,9 +5579,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createExamplePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4407,14 +5625,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateExample(createExampleOptions *CreateExampleOptions)`, func() {
 		version := "testString"
 		createExamplePath := "/v1/workspaces/testString/intents/testString/examples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4439,16 +5654,96 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateExample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the CreateExampleOptions model
+				createExampleOptionsModel := new(assistantv1.CreateExampleOptions)
+				createExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createExampleOptionsModel.Intent = core.StringPtr("testString")
+				createExampleOptionsModel.Text = core.StringPtr("testString")
+				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateExampleWithContext(ctx, createExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateExample(createExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateExampleWithContext(ctx, createExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createExamplePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateExample successfully`, func() {
@@ -4459,7 +5754,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateExample(nil)
@@ -4487,30 +5781,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateExampleWithContext(ctx, createExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateExample(createExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateExampleWithContext(ctx, createExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateExample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -4554,11 +5824,55 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateExample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the CreateExampleOptions model
+				createExampleOptionsModel := new(assistantv1.CreateExampleOptions)
+				createExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createExampleOptionsModel.Intent = core.StringPtr("testString")
+				createExampleOptionsModel.Text = core.StringPtr("testString")
+				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateExample(createExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetExample(getExampleOptions *GetExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		getExamplePath := "/v1/workspaces/testString/intents/testString/examples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4567,9 +5881,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getExamplePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4609,14 +5921,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetExample(getExampleOptions *GetExampleOptions)`, func() {
 		version := "testString"
 		getExamplePath := "/v1/workspaces/testString/intents/testString/examples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4625,16 +5934,74 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetExample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetExampleOptions model
+				getExampleOptionsModel := new(assistantv1.GetExampleOptions)
+				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getExampleOptionsModel.Intent = core.StringPtr("testString")
+				getExampleOptionsModel.Text = core.StringPtr("testString")
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetExampleWithContext(ctx, getExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetExample(getExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetExampleWithContext(ctx, getExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getExamplePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetExample successfully`, func() {
@@ -4645,7 +6012,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetExample(nil)
@@ -4667,30 +6033,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetExampleWithContext(ctx, getExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetExample(getExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetExampleWithContext(ctx, getExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetExample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -4728,11 +6070,49 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetExample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetExampleOptions model
+				getExampleOptionsModel := new(assistantv1.GetExampleOptions)
+				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getExampleOptionsModel.Intent = core.StringPtr("testString")
+				getExampleOptionsModel.Text = core.StringPtr("testString")
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetExample(getExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateExample(updateExampleOptions *UpdateExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		updateExamplePath := "/v1/workspaces/testString/intents/testString/examples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4741,9 +6121,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateExamplePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4790,14 +6168,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateExample(updateExampleOptions *UpdateExampleOptions)`, func() {
 		version := "testString"
 		updateExamplePath := "/v1/workspaces/testString/intents/testString/examples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4822,16 +6197,97 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateExample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the UpdateExampleOptions model
+				updateExampleOptionsModel := new(assistantv1.UpdateExampleOptions)
+				updateExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateExampleOptionsModel.Intent = core.StringPtr("testString")
+				updateExampleOptionsModel.Text = core.StringPtr("testString")
+				updateExampleOptionsModel.NewText = core.StringPtr("testString")
+				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateExampleWithContext(ctx, updateExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateExample(updateExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateExampleWithContext(ctx, updateExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateExamplePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateExample successfully`, func() {
@@ -4842,7 +6298,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateExample(nil)
@@ -4871,30 +6326,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateExampleWithContext(ctx, updateExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateExample(updateExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateExampleWithContext(ctx, updateExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateExample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -4939,8 +6370,52 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateExample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the Mention model
+				mentionModel := new(assistantv1.Mention)
+				mentionModel.Entity = core.StringPtr("testString")
+				mentionModel.Location = []int64{int64(38)}
+
+				// Construct an instance of the UpdateExampleOptions model
+				updateExampleOptionsModel := new(assistantv1.UpdateExampleOptions)
+				updateExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateExampleOptionsModel.Intent = core.StringPtr("testString")
+				updateExampleOptionsModel.Text = core.StringPtr("testString")
+				updateExampleOptionsModel.NewText = core.StringPtr("testString")
+				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateExample(updateExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteExample(deleteExampleOptions *DeleteExampleOptions)`, func() {
 		version := "testString"
 		deleteExamplePath := "/v1/workspaces/testString/intents/testString/examples/testString"
@@ -4954,7 +6429,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -4966,7 +6440,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteExample(nil)
@@ -4981,12 +6454,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteExample(deleteExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteExample(deleteExampleOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -5025,156 +6492,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions) - Operation response error`, func() {
 		version := "testString"
 		listCounterexamplesPath := "/v1/workspaces/testString/counterexamples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5183,17 +6504,11 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCounterexamplesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5235,14 +6550,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListCounterexamples(listCounterexamplesOptions *ListCounterexamplesOptions)`, func() {
 		version := "testString"
 		listCounterexamplesPath := "/v1/workspaces/testString/counterexamples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5251,24 +6563,84 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListCounterexamples successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCounterexamplesOptions model
+				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
+				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
+				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListCounterexamplesWithContext(ctx, listCounterexamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListCounterexamples(listCounterexamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListCounterexamplesWithContext(ctx, listCounterexamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCounterexamplesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"text"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListCounterexamples successfully`, func() {
@@ -5279,7 +6651,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListCounterexamples(nil)
@@ -5303,30 +6674,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListCounterexamplesWithContext(ctx, listCounterexamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListCounterexamples(listCounterexamplesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListCounterexamplesWithContext(ctx, listCounterexamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListCounterexamples with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -5366,11 +6713,51 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCounterexamples successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListCounterexamplesOptions model
+				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
+				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
+				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListCounterexamples(listCounterexamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions) - Operation response error`, func() {
 		version := "testString"
 		createCounterexamplePath := "/v1/workspaces/testString/counterexamples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5379,9 +6766,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createCounterexamplePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5420,14 +6805,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateCounterexample(createCounterexampleOptions *CreateCounterexampleOptions)`, func() {
 		version := "testString"
 		createCounterexamplePath := "/v1/workspaces/testString/counterexamples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5452,16 +6834,89 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateCounterexample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateCounterexampleOptions model
+				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
+				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateCounterexampleWithContext(ctx, createCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateCounterexample(createCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateCounterexampleWithContext(ctx, createCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createCounterexamplePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateCounterexample successfully`, func() {
@@ -5472,7 +6927,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateCounterexample(nil)
@@ -5493,30 +6947,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateCounterexampleWithContext(ctx, createCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateCounterexample(createCounterexampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateCounterexampleWithContext(ctx, createCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateCounterexample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -5553,11 +6983,48 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateCounterexample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateCounterexampleOptions model
+				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
+				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateCounterexample(createCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions) - Operation response error`, func() {
 		version := "testString"
 		getCounterexamplePath := "/v1/workspaces/testString/counterexamples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5566,9 +7033,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getCounterexamplePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5607,14 +7072,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetCounterexample(getCounterexampleOptions *GetCounterexampleOptions)`, func() {
 		version := "testString"
 		getCounterexamplePath := "/v1/workspaces/testString/counterexamples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5623,16 +7085,73 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetCounterexample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCounterexampleOptions model
+				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
+				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetCounterexampleWithContext(ctx, getCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetCounterexample(getCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetCounterexampleWithContext(ctx, getCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCounterexamplePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetCounterexample successfully`, func() {
@@ -5643,7 +7162,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetCounterexample(nil)
@@ -5664,30 +7182,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetCounterexampleWithContext(ctx, getCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetCounterexample(getCounterexampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetCounterexampleWithContext(ctx, getCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetCounterexample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -5724,11 +7218,48 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCounterexample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetCounterexampleOptions model
+				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
+				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetCounterexample(getCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions) - Operation response error`, func() {
 		version := "testString"
 		updateCounterexamplePath := "/v1/workspaces/testString/counterexamples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5737,9 +7268,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateCounterexamplePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5779,14 +7308,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateCounterexample(updateCounterexampleOptions *UpdateCounterexampleOptions)`, func() {
 		version := "testString"
 		updateCounterexamplePath := "/v1/workspaces/testString/counterexamples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5811,16 +7337,90 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateCounterexample successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateCounterexampleOptions model
+				updateCounterexampleOptionsModel := new(assistantv1.UpdateCounterexampleOptions)
+				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateCounterexampleWithContext(ctx, updateCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateCounterexample(updateCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateCounterexampleWithContext(ctx, updateCounterexampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateCounterexamplePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateCounterexample successfully`, func() {
@@ -5831,7 +7431,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateCounterexample(nil)
@@ -5853,30 +7452,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateCounterexampleWithContext(ctx, updateCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateCounterexample(updateCounterexampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateCounterexampleWithContext(ctx, updateCounterexampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateCounterexample with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -5914,8 +7489,45 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateCounterexample successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateCounterexampleOptions model
+				updateCounterexampleOptionsModel := new(assistantv1.UpdateCounterexampleOptions)
+				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateCounterexample(updateCounterexampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteCounterexample(deleteCounterexampleOptions *DeleteCounterexampleOptions)`, func() {
 		version := "testString"
 		deleteCounterexamplePath := "/v1/workspaces/testString/counterexamples/testString"
@@ -5929,7 +7541,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -5941,7 +7552,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteCounterexample(nil)
@@ -5955,12 +7565,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteCounterexample(deleteCounterexampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteCounterexample(deleteCounterexampleOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -5998,156 +7602,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListEntities(listEntitiesOptions *ListEntitiesOptions) - Operation response error`, func() {
 		version := "testString"
 		listEntitiesPath := "/v1/workspaces/testString/entities"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6156,19 +7614,12 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listEntitiesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"entity"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6211,14 +7662,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListEntities(listEntitiesOptions *ListEntitiesOptions)`, func() {
 		version := "testString"
 		listEntitiesPath := "/v1/workspaces/testString/entities"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6227,26 +7675,87 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"entity"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListEntities successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListEntitiesOptions model
+				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
+				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
+				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListEntitiesWithContext(ctx, listEntitiesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListEntities(listEntitiesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListEntitiesWithContext(ctx, listEntitiesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listEntitiesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"entity"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListEntities successfully`, func() {
@@ -6257,7 +7766,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListEntities(nil)
@@ -6282,30 +7790,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListEntitiesWithContext(ctx, listEntitiesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListEntities(listEntitiesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListEntitiesWithContext(ctx, listEntitiesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListEntities with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -6346,11 +7830,52 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListEntities successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListEntitiesOptions model
+				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
+				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
+				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListEntities(listEntitiesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateEntity(createEntityOptions *CreateEntityOptions) - Operation response error`, func() {
 		version := "testString"
 		createEntityPath := "/v1/workspaces/testString/entities"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6359,9 +7884,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createEntityPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6412,14 +7935,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateEntity(createEntityOptions *CreateEntityOptions)`, func() {
 		version := "testString"
 		createEntityPath := "/v1/workspaces/testString/entities"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6444,16 +7964,101 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke CreateEntity successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntityOptions model
+				createEntityOptionsModel := new(assistantv1.CreateEntityOptions)
+				createEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createEntityOptionsModel.Entity = core.StringPtr("testString")
+				createEntityOptionsModel.Description = core.StringPtr("testString")
+				createEntityOptionsModel.Metadata = make(map[string]interface{})
+				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateEntityWithContext(ctx, createEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateEntity(createEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateEntityWithContext(ctx, createEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createEntityPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke CreateEntity successfully`, func() {
@@ -6464,7 +8069,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateEntity(nil)
@@ -6497,30 +8101,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateEntityWithContext(ctx, createEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateEntity(createEntityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateEntityWithContext(ctx, createEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateEntity with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -6569,11 +8149,60 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateEntity successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the CreateEntityOptions model
+				createEntityOptionsModel := new(assistantv1.CreateEntityOptions)
+				createEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createEntityOptionsModel.Entity = core.StringPtr("testString")
+				createEntityOptionsModel.Description = core.StringPtr("testString")
+				createEntityOptionsModel.Metadata = make(map[string]interface{})
+				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
+				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateEntity(createEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetEntity(getEntityOptions *GetEntityOptions) - Operation response error`, func() {
 		version := "testString"
 		getEntityPath := "/v1/workspaces/testString/entities/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6582,11 +8211,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getEntityPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6626,14 +8252,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetEntity(getEntityOptions *GetEntityOptions)`, func() {
 		version := "testString"
 		getEntityPath := "/v1/workspaces/testString/entities/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6642,18 +8265,76 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke GetEntity successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetEntityOptions model
+				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
+				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getEntityOptionsModel.Entity = core.StringPtr("testString")
+				getEntityOptionsModel.Export = core.BoolPtr(true)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetEntityWithContext(ctx, getEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetEntity(getEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetEntityWithContext(ctx, getEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getEntityPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke GetEntity successfully`, func() {
@@ -6664,7 +8345,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetEntity(nil)
@@ -6686,30 +8366,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetEntityWithContext(ctx, getEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetEntity(getEntityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetEntityWithContext(ctx, getEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetEntity with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -6747,11 +8403,49 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetEntity successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetEntityOptions model
+				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
+				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getEntityOptionsModel.Entity = core.StringPtr("testString")
+				getEntityOptionsModel.Export = core.BoolPtr(true)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetEntity(getEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateEntity(updateEntityOptions *UpdateEntityOptions) - Operation response error`, func() {
 		version := "testString"
 		updateEntityPath := "/v1/workspaces/testString/entities/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6760,11 +8454,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateEntityPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6817,14 +8508,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateEntity(updateEntityOptions *UpdateEntityOptions)`, func() {
 		version := "testString"
 		updateEntityPath := "/v1/workspaces/testString/entities/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6849,18 +8537,105 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke UpdateEntity successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the UpdateEntityOptions model
+				updateEntityOptionsModel := new(assistantv1.UpdateEntityOptions)
+				updateEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateEntityOptionsModel.Entity = core.StringPtr("testString")
+				updateEntityOptionsModel.NewEntity = core.StringPtr("testString")
+				updateEntityOptionsModel.NewDescription = core.StringPtr("testString")
+				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
+				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
+				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
+				updateEntityOptionsModel.Append = core.BoolPtr(true)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateEntityWithContext(ctx, updateEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateEntity(updateEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateEntityWithContext(ctx, updateEntityOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateEntityPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for append query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke UpdateEntity successfully`, func() {
@@ -6871,7 +8646,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateEntity(nil)
@@ -6906,30 +8680,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateEntityWithContext(ctx, updateEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateEntity(updateEntityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateEntityWithContext(ctx, updateEntityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateEntity with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -6980,8 +8730,58 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateEntity successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateValue model
+				createValueModel := new(assistantv1.CreateValue)
+				createValueModel.Value = core.StringPtr("testString")
+				createValueModel.Metadata = make(map[string]interface{})
+				createValueModel.Type = core.StringPtr("synonyms")
+				createValueModel.Synonyms = []string{"testString"}
+				createValueModel.Patterns = []string{"testString"}
+
+				// Construct an instance of the UpdateEntityOptions model
+				updateEntityOptionsModel := new(assistantv1.UpdateEntityOptions)
+				updateEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateEntityOptionsModel.Entity = core.StringPtr("testString")
+				updateEntityOptionsModel.NewEntity = core.StringPtr("testString")
+				updateEntityOptionsModel.NewDescription = core.StringPtr("testString")
+				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
+				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
+				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
+				updateEntityOptionsModel.Append = core.BoolPtr(true)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateEntity(updateEntityOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteEntity(deleteEntityOptions *DeleteEntityOptions)`, func() {
 		version := "testString"
 		deleteEntityPath := "/v1/workspaces/testString/entities/testString"
@@ -6995,7 +8795,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -7007,7 +8806,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteEntity(nil)
@@ -7021,12 +8819,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteEntity(deleteEntityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteEntity(deleteEntityOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -7064,156 +8856,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListMentions(listMentionsOptions *ListMentionsOptions) - Operation response error`, func() {
 		version := "testString"
 		listMentionsPath := "/v1/workspaces/testString/entities/testString/mentions"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7222,11 +8868,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listMentionsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7266,14 +8909,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListMentions(listMentionsOptions *ListMentionsOptions)`, func() {
 		version := "testString"
 		listMentionsPath := "/v1/workspaces/testString/entities/testString/mentions"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7282,14 +8922,72 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"examples": [{"text": "Text", "intent": "Intent", "location": [8]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListMentions successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListMentionsOptions model
+				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
+				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listMentionsOptionsModel.Entity = core.StringPtr("testString")
+				listMentionsOptionsModel.Export = core.BoolPtr(true)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListMentionsWithContext(ctx, listMentionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListMentions(listMentionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListMentionsWithContext(ctx, listMentionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listMentionsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					// TODO: Add check for include_audit query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -7304,7 +9002,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListMentions(nil)
@@ -7326,30 +9023,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListMentionsWithContext(ctx, listMentionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListMentions(listMentionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListMentionsWithContext(ctx, listMentionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListMentions with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -7387,157 +9060,49 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListMentions successfully`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the ListMentionsOptions model
+				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
+				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listMentionsOptionsModel.Entity = core.StringPtr("testString")
+				listMentionsOptionsModel.Export = core.BoolPtr(true)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := assistantService.ListMentions(listMentionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListValues(listValuesOptions *ListValuesOptions) - Operation response error`, func() {
 		version := "testString"
 		listValuesPath := "/v1/workspaces/testString/entities/testString/values"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7546,19 +9111,12 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listValuesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"value"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7602,14 +9160,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListValues(listValuesOptions *ListValuesOptions)`, func() {
 		version := "testString"
 		listValuesPath := "/v1/workspaces/testString/entities/testString/values"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7618,26 +9173,88 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"value"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListValues successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListValuesOptions model
+				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
+				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listValuesOptionsModel.Entity = core.StringPtr("testString")
+				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.Sort = core.StringPtr("value")
+				listValuesOptionsModel.Cursor = core.StringPtr("testString")
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListValuesWithContext(ctx, listValuesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListValues(listValuesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListValuesWithContext(ctx, listValuesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listValuesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"value"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListValues successfully`, func() {
@@ -7648,7 +9265,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListValues(nil)
@@ -7674,30 +9290,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListValuesWithContext(ctx, listValuesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListValues(listValuesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListValuesWithContext(ctx, listValuesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListValues with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -7739,11 +9331,53 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListValues successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListValuesOptions model
+				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
+				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listValuesOptionsModel.Entity = core.StringPtr("testString")
+				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.Sort = core.StringPtr("value")
+				listValuesOptionsModel.Cursor = core.StringPtr("testString")
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListValues(listValuesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateValue(createValueOptions *CreateValueOptions) - Operation response error`, func() {
 		version := "testString"
 		createValuePath := "/v1/workspaces/testString/entities/testString/values"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7752,9 +9386,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createValuePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7798,14 +9430,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateValue(createValueOptions *CreateValueOptions)`, func() {
 		version := "testString"
 		createValuePath := "/v1/workspaces/testString/entities/testString/values"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7830,16 +9459,94 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateValue successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateValueOptions model
+				createValueOptionsModel := new(assistantv1.CreateValueOptions)
+				createValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createValueOptionsModel.Entity = core.StringPtr("testString")
+				createValueOptionsModel.Value = core.StringPtr("testString")
+				createValueOptionsModel.Metadata = make(map[string]interface{})
+				createValueOptionsModel.Type = core.StringPtr("synonyms")
+				createValueOptionsModel.Synonyms = []string{"testString"}
+				createValueOptionsModel.Patterns = []string{"testString"}
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateValueWithContext(ctx, createValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateValue(createValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateValueWithContext(ctx, createValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createValuePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateValue successfully`, func() {
@@ -7850,7 +9557,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateValue(nil)
@@ -7876,30 +9582,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateValueWithContext(ctx, createValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateValue(createValueOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateValueWithContext(ctx, createValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateValue with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -7941,11 +9623,53 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateValue successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateValueOptions model
+				createValueOptionsModel := new(assistantv1.CreateValueOptions)
+				createValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createValueOptionsModel.Entity = core.StringPtr("testString")
+				createValueOptionsModel.Value = core.StringPtr("testString")
+				createValueOptionsModel.Metadata = make(map[string]interface{})
+				createValueOptionsModel.Type = core.StringPtr("synonyms")
+				createValueOptionsModel.Synonyms = []string{"testString"}
+				createValueOptionsModel.Patterns = []string{"testString"}
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateValue(createValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetValue(getValueOptions *GetValueOptions) - Operation response error`, func() {
 		version := "testString"
 		getValuePath := "/v1/workspaces/testString/entities/testString/values/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7954,11 +9678,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getValuePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7999,14 +9720,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetValue(getValueOptions *GetValueOptions)`, func() {
 		version := "testString"
 		getValuePath := "/v1/workspaces/testString/entities/testString/values/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8015,18 +9733,77 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for export query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetValue successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetValueOptions model
+				getValueOptionsModel := new(assistantv1.GetValueOptions)
+				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getValueOptionsModel.Entity = core.StringPtr("testString")
+				getValueOptionsModel.Value = core.StringPtr("testString")
+				getValueOptionsModel.Export = core.BoolPtr(true)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetValueWithContext(ctx, getValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetValue(getValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetValueWithContext(ctx, getValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getValuePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for export query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetValue successfully`, func() {
@@ -8037,7 +9814,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetValue(nil)
@@ -8060,30 +9836,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetValueWithContext(ctx, getValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetValue(getValueOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetValueWithContext(ctx, getValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetValue with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -8122,11 +9874,50 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetValue successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetValueOptions model
+				getValueOptionsModel := new(assistantv1.GetValueOptions)
+				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getValueOptionsModel.Entity = core.StringPtr("testString")
+				getValueOptionsModel.Value = core.StringPtr("testString")
+				getValueOptionsModel.Export = core.BoolPtr(true)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetValue(getValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateValue(updateValueOptions *UpdateValueOptions) - Operation response error`, func() {
 		version := "testString"
 		updateValuePath := "/v1/workspaces/testString/entities/testString/values/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8135,11 +9926,8 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateValuePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8185,14 +9973,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateValue(updateValueOptions *UpdateValueOptions)`, func() {
 		version := "testString"
 		updateValuePath := "/v1/workspaces/testString/entities/testString/values/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8217,18 +10002,98 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for append query parameter
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateValue successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateValueOptions model
+				updateValueOptionsModel := new(assistantv1.UpdateValueOptions)
+				updateValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateValueOptionsModel.Entity = core.StringPtr("testString")
+				updateValueOptionsModel.Value = core.StringPtr("testString")
+				updateValueOptionsModel.NewValue = core.StringPtr("testString")
+				updateValueOptionsModel.NewMetadata = make(map[string]interface{})
+				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
+				updateValueOptionsModel.NewSynonyms = []string{"testString"}
+				updateValueOptionsModel.NewPatterns = []string{"testString"}
+				updateValueOptionsModel.Append = core.BoolPtr(true)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateValueWithContext(ctx, updateValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateValue(updateValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateValueWithContext(ctx, updateValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateValuePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for append query parameter
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateValue successfully`, func() {
@@ -8239,7 +10104,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateValue(nil)
@@ -8267,30 +10131,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateValueWithContext(ctx, updateValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateValue(updateValueOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateValueWithContext(ctx, updateValueOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateValue with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -8334,8 +10174,51 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateValue successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateValueOptions model
+				updateValueOptionsModel := new(assistantv1.UpdateValueOptions)
+				updateValueOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateValueOptionsModel.Entity = core.StringPtr("testString")
+				updateValueOptionsModel.Value = core.StringPtr("testString")
+				updateValueOptionsModel.NewValue = core.StringPtr("testString")
+				updateValueOptionsModel.NewMetadata = make(map[string]interface{})
+				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
+				updateValueOptionsModel.NewSynonyms = []string{"testString"}
+				updateValueOptionsModel.NewPatterns = []string{"testString"}
+				updateValueOptionsModel.Append = core.BoolPtr(true)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateValue(updateValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteValue(deleteValueOptions *DeleteValueOptions)`, func() {
 		version := "testString"
 		deleteValuePath := "/v1/workspaces/testString/entities/testString/values/testString"
@@ -8349,7 +10232,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -8361,7 +10243,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteValue(nil)
@@ -8376,12 +10257,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteValue(deleteValueOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteValue(deleteValueOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -8420,156 +10295,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListSynonyms(listSynonymsOptions *ListSynonymsOptions) - Operation response error`, func() {
 		version := "testString"
 		listSynonymsPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8578,17 +10307,11 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listSynonymsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"synonym"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8632,14 +10355,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListSynonyms(listSynonymsOptions *ListSynonymsOptions)`, func() {
 		version := "testString"
 		listSynonymsPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8648,24 +10368,86 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"synonym"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"synonyms": [{"synonym": "Synonym", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"synonyms": [{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListSynonyms successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListSynonymsOptions model
+				listSynonymsOptionsModel := new(assistantv1.ListSynonymsOptions)
+				listSynonymsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
+				listSynonymsOptionsModel.Value = core.StringPtr("testString")
+				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
+				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListSynonymsWithContext(ctx, listSynonymsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListSynonyms(listSynonymsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListSynonymsWithContext(ctx, listSynonymsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listSynonymsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"synonym"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"synonyms": [{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListSynonyms successfully`, func() {
@@ -8676,7 +10458,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListSynonyms(nil)
@@ -8702,30 +10483,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListSynonymsWithContext(ctx, listSynonymsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListSynonyms(listSynonymsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListSynonymsWithContext(ctx, listSynonymsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListSynonyms with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -8767,11 +10524,53 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListSynonyms successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListSynonymsOptions model
+				listSynonymsOptionsModel := new(assistantv1.ListSynonymsOptions)
+				listSynonymsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
+				listSynonymsOptionsModel.Value = core.StringPtr("testString")
+				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
+				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListSynonyms(listSynonymsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateSynonym(createSynonymOptions *CreateSynonymOptions) - Operation response error`, func() {
 		version := "testString"
 		createSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8780,9 +10579,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createSynonymPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8823,14 +10620,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateSynonym(createSynonymOptions *CreateSynonymOptions)`, func() {
 		version := "testString"
 		createSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8855,16 +10649,91 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateSynonym successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateSynonymOptions model
+				createSynonymOptionsModel := new(assistantv1.CreateSynonymOptions)
+				createSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createSynonymOptionsModel.Entity = core.StringPtr("testString")
+				createSynonymOptionsModel.Value = core.StringPtr("testString")
+				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateSynonymWithContext(ctx, createSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateSynonym(createSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateSynonymWithContext(ctx, createSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createSynonymPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateSynonym successfully`, func() {
@@ -8875,7 +10744,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateSynonym(nil)
@@ -8898,30 +10766,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateSynonymWithContext(ctx, createSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateSynonym(createSynonymOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateSynonymWithContext(ctx, createSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateSynonym with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -8960,11 +10804,50 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateSynonym successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the CreateSynonymOptions model
+				createSynonymOptionsModel := new(assistantv1.CreateSynonymOptions)
+				createSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createSynonymOptionsModel.Entity = core.StringPtr("testString")
+				createSynonymOptionsModel.Value = core.StringPtr("testString")
+				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateSynonym(createSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetSynonym(getSynonymOptions *GetSynonymOptions) - Operation response error`, func() {
 		version := "testString"
 		getSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8973,9 +10856,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getSynonymPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9016,14 +10897,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetSynonym(getSynonymOptions *GetSynonymOptions)`, func() {
 		version := "testString"
 		getSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9032,16 +10910,75 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetSynonym successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetSynonymOptions model
+				getSynonymOptionsModel := new(assistantv1.GetSynonymOptions)
+				getSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getSynonymOptionsModel.Entity = core.StringPtr("testString")
+				getSynonymOptionsModel.Value = core.StringPtr("testString")
+				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetSynonymWithContext(ctx, getSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetSynonym(getSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetSynonymWithContext(ctx, getSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getSynonymPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetSynonym successfully`, func() {
@@ -9052,7 +10989,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetSynonym(nil)
@@ -9075,30 +11011,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetSynonymWithContext(ctx, getSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetSynonym(getSynonymOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetSynonymWithContext(ctx, getSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetSynonym with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -9137,11 +11049,50 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetSynonym successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetSynonymOptions model
+				getSynonymOptionsModel := new(assistantv1.GetSynonymOptions)
+				getSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getSynonymOptionsModel.Entity = core.StringPtr("testString")
+				getSynonymOptionsModel.Value = core.StringPtr("testString")
+				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetSynonym(getSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions) - Operation response error`, func() {
 		version := "testString"
 		updateSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9150,9 +11101,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateSynonymPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9194,14 +11143,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateSynonym(updateSynonymOptions *UpdateSynonymOptions)`, func() {
 		version := "testString"
 		updateSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9226,16 +11172,92 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateSynonym successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateSynonymOptions model
+				updateSynonymOptionsModel := new(assistantv1.UpdateSynonymOptions)
+				updateSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateSynonymOptionsModel.Entity = core.StringPtr("testString")
+				updateSynonymOptionsModel.Value = core.StringPtr("testString")
+				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateSynonymWithContext(ctx, updateSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateSynonym(updateSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateSynonymWithContext(ctx, updateSynonymOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateSynonymPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"synonym": "Synonym", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateSynonym successfully`, func() {
@@ -9246,7 +11268,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateSynonym(nil)
@@ -9270,30 +11291,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateSynonymWithContext(ctx, updateSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateSynonym(updateSynonymOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateSynonymWithContext(ctx, updateSynonymOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateSynonym with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -9333,8 +11330,47 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateSynonym successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateSynonymOptions model
+				updateSynonymOptionsModel := new(assistantv1.UpdateSynonymOptions)
+				updateSynonymOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateSynonymOptionsModel.Entity = core.StringPtr("testString")
+				updateSynonymOptionsModel.Value = core.StringPtr("testString")
+				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
+				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateSynonym(updateSynonymOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteSynonym(deleteSynonymOptions *DeleteSynonymOptions)`, func() {
 		version := "testString"
 		deleteSynonymPath := "/v1/workspaces/testString/entities/testString/values/testString/synonyms/testString"
@@ -9348,7 +11384,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -9360,7 +11395,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteSynonym(nil)
@@ -9376,12 +11410,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteSynonym(deleteSynonymOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteSynonym(deleteSynonymOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -9421,156 +11449,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions) - Operation response error`, func() {
 		version := "testString"
 		listDialogNodesPath := "/v1/workspaces/testString/dialog_nodes"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9579,17 +11461,11 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listDialogNodesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"dialog_node"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9631,14 +11507,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListDialogNodes(listDialogNodesOptions *ListDialogNodesOptions)`, func() {
 		version := "testString"
 		listDialogNodesPath := "/v1/workspaces/testString/dialog_nodes"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9647,24 +11520,84 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for include_count query parameter
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"dialog_node"}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListDialogNodes successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListDialogNodesOptions model
+				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
+				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
+				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListDialogNodesWithContext(ctx, listDialogNodesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListDialogNodes(listDialogNodesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListDialogNodesWithContext(ctx, listDialogNodesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDialogNodesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for include_count query parameter
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"dialog_node"}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListDialogNodes successfully`, func() {
@@ -9675,7 +11608,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListDialogNodes(nil)
@@ -9699,30 +11631,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListDialogNodesWithContext(ctx, listDialogNodesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListDialogNodes(listDialogNodesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListDialogNodesWithContext(ctx, listDialogNodesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListDialogNodes with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -9762,11 +11670,51 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListDialogNodes successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListDialogNodesOptions model
+				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
+				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
+				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListDialogNodes(listDialogNodesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions) - Operation response error`, func() {
 		version := "testString"
 		createDialogNodePath := "/v1/workspaces/testString/dialog_nodes"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9775,9 +11723,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createDialogNodePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9792,6 +11738,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -9799,6 +11749,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -9872,14 +11823,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateDialogNode(createDialogNodeOptions *CreateDialogNodeOptions)`, func() {
 		version := "testString"
 		createDialogNodePath := "/v1/workspaces/testString/dialog_nodes"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9904,16 +11852,150 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateDialogNode successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDialogNodeOptions model
+				createDialogNodeOptionsModel := new(assistantv1.CreateDialogNodeOptions)
+				createDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Description = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Conditions = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Parent = core.StringPtr("testString")
+				createDialogNodeOptionsModel.PreviousSibling = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Output = dialogNodeOutputModel
+				createDialogNodeOptionsModel.Context = dialogNodeContextModel
+				createDialogNodeOptionsModel.Metadata = make(map[string]interface{})
+				createDialogNodeOptionsModel.NextStep = dialogNodeNextStepModel
+				createDialogNodeOptionsModel.Title = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Type = core.StringPtr("standard")
+				createDialogNodeOptionsModel.EventName = core.StringPtr("focus")
+				createDialogNodeOptionsModel.Variable = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				createDialogNodeOptionsModel.DigressIn = core.StringPtr("not_available")
+				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
+				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
+				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.CreateDialogNodeWithContext(ctx, createDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.CreateDialogNode(createDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.CreateDialogNodeWithContext(ctx, createDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createDialogNodePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateDialogNode successfully`, func() {
@@ -9924,13 +12006,16 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.CreateDialogNode(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
 
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
@@ -9939,6 +12024,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -10001,30 +12087,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateDialogNodeWithContext(ctx, createDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.CreateDialogNode(createDialogNodeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.CreateDialogNodeWithContext(ctx, createDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateDialogNode with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -10035,6 +12097,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -10042,6 +12108,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -10117,11 +12184,109 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateDialogNode successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the CreateDialogNodeOptions model
+				createDialogNodeOptionsModel := new(assistantv1.CreateDialogNodeOptions)
+				createDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				createDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Description = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Conditions = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Parent = core.StringPtr("testString")
+				createDialogNodeOptionsModel.PreviousSibling = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Output = dialogNodeOutputModel
+				createDialogNodeOptionsModel.Context = dialogNodeContextModel
+				createDialogNodeOptionsModel.Metadata = make(map[string]interface{})
+				createDialogNodeOptionsModel.NextStep = dialogNodeNextStepModel
+				createDialogNodeOptionsModel.Title = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Type = core.StringPtr("standard")
+				createDialogNodeOptionsModel.EventName = core.StringPtr("focus")
+				createDialogNodeOptionsModel.Variable = core.StringPtr("testString")
+				createDialogNodeOptionsModel.Actions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				createDialogNodeOptionsModel.DigressIn = core.StringPtr("not_available")
+				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
+				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
+				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.CreateDialogNode(createDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions) - Operation response error`, func() {
 		version := "testString"
 		getDialogNodePath := "/v1/workspaces/testString/dialog_nodes/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10130,9 +12295,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getDialogNodePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10171,14 +12334,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetDialogNode(getDialogNodeOptions *GetDialogNodeOptions)`, func() {
 		version := "testString"
 		getDialogNodePath := "/v1/workspaces/testString/dialog_nodes/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10187,16 +12347,73 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetDialogNode successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDialogNodeOptions model
+				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
+				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.GetDialogNodeWithContext(ctx, getDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.GetDialogNode(getDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.GetDialogNodeWithContext(ctx, getDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDialogNodePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetDialogNode successfully`, func() {
@@ -10207,7 +12424,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.GetDialogNode(nil)
@@ -10228,30 +12444,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetDialogNodeWithContext(ctx, getDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.GetDialogNode(getDialogNodeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.GetDialogNodeWithContext(ctx, getDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetDialogNode with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -10288,11 +12480,48 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetDialogNode successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the GetDialogNodeOptions model
+				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
+				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.GetDialogNode(getDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions) - Operation response error`, func() {
 		version := "testString"
 		updateDialogNodePath := "/v1/workspaces/testString/dialog_nodes/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10301,9 +12530,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateDialogNodePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10318,6 +12545,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -10325,6 +12556,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -10399,14 +12631,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateDialogNode(updateDialogNodeOptions *UpdateDialogNodeOptions)`, func() {
 		version := "testString"
 		updateDialogNodePath := "/v1/workspaces/testString/dialog_nodes/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10431,16 +12660,151 @@ var _ = Describe(`AssistantV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for include_audit query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion"}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateDialogNode successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the UpdateDialogNodeOptions model
+				updateDialogNodeOptionsModel := new(assistantv1.UpdateDialogNodeOptions)
+				updateDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDialogNode = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDescription = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewConditions = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewParent = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewPreviousSibling = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewOutput = dialogNodeOutputModel
+				updateDialogNodeOptionsModel.NewContext = dialogNodeContextModel
+				updateDialogNodeOptionsModel.NewMetadata = make(map[string]interface{})
+				updateDialogNodeOptionsModel.NewNextStep = dialogNodeNextStepModel
+				updateDialogNodeOptionsModel.NewTitle = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewType = core.StringPtr("standard")
+				updateDialogNodeOptionsModel.NewEventName = core.StringPtr("focus")
+				updateDialogNodeOptionsModel.NewVariable = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewActions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				updateDialogNodeOptionsModel.NewDigressIn = core.StringPtr("not_available")
+				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
+				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
+				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.UpdateDialogNodeWithContext(ctx, updateDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.UpdateDialogNode(updateDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.UpdateDialogNodeWithContext(ctx, updateDialogNodeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateDialogNodePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for include_audit query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateDialogNode successfully`, func() {
@@ -10451,13 +12815,16 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.UpdateDialogNode(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
 
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
@@ -10466,6 +12833,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -10529,30 +12897,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateDialogNodeWithContext(ctx, updateDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.UpdateDialogNode(updateDialogNodeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.UpdateDialogNodeWithContext(ctx, updateDialogNodeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateDialogNode with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -10563,6 +12907,10 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
@@ -10570,6 +12918,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -10646,8 +12995,106 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateDialogNode successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+
+				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
+				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
+				dialogNodeOutputGenericModel.ResponseType = core.StringPtr("search_skill")
+				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
+				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
+
+				// Construct an instance of the DialogNodeOutputModifiers model
+				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
+				dialogNodeOutputModifiersModel.Overwrite = core.BoolPtr(true)
+
+				// Construct an instance of the DialogNodeOutput model
+				dialogNodeOutputModel := new(assistantv1.DialogNodeOutput)
+				dialogNodeOutputModel.Generic = []assistantv1.DialogNodeOutputGenericIntf{dialogNodeOutputGenericModel}
+				dialogNodeOutputModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeOutputModel.Modifiers = dialogNodeOutputModifiersModel
+				dialogNodeOutputModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeContext model
+				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
+				dialogNodeContextModel.Integrations = make(map[string]map[string]interface{})
+				dialogNodeContextModel.SetProperty("foo", core.StringPtr("testString"))
+
+				// Construct an instance of the DialogNodeNextStep model
+				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
+				dialogNodeNextStepModel.Behavior = core.StringPtr("get_user_input")
+				dialogNodeNextStepModel.DialogNode = core.StringPtr("testString")
+				dialogNodeNextStepModel.Selector = core.StringPtr("condition")
+
+				// Construct an instance of the DialogNodeAction model
+				dialogNodeActionModel := new(assistantv1.DialogNodeAction)
+				dialogNodeActionModel.Name = core.StringPtr("testString")
+				dialogNodeActionModel.Type = core.StringPtr("client")
+				dialogNodeActionModel.Parameters = make(map[string]interface{})
+				dialogNodeActionModel.ResultVariable = core.StringPtr("testString")
+				dialogNodeActionModel.Credentials = core.StringPtr("testString")
+
+				// Construct an instance of the UpdateDialogNodeOptions model
+				updateDialogNodeOptionsModel := new(assistantv1.UpdateDialogNodeOptions)
+				updateDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDialogNode = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDescription = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewConditions = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewParent = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewPreviousSibling = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewOutput = dialogNodeOutputModel
+				updateDialogNodeOptionsModel.NewContext = dialogNodeContextModel
+				updateDialogNodeOptionsModel.NewMetadata = make(map[string]interface{})
+				updateDialogNodeOptionsModel.NewNextStep = dialogNodeNextStepModel
+				updateDialogNodeOptionsModel.NewTitle = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewType = core.StringPtr("standard")
+				updateDialogNodeOptionsModel.NewEventName = core.StringPtr("focus")
+				updateDialogNodeOptionsModel.NewVariable = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewActions = []assistantv1.DialogNodeAction{*dialogNodeActionModel}
+				updateDialogNodeOptionsModel.NewDigressIn = core.StringPtr("not_available")
+				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
+				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
+				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.UpdateDialogNode(updateDialogNodeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteDialogNode(deleteDialogNodeOptions *DeleteDialogNodeOptions)`, func() {
 		version := "testString"
 		deleteDialogNodePath := "/v1/workspaces/testString/dialog_nodes/testString"
@@ -10661,7 +13108,6 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -10673,7 +13119,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteDialogNode(nil)
@@ -10687,12 +13132,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteDialogNode(deleteDialogNodeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteDialogNode(deleteDialogNodeOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -10730,156 +13169,10 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`ListLogs(listLogsOptions *ListLogsOptions) - Operation response error`, func() {
 		version := "testString"
 		listLogsPath := "/v1/workspaces/testString/logs"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10888,15 +13181,10 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listLogsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10937,14 +13225,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListLogs(listLogsOptions *ListLogsOptions)`, func() {
 		version := "testString"
 		listLogsPath := "/v1/workspaces/testString/logs"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10953,22 +13238,81 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg"}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}]}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg"}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}]}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListLogs successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListLogsOptions model
+				listLogsOptionsModel := new(assistantv1.ListLogsOptions)
+				listLogsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listLogsOptionsModel.Sort = core.StringPtr("testString")
+				listLogsOptionsModel.Filter = core.StringPtr("testString")
+				listLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListLogs(listLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listLogsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully`, func() {
@@ -10979,7 +13323,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListLogs(nil)
@@ -11002,30 +13345,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListLogs(listLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListLogsWithContext(ctx, listLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListLogs with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -11064,11 +13383,50 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListLogs successfully`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+
+				// Construct an instance of the ListLogsOptions model
+				listLogsOptionsModel := new(assistantv1.ListLogsOptions)
+				listLogsOptionsModel.WorkspaceID = core.StringPtr("testString")
+				listLogsOptionsModel.Sort = core.StringPtr("testString")
+				listLogsOptionsModel.Filter = core.StringPtr("testString")
+				listLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListLogs(listLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListAllLogs(listAllLogsOptions *ListAllLogsOptions) - Operation response error`, func() {
 		version := "testString"
 		listAllLogsPath := "/v1/logs"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -11077,15 +13435,10 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listAllLogsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -11125,14 +13478,11 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListAllLogs(listAllLogsOptions *ListAllLogsOptions)`, func() {
 		version := "testString"
 		listAllLogsPath := "/v1/logs"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11141,22 +13491,80 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg"}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}]}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg"}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}]}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+				}))
+			})
+			It(`Invoke ListAllLogs successfully with retries`, func() {
+				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(assistantService).ToNot(BeNil())
+				assistantService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListAllLogsOptions model
+				listAllLogsOptionsModel := new(assistantv1.ListAllLogsOptions)
+				listAllLogsOptionsModel.Filter = core.StringPtr("testString")
+				listAllLogsOptionsModel.Sort = core.StringPtr("testString")
+				listAllLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listAllLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listAllLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := assistantService.ListAllLogsWithContext(ctx, listAllLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				assistantService.DisableRetries()
+				result, response, operationErr := assistantService.ListAllLogs(listAllLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = assistantService.ListAllLogsWithContext(ctx, listAllLogsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listAllLogsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["page_limit"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["cursor"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListAllLogs successfully`, func() {
@@ -11167,7 +13575,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := assistantService.ListAllLogs(nil)
@@ -11189,30 +13596,6 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListAllLogsWithContext(ctx, listAllLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
-				result, response, operationErr = assistantService.ListAllLogs(listAllLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = assistantService.ListAllLogsWithContext(ctx, listAllLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListAllLogs with error: Operation validation and request error`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
@@ -11250,154 +13633,45 @@ var _ = Describe(`AssistantV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(assistantService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeFalse())
-			assistantService.DisableSSLVerification()
-			Expect(assistantService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "https://assistantv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{})
-			Expect(assistantService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListAllLogs successfully`, func() {
 				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(assistantService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
+				// Construct an instance of the ListAllLogsOptions model
+				listAllLogsOptionsModel := new(assistantv1.ListAllLogsOptions)
+				listAllLogsOptionsModel.Filter = core.StringPtr("testString")
+				listAllLogsOptionsModel.Sort = core.StringPtr("testString")
+				listAllLogsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
+				listAllLogsOptionsModel.Cursor = core.StringPtr("testString")
+				listAllLogsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := assistantService.ListAllLogs(listAllLogsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := assistantService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(assistantService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(assistantService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := assistantService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != assistantService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(assistantService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(assistantService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_URL":       "https://assistantv1/api",
-				"CONVERSATION_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"CONVERSATION_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			assistantService, serviceErr := assistantv1.NewAssistantV1(&assistantv1.AssistantV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(assistantService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = assistantv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		version := "testString"
 		deleteUserDataPath := "/v1/user_data"
@@ -11411,9 +13685,7 @@ var _ = Describe(`AssistantV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["customer_id"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(202)
 				}))
 			})
@@ -11425,7 +13697,6 @@ var _ = Describe(`AssistantV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(assistantService).ToNot(BeNil())
-				assistantService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := assistantService.DeleteUserData(nil)
@@ -11438,12 +13709,6 @@ var _ = Describe(`AssistantV1`, func() {
 				deleteUserDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = assistantService.DeleteUserData(deleteUserDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				assistantService.DisableRetries()
 				response, operationErr = assistantService.DeleteUserData(deleteUserDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -11518,6 +13783,11 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
+			It(`Invoke NewChannelTransferInfo successfully`, func() {
+				var target *assistantv1.ChannelTransferTarget = nil
+				_, err := assistantService.NewChannelTransferInfo(target)
+				Expect(err).ToNot(BeNil())
+			})
 			It(`Invoke NewCounterexample successfully`, func() {
 				text := "testString"
 				model, err := assistantService.NewCounterexample(text)
@@ -11540,6 +13810,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createCounterexampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateDialogNodeOptions successfully`, func() {
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				Expect(responseGenericChannelModel).ToNot(BeNil())
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+				Expect(responseGenericChannelModel.Channel).To(Equal(core.StringPtr("chat")))
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				Expect(dialogNodeOutputGenericModel).ToNot(BeNil())
@@ -11548,11 +13824,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -11822,6 +14100,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateWorkspaceOptions successfully`, func() {
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				Expect(responseGenericChannelModel).ToNot(BeNil())
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+				Expect(responseGenericChannelModel.Channel).To(Equal(core.StringPtr("chat")))
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				Expect(dialogNodeOutputGenericModel).ToNot(BeNil())
@@ -11830,11 +14114,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -12620,7 +14906,8 @@ var _ = Describe(`AssistantV1`, func() {
 			It(`Invoke NewLogMessage successfully`, func() {
 				level := "info"
 				msg := "testString"
-				model, err := assistantService.NewLogMessage(level, msg)
+				code := "testString"
+				model, err := assistantService.NewLogMessage(level, msg, code)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
@@ -12784,13 +15071,25 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeVisitedDetailsModel.Title).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeVisitedDetailsModel.Conditions).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the LogMessageSource model
+				logMessageSourceModel := new(assistantv1.LogMessageSource)
+				Expect(logMessageSourceModel).ToNot(BeNil())
+				logMessageSourceModel.Type = core.StringPtr("dialog_node")
+				logMessageSourceModel.DialogNode = core.StringPtr("testString")
+				Expect(logMessageSourceModel.Type).To(Equal(core.StringPtr("dialog_node")))
+				Expect(logMessageSourceModel.DialogNode).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the LogMessage model
 				logMessageModel := new(assistantv1.LogMessage)
 				Expect(logMessageModel).ToNot(BeNil())
 				logMessageModel.Level = core.StringPtr("info")
 				logMessageModel.Msg = core.StringPtr("testString")
+				logMessageModel.Code = core.StringPtr("testString")
+				logMessageModel.Source = logMessageSourceModel
 				Expect(logMessageModel.Level).To(Equal(core.StringPtr("info")))
 				Expect(logMessageModel.Msg).To(Equal(core.StringPtr("testString")))
+				Expect(logMessageModel.Code).To(Equal(core.StringPtr("testString")))
+				Expect(logMessageModel.Source).To(Equal(logMessageSourceModel))
 
 				// Construct an instance of the DialogNodeOutputOptionsElementValue model
 				dialogNodeOutputOptionsElementValueModel := new(assistantv1.DialogNodeOutputOptionsElementValue)
@@ -12810,6 +15109,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeOutputOptionsElementModel.Label).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputOptionsElementModel.Value).To(Equal(dialogNodeOutputOptionsElementValueModel))
 
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				Expect(responseGenericChannelModel).ToNot(BeNil())
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+				Expect(responseGenericChannelModel.Channel).To(Equal(core.StringPtr("chat")))
+
 				// Construct an instance of the RuntimeResponseGenericRuntimeResponseTypeOption model
 				runtimeResponseGenericModel := new(assistantv1.RuntimeResponseGenericRuntimeResponseTypeOption)
 				Expect(runtimeResponseGenericModel).ToNot(BeNil())
@@ -12818,11 +15123,13 @@ var _ = Describe(`AssistantV1`, func() {
 				runtimeResponseGenericModel.Description = core.StringPtr("testString")
 				runtimeResponseGenericModel.Preference = core.StringPtr("dropdown")
 				runtimeResponseGenericModel.Options = []assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}
+				runtimeResponseGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(runtimeResponseGenericModel.ResponseType).To(Equal(core.StringPtr("option")))
 				Expect(runtimeResponseGenericModel.Title).To(Equal(core.StringPtr("testString")))
 				Expect(runtimeResponseGenericModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(runtimeResponseGenericModel.Preference).To(Equal(core.StringPtr("dropdown")))
 				Expect(runtimeResponseGenericModel.Options).To(Equal([]assistantv1.DialogNodeOutputOptionsElement{*dialogNodeOutputOptionsElementModel}))
+				Expect(runtimeResponseGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the OutputData model
 				outputDataModel := new(assistantv1.OutputData)
@@ -12851,6 +15158,7 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.SetAlternateIntents(true)
 				messageOptionsModel.SetContext(contextModel)
 				messageOptionsModel.SetOutput(outputDataModel)
+				messageOptionsModel.SetUserID("testString")
 				messageOptionsModel.SetNodesVisitedDetails(true)
 				messageOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(messageOptionsModel).ToNot(BeNil())
@@ -12861,6 +15169,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(messageOptionsModel.AlternateIntents).To(Equal(core.BoolPtr(true)))
 				Expect(messageOptionsModel.Context).To(Equal(contextModel))
 				Expect(messageOptionsModel.Output).To(Equal(outputDataModel))
+				Expect(messageOptionsModel.UserID).To(Equal(core.StringPtr("testString")))
 				Expect(messageOptionsModel.NodesVisitedDetails).To(Equal(core.BoolPtr(true)))
 				Expect(messageOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -12910,6 +15219,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateCounterexampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateDialogNodeOptions successfully`, func() {
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				Expect(responseGenericChannelModel).ToNot(BeNil())
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+				Expect(responseGenericChannelModel.Channel).To(Equal(core.StringPtr("chat")))
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				Expect(dialogNodeOutputGenericModel).ToNot(BeNil())
@@ -12918,11 +15233,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -13192,6 +15509,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateWorkspaceOptions successfully`, func() {
+				// Construct an instance of the ResponseGenericChannel model
+				responseGenericChannelModel := new(assistantv1.ResponseGenericChannel)
+				Expect(responseGenericChannelModel).ToNot(BeNil())
+				responseGenericChannelModel.Channel = core.StringPtr("chat")
+				Expect(responseGenericChannelModel.Channel).To(Equal(core.StringPtr("chat")))
+
 				// Construct an instance of the DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill model
 				dialogNodeOutputGenericModel := new(assistantv1.DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill)
 				Expect(dialogNodeOutputGenericModel).ToNot(BeNil())
@@ -13200,11 +15523,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
 				dialogNodeOutputModifiersModel := new(assistantv1.DialogNodeOutputModifiers)
@@ -13481,6 +15806,13 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
+			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer successfully`, func() {
+				responseType := "channel_transfer"
+				messageToUser := "testString"
+				var transferInfo *assistantv1.ChannelTransferInfo = nil
+				_, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer(responseType, messageToUser, transferInfo)
+				Expect(err).ToNot(BeNil())
+			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent successfully`, func() {
 				responseType := "connect_to_agent"
 				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType)
@@ -13523,6 +15855,20 @@ var _ = Describe(`AssistantV1`, func() {
 				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType, values)
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
+			})
+			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined successfully`, func() {
+				responseType := "user_defined"
+				userDefined := make(map[string]interface{})
+				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType, userDefined)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
+			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer successfully`, func() {
+				responseType := "channel_transfer"
+				messageToUser := "testString"
+				var transferInfo *assistantv1.ChannelTransferInfo = nil
+				_, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(responseType, messageToUser, transferInfo)
+				Expect(err).ToNot(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent successfully`, func() {
 				responseType := "connect_to_agent"
@@ -13567,6 +15913,13 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
+			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeUserDefined successfully`, func() {
+				responseType := "user_defined"
+				userDefined := make(map[string]interface{})
+				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType, userDefined)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
+			})
 		})
 	})
 	Describe(`Utility function tests`, func() {
@@ -13583,11 +15936,11 @@ var _ = Describe(`AssistantV1`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -13612,13 +15965,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
