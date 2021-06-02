@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -166,7 +166,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 	})
 	Describe(`ListVoices(listVoicesOptions *ListVoicesOptions) - Operation response error`, func() {
 		listVoicesPath := "/v1/voices"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -208,13 +208,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListVoices(listVoicesOptions *ListVoicesOptions)`, func() {
 		listVoicesPath := "/v1/voices"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -223,12 +220,65 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"voices": [{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}}]}`)
+					fmt.Fprintf(res, "%s", `{"voices": [{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}}]}`)
+				}))
+			})
+			It(`Invoke ListVoices successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListVoicesOptions model
+				listVoicesOptionsModel := new(texttospeechv1.ListVoicesOptions)
+				listVoicesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.ListVoicesWithContext(ctx, listVoicesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.ListVoices(listVoicesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.ListVoicesWithContext(ctx, listVoicesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listVoicesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"voices": [{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}}]}`)
 				}))
 			})
 			It(`Invoke ListVoices successfully`, func() {
@@ -238,7 +288,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.ListVoices(nil)
@@ -256,30 +305,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListVoicesWithContext(ctx, listVoicesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.ListVoices(listVoicesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListVoicesWithContext(ctx, listVoicesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListVoices with error: Operation request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -305,10 +330,43 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListVoices successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListVoicesOptions model
+				listVoicesOptionsModel := new(texttospeechv1.ListVoicesOptions)
+				listVoicesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.ListVoices(listVoicesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetVoice(getVoiceOptions *GetVoiceOptions) - Operation response error`, func() {
 		getVoicePath := "/v1/voices/ar-AR_OmarVoice"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -317,7 +375,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getVoicePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -354,13 +411,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetVoice(getVoiceOptions *GetVoiceOptions)`, func() {
 		getVoicePath := "/v1/voices/ar-AR_OmarVoice"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -369,14 +423,69 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}}`)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}}`)
+				}))
+			})
+			It(`Invoke GetVoice successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetVoiceOptions model
+				getVoiceOptionsModel := new(texttospeechv1.GetVoiceOptions)
+				getVoiceOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				getVoiceOptionsModel.CustomizationID = core.StringPtr("testString")
+				getVoiceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetVoiceWithContext(ctx, getVoiceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetVoice(getVoiceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetVoiceWithContext(ctx, getVoiceOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getVoicePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"url": "URL", "gender": "Gender", "name": "Name", "language": "Language", "description": "Description", "customizable": true, "supported_features": {"custom_pronunciation": false, "voice_transformation": false}, "customization": {"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}}`)
 				}))
 			})
 			It(`Invoke GetVoice successfully`, func() {
@@ -386,7 +495,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.GetVoice(nil)
@@ -406,30 +514,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetVoiceWithContext(ctx, getVoiceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.GetVoice(getVoiceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetVoiceWithContext(ctx, getVoiceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetVoice with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -464,142 +548,46 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(textToSpeechService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeFalse())
-			textToSpeechService.DisableSSLVerification()
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "https://texttospeechv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
 			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+			It(`Invoke GetVoice successfully`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-					URL: "https://testService/api",
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
 				})
-				Expect(textToSpeechService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				err := textToSpeechService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+				// Construct an instance of the GetVoiceOptions model
+				getVoiceOptionsModel := new(texttospeechv1.GetVoiceOptions)
+				getVoiceOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				getVoiceOptionsModel.CustomizationID = core.StringPtr("testString")
+				getVoiceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetVoice(getVoiceOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = texttospeechv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`Synthesize(synthesizeOptions *SynthesizeOptions)`, func() {
 		synthesizePath := "/v1/synthesize"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -626,12 +614,87 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Header["Accept"]).ToNot(BeNil())
 					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/basic")))
 					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "audio/basic")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `This is a mock binary response.`)
+				}))
+			})
+			It(`Invoke Synthesize successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the SynthesizeOptions model
+				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
+				synthesizeOptionsModel.Text = core.StringPtr("testString")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
+				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
+				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.SynthesizeWithContext(ctx, synthesizeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.Synthesize(synthesizeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.SynthesizeWithContext(ctx, synthesizeOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(synthesizePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["Accept"]).ToNot(BeNil())
+					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/basic")))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
+					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "audio/basic")
 					res.WriteHeader(200)
@@ -645,7 +708,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.Synthesize(nil)
@@ -667,30 +729,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.SynthesizeWithContext(ctx, synthesizeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.Synthesize(synthesizeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.SynthesizeWithContext(ctx, synthesizeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Synthesize with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -727,138 +765,51 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(textToSpeechService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeFalse())
-			textToSpeechService.DisableSSLVerification()
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "https://texttospeechv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
 			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+			It(`Invoke Synthesize successfully`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-					URL: "https://testService/api",
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
 				})
-				Expect(textToSpeechService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				err := textToSpeechService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+				// Construct an instance of the SynthesizeOptions model
+				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
+				synthesizeOptionsModel.Text = core.StringPtr("testString")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
+				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
+				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.Synthesize(synthesizeOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify empty byte buffer.
+				Expect(result).ToNot(BeNil())
+				buffer, operationErr := ioutil.ReadAll(result)
+				Expect(operationErr).To(BeNil())
+				Expect(buffer).ToNot(BeNil())
+				Expect(len(buffer)).To(Equal(0))
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = texttospeechv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`GetPronunciation(getPronunciationOptions *GetPronunciationOptions) - Operation response error`, func() {
 		getPronunciationPath := "/v1/pronunciation"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -867,13 +818,9 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getPronunciationPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-
 					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
-
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -912,13 +859,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetPronunciation(getPronunciationOptions *GetPronunciationOptions)`, func() {
 		getPronunciationPath := "/v1/pronunciation"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -927,16 +871,73 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-
 					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
-
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"pronunciation": "Pronunciation"}`)
+				}))
+			})
+			It(`Invoke GetPronunciation successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetPronunciationOptions model
+				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
+				getPronunciationOptionsModel.Text = core.StringPtr("testString")
+				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
+				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetPronunciationWithContext(ctx, getPronunciationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetPronunciation(getPronunciationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetPronunciationWithContext(ctx, getPronunciationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getPronunciationPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
+					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
+					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -950,7 +951,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.GetPronunciation(nil)
@@ -972,30 +972,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetPronunciationWithContext(ctx, getPronunciationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.GetPronunciation(getPronunciationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetPronunciationWithContext(ctx, getPronunciationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetPronunciation with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -1032,138 +1008,47 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(textToSpeechService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeFalse())
-			textToSpeechService.DisableSSLVerification()
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "https://texttospeechv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
 			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+			It(`Invoke GetPronunciation successfully`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-					URL: "https://testService/api",
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
 				})
-				Expect(textToSpeechService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				err := textToSpeechService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+				// Construct an instance of the GetPronunciationOptions model
+				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
+				getPronunciationOptionsModel.Text = core.StringPtr("testString")
+				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
+				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetPronunciation(getPronunciationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = texttospeechv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`CreateCustomModel(createCustomModelOptions *CreateCustomModelOptions) - Operation response error`, func() {
 		createCustomModelPath := "/v1/customizations"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1208,13 +1093,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateCustomModel(createCustomModelOptions *CreateCustomModelOptions)`, func() {
 		createCustomModelPath := "/v1/customizations"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1239,12 +1121,84 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}`)
+					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
+				}))
+			})
+			It(`Invoke CreateCustomModel successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateCustomModelOptions model
+				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
+				createCustomModelOptionsModel.Name = core.StringPtr("testString")
+				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Description = core.StringPtr("testString")
+				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.CreateCustomModelWithContext(ctx, createCustomModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.CreateCustomModel(createCustomModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.CreateCustomModelWithContext(ctx, createCustomModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createCustomModelPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
 				}))
 			})
 			It(`Invoke CreateCustomModel successfully`, func() {
@@ -1254,7 +1208,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.CreateCustomModel(nil)
@@ -1275,30 +1228,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.CreateCustomModelWithContext(ctx, createCustomModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.CreateCustomModel(createCustomModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.CreateCustomModelWithContext(ctx, createCustomModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateCustomModel with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -1334,10 +1263,46 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateCustomModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the CreateCustomModelOptions model
+				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
+				createCustomModelOptionsModel.Name = core.StringPtr("testString")
+				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Description = core.StringPtr("testString")
+				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.CreateCustomModel(createCustomModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListCustomModels(listCustomModelsOptions *ListCustomModelsOptions) - Operation response error`, func() {
 		listCustomModelsPath := "/v1/customizations"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1346,7 +1311,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCustomModelsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["language"]).To(Equal([]string{"ar-MS"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1382,13 +1346,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListCustomModels(listCustomModelsOptions *ListCustomModelsOptions)`, func() {
 		listCustomModelsPath := "/v1/customizations"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1397,14 +1358,68 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["language"]).To(Equal([]string{"ar-MS"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"customizations": [{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"customizations": [{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}]}`)
+				}))
+			})
+			It(`Invoke ListCustomModels successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCustomModelsOptions model
+				listCustomModelsOptionsModel := new(texttospeechv1.ListCustomModelsOptions)
+				listCustomModelsOptionsModel.Language = core.StringPtr("ar-MS")
+				listCustomModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.ListCustomModelsWithContext(ctx, listCustomModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.ListCustomModels(listCustomModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.ListCustomModelsWithContext(ctx, listCustomModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCustomModelsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["language"]).To(Equal([]string{"ar-MS"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"customizations": [{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}]}`)
 				}))
 			})
 			It(`Invoke ListCustomModels successfully`, func() {
@@ -1414,7 +1429,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.ListCustomModels(nil)
@@ -1433,30 +1447,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListCustomModelsWithContext(ctx, listCustomModelsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.ListCustomModels(listCustomModelsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListCustomModelsWithContext(ctx, listCustomModelsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListCustomModels with error: Operation request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -1483,8 +1473,41 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCustomModels successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListCustomModelsOptions model
+				listCustomModelsOptionsModel := new(texttospeechv1.ListCustomModelsOptions)
+				listCustomModelsOptionsModel.Language = core.StringPtr("ar-MS")
+				listCustomModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.ListCustomModels(listCustomModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`UpdateCustomModel(updateCustomModelOptions *UpdateCustomModelOptions)`, func() {
 		updateCustomModelPath := "/v1/customizations/testString"
 		Context(`Using mock server endpoint`, func() {
@@ -1522,7 +1545,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.UpdateCustomModel(nil)
@@ -1544,12 +1566,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				updateCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.UpdateCustomModel(updateCustomModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.UpdateCustomModel(updateCustomModelOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1596,7 +1612,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 	})
 	Describe(`GetCustomModel(getCustomModelOptions *GetCustomModelOptions) - Operation response error`, func() {
 		getCustomModelPath := "/v1/customizations/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1639,13 +1655,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetCustomModel(getCustomModelOptions *GetCustomModelOptions)`, func() {
 		getCustomModelPath := "/v1/customizations/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1654,12 +1667,66 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}`)
+					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
+				}))
+			})
+			It(`Invoke GetCustomModel successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCustomModelOptions model
+				getCustomModelOptionsModel := new(texttospeechv1.GetCustomModelOptions)
+				getCustomModelOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetCustomModelWithContext(ctx, getCustomModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetCustomModel(getCustomModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetCustomModelWithContext(ctx, getCustomModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCustomModelPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"customization_id": "CustomizationID", "name": "Name", "language": "Language", "owner": "Owner", "created": "Created", "last_modified": "LastModified", "description": "Description", "words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}], "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
 				}))
 			})
 			It(`Invoke GetCustomModel successfully`, func() {
@@ -1669,7 +1736,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.GetCustomModel(nil)
@@ -1688,30 +1754,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetCustomModelWithContext(ctx, getCustomModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.GetCustomModel(getCustomModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetCustomModelWithContext(ctx, getCustomModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetCustomModel with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -1745,8 +1787,41 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCustomModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetCustomModelOptions model
+				getCustomModelOptionsModel := new(texttospeechv1.GetCustomModelOptions)
+				getCustomModelOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetCustomModel(getCustomModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteCustomModel(deleteCustomModelOptions *DeleteCustomModelOptions)`, func() {
 		deleteCustomModelPath := "/v1/customizations/testString"
 		Context(`Using mock server endpoint`, func() {
@@ -1768,7 +1843,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.DeleteCustomModel(nil)
@@ -1781,12 +1855,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				deleteCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.DeleteCustomModel(deleteCustomModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.DeleteCustomModel(deleteCustomModelOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1822,135 +1890,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(textToSpeechService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeFalse())
-			textToSpeechService.DisableSSLVerification()
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "https://texttospeechv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-					URL: "https://testService/api",
-				})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				err := textToSpeechService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = texttospeechv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`AddWords(addWordsOptions *AddWordsOptions)`, func() {
 		addWordsPath := "/v1/customizations/testString/words"
 		Context(`Using mock server endpoint`, func() {
@@ -1988,7 +1927,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.AddWords(nil)
@@ -2008,12 +1946,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				addWordsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.AddWords(addWordsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.AddWords(addWordsOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2058,7 +1990,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 	})
 	Describe(`ListWords(listWordsOptions *ListWordsOptions) - Operation response error`, func() {
 		listWordsPath := "/v1/customizations/testString/words"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2101,13 +2033,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListWords(listWordsOptions *ListWordsOptions)`, func() {
 		listWordsPath := "/v1/customizations/testString/words"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2116,7 +2045,61 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"words": [{"word": "Word", "translation": "Translation", "part_of_speech": "Dosi"}]}`)
+				}))
+			})
+			It(`Invoke ListWords successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListWordsOptions model
+				listWordsOptionsModel := new(texttospeechv1.ListWordsOptions)
+				listWordsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listWordsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.ListWordsWithContext(ctx, listWordsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.ListWords(listWordsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.ListWordsWithContext(ctx, listWordsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listWordsPath))
+					Expect(req.Method).To(Equal("GET"))
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -2131,7 +2114,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.ListWords(nil)
@@ -2150,30 +2132,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListWordsWithContext(ctx, listWordsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.ListWords(listWordsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.ListWordsWithContext(ctx, listWordsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListWords with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -2207,8 +2165,41 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListWords successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListWordsOptions model
+				listWordsOptionsModel := new(texttospeechv1.ListWordsOptions)
+				listWordsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listWordsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.ListWords(listWordsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`AddWord(addWordOptions *AddWordOptions)`, func() {
 		addWordPath := "/v1/customizations/testString/words/testString"
 		Context(`Using mock server endpoint`, func() {
@@ -2246,7 +2237,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.AddWord(nil)
@@ -2262,12 +2252,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				addWordOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.AddWord(addWordOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.AddWord(addWordOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2308,7 +2292,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 	})
 	Describe(`GetWord(getWordOptions *GetWordOptions) - Operation response error`, func() {
 		getWordPath := "/v1/customizations/testString/words/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2352,13 +2336,10 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetWord(getWordOptions *GetWordOptions)`, func() {
 		getWordPath := "/v1/customizations/testString/words/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2367,7 +2348,62 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"translation": "Translation", "part_of_speech": "Dosi"}`)
+				}))
+			})
+			It(`Invoke GetWord successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetWordOptions model
+				getWordOptionsModel := new(texttospeechv1.GetWordOptions)
+				getWordOptionsModel.CustomizationID = core.StringPtr("testString")
+				getWordOptionsModel.Word = core.StringPtr("testString")
+				getWordOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetWordWithContext(ctx, getWordOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetWord(getWordOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetWordWithContext(ctx, getWordOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getWordPath))
+					Expect(req.Method).To(Equal("GET"))
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -2382,7 +2418,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := textToSpeechService.GetWord(nil)
@@ -2402,30 +2437,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetWordWithContext(ctx, getWordOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
-				result, response, operationErr = textToSpeechService.GetWord(getWordOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = textToSpeechService.GetWordWithContext(ctx, getWordOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWord with error: Operation validation and request error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
@@ -2460,8 +2471,42 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetWord successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetWordOptions model
+				getWordOptionsModel := new(texttospeechv1.GetWordOptions)
+				getWordOptionsModel.CustomizationID = core.StringPtr("testString")
+				getWordOptionsModel.Word = core.StringPtr("testString")
+				getWordOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetWord(getWordOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteWord(deleteWordOptions *DeleteWordOptions)`, func() {
 		deleteWordPath := "/v1/customizations/testString/words/testString"
 		Context(`Using mock server endpoint`, func() {
@@ -2483,7 +2528,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.DeleteWord(nil)
@@ -2497,12 +2541,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				deleteWordOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.DeleteWord(deleteWordOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.DeleteWord(deleteWordOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2539,135 +2577,1489 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(textToSpeechService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeFalse())
-			textToSpeechService.DisableSSLVerification()
-			Expect(textToSpeechService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "https://texttospeechv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(textToSpeechService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "noauth",
-			}
+	Describe(`ListCustomPrompts(listCustomPromptsOptions *ListCustomPromptsOptions) - Operation response error`, func() {
+		listCustomPromptsPath := "/v1/customizations/testString/prompts"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				Expect(textToSpeechService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCustomPromptsPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
 			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+			It(`Invoke ListCustomPrompts with error: Operation response processing error`, func() {
 				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-					URL: "https://testService/api",
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
 				})
-				Expect(textToSpeechService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				Expect(textToSpeechService).ToNot(BeNil())
 
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+				// Construct an instance of the ListCustomPromptsOptions model
+				listCustomPromptsOptionsModel := new(texttospeechv1.ListCustomPromptsOptions)
+				listCustomPromptsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listCustomPromptsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
 			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-				err := textToSpeechService.SetServiceURL("https://testService/api")
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListCustomPrompts(listCustomPromptsOptions *ListCustomPromptsOptions)`, func() {
+		listCustomPromptsPath := "/v1/customizations/testString/prompts"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCustomPromptsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
+				}))
+			})
+			It(`Invoke ListCustomPrompts successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCustomPromptsOptions model
+				listCustomPromptsOptionsModel := new(texttospeechv1.ListCustomPromptsOptions)
+				listCustomPromptsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listCustomPromptsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.ListCustomPromptsWithContext(ctx, listCustomPromptsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.ListCustomPromptsWithContext(ctx, listCustomPromptsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCustomPromptsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}]}`)
+				}))
+			})
+			It(`Invoke ListCustomPrompts successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.ListCustomPrompts(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListCustomPromptsOptions model
+				listCustomPromptsOptionsModel := new(texttospeechv1.ListCustomPromptsOptions)
+				listCustomPromptsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listCustomPromptsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke ListCustomPrompts with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListCustomPromptsOptions model
+				listCustomPromptsOptionsModel := new(texttospeechv1.ListCustomPromptsOptions)
+				listCustomPromptsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listCustomPromptsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				Expect(textToSpeechService).ToNot(BeNil())
+				result, response, operationErr := textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ListCustomPromptsOptions model with no property values
+				listCustomPromptsOptionsModelNew := new(texttospeechv1.ListCustomPromptsOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCustomPrompts successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
 				Expect(serviceErr).To(BeNil())
-				Expect(textToSpeechService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				Expect(textToSpeechService).ToNot(BeNil())
 
-				clone := textToSpeechService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != textToSpeechService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(textToSpeechService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(textToSpeechService.Service.Options.Authenticator))
+				// Construct an instance of the ListCustomPromptsOptions model
+				listCustomPromptsOptionsModel := new(texttospeechv1.ListCustomPromptsOptions)
+				listCustomPromptsOptionsModel.CustomizationID = core.StringPtr("testString")
+				listCustomPromptsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.ListCustomPrompts(listCustomPromptsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_URL":       "https://texttospeechv1/api",
-				"TEXT_TO_SPEECH_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"TEXT_TO_SPEECH_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(textToSpeechService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = texttospeechv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
+	Describe(`AddCustomPrompt(addCustomPromptOptions *AddCustomPromptOptions) - Operation response error`, func() {
+		addCustomPromptPath := "/v1/customizations/testString/prompts/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(addCustomPromptPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke AddCustomPrompt with error: Operation response processing error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+
+				// Construct an instance of the AddCustomPromptOptions model
+				addCustomPromptOptionsModel := new(texttospeechv1.AddCustomPromptOptions)
+				addCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.Metadata = promptMetadataModel
+				addCustomPromptOptionsModel.File = CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
 		})
 	})
+	Describe(`AddCustomPrompt(addCustomPromptOptions *AddCustomPromptOptions)`, func() {
+		addCustomPromptPath := "/v1/customizations/testString/prompts/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(addCustomPromptPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke AddCustomPrompt successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+
+				// Construct an instance of the AddCustomPromptOptions model
+				addCustomPromptOptionsModel := new(texttospeechv1.AddCustomPromptOptions)
+				addCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.Metadata = promptMetadataModel
+				addCustomPromptOptionsModel.File = CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.AddCustomPromptWithContext(ctx, addCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.AddCustomPromptWithContext(ctx, addCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(addCustomPromptPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke AddCustomPrompt successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.AddCustomPrompt(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+
+				// Construct an instance of the AddCustomPromptOptions model
+				addCustomPromptOptionsModel := new(texttospeechv1.AddCustomPromptOptions)
+				addCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.Metadata = promptMetadataModel
+				addCustomPromptOptionsModel.File = CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke AddCustomPrompt with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+
+				// Construct an instance of the AddCustomPromptOptions model
+				addCustomPromptOptionsModel := new(texttospeechv1.AddCustomPromptOptions)
+				addCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.Metadata = promptMetadataModel
+				addCustomPromptOptionsModel.File = CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the AddCustomPromptOptions model with no property values
+				addCustomPromptOptionsModelNew := new(texttospeechv1.AddCustomPromptOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke AddCustomPrompt successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+
+				// Construct an instance of the AddCustomPromptOptions model
+				addCustomPromptOptionsModel := new(texttospeechv1.AddCustomPromptOptions)
+				addCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				addCustomPromptOptionsModel.Metadata = promptMetadataModel
+				addCustomPromptOptionsModel.File = CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.AddCustomPrompt(addCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetCustomPrompt(getCustomPromptOptions *GetCustomPromptOptions) - Operation response error`, func() {
+		getCustomPromptPath := "/v1/customizations/testString/prompts/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCustomPromptPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetCustomPrompt with error: Operation response processing error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetCustomPromptOptions model
+				getCustomPromptOptionsModel := new(texttospeechv1.GetCustomPromptOptions)
+				getCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetCustomPrompt(getCustomPromptOptions *GetCustomPromptOptions)`, func() {
+		getCustomPromptPath := "/v1/customizations/testString/prompts/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCustomPromptPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke GetCustomPrompt successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCustomPromptOptions model
+				getCustomPromptOptionsModel := new(texttospeechv1.GetCustomPromptOptions)
+				getCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetCustomPromptWithContext(ctx, getCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetCustomPromptWithContext(ctx, getCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCustomPromptPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error", "speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke GetCustomPrompt successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.GetCustomPrompt(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetCustomPromptOptions model
+				getCustomPromptOptionsModel := new(texttospeechv1.GetCustomPromptOptions)
+				getCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetCustomPrompt with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetCustomPromptOptions model
+				getCustomPromptOptionsModel := new(texttospeechv1.GetCustomPromptOptions)
+				getCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetCustomPromptOptions model with no property values
+				getCustomPromptOptionsModelNew := new(texttospeechv1.GetCustomPromptOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCustomPrompt successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetCustomPromptOptions model
+				getCustomPromptOptionsModel := new(texttospeechv1.GetCustomPromptOptions)
+				getCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				getCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetCustomPrompt(getCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`DeleteCustomPrompt(deleteCustomPromptOptions *DeleteCustomPromptOptions)`, func() {
+		deleteCustomPromptPath := "/v1/customizations/testString/prompts/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteCustomPromptPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					res.WriteHeader(204)
+				}))
+			})
+			It(`Invoke DeleteCustomPrompt successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				response, operationErr := textToSpeechService.DeleteCustomPrompt(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				// Construct an instance of the DeleteCustomPromptOptions model
+				deleteCustomPromptOptionsModel := new(texttospeechv1.DeleteCustomPromptOptions)
+				deleteCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				deleteCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				deleteCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				response, operationErr = textToSpeechService.DeleteCustomPrompt(deleteCustomPromptOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+			It(`Invoke DeleteCustomPrompt with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteCustomPromptOptions model
+				deleteCustomPromptOptionsModel := new(texttospeechv1.DeleteCustomPromptOptions)
+				deleteCustomPromptOptionsModel.CustomizationID = core.StringPtr("testString")
+				deleteCustomPromptOptionsModel.PromptID = core.StringPtr("testString")
+				deleteCustomPromptOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				response, operationErr := textToSpeechService.DeleteCustomPrompt(deleteCustomPromptOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				// Construct a second instance of the DeleteCustomPromptOptions model with no property values
+				deleteCustomPromptOptionsModelNew := new(texttospeechv1.DeleteCustomPromptOptions)
+				// Invoke operation with invalid model (negative test)
+				response, operationErr = textToSpeechService.DeleteCustomPrompt(deleteCustomPromptOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListSpeakerModels(listSpeakerModelsOptions *ListSpeakerModelsOptions) - Operation response error`, func() {
+		listSpeakerModelsPath := "/v1/speakers"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listSpeakerModelsPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListSpeakerModels with error: Operation response processing error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := new(texttospeechv1.ListSpeakerModelsOptions)
+				listSpeakerModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListSpeakerModels(listSpeakerModelsOptions *ListSpeakerModelsOptions)`, func() {
+		listSpeakerModelsPath := "/v1/speakers"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listSpeakerModelsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"speakers": [{"speaker_id": "SpeakerID", "name": "Name"}]}`)
+				}))
+			})
+			It(`Invoke ListSpeakerModels successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := new(texttospeechv1.ListSpeakerModelsOptions)
+				listSpeakerModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.ListSpeakerModelsWithContext(ctx, listSpeakerModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.ListSpeakerModelsWithContext(ctx, listSpeakerModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listSpeakerModelsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"speakers": [{"speaker_id": "SpeakerID", "name": "Name"}]}`)
+				}))
+			})
+			It(`Invoke ListSpeakerModels successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.ListSpeakerModels(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := new(texttospeechv1.ListSpeakerModelsOptions)
+				listSpeakerModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke ListSpeakerModels with error: Operation request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := new(texttospeechv1.ListSpeakerModelsOptions)
+				listSpeakerModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListSpeakerModels successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := new(texttospeechv1.ListSpeakerModelsOptions)
+				listSpeakerModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.ListSpeakerModels(listSpeakerModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`CreateSpeakerModel(createSpeakerModelOptions *CreateSpeakerModelOptions) - Operation response error`, func() {
+		createSpeakerModelPath := "/v1/speakers"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createSpeakerModelPath))
+					Expect(req.Method).To(Equal("POST"))
+					Expect(req.URL.Query()["speaker_name"]).To(Equal([]string{"testString"}))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke CreateSpeakerModel with error: Operation response processing error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the CreateSpeakerModelOptions model
+				createSpeakerModelOptionsModel := new(texttospeechv1.CreateSpeakerModelOptions)
+				createSpeakerModelOptionsModel.SpeakerName = core.StringPtr("testString")
+				createSpeakerModelOptionsModel.Audio = CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`CreateSpeakerModel(createSpeakerModelOptions *CreateSpeakerModelOptions)`, func() {
+		createSpeakerModelPath := "/v1/speakers"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createSpeakerModelPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["speaker_name"]).To(Equal([]string{"testString"}))
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke CreateSpeakerModel successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateSpeakerModelOptions model
+				createSpeakerModelOptionsModel := new(texttospeechv1.CreateSpeakerModelOptions)
+				createSpeakerModelOptionsModel.SpeakerName = core.StringPtr("testString")
+				createSpeakerModelOptionsModel.Audio = CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.CreateSpeakerModelWithContext(ctx, createSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.CreateSpeakerModelWithContext(ctx, createSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createSpeakerModelPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["speaker_name"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"speaker_id": "SpeakerID"}`)
+				}))
+			})
+			It(`Invoke CreateSpeakerModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.CreateSpeakerModel(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the CreateSpeakerModelOptions model
+				createSpeakerModelOptionsModel := new(texttospeechv1.CreateSpeakerModelOptions)
+				createSpeakerModelOptionsModel.SpeakerName = core.StringPtr("testString")
+				createSpeakerModelOptionsModel.Audio = CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke CreateSpeakerModel with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the CreateSpeakerModelOptions model
+				createSpeakerModelOptionsModel := new(texttospeechv1.CreateSpeakerModelOptions)
+				createSpeakerModelOptionsModel.SpeakerName = core.StringPtr("testString")
+				createSpeakerModelOptionsModel.Audio = CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the CreateSpeakerModelOptions model with no property values
+				createSpeakerModelOptionsModelNew := new(texttospeechv1.CreateSpeakerModelOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateSpeakerModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the CreateSpeakerModelOptions model
+				createSpeakerModelOptionsModel := new(texttospeechv1.CreateSpeakerModelOptions)
+				createSpeakerModelOptionsModel.SpeakerName = core.StringPtr("testString")
+				createSpeakerModelOptionsModel.Audio = CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.CreateSpeakerModel(createSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetSpeakerModel(getSpeakerModelOptions *GetSpeakerModelOptions) - Operation response error`, func() {
+		getSpeakerModelPath := "/v1/speakers/testString"
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getSpeakerModelPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetSpeakerModel with error: Operation response processing error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetSpeakerModelOptions model
+				getSpeakerModelOptionsModel := new(texttospeechv1.GetSpeakerModelOptions)
+				getSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				getSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+
+				// Enable retries and test again
+				textToSpeechService.EnableRetries(0, 0)
+				result, response, operationErr = textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetSpeakerModel(getSpeakerModelOptions *GetSpeakerModelOptions)`, func() {
+		getSpeakerModelPath := "/v1/speakers/testString"
+		Context(`Using mock server endpoint with timeout`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getSpeakerModelPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Sleep a short time to support a timeout test
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"customizations": [{"customization_id": "CustomizationID", "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error"}]}]}`)
+				}))
+			})
+			It(`Invoke GetSpeakerModel successfully with retries`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+				textToSpeechService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetSpeakerModelOptions model
+				getSpeakerModelOptionsModel := new(texttospeechv1.GetSpeakerModelOptions)
+				getSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				getSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := textToSpeechService.GetSpeakerModelWithContext(ctx, getSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				textToSpeechService.DisableRetries()
+				result, response, operationErr := textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = textToSpeechService.GetSpeakerModelWithContext(ctx, getSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getSpeakerModelPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"customizations": [{"customization_id": "CustomizationID", "prompts": [{"prompt": "Prompt", "prompt_id": "PromptID", "status": "Status", "error": "Error"}]}]}`)
+				}))
+			})
+			It(`Invoke GetSpeakerModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := textToSpeechService.GetSpeakerModel(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetSpeakerModelOptions model
+				getSpeakerModelOptionsModel := new(texttospeechv1.GetSpeakerModelOptions)
+				getSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				getSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+			})
+			It(`Invoke GetSpeakerModel with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetSpeakerModelOptions model
+				getSpeakerModelOptionsModel := new(texttospeechv1.GetSpeakerModelOptions)
+				getSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				getSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetSpeakerModelOptions model with no property values
+				getSpeakerModelOptionsModelNew := new(texttospeechv1.GetSpeakerModelOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetSpeakerModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the GetSpeakerModelOptions model
+				getSpeakerModelOptionsModel := new(texttospeechv1.GetSpeakerModelOptions)
+				getSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				getSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := textToSpeechService.GetSpeakerModel(getSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`DeleteSpeakerModel(deleteSpeakerModelOptions *DeleteSpeakerModelOptions)`, func() {
+		deleteSpeakerModelPath := "/v1/speakers/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteSpeakerModelPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					res.WriteHeader(204)
+				}))
+			})
+			It(`Invoke DeleteSpeakerModel successfully`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				response, operationErr := textToSpeechService.DeleteSpeakerModel(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				// Construct an instance of the DeleteSpeakerModelOptions model
+				deleteSpeakerModelOptionsModel := new(texttospeechv1.DeleteSpeakerModelOptions)
+				deleteSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				deleteSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				response, operationErr = textToSpeechService.DeleteSpeakerModel(deleteSpeakerModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+			It(`Invoke DeleteSpeakerModel with error: Operation validation and request error`, func() {
+				textToSpeechService, serviceErr := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(textToSpeechService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteSpeakerModelOptions model
+				deleteSpeakerModelOptionsModel := new(texttospeechv1.DeleteSpeakerModelOptions)
+				deleteSpeakerModelOptionsModel.SpeakerID = core.StringPtr("testString")
+				deleteSpeakerModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := textToSpeechService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				response, operationErr := textToSpeechService.DeleteSpeakerModel(deleteSpeakerModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				// Construct a second instance of the DeleteSpeakerModelOptions model with no property values
+				deleteSpeakerModelOptionsModelNew := new(texttospeechv1.DeleteSpeakerModelOptions)
+				// Invoke operation with invalid model (negative test)
+				response, operationErr = textToSpeechService.DeleteSpeakerModel(deleteSpeakerModelOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		deleteUserDataPath := "/v1/user_data"
 		Context(`Using mock server endpoint`, func() {
@@ -2680,7 +4072,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["customer_id"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -2691,7 +4082,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(textToSpeechService).ToNot(BeNil())
-				textToSpeechService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := textToSpeechService.DeleteUserData(nil)
@@ -2704,12 +4094,6 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				deleteUserDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = textToSpeechService.DeleteUserData(deleteUserDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				textToSpeechService.DisableRetries()
 				response, operationErr = textToSpeechService.DeleteUserData(deleteUserDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2750,6 +4134,33 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			textToSpeechService, _ := texttospeechv1.NewTextToSpeechV1(&texttospeechv1.TextToSpeechV1Options{
 				URL:           "http://texttospeechv1modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			It(`Invoke NewAddCustomPromptOptions successfully`, func() {
+				// Construct an instance of the PromptMetadata model
+				promptMetadataModel := new(texttospeechv1.PromptMetadata)
+				Expect(promptMetadataModel).ToNot(BeNil())
+				promptMetadataModel.PromptText = core.StringPtr("testString")
+				promptMetadataModel.SpeakerID = core.StringPtr("testString")
+				Expect(promptMetadataModel.PromptText).To(Equal(core.StringPtr("testString")))
+				Expect(promptMetadataModel.SpeakerID).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the AddCustomPromptOptions model
+				customizationID := "testString"
+				promptID := "testString"
+				var metadata *texttospeechv1.PromptMetadata = nil
+				file := CreateMockReader("This is a mock file.")
+				addCustomPromptOptionsModel := textToSpeechService.NewAddCustomPromptOptions(customizationID, promptID, metadata, file)
+				addCustomPromptOptionsModel.SetCustomizationID("testString")
+				addCustomPromptOptionsModel.SetPromptID("testString")
+				addCustomPromptOptionsModel.SetMetadata(promptMetadataModel)
+				addCustomPromptOptionsModel.SetFile(CreateMockReader("This is a mock file."))
+				addCustomPromptOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(addCustomPromptOptionsModel).ToNot(BeNil())
+				Expect(addCustomPromptOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
+				Expect(addCustomPromptOptionsModel.PromptID).To(Equal(core.StringPtr("testString")))
+				Expect(addCustomPromptOptionsModel.Metadata).To(Equal(promptMetadataModel))
+				Expect(addCustomPromptOptionsModel.File).To(Equal(CreateMockReader("This is a mock file.")))
+				Expect(addCustomPromptOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewAddWordOptions successfully`, func() {
 				// Construct an instance of the AddWordOptions model
@@ -2806,6 +4217,19 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(createCustomModelOptionsModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(createCustomModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewCreateSpeakerModelOptions successfully`, func() {
+				// Construct an instance of the CreateSpeakerModelOptions model
+				speakerName := "testString"
+				audio := CreateMockReader("This is a mock file.")
+				createSpeakerModelOptionsModel := textToSpeechService.NewCreateSpeakerModelOptions(speakerName, audio)
+				createSpeakerModelOptionsModel.SetSpeakerName("testString")
+				createSpeakerModelOptionsModel.SetAudio(CreateMockReader("This is a mock file."))
+				createSpeakerModelOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createSpeakerModelOptionsModel).ToNot(BeNil())
+				Expect(createSpeakerModelOptionsModel.SpeakerName).To(Equal(core.StringPtr("testString")))
+				Expect(createSpeakerModelOptionsModel.Audio).To(Equal(CreateMockReader("This is a mock file.")))
+				Expect(createSpeakerModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewDeleteCustomModelOptions successfully`, func() {
 				// Construct an instance of the DeleteCustomModelOptions model
 				customizationID := "testString"
@@ -2815,6 +4239,29 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(deleteCustomModelOptionsModel).ToNot(BeNil())
 				Expect(deleteCustomModelOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteCustomModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewDeleteCustomPromptOptions successfully`, func() {
+				// Construct an instance of the DeleteCustomPromptOptions model
+				customizationID := "testString"
+				promptID := "testString"
+				deleteCustomPromptOptionsModel := textToSpeechService.NewDeleteCustomPromptOptions(customizationID, promptID)
+				deleteCustomPromptOptionsModel.SetCustomizationID("testString")
+				deleteCustomPromptOptionsModel.SetPromptID("testString")
+				deleteCustomPromptOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteCustomPromptOptionsModel).ToNot(BeNil())
+				Expect(deleteCustomPromptOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteCustomPromptOptionsModel.PromptID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteCustomPromptOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewDeleteSpeakerModelOptions successfully`, func() {
+				// Construct an instance of the DeleteSpeakerModelOptions model
+				speakerID := "testString"
+				deleteSpeakerModelOptionsModel := textToSpeechService.NewDeleteSpeakerModelOptions(speakerID)
+				deleteSpeakerModelOptionsModel.SetSpeakerID("testString")
+				deleteSpeakerModelOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteSpeakerModelOptionsModel).ToNot(BeNil())
+				Expect(deleteSpeakerModelOptionsModel.SpeakerID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteSpeakerModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeleteUserDataOptions successfully`, func() {
 				// Construct an instance of the DeleteUserDataOptions model
@@ -2849,6 +4296,19 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(getCustomModelOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(getCustomModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewGetCustomPromptOptions successfully`, func() {
+				// Construct an instance of the GetCustomPromptOptions model
+				customizationID := "testString"
+				promptID := "testString"
+				getCustomPromptOptionsModel := textToSpeechService.NewGetCustomPromptOptions(customizationID, promptID)
+				getCustomPromptOptionsModel.SetCustomizationID("testString")
+				getCustomPromptOptionsModel.SetPromptID("testString")
+				getCustomPromptOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getCustomPromptOptionsModel).ToNot(BeNil())
+				Expect(getCustomPromptOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
+				Expect(getCustomPromptOptionsModel.PromptID).To(Equal(core.StringPtr("testString")))
+				Expect(getCustomPromptOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewGetPronunciationOptions successfully`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				text := "testString"
@@ -2864,6 +4324,16 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(getPronunciationOptionsModel.Format).To(Equal(core.StringPtr("ibm")))
 				Expect(getPronunciationOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(getPronunciationOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetSpeakerModelOptions successfully`, func() {
+				// Construct an instance of the GetSpeakerModelOptions model
+				speakerID := "testString"
+				getSpeakerModelOptionsModel := textToSpeechService.NewGetSpeakerModelOptions(speakerID)
+				getSpeakerModelOptionsModel.SetSpeakerID("testString")
+				getSpeakerModelOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getSpeakerModelOptionsModel).ToNot(BeNil())
+				Expect(getSpeakerModelOptionsModel.SpeakerID).To(Equal(core.StringPtr("testString")))
+				Expect(getSpeakerModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetVoiceOptions successfully`, func() {
 				// Construct an instance of the GetVoiceOptions model
@@ -2899,6 +4369,23 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(listCustomModelsOptionsModel.Language).To(Equal(core.StringPtr("ar-MS")))
 				Expect(listCustomModelsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewListCustomPromptsOptions successfully`, func() {
+				// Construct an instance of the ListCustomPromptsOptions model
+				customizationID := "testString"
+				listCustomPromptsOptionsModel := textToSpeechService.NewListCustomPromptsOptions(customizationID)
+				listCustomPromptsOptionsModel.SetCustomizationID("testString")
+				listCustomPromptsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listCustomPromptsOptionsModel).ToNot(BeNil())
+				Expect(listCustomPromptsOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
+				Expect(listCustomPromptsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewListSpeakerModelsOptions successfully`, func() {
+				// Construct an instance of the ListSpeakerModelsOptions model
+				listSpeakerModelsOptionsModel := textToSpeechService.NewListSpeakerModelsOptions()
+				listSpeakerModelsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listSpeakerModelsOptionsModel).ToNot(BeNil())
+				Expect(listSpeakerModelsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewListVoicesOptions successfully`, func() {
 				// Construct an instance of the ListVoicesOptions model
 				listVoicesOptionsModel := textToSpeechService.NewListVoicesOptions()
@@ -2915,6 +4402,12 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				Expect(listWordsOptionsModel).ToNot(BeNil())
 				Expect(listWordsOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(listWordsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewPromptMetadata successfully`, func() {
+				promptText := "testString"
+				model, err := textToSpeechService.NewPromptMetadata(promptText)
+				Expect(model).ToNot(BeNil())
+				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSynthesizeOptions successfully`, func() {
 				// Construct an instance of the SynthesizeOptions model
@@ -2993,11 +4486,11 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -3022,13 +4515,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
