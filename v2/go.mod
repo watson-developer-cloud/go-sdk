@@ -3,8 +3,8 @@ module github.com/watson-developer-cloud/go-sdk/v2
 go 1.12
 
 require (
-	github.com/IBM/go-sdk-core/v4 v4.9.0
-	github.com/go-openapi/strfmt v0.19.10
+	github.com/IBM/go-sdk-core/v5 v5.5.0
+	github.com/go-openapi/strfmt v0.20.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/joho/godotenv v1.3.0
 	github.com/onsi/ginkgo v1.14.2
