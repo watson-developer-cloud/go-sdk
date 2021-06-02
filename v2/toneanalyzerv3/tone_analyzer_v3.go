@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
@@ -30,7 +30,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
@@ -260,11 +260,13 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneWithContext(ctx context.Context, toneOpt
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalToneAnalysis)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalToneAnalysis)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -342,11 +344,13 @@ func (toneAnalyzer *ToneAnalyzerV3) ToneChatWithContext(ctx context.Context, ton
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalUtteranceAnalyses)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalUtteranceAnalyses)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -508,7 +512,7 @@ func UnmarshalToneCategory(m map[string]json.RawMessage, result interface{}) (er
 // ToneChatOptions : The ToneChat options.
 type ToneChatOptions struct {
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
-	Utterances []Utterance `json:"utterances" validate:"required"`
+	Utterances []Utterance `validate:"required"`
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not
@@ -516,12 +520,12 @@ type ToneChatOptions struct {
 	// **Accept-Language**.
 	// * **`2017-09-21`:** Accepts `en` or `fr`.
 	// * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage *string `json:"Content-Language,omitempty"`
+	ContentLanguage *string
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 	// **Accept-Language**.
-	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+	AcceptLanguage *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -664,19 +668,19 @@ func UnmarshalToneInput(m map[string]json.RawMessage, result interface{}) (err e
 type ToneOptions struct {
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
-	ToneInput *ToneInput `json:"tone_input,omitempty"`
+	ToneInput *ToneInput
 
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
-	Body *string `json:"body,omitempty"`
+	Body *string
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
 	// 'text/plain;charset=utf-8'.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.
-	Sentences *bool `json:"sentences,omitempty"`
+	Sentences *bool
 
 	// **`2017-09-21`:** Deprecated. The service continues to accept the parameter for backward-compatibility, but the
 	// parameter no longer affects the response.
@@ -684,7 +688,7 @@ type ToneOptions struct {
 	// **`2016-05-19`:** A comma-separated list of tones for which the service is to return its analysis of the input; the
 	// indicated tones apply both to the full document and to individual sentences of the document. You can specify one or
 	// more of the valid values. Omit the parameter to request results for all three tones.
-	Tones []string `json:"tones,omitempty"`
+	Tones []string
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not
@@ -692,12 +696,12 @@ type ToneOptions struct {
 	// **Accept-Language**.
 	// * **`2017-09-21`:** Accepts `en` or `fr`.
 	// * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage *string `json:"Content-Language,omitempty"`
+	ContentLanguage *string
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 	// **Accept-Language**.
-	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+	AcceptLanguage *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

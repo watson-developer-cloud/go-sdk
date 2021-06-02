@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions) - Operation response error`, func() {
 		version := "testString"
 		createEnvironmentPath := "/v1/environments"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -194,7 +194,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createEnvironmentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -233,14 +232,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateEnvironment(createEnvironmentOptions *CreateEnvironmentOptions)`, func() {
 		version := "testString"
 		createEnvironmentPath := "/v1/environments"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -265,14 +261,87 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+				}))
+			})
+			It(`Invoke CreateEnvironment successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateEnvironmentOptions model
+				createEnvironmentOptionsModel := new(discoveryv1.CreateEnvironmentOptions)
+				createEnvironmentOptionsModel.Name = core.StringPtr("testString")
+				createEnvironmentOptionsModel.Description = core.StringPtr("testString")
+				createEnvironmentOptionsModel.Size = core.StringPtr("LT")
+				createEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateEnvironmentWithContext(ctx, createEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateEnvironment(createEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateEnvironmentWithContext(ctx, createEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createEnvironmentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
 				}))
 			})
 			It(`Invoke CreateEnvironment successfully`, func() {
@@ -283,7 +352,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateEnvironment(nil)
@@ -304,30 +372,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateEnvironmentWithContext(ctx, createEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateEnvironment(createEnvironmentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateEnvironmentWithContext(ctx, createEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateEnvironment with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -364,11 +408,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateEnvironment successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CreateEnvironmentOptions model
+				createEnvironmentOptionsModel := new(discoveryv1.CreateEnvironmentOptions)
+				createEnvironmentOptionsModel.Name = core.StringPtr("testString")
+				createEnvironmentOptionsModel.Description = core.StringPtr("testString")
+				createEnvironmentOptionsModel.Size = core.StringPtr("LT")
+				createEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateEnvironment(createEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions) - Operation response error`, func() {
 		version := "testString"
 		listEnvironmentsPath := "/v1/environments"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -377,9 +458,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listEnvironmentsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -416,14 +495,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListEnvironments(listEnvironmentsOptions *ListEnvironmentsOptions)`, func() {
 		version := "testString"
 		listEnvironmentsPath := "/v1/environments"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -432,16 +508,71 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"environments": [{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}]}`)
+					fmt.Fprintf(res, "%s", `{"environments": [{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}]}`)
+				}))
+			})
+			It(`Invoke ListEnvironments successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListEnvironmentsOptions model
+				listEnvironmentsOptionsModel := new(discoveryv1.ListEnvironmentsOptions)
+				listEnvironmentsOptionsModel.Name = core.StringPtr("testString")
+				listEnvironmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListEnvironmentsWithContext(ctx, listEnvironmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListEnvironments(listEnvironmentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListEnvironmentsWithContext(ctx, listEnvironmentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listEnvironmentsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"environments": [{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}]}`)
 				}))
 			})
 			It(`Invoke ListEnvironments successfully`, func() {
@@ -452,7 +583,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListEnvironments(nil)
@@ -471,30 +601,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListEnvironmentsWithContext(ctx, listEnvironmentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListEnvironments(listEnvironmentsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListEnvironmentsWithContext(ctx, listEnvironmentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListEnvironments with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -522,11 +628,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListEnvironments successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListEnvironmentsOptions model
+				listEnvironmentsOptionsModel := new(discoveryv1.ListEnvironmentsOptions)
+				listEnvironmentsOptionsModel.Name = core.StringPtr("testString")
+				listEnvironmentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListEnvironments(listEnvironmentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions) - Operation response error`, func() {
 		version := "testString"
 		getEnvironmentPath := "/v1/environments/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -535,7 +676,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getEnvironmentPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -572,14 +712,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetEnvironment(getEnvironmentOptions *GetEnvironmentOptions)`, func() {
 		version := "testString"
 		getEnvironmentPath := "/v1/environments/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -588,14 +725,69 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+				}))
+			})
+			It(`Invoke GetEnvironment successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetEnvironmentOptions model
+				getEnvironmentOptionsModel := new(discoveryv1.GetEnvironmentOptions)
+				getEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetEnvironmentWithContext(ctx, getEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetEnvironment(getEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetEnvironmentWithContext(ctx, getEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getEnvironmentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
 				}))
 			})
 			It(`Invoke GetEnvironment successfully`, func() {
@@ -606,7 +798,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetEnvironment(nil)
@@ -625,30 +816,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetEnvironmentWithContext(ctx, getEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetEnvironment(getEnvironmentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetEnvironmentWithContext(ctx, getEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetEnvironment with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -683,11 +850,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetEnvironment successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetEnvironmentOptions model
+				getEnvironmentOptionsModel := new(discoveryv1.GetEnvironmentOptions)
+				getEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetEnvironment(getEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions) - Operation response error`, func() {
 		version := "testString"
 		updateEnvironmentPath := "/v1/environments/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -696,7 +898,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateEnvironmentPath))
 					Expect(req.Method).To(Equal("PUT"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -736,14 +937,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateEnvironment(updateEnvironmentOptions *UpdateEnvironmentOptions)`, func() {
 		version := "testString"
 		updateEnvironmentPath := "/v1/environments/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -768,14 +966,88 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
+				}))
+			})
+			It(`Invoke UpdateEnvironment successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateEnvironmentOptions model
+				updateEnvironmentOptionsModel := new(discoveryv1.UpdateEnvironmentOptions)
+				updateEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Name = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Description = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Size = core.StringPtr("S")
+				updateEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateEnvironmentWithContext(ctx, updateEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateEnvironment(updateEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateEnvironmentWithContext(ctx, updateEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateEnvironmentPath))
+					Expect(req.Method).To(Equal("PUT"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "read_only": true, "size": "LT", "requested_size": "RequestedSize", "index_capacity": {"documents": {"available": 9, "maximum_allowed": 14}, "disk_usage": {"used_bytes": 9, "maximum_allowed_bytes": 19}, "collections": {"available": 9, "maximum_allowed": 14}}, "search_status": {"scope": "Scope", "status": "NO_DATA", "status_description": "StatusDescription", "last_trained": "2019-01-01"}}`)
 				}))
 			})
 			It(`Invoke UpdateEnvironment successfully`, func() {
@@ -786,7 +1058,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateEnvironment(nil)
@@ -808,30 +1079,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateEnvironmentWithContext(ctx, updateEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateEnvironment(updateEnvironmentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateEnvironmentWithContext(ctx, updateEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateEnvironment with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -869,11 +1116,49 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateEnvironment successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateEnvironmentOptions model
+				updateEnvironmentOptionsModel := new(discoveryv1.UpdateEnvironmentOptions)
+				updateEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Name = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Description = core.StringPtr("testString")
+				updateEnvironmentOptionsModel.Size = core.StringPtr("S")
+				updateEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateEnvironment(updateEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteEnvironmentPath := "/v1/environments/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -882,7 +1167,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteEnvironmentPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -919,14 +1203,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteEnvironment(deleteEnvironmentOptions *DeleteEnvironmentOptions)`, func() {
 		version := "testString"
 		deleteEnvironmentPath := "/v1/environments/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -935,10 +1216,65 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "status": "deleted"}`)
+				}))
+			})
+			It(`Invoke DeleteEnvironment successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteEnvironmentOptions model
+				deleteEnvironmentOptionsModel := new(discoveryv1.DeleteEnvironmentOptions)
+				deleteEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteEnvironmentWithContext(ctx, deleteEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteEnvironment(deleteEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteEnvironmentWithContext(ctx, deleteEnvironmentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteEnvironmentPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -953,7 +1289,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteEnvironment(nil)
@@ -972,30 +1307,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteEnvironmentWithContext(ctx, deleteEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteEnvironment(deleteEnvironmentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteEnvironmentWithContext(ctx, deleteEnvironmentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteEnvironment with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -1030,11 +1341,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteEnvironment successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteEnvironmentOptions model
+				deleteEnvironmentOptionsModel := new(discoveryv1.DeleteEnvironmentOptions)
+				deleteEnvironmentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteEnvironmentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteEnvironment(deleteEnvironmentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListFields(listFieldsOptions *ListFieldsOptions) - Operation response error`, func() {
 		version := "testString"
 		listFieldsPath := "/v1/environments/testString/fields"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1043,7 +1389,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listFieldsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1081,14 +1426,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListFields(listFieldsOptions *ListFieldsOptions)`, func() {
 		version := "testString"
 		listFieldsPath := "/v1/environments/testString/fields"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1097,10 +1439,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"fields": [{"field": "Field", "type": "nested"}]}`)
+				}))
+			})
+			It(`Invoke ListFields successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListFieldsOptions model
+				listFieldsOptionsModel := new(discoveryv1.ListFieldsOptions)
+				listFieldsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listFieldsOptionsModel.CollectionIds = []string{"testString"}
+				listFieldsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListFieldsWithContext(ctx, listFieldsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListFields(listFieldsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListFieldsWithContext(ctx, listFieldsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listFieldsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1115,7 +1513,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListFields(nil)
@@ -1135,30 +1532,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListFieldsWithContext(ctx, listFieldsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListFields(listFieldsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListFieldsWithContext(ctx, listFieldsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListFields with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -1194,157 +1567,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListFields successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the ListFieldsOptions model
+				listFieldsOptionsModel := new(discoveryv1.ListFieldsOptions)
+				listFieldsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listFieldsOptionsModel.CollectionIds = []string{"testString"}
+				listFieldsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListFields(listFieldsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions) - Operation response error`, func() {
 		version := "testString"
 		createConfigurationPath := "/v1/environments/testString/configurations"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1353,7 +1616,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createConfigurationPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1582,14 +1844,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateConfiguration(createConfigurationOptions *CreateConfigurationOptions)`, func() {
 		version := "testString"
 		createConfigurationPath := "/v1/environments/testString/configurations"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1614,14 +1873,277 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+				}))
+			})
+			It(`Invoke CreateConfiguration successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the FontSetting model
+				fontSettingModel := new(discoveryv1.FontSetting)
+				fontSettingModel.Level = core.Int64Ptr(int64(38))
+				fontSettingModel.MinSize = core.Int64Ptr(int64(38))
+				fontSettingModel.MaxSize = core.Int64Ptr(int64(38))
+				fontSettingModel.Bold = core.BoolPtr(true)
+				fontSettingModel.Italic = core.BoolPtr(true)
+				fontSettingModel.Name = core.StringPtr("testString")
+
+				// Construct an instance of the PDFHeadingDetection model
+				pdfHeadingDetectionModel := new(discoveryv1.PDFHeadingDetection)
+				pdfHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+
+				// Construct an instance of the PDFSettings model
+				pdfSettingsModel := new(discoveryv1.PDFSettings)
+				pdfSettingsModel.Heading = pdfHeadingDetectionModel
+
+				// Construct an instance of the WordStyle model
+				wordStyleModel := new(discoveryv1.WordStyle)
+				wordStyleModel.Level = core.Int64Ptr(int64(38))
+				wordStyleModel.Names = []string{"testString"}
+
+				// Construct an instance of the WordHeadingDetection model
+				wordHeadingDetectionModel := new(discoveryv1.WordHeadingDetection)
+				wordHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+				wordHeadingDetectionModel.Styles = []discoveryv1.WordStyle{*wordStyleModel}
+
+				// Construct an instance of the WordSettings model
+				wordSettingsModel := new(discoveryv1.WordSettings)
+				wordSettingsModel.Heading = wordHeadingDetectionModel
+
+				// Construct an instance of the XPathPatterns model
+				xPathPatternsModel := new(discoveryv1.XPathPatterns)
+				xPathPatternsModel.Xpaths = []string{"testString"}
+
+				// Construct an instance of the HTMLSettings model
+				htmlSettingsModel := new(discoveryv1.HTMLSettings)
+				htmlSettingsModel.ExcludeTagsCompletely = []string{"testString"}
+				htmlSettingsModel.ExcludeTagsKeepContent = []string{"testString"}
+				htmlSettingsModel.KeepContent = xPathPatternsModel
+				htmlSettingsModel.ExcludeContent = xPathPatternsModel
+				htmlSettingsModel.KeepTagAttributes = []string{"testString"}
+				htmlSettingsModel.ExcludeTagAttributes = []string{"testString"}
+
+				// Construct an instance of the SegmentSettings model
+				segmentSettingsModel := new(discoveryv1.SegmentSettings)
+				segmentSettingsModel.Enabled = core.BoolPtr(true)
+				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.AnnotatedFields = []string{"testString"}
+
+				// Construct an instance of the NormalizationOperation model
+				normalizationOperationModel := new(discoveryv1.NormalizationOperation)
+				normalizationOperationModel.Operation = core.StringPtr("copy")
+				normalizationOperationModel.SourceField = core.StringPtr("testString")
+				normalizationOperationModel.DestinationField = core.StringPtr("testString")
+
+				// Construct an instance of the Conversions model
+				conversionsModel := new(discoveryv1.Conversions)
+				conversionsModel.PDF = pdfSettingsModel
+				conversionsModel.Word = wordSettingsModel
+				conversionsModel.HTML = htmlSettingsModel
+				conversionsModel.Segment = segmentSettingsModel
+				conversionsModel.JSONNormalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				conversionsModel.ImageTextRecognition = core.BoolPtr(true)
+
+				// Construct an instance of the NluEnrichmentKeywords model
+				nluEnrichmentKeywordsModel := new(discoveryv1.NluEnrichmentKeywords)
+				nluEnrichmentKeywordsModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentEntities model
+				nluEnrichmentEntitiesModel := new(discoveryv1.NluEnrichmentEntities)
+				nluEnrichmentEntitiesModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Limit = core.Int64Ptr(int64(38))
+				nluEnrichmentEntitiesModel.Mentions = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.MentionTypes = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.SentenceLocations = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentSentiment model
+				nluEnrichmentSentimentModel := new(discoveryv1.NluEnrichmentSentiment)
+				nluEnrichmentSentimentModel.Document = core.BoolPtr(true)
+				nluEnrichmentSentimentModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentEmotion model
+				nluEnrichmentEmotionModel := new(discoveryv1.NluEnrichmentEmotion)
+				nluEnrichmentEmotionModel.Document = core.BoolPtr(true)
+				nluEnrichmentEmotionModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentSemanticRoles model
+				nluEnrichmentSemanticRolesModel := new(discoveryv1.NluEnrichmentSemanticRoles)
+				nluEnrichmentSemanticRolesModel.Entities = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Keywords = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentRelations model
+				nluEnrichmentRelationsModel := new(discoveryv1.NluEnrichmentRelations)
+				nluEnrichmentRelationsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentConcepts model
+				nluEnrichmentConceptsModel := new(discoveryv1.NluEnrichmentConcepts)
+				nluEnrichmentConceptsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentFeatures model
+				nluEnrichmentFeaturesModel := new(discoveryv1.NluEnrichmentFeatures)
+				nluEnrichmentFeaturesModel.Keywords = nluEnrichmentKeywordsModel
+				nluEnrichmentFeaturesModel.Entities = nluEnrichmentEntitiesModel
+				nluEnrichmentFeaturesModel.Sentiment = nluEnrichmentSentimentModel
+				nluEnrichmentFeaturesModel.Emotion = nluEnrichmentEmotionModel
+				nluEnrichmentFeaturesModel.Categories = make(map[string]interface{})
+				nluEnrichmentFeaturesModel.SemanticRoles = nluEnrichmentSemanticRolesModel
+				nluEnrichmentFeaturesModel.Relations = nluEnrichmentRelationsModel
+				nluEnrichmentFeaturesModel.Concepts = nluEnrichmentConceptsModel
+
+				// Construct an instance of the EnrichmentOptions model
+				enrichmentOptionsModel := new(discoveryv1.EnrichmentOptions)
+				enrichmentOptionsModel.Features = nluEnrichmentFeaturesModel
+				enrichmentOptionsModel.Language = core.StringPtr("ar")
+				enrichmentOptionsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the Enrichment model
+				enrichmentModel := new(discoveryv1.Enrichment)
+				enrichmentModel.Description = core.StringPtr("testString")
+				enrichmentModel.DestinationField = core.StringPtr("testString")
+				enrichmentModel.SourceField = core.StringPtr("testString")
+				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Enrichment = core.StringPtr("testString")
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.Options = enrichmentOptionsModel
+
+				// Construct an instance of the SourceSchedule model
+				sourceScheduleModel := new(discoveryv1.SourceSchedule)
+				sourceScheduleModel.Enabled = core.BoolPtr(true)
+				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.Frequency = core.StringPtr("daily")
+
+				// Construct an instance of the SourceOptionsFolder model
+				sourceOptionsFolderModel := new(discoveryv1.SourceOptionsFolder)
+				sourceOptionsFolderModel.OwnerUserID = core.StringPtr("testString")
+				sourceOptionsFolderModel.FolderID = core.StringPtr("testString")
+				sourceOptionsFolderModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsObject model
+				sourceOptionsObjectModel := new(discoveryv1.SourceOptionsObject)
+				sourceOptionsObjectModel.Name = core.StringPtr("testString")
+				sourceOptionsObjectModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsSiteColl model
+				sourceOptionsSiteCollModel := new(discoveryv1.SourceOptionsSiteColl)
+				sourceOptionsSiteCollModel.SiteCollectionPath = core.StringPtr("testString")
+				sourceOptionsSiteCollModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsWebCrawl model
+				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
+				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
+				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
+
+				// Construct an instance of the SourceOptionsBuckets model
+				sourceOptionsBucketsModel := new(discoveryv1.SourceOptionsBuckets)
+				sourceOptionsBucketsModel.Name = core.StringPtr("testString")
+				sourceOptionsBucketsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptions model
+				sourceOptionsModel := new(discoveryv1.SourceOptions)
+				sourceOptionsModel.Folders = []discoveryv1.SourceOptionsFolder{*sourceOptionsFolderModel}
+				sourceOptionsModel.Objects = []discoveryv1.SourceOptionsObject{*sourceOptionsObjectModel}
+				sourceOptionsModel.SiteCollections = []discoveryv1.SourceOptionsSiteColl{*sourceOptionsSiteCollModel}
+				sourceOptionsModel.Urls = []discoveryv1.SourceOptionsWebCrawl{*sourceOptionsWebCrawlModel}
+				sourceOptionsModel.Buckets = []discoveryv1.SourceOptionsBuckets{*sourceOptionsBucketsModel}
+				sourceOptionsModel.CrawlAllBuckets = core.BoolPtr(true)
+
+				// Construct an instance of the Source model
+				sourceModel := new(discoveryv1.Source)
+				sourceModel.Type = core.StringPtr("box")
+				sourceModel.CredentialID = core.StringPtr("testString")
+				sourceModel.Schedule = sourceScheduleModel
+				sourceModel.Options = sourceOptionsModel
+
+				// Construct an instance of the CreateConfigurationOptions model
+				createConfigurationOptionsModel := new(discoveryv1.CreateConfigurationOptions)
+				createConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createConfigurationOptionsModel.Name = core.StringPtr("testString")
+				createConfigurationOptionsModel.Description = core.StringPtr("testString")
+				createConfigurationOptionsModel.Conversions = conversionsModel
+				createConfigurationOptionsModel.Enrichments = []discoveryv1.Enrichment{*enrichmentModel}
+				createConfigurationOptionsModel.Normalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				createConfigurationOptionsModel.Source = sourceModel
+				createConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateConfigurationWithContext(ctx, createConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateConfiguration(createConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateConfigurationWithContext(ctx, createConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createConfigurationPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke CreateConfiguration successfully`, func() {
@@ -1632,7 +2154,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateConfiguration(nil)
@@ -1843,30 +2364,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateConfigurationWithContext(ctx, createConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateConfiguration(createConfigurationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateConfigurationWithContext(ctx, createConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateConfiguration with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -2093,11 +2590,238 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateConfiguration successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the FontSetting model
+				fontSettingModel := new(discoveryv1.FontSetting)
+				fontSettingModel.Level = core.Int64Ptr(int64(38))
+				fontSettingModel.MinSize = core.Int64Ptr(int64(38))
+				fontSettingModel.MaxSize = core.Int64Ptr(int64(38))
+				fontSettingModel.Bold = core.BoolPtr(true)
+				fontSettingModel.Italic = core.BoolPtr(true)
+				fontSettingModel.Name = core.StringPtr("testString")
+
+				// Construct an instance of the PDFHeadingDetection model
+				pdfHeadingDetectionModel := new(discoveryv1.PDFHeadingDetection)
+				pdfHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+
+				// Construct an instance of the PDFSettings model
+				pdfSettingsModel := new(discoveryv1.PDFSettings)
+				pdfSettingsModel.Heading = pdfHeadingDetectionModel
+
+				// Construct an instance of the WordStyle model
+				wordStyleModel := new(discoveryv1.WordStyle)
+				wordStyleModel.Level = core.Int64Ptr(int64(38))
+				wordStyleModel.Names = []string{"testString"}
+
+				// Construct an instance of the WordHeadingDetection model
+				wordHeadingDetectionModel := new(discoveryv1.WordHeadingDetection)
+				wordHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+				wordHeadingDetectionModel.Styles = []discoveryv1.WordStyle{*wordStyleModel}
+
+				// Construct an instance of the WordSettings model
+				wordSettingsModel := new(discoveryv1.WordSettings)
+				wordSettingsModel.Heading = wordHeadingDetectionModel
+
+				// Construct an instance of the XPathPatterns model
+				xPathPatternsModel := new(discoveryv1.XPathPatterns)
+				xPathPatternsModel.Xpaths = []string{"testString"}
+
+				// Construct an instance of the HTMLSettings model
+				htmlSettingsModel := new(discoveryv1.HTMLSettings)
+				htmlSettingsModel.ExcludeTagsCompletely = []string{"testString"}
+				htmlSettingsModel.ExcludeTagsKeepContent = []string{"testString"}
+				htmlSettingsModel.KeepContent = xPathPatternsModel
+				htmlSettingsModel.ExcludeContent = xPathPatternsModel
+				htmlSettingsModel.KeepTagAttributes = []string{"testString"}
+				htmlSettingsModel.ExcludeTagAttributes = []string{"testString"}
+
+				// Construct an instance of the SegmentSettings model
+				segmentSettingsModel := new(discoveryv1.SegmentSettings)
+				segmentSettingsModel.Enabled = core.BoolPtr(true)
+				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.AnnotatedFields = []string{"testString"}
+
+				// Construct an instance of the NormalizationOperation model
+				normalizationOperationModel := new(discoveryv1.NormalizationOperation)
+				normalizationOperationModel.Operation = core.StringPtr("copy")
+				normalizationOperationModel.SourceField = core.StringPtr("testString")
+				normalizationOperationModel.DestinationField = core.StringPtr("testString")
+
+				// Construct an instance of the Conversions model
+				conversionsModel := new(discoveryv1.Conversions)
+				conversionsModel.PDF = pdfSettingsModel
+				conversionsModel.Word = wordSettingsModel
+				conversionsModel.HTML = htmlSettingsModel
+				conversionsModel.Segment = segmentSettingsModel
+				conversionsModel.JSONNormalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				conversionsModel.ImageTextRecognition = core.BoolPtr(true)
+
+				// Construct an instance of the NluEnrichmentKeywords model
+				nluEnrichmentKeywordsModel := new(discoveryv1.NluEnrichmentKeywords)
+				nluEnrichmentKeywordsModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentEntities model
+				nluEnrichmentEntitiesModel := new(discoveryv1.NluEnrichmentEntities)
+				nluEnrichmentEntitiesModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Limit = core.Int64Ptr(int64(38))
+				nluEnrichmentEntitiesModel.Mentions = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.MentionTypes = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.SentenceLocations = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentSentiment model
+				nluEnrichmentSentimentModel := new(discoveryv1.NluEnrichmentSentiment)
+				nluEnrichmentSentimentModel.Document = core.BoolPtr(true)
+				nluEnrichmentSentimentModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentEmotion model
+				nluEnrichmentEmotionModel := new(discoveryv1.NluEnrichmentEmotion)
+				nluEnrichmentEmotionModel.Document = core.BoolPtr(true)
+				nluEnrichmentEmotionModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentSemanticRoles model
+				nluEnrichmentSemanticRolesModel := new(discoveryv1.NluEnrichmentSemanticRoles)
+				nluEnrichmentSemanticRolesModel.Entities = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Keywords = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentRelations model
+				nluEnrichmentRelationsModel := new(discoveryv1.NluEnrichmentRelations)
+				nluEnrichmentRelationsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentConcepts model
+				nluEnrichmentConceptsModel := new(discoveryv1.NluEnrichmentConcepts)
+				nluEnrichmentConceptsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentFeatures model
+				nluEnrichmentFeaturesModel := new(discoveryv1.NluEnrichmentFeatures)
+				nluEnrichmentFeaturesModel.Keywords = nluEnrichmentKeywordsModel
+				nluEnrichmentFeaturesModel.Entities = nluEnrichmentEntitiesModel
+				nluEnrichmentFeaturesModel.Sentiment = nluEnrichmentSentimentModel
+				nluEnrichmentFeaturesModel.Emotion = nluEnrichmentEmotionModel
+				nluEnrichmentFeaturesModel.Categories = make(map[string]interface{})
+				nluEnrichmentFeaturesModel.SemanticRoles = nluEnrichmentSemanticRolesModel
+				nluEnrichmentFeaturesModel.Relations = nluEnrichmentRelationsModel
+				nluEnrichmentFeaturesModel.Concepts = nluEnrichmentConceptsModel
+
+				// Construct an instance of the EnrichmentOptions model
+				enrichmentOptionsModel := new(discoveryv1.EnrichmentOptions)
+				enrichmentOptionsModel.Features = nluEnrichmentFeaturesModel
+				enrichmentOptionsModel.Language = core.StringPtr("ar")
+				enrichmentOptionsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the Enrichment model
+				enrichmentModel := new(discoveryv1.Enrichment)
+				enrichmentModel.Description = core.StringPtr("testString")
+				enrichmentModel.DestinationField = core.StringPtr("testString")
+				enrichmentModel.SourceField = core.StringPtr("testString")
+				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Enrichment = core.StringPtr("testString")
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.Options = enrichmentOptionsModel
+
+				// Construct an instance of the SourceSchedule model
+				sourceScheduleModel := new(discoveryv1.SourceSchedule)
+				sourceScheduleModel.Enabled = core.BoolPtr(true)
+				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.Frequency = core.StringPtr("daily")
+
+				// Construct an instance of the SourceOptionsFolder model
+				sourceOptionsFolderModel := new(discoveryv1.SourceOptionsFolder)
+				sourceOptionsFolderModel.OwnerUserID = core.StringPtr("testString")
+				sourceOptionsFolderModel.FolderID = core.StringPtr("testString")
+				sourceOptionsFolderModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsObject model
+				sourceOptionsObjectModel := new(discoveryv1.SourceOptionsObject)
+				sourceOptionsObjectModel.Name = core.StringPtr("testString")
+				sourceOptionsObjectModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsSiteColl model
+				sourceOptionsSiteCollModel := new(discoveryv1.SourceOptionsSiteColl)
+				sourceOptionsSiteCollModel.SiteCollectionPath = core.StringPtr("testString")
+				sourceOptionsSiteCollModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsWebCrawl model
+				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
+				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
+				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
+
+				// Construct an instance of the SourceOptionsBuckets model
+				sourceOptionsBucketsModel := new(discoveryv1.SourceOptionsBuckets)
+				sourceOptionsBucketsModel.Name = core.StringPtr("testString")
+				sourceOptionsBucketsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptions model
+				sourceOptionsModel := new(discoveryv1.SourceOptions)
+				sourceOptionsModel.Folders = []discoveryv1.SourceOptionsFolder{*sourceOptionsFolderModel}
+				sourceOptionsModel.Objects = []discoveryv1.SourceOptionsObject{*sourceOptionsObjectModel}
+				sourceOptionsModel.SiteCollections = []discoveryv1.SourceOptionsSiteColl{*sourceOptionsSiteCollModel}
+				sourceOptionsModel.Urls = []discoveryv1.SourceOptionsWebCrawl{*sourceOptionsWebCrawlModel}
+				sourceOptionsModel.Buckets = []discoveryv1.SourceOptionsBuckets{*sourceOptionsBucketsModel}
+				sourceOptionsModel.CrawlAllBuckets = core.BoolPtr(true)
+
+				// Construct an instance of the Source model
+				sourceModel := new(discoveryv1.Source)
+				sourceModel.Type = core.StringPtr("box")
+				sourceModel.CredentialID = core.StringPtr("testString")
+				sourceModel.Schedule = sourceScheduleModel
+				sourceModel.Options = sourceOptionsModel
+
+				// Construct an instance of the CreateConfigurationOptions model
+				createConfigurationOptionsModel := new(discoveryv1.CreateConfigurationOptions)
+				createConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createConfigurationOptionsModel.Name = core.StringPtr("testString")
+				createConfigurationOptionsModel.Description = core.StringPtr("testString")
+				createConfigurationOptionsModel.Conversions = conversionsModel
+				createConfigurationOptionsModel.Enrichments = []discoveryv1.Enrichment{*enrichmentModel}
+				createConfigurationOptionsModel.Normalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				createConfigurationOptionsModel.Source = sourceModel
+				createConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateConfiguration(createConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions) - Operation response error`, func() {
 		version := "testString"
 		listConfigurationsPath := "/v1/environments/testString/configurations"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2106,9 +2830,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listConfigurationsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2146,14 +2868,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListConfigurations(listConfigurationsOptions *ListConfigurationsOptions)`, func() {
 		version := "testString"
 		listConfigurationsPath := "/v1/environments/testString/configurations"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2162,16 +2881,72 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
+					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
+				}))
+			})
+			It(`Invoke ListConfigurations successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListConfigurationsOptions model
+				listConfigurationsOptionsModel := new(discoveryv1.ListConfigurationsOptions)
+				listConfigurationsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listConfigurationsOptionsModel.Name = core.StringPtr("testString")
+				listConfigurationsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListConfigurationsWithContext(ctx, listConfigurationsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListConfigurations(listConfigurationsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListConfigurationsWithContext(ctx, listConfigurationsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listConfigurationsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
 				}))
 			})
 			It(`Invoke ListConfigurations successfully`, func() {
@@ -2182,7 +2957,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListConfigurations(nil)
@@ -2202,30 +2976,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListConfigurationsWithContext(ctx, listConfigurationsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListConfigurations(listConfigurationsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListConfigurationsWithContext(ctx, listConfigurationsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListConfigurations with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -2261,11 +3011,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListConfigurations successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListConfigurationsOptions model
+				listConfigurationsOptionsModel := new(discoveryv1.ListConfigurationsOptions)
+				listConfigurationsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listConfigurationsOptionsModel.Name = core.StringPtr("testString")
+				listConfigurationsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListConfigurations(listConfigurationsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetConfiguration(getConfigurationOptions *GetConfigurationOptions) - Operation response error`, func() {
 		version := "testString"
 		getConfigurationPath := "/v1/environments/testString/configurations/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2274,7 +3060,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getConfigurationPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2312,14 +3097,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetConfiguration(getConfigurationOptions *GetConfigurationOptions)`, func() {
 		version := "testString"
 		getConfigurationPath := "/v1/environments/testString/configurations/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2328,14 +3110,70 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+				}))
+			})
+			It(`Invoke GetConfiguration successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetConfigurationOptions model
+				getConfigurationOptionsModel := new(discoveryv1.GetConfigurationOptions)
+				getConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				getConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetConfigurationWithContext(ctx, getConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetConfiguration(getConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetConfigurationWithContext(ctx, getConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getConfigurationPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke GetConfiguration successfully`, func() {
@@ -2346,7 +3184,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetConfiguration(nil)
@@ -2366,30 +3203,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetConfigurationWithContext(ctx, getConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetConfiguration(getConfigurationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetConfigurationWithContext(ctx, getConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetConfiguration with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -2425,11 +3238,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetConfiguration successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetConfigurationOptions model
+				getConfigurationOptionsModel := new(discoveryv1.GetConfigurationOptions)
+				getConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				getConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetConfiguration(getConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions) - Operation response error`, func() {
 		version := "testString"
 		updateConfigurationPath := "/v1/environments/testString/configurations/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2438,7 +3287,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateConfigurationPath))
 					Expect(req.Method).To(Equal("PUT"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2668,14 +3516,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateConfiguration(updateConfigurationOptions *UpdateConfigurationOptions)`, func() {
 		version := "testString"
 		updateConfigurationPath := "/v1/environments/testString/configurations/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2700,14 +3545,278 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+				}))
+			})
+			It(`Invoke UpdateConfiguration successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the FontSetting model
+				fontSettingModel := new(discoveryv1.FontSetting)
+				fontSettingModel.Level = core.Int64Ptr(int64(38))
+				fontSettingModel.MinSize = core.Int64Ptr(int64(38))
+				fontSettingModel.MaxSize = core.Int64Ptr(int64(38))
+				fontSettingModel.Bold = core.BoolPtr(true)
+				fontSettingModel.Italic = core.BoolPtr(true)
+				fontSettingModel.Name = core.StringPtr("testString")
+
+				// Construct an instance of the PDFHeadingDetection model
+				pdfHeadingDetectionModel := new(discoveryv1.PDFHeadingDetection)
+				pdfHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+
+				// Construct an instance of the PDFSettings model
+				pdfSettingsModel := new(discoveryv1.PDFSettings)
+				pdfSettingsModel.Heading = pdfHeadingDetectionModel
+
+				// Construct an instance of the WordStyle model
+				wordStyleModel := new(discoveryv1.WordStyle)
+				wordStyleModel.Level = core.Int64Ptr(int64(38))
+				wordStyleModel.Names = []string{"testString"}
+
+				// Construct an instance of the WordHeadingDetection model
+				wordHeadingDetectionModel := new(discoveryv1.WordHeadingDetection)
+				wordHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+				wordHeadingDetectionModel.Styles = []discoveryv1.WordStyle{*wordStyleModel}
+
+				// Construct an instance of the WordSettings model
+				wordSettingsModel := new(discoveryv1.WordSettings)
+				wordSettingsModel.Heading = wordHeadingDetectionModel
+
+				// Construct an instance of the XPathPatterns model
+				xPathPatternsModel := new(discoveryv1.XPathPatterns)
+				xPathPatternsModel.Xpaths = []string{"testString"}
+
+				// Construct an instance of the HTMLSettings model
+				htmlSettingsModel := new(discoveryv1.HTMLSettings)
+				htmlSettingsModel.ExcludeTagsCompletely = []string{"testString"}
+				htmlSettingsModel.ExcludeTagsKeepContent = []string{"testString"}
+				htmlSettingsModel.KeepContent = xPathPatternsModel
+				htmlSettingsModel.ExcludeContent = xPathPatternsModel
+				htmlSettingsModel.KeepTagAttributes = []string{"testString"}
+				htmlSettingsModel.ExcludeTagAttributes = []string{"testString"}
+
+				// Construct an instance of the SegmentSettings model
+				segmentSettingsModel := new(discoveryv1.SegmentSettings)
+				segmentSettingsModel.Enabled = core.BoolPtr(true)
+				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.AnnotatedFields = []string{"testString"}
+
+				// Construct an instance of the NormalizationOperation model
+				normalizationOperationModel := new(discoveryv1.NormalizationOperation)
+				normalizationOperationModel.Operation = core.StringPtr("copy")
+				normalizationOperationModel.SourceField = core.StringPtr("testString")
+				normalizationOperationModel.DestinationField = core.StringPtr("testString")
+
+				// Construct an instance of the Conversions model
+				conversionsModel := new(discoveryv1.Conversions)
+				conversionsModel.PDF = pdfSettingsModel
+				conversionsModel.Word = wordSettingsModel
+				conversionsModel.HTML = htmlSettingsModel
+				conversionsModel.Segment = segmentSettingsModel
+				conversionsModel.JSONNormalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				conversionsModel.ImageTextRecognition = core.BoolPtr(true)
+
+				// Construct an instance of the NluEnrichmentKeywords model
+				nluEnrichmentKeywordsModel := new(discoveryv1.NluEnrichmentKeywords)
+				nluEnrichmentKeywordsModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentEntities model
+				nluEnrichmentEntitiesModel := new(discoveryv1.NluEnrichmentEntities)
+				nluEnrichmentEntitiesModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Limit = core.Int64Ptr(int64(38))
+				nluEnrichmentEntitiesModel.Mentions = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.MentionTypes = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.SentenceLocations = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentSentiment model
+				nluEnrichmentSentimentModel := new(discoveryv1.NluEnrichmentSentiment)
+				nluEnrichmentSentimentModel.Document = core.BoolPtr(true)
+				nluEnrichmentSentimentModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentEmotion model
+				nluEnrichmentEmotionModel := new(discoveryv1.NluEnrichmentEmotion)
+				nluEnrichmentEmotionModel.Document = core.BoolPtr(true)
+				nluEnrichmentEmotionModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentSemanticRoles model
+				nluEnrichmentSemanticRolesModel := new(discoveryv1.NluEnrichmentSemanticRoles)
+				nluEnrichmentSemanticRolesModel.Entities = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Keywords = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentRelations model
+				nluEnrichmentRelationsModel := new(discoveryv1.NluEnrichmentRelations)
+				nluEnrichmentRelationsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentConcepts model
+				nluEnrichmentConceptsModel := new(discoveryv1.NluEnrichmentConcepts)
+				nluEnrichmentConceptsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentFeatures model
+				nluEnrichmentFeaturesModel := new(discoveryv1.NluEnrichmentFeatures)
+				nluEnrichmentFeaturesModel.Keywords = nluEnrichmentKeywordsModel
+				nluEnrichmentFeaturesModel.Entities = nluEnrichmentEntitiesModel
+				nluEnrichmentFeaturesModel.Sentiment = nluEnrichmentSentimentModel
+				nluEnrichmentFeaturesModel.Emotion = nluEnrichmentEmotionModel
+				nluEnrichmentFeaturesModel.Categories = make(map[string]interface{})
+				nluEnrichmentFeaturesModel.SemanticRoles = nluEnrichmentSemanticRolesModel
+				nluEnrichmentFeaturesModel.Relations = nluEnrichmentRelationsModel
+				nluEnrichmentFeaturesModel.Concepts = nluEnrichmentConceptsModel
+
+				// Construct an instance of the EnrichmentOptions model
+				enrichmentOptionsModel := new(discoveryv1.EnrichmentOptions)
+				enrichmentOptionsModel.Features = nluEnrichmentFeaturesModel
+				enrichmentOptionsModel.Language = core.StringPtr("ar")
+				enrichmentOptionsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the Enrichment model
+				enrichmentModel := new(discoveryv1.Enrichment)
+				enrichmentModel.Description = core.StringPtr("testString")
+				enrichmentModel.DestinationField = core.StringPtr("testString")
+				enrichmentModel.SourceField = core.StringPtr("testString")
+				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Enrichment = core.StringPtr("testString")
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.Options = enrichmentOptionsModel
+
+				// Construct an instance of the SourceSchedule model
+				sourceScheduleModel := new(discoveryv1.SourceSchedule)
+				sourceScheduleModel.Enabled = core.BoolPtr(true)
+				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.Frequency = core.StringPtr("daily")
+
+				// Construct an instance of the SourceOptionsFolder model
+				sourceOptionsFolderModel := new(discoveryv1.SourceOptionsFolder)
+				sourceOptionsFolderModel.OwnerUserID = core.StringPtr("testString")
+				sourceOptionsFolderModel.FolderID = core.StringPtr("testString")
+				sourceOptionsFolderModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsObject model
+				sourceOptionsObjectModel := new(discoveryv1.SourceOptionsObject)
+				sourceOptionsObjectModel.Name = core.StringPtr("testString")
+				sourceOptionsObjectModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsSiteColl model
+				sourceOptionsSiteCollModel := new(discoveryv1.SourceOptionsSiteColl)
+				sourceOptionsSiteCollModel.SiteCollectionPath = core.StringPtr("testString")
+				sourceOptionsSiteCollModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsWebCrawl model
+				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
+				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
+				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
+
+				// Construct an instance of the SourceOptionsBuckets model
+				sourceOptionsBucketsModel := new(discoveryv1.SourceOptionsBuckets)
+				sourceOptionsBucketsModel.Name = core.StringPtr("testString")
+				sourceOptionsBucketsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptions model
+				sourceOptionsModel := new(discoveryv1.SourceOptions)
+				sourceOptionsModel.Folders = []discoveryv1.SourceOptionsFolder{*sourceOptionsFolderModel}
+				sourceOptionsModel.Objects = []discoveryv1.SourceOptionsObject{*sourceOptionsObjectModel}
+				sourceOptionsModel.SiteCollections = []discoveryv1.SourceOptionsSiteColl{*sourceOptionsSiteCollModel}
+				sourceOptionsModel.Urls = []discoveryv1.SourceOptionsWebCrawl{*sourceOptionsWebCrawlModel}
+				sourceOptionsModel.Buckets = []discoveryv1.SourceOptionsBuckets{*sourceOptionsBucketsModel}
+				sourceOptionsModel.CrawlAllBuckets = core.BoolPtr(true)
+
+				// Construct an instance of the Source model
+				sourceModel := new(discoveryv1.Source)
+				sourceModel.Type = core.StringPtr("box")
+				sourceModel.CredentialID = core.StringPtr("testString")
+				sourceModel.Schedule = sourceScheduleModel
+				sourceModel.Options = sourceOptionsModel
+
+				// Construct an instance of the UpdateConfigurationOptions model
+				updateConfigurationOptionsModel := new(discoveryv1.UpdateConfigurationOptions)
+				updateConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Name = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Description = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Conversions = conversionsModel
+				updateConfigurationOptionsModel.Enrichments = []discoveryv1.Enrichment{*enrichmentModel}
+				updateConfigurationOptionsModel.Normalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				updateConfigurationOptionsModel.Source = sourceModel
+				updateConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateConfigurationWithContext(ctx, updateConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateConfiguration(updateConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateConfigurationWithContext(ctx, updateConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateConfigurationPath))
+					Expect(req.Method).To(Equal("PUT"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke UpdateConfiguration successfully`, func() {
@@ -2718,7 +3827,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateConfiguration(nil)
@@ -2930,30 +4038,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateConfigurationWithContext(ctx, updateConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateConfiguration(updateConfigurationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateConfigurationWithContext(ctx, updateConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateConfiguration with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -3181,11 +4265,239 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateConfiguration successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the FontSetting model
+				fontSettingModel := new(discoveryv1.FontSetting)
+				fontSettingModel.Level = core.Int64Ptr(int64(38))
+				fontSettingModel.MinSize = core.Int64Ptr(int64(38))
+				fontSettingModel.MaxSize = core.Int64Ptr(int64(38))
+				fontSettingModel.Bold = core.BoolPtr(true)
+				fontSettingModel.Italic = core.BoolPtr(true)
+				fontSettingModel.Name = core.StringPtr("testString")
+
+				// Construct an instance of the PDFHeadingDetection model
+				pdfHeadingDetectionModel := new(discoveryv1.PDFHeadingDetection)
+				pdfHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+
+				// Construct an instance of the PDFSettings model
+				pdfSettingsModel := new(discoveryv1.PDFSettings)
+				pdfSettingsModel.Heading = pdfHeadingDetectionModel
+
+				// Construct an instance of the WordStyle model
+				wordStyleModel := new(discoveryv1.WordStyle)
+				wordStyleModel.Level = core.Int64Ptr(int64(38))
+				wordStyleModel.Names = []string{"testString"}
+
+				// Construct an instance of the WordHeadingDetection model
+				wordHeadingDetectionModel := new(discoveryv1.WordHeadingDetection)
+				wordHeadingDetectionModel.Fonts = []discoveryv1.FontSetting{*fontSettingModel}
+				wordHeadingDetectionModel.Styles = []discoveryv1.WordStyle{*wordStyleModel}
+
+				// Construct an instance of the WordSettings model
+				wordSettingsModel := new(discoveryv1.WordSettings)
+				wordSettingsModel.Heading = wordHeadingDetectionModel
+
+				// Construct an instance of the XPathPatterns model
+				xPathPatternsModel := new(discoveryv1.XPathPatterns)
+				xPathPatternsModel.Xpaths = []string{"testString"}
+
+				// Construct an instance of the HTMLSettings model
+				htmlSettingsModel := new(discoveryv1.HTMLSettings)
+				htmlSettingsModel.ExcludeTagsCompletely = []string{"testString"}
+				htmlSettingsModel.ExcludeTagsKeepContent = []string{"testString"}
+				htmlSettingsModel.KeepContent = xPathPatternsModel
+				htmlSettingsModel.ExcludeContent = xPathPatternsModel
+				htmlSettingsModel.KeepTagAttributes = []string{"testString"}
+				htmlSettingsModel.ExcludeTagAttributes = []string{"testString"}
+
+				// Construct an instance of the SegmentSettings model
+				segmentSettingsModel := new(discoveryv1.SegmentSettings)
+				segmentSettingsModel.Enabled = core.BoolPtr(true)
+				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.AnnotatedFields = []string{"testString"}
+
+				// Construct an instance of the NormalizationOperation model
+				normalizationOperationModel := new(discoveryv1.NormalizationOperation)
+				normalizationOperationModel.Operation = core.StringPtr("copy")
+				normalizationOperationModel.SourceField = core.StringPtr("testString")
+				normalizationOperationModel.DestinationField = core.StringPtr("testString")
+
+				// Construct an instance of the Conversions model
+				conversionsModel := new(discoveryv1.Conversions)
+				conversionsModel.PDF = pdfSettingsModel
+				conversionsModel.Word = wordSettingsModel
+				conversionsModel.HTML = htmlSettingsModel
+				conversionsModel.Segment = segmentSettingsModel
+				conversionsModel.JSONNormalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				conversionsModel.ImageTextRecognition = core.BoolPtr(true)
+
+				// Construct an instance of the NluEnrichmentKeywords model
+				nluEnrichmentKeywordsModel := new(discoveryv1.NluEnrichmentKeywords)
+				nluEnrichmentKeywordsModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentKeywordsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentEntities model
+				nluEnrichmentEntitiesModel := new(discoveryv1.NluEnrichmentEntities)
+				nluEnrichmentEntitiesModel.Sentiment = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Emotion = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Limit = core.Int64Ptr(int64(38))
+				nluEnrichmentEntitiesModel.Mentions = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.MentionTypes = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.SentenceLocations = core.BoolPtr(true)
+				nluEnrichmentEntitiesModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentSentiment model
+				nluEnrichmentSentimentModel := new(discoveryv1.NluEnrichmentSentiment)
+				nluEnrichmentSentimentModel.Document = core.BoolPtr(true)
+				nluEnrichmentSentimentModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentEmotion model
+				nluEnrichmentEmotionModel := new(discoveryv1.NluEnrichmentEmotion)
+				nluEnrichmentEmotionModel.Document = core.BoolPtr(true)
+				nluEnrichmentEmotionModel.Targets = []string{"testString"}
+
+				// Construct an instance of the NluEnrichmentSemanticRoles model
+				nluEnrichmentSemanticRolesModel := new(discoveryv1.NluEnrichmentSemanticRoles)
+				nluEnrichmentSemanticRolesModel.Entities = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Keywords = core.BoolPtr(true)
+				nluEnrichmentSemanticRolesModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentRelations model
+				nluEnrichmentRelationsModel := new(discoveryv1.NluEnrichmentRelations)
+				nluEnrichmentRelationsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the NluEnrichmentConcepts model
+				nluEnrichmentConceptsModel := new(discoveryv1.NluEnrichmentConcepts)
+				nluEnrichmentConceptsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the NluEnrichmentFeatures model
+				nluEnrichmentFeaturesModel := new(discoveryv1.NluEnrichmentFeatures)
+				nluEnrichmentFeaturesModel.Keywords = nluEnrichmentKeywordsModel
+				nluEnrichmentFeaturesModel.Entities = nluEnrichmentEntitiesModel
+				nluEnrichmentFeaturesModel.Sentiment = nluEnrichmentSentimentModel
+				nluEnrichmentFeaturesModel.Emotion = nluEnrichmentEmotionModel
+				nluEnrichmentFeaturesModel.Categories = make(map[string]interface{})
+				nluEnrichmentFeaturesModel.SemanticRoles = nluEnrichmentSemanticRolesModel
+				nluEnrichmentFeaturesModel.Relations = nluEnrichmentRelationsModel
+				nluEnrichmentFeaturesModel.Concepts = nluEnrichmentConceptsModel
+
+				// Construct an instance of the EnrichmentOptions model
+				enrichmentOptionsModel := new(discoveryv1.EnrichmentOptions)
+				enrichmentOptionsModel.Features = nluEnrichmentFeaturesModel
+				enrichmentOptionsModel.Language = core.StringPtr("ar")
+				enrichmentOptionsModel.Model = core.StringPtr("testString")
+
+				// Construct an instance of the Enrichment model
+				enrichmentModel := new(discoveryv1.Enrichment)
+				enrichmentModel.Description = core.StringPtr("testString")
+				enrichmentModel.DestinationField = core.StringPtr("testString")
+				enrichmentModel.SourceField = core.StringPtr("testString")
+				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Enrichment = core.StringPtr("testString")
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.Options = enrichmentOptionsModel
+
+				// Construct an instance of the SourceSchedule model
+				sourceScheduleModel := new(discoveryv1.SourceSchedule)
+				sourceScheduleModel.Enabled = core.BoolPtr(true)
+				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.Frequency = core.StringPtr("daily")
+
+				// Construct an instance of the SourceOptionsFolder model
+				sourceOptionsFolderModel := new(discoveryv1.SourceOptionsFolder)
+				sourceOptionsFolderModel.OwnerUserID = core.StringPtr("testString")
+				sourceOptionsFolderModel.FolderID = core.StringPtr("testString")
+				sourceOptionsFolderModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsObject model
+				sourceOptionsObjectModel := new(discoveryv1.SourceOptionsObject)
+				sourceOptionsObjectModel.Name = core.StringPtr("testString")
+				sourceOptionsObjectModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsSiteColl model
+				sourceOptionsSiteCollModel := new(discoveryv1.SourceOptionsSiteColl)
+				sourceOptionsSiteCollModel.SiteCollectionPath = core.StringPtr("testString")
+				sourceOptionsSiteCollModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptionsWebCrawl model
+				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
+				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
+				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
+
+				// Construct an instance of the SourceOptionsBuckets model
+				sourceOptionsBucketsModel := new(discoveryv1.SourceOptionsBuckets)
+				sourceOptionsBucketsModel.Name = core.StringPtr("testString")
+				sourceOptionsBucketsModel.Limit = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the SourceOptions model
+				sourceOptionsModel := new(discoveryv1.SourceOptions)
+				sourceOptionsModel.Folders = []discoveryv1.SourceOptionsFolder{*sourceOptionsFolderModel}
+				sourceOptionsModel.Objects = []discoveryv1.SourceOptionsObject{*sourceOptionsObjectModel}
+				sourceOptionsModel.SiteCollections = []discoveryv1.SourceOptionsSiteColl{*sourceOptionsSiteCollModel}
+				sourceOptionsModel.Urls = []discoveryv1.SourceOptionsWebCrawl{*sourceOptionsWebCrawlModel}
+				sourceOptionsModel.Buckets = []discoveryv1.SourceOptionsBuckets{*sourceOptionsBucketsModel}
+				sourceOptionsModel.CrawlAllBuckets = core.BoolPtr(true)
+
+				// Construct an instance of the Source model
+				sourceModel := new(discoveryv1.Source)
+				sourceModel.Type = core.StringPtr("box")
+				sourceModel.CredentialID = core.StringPtr("testString")
+				sourceModel.Schedule = sourceScheduleModel
+				sourceModel.Options = sourceOptionsModel
+
+				// Construct an instance of the UpdateConfigurationOptions model
+				updateConfigurationOptionsModel := new(discoveryv1.UpdateConfigurationOptions)
+				updateConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Name = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Description = core.StringPtr("testString")
+				updateConfigurationOptionsModel.Conversions = conversionsModel
+				updateConfigurationOptionsModel.Enrichments = []discoveryv1.Enrichment{*enrichmentModel}
+				updateConfigurationOptionsModel.Normalizations = []discoveryv1.NormalizationOperation{*normalizationOperationModel}
+				updateConfigurationOptionsModel.Source = sourceModel
+				updateConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateConfiguration(updateConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteConfigurationPath := "/v1/environments/testString/configurations/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3194,7 +4506,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteConfigurationPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3232,14 +4543,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteConfiguration(deleteConfigurationOptions *DeleteConfigurationOptions)`, func() {
 		version := "testString"
 		deleteConfigurationPath := "/v1/environments/testString/configurations/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3248,14 +4556,70 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "status": "deleted", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "status": "deleted", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+				}))
+			})
+			It(`Invoke DeleteConfiguration successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteConfigurationOptions model
+				deleteConfigurationOptionsModel := new(discoveryv1.DeleteConfigurationOptions)
+				deleteConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				deleteConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteConfigurationWithContext(ctx, deleteConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteConfiguration(deleteConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteConfigurationWithContext(ctx, deleteConfigurationOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteConfigurationPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "status": "deleted", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
 				}))
 			})
 			It(`Invoke DeleteConfiguration successfully`, func() {
@@ -3266,7 +4630,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteConfiguration(nil)
@@ -3286,30 +4649,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteConfigurationWithContext(ctx, deleteConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteConfiguration(deleteConfigurationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteConfigurationWithContext(ctx, deleteConfigurationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteConfiguration with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -3345,157 +4684,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteConfiguration successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the DeleteConfigurationOptions model
+				deleteConfigurationOptionsModel := new(discoveryv1.DeleteConfigurationOptions)
+				deleteConfigurationOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteConfigurationOptionsModel.ConfigurationID = core.StringPtr("testString")
+				deleteConfigurationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteConfiguration(deleteConfigurationOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`CreateCollection(createCollectionOptions *CreateCollectionOptions) - Operation response error`, func() {
 		version := "testString"
 		createCollectionPath := "/v1/environments/testString/collections"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3504,7 +4733,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createCollectionPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3545,14 +4773,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateCollection(createCollectionOptions *CreateCollectionOptions)`, func() {
 		version := "testString"
 		createCollectionPath := "/v1/environments/testString/collections"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3577,14 +4802,89 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00", "data_updated": "2019-01-01T12:00:00"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+				}))
+			})
+			It(`Invoke CreateCollection successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateCollectionOptions model
+				createCollectionOptionsModel := new(discoveryv1.CreateCollectionOptions)
+				createCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createCollectionOptionsModel.Name = core.StringPtr("testString")
+				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.ConfigurationID = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
+				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateCollectionWithContext(ctx, createCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateCollection(createCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateCollectionWithContext(ctx, createCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createCollectionPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke CreateCollection successfully`, func() {
@@ -3595,7 +4895,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateCollection(nil)
@@ -3618,30 +4917,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateCollectionWithContext(ctx, createCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateCollection(createCollectionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateCollectionWithContext(ctx, createCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateCollection with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -3680,11 +4955,50 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateCollection successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CreateCollectionOptions model
+				createCollectionOptionsModel := new(discoveryv1.CreateCollectionOptions)
+				createCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createCollectionOptionsModel.Name = core.StringPtr("testString")
+				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.ConfigurationID = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
+				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateCollection(createCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListCollections(listCollectionsOptions *ListCollectionsOptions) - Operation response error`, func() {
 		version := "testString"
 		listCollectionsPath := "/v1/environments/testString/collections"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3693,9 +5007,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCollectionsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3733,14 +5045,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListCollections(listCollectionsOptions *ListCollectionsOptions)`, func() {
 		version := "testString"
 		listCollectionsPath := "/v1/environments/testString/collections"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3749,16 +5058,72 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00", "data_updated": "2019-01-01T12:00:00"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
+					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
+				}))
+			})
+			It(`Invoke ListCollections successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCollectionsOptions model
+				listCollectionsOptionsModel := new(discoveryv1.ListCollectionsOptions)
+				listCollectionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCollectionsOptionsModel.Name = core.StringPtr("testString")
+				listCollectionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListCollectionsWithContext(ctx, listCollectionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListCollections(listCollectionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListCollectionsWithContext(ctx, listCollectionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCollectionsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
 				}))
 			})
 			It(`Invoke ListCollections successfully`, func() {
@@ -3769,7 +5134,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListCollections(nil)
@@ -3789,30 +5153,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCollectionsWithContext(ctx, listCollectionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListCollections(listCollectionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCollectionsWithContext(ctx, listCollectionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListCollections with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -3848,11 +5188,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCollections successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListCollectionsOptions model
+				listCollectionsOptionsModel := new(discoveryv1.ListCollectionsOptions)
+				listCollectionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCollectionsOptionsModel.Name = core.StringPtr("testString")
+				listCollectionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListCollections(listCollectionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetCollection(getCollectionOptions *GetCollectionOptions) - Operation response error`, func() {
 		version := "testString"
 		getCollectionPath := "/v1/environments/testString/collections/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -3861,7 +5237,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getCollectionPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -3899,14 +5274,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetCollection(getCollectionOptions *GetCollectionOptions)`, func() {
 		version := "testString"
 		getCollectionPath := "/v1/environments/testString/collections/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -3915,14 +5287,70 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00", "data_updated": "2019-01-01T12:00:00"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+				}))
+			})
+			It(`Invoke GetCollection successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCollectionOptions model
+				getCollectionOptionsModel := new(discoveryv1.GetCollectionOptions)
+				getCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				getCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetCollectionWithContext(ctx, getCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetCollection(getCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetCollectionWithContext(ctx, getCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCollectionPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke GetCollection successfully`, func() {
@@ -3933,7 +5361,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetCollection(nil)
@@ -3953,30 +5380,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetCollectionWithContext(ctx, getCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetCollection(getCollectionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetCollectionWithContext(ctx, getCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetCollection with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -4012,11 +5415,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCollection successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetCollectionOptions model
+				getCollectionOptionsModel := new(discoveryv1.GetCollectionOptions)
+				getCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				getCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetCollection(getCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateCollection(updateCollectionOptions *UpdateCollectionOptions) - Operation response error`, func() {
 		version := "testString"
 		updateCollectionPath := "/v1/environments/testString/collections/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4025,7 +5464,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateCollectionPath))
 					Expect(req.Method).To(Equal("PUT"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4066,14 +5504,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateCollection(updateCollectionOptions *UpdateCollectionOptions)`, func() {
 		version := "testString"
 		updateCollectionPath := "/v1/environments/testString/collections/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4098,14 +5533,89 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00", "data_updated": "2019-01-01T12:00:00"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+				}))
+			})
+			It(`Invoke UpdateCollection successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateCollectionOptions model
+				updateCollectionOptionsModel := new(discoveryv1.UpdateCollectionOptions)
+				updateCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				updateCollectionOptionsModel.Name = core.StringPtr("testString")
+				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.ConfigurationID = core.StringPtr("testString")
+				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateCollectionWithContext(ctx, updateCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateCollection(updateCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateCollectionWithContext(ctx, updateCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateCollectionPath))
+					Expect(req.Method).To(Equal("PUT"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke UpdateCollection successfully`, func() {
@@ -4116,7 +5626,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateCollection(nil)
@@ -4139,30 +5648,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateCollectionWithContext(ctx, updateCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateCollection(updateCollectionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateCollectionWithContext(ctx, updateCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateCollection with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -4201,11 +5686,50 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke UpdateCollection successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateCollectionOptions model
+				updateCollectionOptionsModel := new(discoveryv1.UpdateCollectionOptions)
+				updateCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				updateCollectionOptionsModel.Name = core.StringPtr("testString")
+				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.ConfigurationID = core.StringPtr("testString")
+				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateCollection(updateCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteCollectionPath := "/v1/environments/testString/collections/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4214,7 +5738,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteCollectionPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4252,14 +5775,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteCollection(deleteCollectionOptions *DeleteCollectionOptions)`, func() {
 		version := "testString"
 		deleteCollectionPath := "/v1/environments/testString/collections/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4268,10 +5788,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "status": "deleted"}`)
+				}))
+			})
+			It(`Invoke DeleteCollection successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteCollectionOptions model
+				deleteCollectionOptionsModel := new(discoveryv1.DeleteCollectionOptions)
+				deleteCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				deleteCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteCollectionWithContext(ctx, deleteCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteCollection(deleteCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteCollectionWithContext(ctx, deleteCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteCollectionPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -4286,7 +5862,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteCollection(nil)
@@ -4306,30 +5881,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteCollectionWithContext(ctx, deleteCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteCollection(deleteCollectionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteCollectionWithContext(ctx, deleteCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteCollection with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -4365,11 +5916,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteCollection successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteCollectionOptions model
+				deleteCollectionOptionsModel := new(discoveryv1.DeleteCollectionOptions)
+				deleteCollectionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteCollectionOptionsModel.CollectionID = core.StringPtr("testString")
+				deleteCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteCollection(deleteCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions) - Operation response error`, func() {
 		version := "testString"
 		listCollectionFieldsPath := "/v1/environments/testString/collections/testString/fields"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4378,7 +5965,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCollectionFieldsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4416,14 +6002,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListCollectionFields(listCollectionFieldsOptions *ListCollectionFieldsOptions)`, func() {
 		version := "testString"
 		listCollectionFieldsPath := "/v1/environments/testString/collections/testString/fields"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4432,10 +6015,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"fields": [{"field": "Field", "type": "nested"}]}`)
+				}))
+			})
+			It(`Invoke ListCollectionFields successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCollectionFieldsOptions model
+				listCollectionFieldsOptionsModel := new(discoveryv1.ListCollectionFieldsOptions)
+				listCollectionFieldsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCollectionFieldsOptionsModel.CollectionID = core.StringPtr("testString")
+				listCollectionFieldsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListCollectionFieldsWithContext(ctx, listCollectionFieldsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListCollectionFields(listCollectionFieldsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListCollectionFieldsWithContext(ctx, listCollectionFieldsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCollectionFieldsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -4450,7 +6089,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListCollectionFields(nil)
@@ -4470,30 +6108,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCollectionFieldsWithContext(ctx, listCollectionFieldsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListCollectionFields(listCollectionFieldsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCollectionFieldsWithContext(ctx, listCollectionFieldsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListCollectionFields with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -4529,157 +6143,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCollectionFields successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the ListCollectionFieldsOptions model
+				listCollectionFieldsOptionsModel := new(discoveryv1.ListCollectionFieldsOptions)
+				listCollectionFieldsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCollectionFieldsOptionsModel.CollectionID = core.StringPtr("testString")
+				listCollectionFieldsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListCollectionFields(listCollectionFieldsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListExpansions(listExpansionsOptions *ListExpansionsOptions) - Operation response error`, func() {
 		version := "testString"
 		listExpansionsPath := "/v1/environments/testString/collections/testString/expansions"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4688,7 +6192,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listExpansionsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4726,14 +6229,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListExpansions(listExpansionsOptions *ListExpansionsOptions)`, func() {
 		version := "testString"
 		listExpansionsPath := "/v1/environments/testString/collections/testString/expansions"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4742,10 +6242,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"expansions": [{"input_terms": ["InputTerms"], "expanded_terms": ["ExpandedTerms"]}]}`)
+				}))
+			})
+			It(`Invoke ListExpansions successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListExpansionsOptions model
+				listExpansionsOptionsModel := new(discoveryv1.ListExpansionsOptions)
+				listExpansionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listExpansionsOptionsModel.CollectionID = core.StringPtr("testString")
+				listExpansionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListExpansionsWithContext(ctx, listExpansionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListExpansions(listExpansionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListExpansionsWithContext(ctx, listExpansionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listExpansionsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -4760,7 +6316,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListExpansions(nil)
@@ -4780,30 +6335,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListExpansionsWithContext(ctx, listExpansionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListExpansions(listExpansionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListExpansionsWithContext(ctx, listExpansionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListExpansions with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -4839,11 +6370,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListExpansions successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListExpansionsOptions model
+				listExpansionsOptionsModel := new(discoveryv1.ListExpansionsOptions)
+				listExpansionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listExpansionsOptionsModel.CollectionID = core.StringPtr("testString")
+				listExpansionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListExpansions(listExpansionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateExpansions(createExpansionsOptions *CreateExpansionsOptions) - Operation response error`, func() {
 		version := "testString"
 		createExpansionsPath := "/v1/environments/testString/collections/testString/expansions"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -4852,7 +6419,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createExpansionsPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -4896,14 +6462,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateExpansions(createExpansionsOptions *CreateExpansionsOptions)`, func() {
 		version := "testString"
 		createExpansionsPath := "/v1/environments/testString/collections/testString/expansions"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -4928,10 +6491,88 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"expansions": [{"input_terms": ["InputTerms"], "expanded_terms": ["ExpandedTerms"]}]}`)
+				}))
+			})
+			It(`Invoke CreateExpansions successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the Expansion model
+				expansionModel := new(discoveryv1.Expansion)
+				expansionModel.InputTerms = []string{"testString"}
+				expansionModel.ExpandedTerms = []string{"testString"}
+
+				// Construct an instance of the CreateExpansionsOptions model
+				createExpansionsOptionsModel := new(discoveryv1.CreateExpansionsOptions)
+				createExpansionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createExpansionsOptionsModel.CollectionID = core.StringPtr("testString")
+				createExpansionsOptionsModel.Expansions = []discoveryv1.Expansion{*expansionModel}
+				createExpansionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateExpansionsWithContext(ctx, createExpansionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateExpansions(createExpansionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateExpansionsWithContext(ctx, createExpansionsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createExpansionsPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -4946,7 +6587,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateExpansions(nil)
@@ -4972,30 +6612,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateExpansionsWithContext(ctx, createExpansionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateExpansions(createExpansionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateExpansionsWithContext(ctx, createExpansionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateExpansions with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -5037,8 +6653,49 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateExpansions successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the Expansion model
+				expansionModel := new(discoveryv1.Expansion)
+				expansionModel.InputTerms = []string{"testString"}
+				expansionModel.ExpandedTerms = []string{"testString"}
+
+				// Construct an instance of the CreateExpansionsOptions model
+				createExpansionsOptionsModel := new(discoveryv1.CreateExpansionsOptions)
+				createExpansionsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createExpansionsOptionsModel.CollectionID = core.StringPtr("testString")
+				createExpansionsOptionsModel.Expansions = []discoveryv1.Expansion{*expansionModel}
+				createExpansionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateExpansions(createExpansionsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteExpansions(deleteExpansionsOptions *DeleteExpansionsOptions)`, func() {
 		version := "testString"
 		deleteExpansionsPath := "/v1/environments/testString/collections/testString/expansions"
@@ -5052,7 +6709,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(204)
 				}))
 			})
@@ -5064,7 +6720,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteExpansions(nil)
@@ -5078,12 +6733,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteExpansionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteExpansions(deleteExpansionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteExpansions(deleteExpansionsOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -5124,7 +6773,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions) - Operation response error`, func() {
 		version := "testString"
 		getTokenizationDictionaryStatusPath := "/v1/environments/testString/collections/testString/word_lists/tokenization_dictionary"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5133,7 +6782,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getTokenizationDictionaryStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5171,14 +6819,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptions *GetTokenizationDictionaryStatusOptions)`, func() {
 		version := "testString"
 		getTokenizationDictionaryStatusPath := "/v1/environments/testString/collections/testString/word_lists/tokenization_dictionary"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5187,10 +6832,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"status": "active", "type": "Type"}`)
+				}))
+			})
+			It(`Invoke GetTokenizationDictionaryStatus successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetTokenizationDictionaryStatusOptions model
+				getTokenizationDictionaryStatusOptionsModel := new(discoveryv1.GetTokenizationDictionaryStatusOptions)
+				getTokenizationDictionaryStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTokenizationDictionaryStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getTokenizationDictionaryStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetTokenizationDictionaryStatusWithContext(ctx, getTokenizationDictionaryStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetTokenizationDictionaryStatusWithContext(ctx, getTokenizationDictionaryStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getTokenizationDictionaryStatusPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -5205,7 +6906,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetTokenizationDictionaryStatus(nil)
@@ -5225,30 +6925,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTokenizationDictionaryStatusWithContext(ctx, getTokenizationDictionaryStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTokenizationDictionaryStatusWithContext(ctx, getTokenizationDictionaryStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTokenizationDictionaryStatus with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -5284,11 +6960,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetTokenizationDictionaryStatus successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetTokenizationDictionaryStatusOptions model
+				getTokenizationDictionaryStatusOptionsModel := new(discoveryv1.GetTokenizationDictionaryStatusOptions)
+				getTokenizationDictionaryStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTokenizationDictionaryStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getTokenizationDictionaryStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetTokenizationDictionaryStatus(getTokenizationDictionaryStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions) - Operation response error`, func() {
 		version := "testString"
 		createTokenizationDictionaryPath := "/v1/environments/testString/collections/testString/word_lists/tokenization_dictionary"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5297,7 +7009,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createTokenizationDictionaryPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5343,14 +7054,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateTokenizationDictionary(createTokenizationDictionaryOptions *CreateTokenizationDictionaryOptions)`, func() {
 		version := "testString"
 		createTokenizationDictionaryPath := "/v1/environments/testString/collections/testString/word_lists/tokenization_dictionary"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5375,10 +7083,90 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(202)
+					fmt.Fprintf(res, "%s", `{"status": "active", "type": "Type"}`)
+				}))
+			})
+			It(`Invoke CreateTokenizationDictionary successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the TokenDictRule model
+				tokenDictRuleModel := new(discoveryv1.TokenDictRule)
+				tokenDictRuleModel.Text = core.StringPtr("testString")
+				tokenDictRuleModel.Tokens = []string{"testString"}
+				tokenDictRuleModel.Readings = []string{"testString"}
+				tokenDictRuleModel.PartOfSpeech = core.StringPtr("testString")
+
+				// Construct an instance of the CreateTokenizationDictionaryOptions model
+				createTokenizationDictionaryOptionsModel := new(discoveryv1.CreateTokenizationDictionaryOptions)
+				createTokenizationDictionaryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createTokenizationDictionaryOptionsModel.CollectionID = core.StringPtr("testString")
+				createTokenizationDictionaryOptionsModel.TokenizationRules = []discoveryv1.TokenDictRule{*tokenDictRuleModel}
+				createTokenizationDictionaryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateTokenizationDictionaryWithContext(ctx, createTokenizationDictionaryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateTokenizationDictionary(createTokenizationDictionaryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateTokenizationDictionaryWithContext(ctx, createTokenizationDictionaryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createTokenizationDictionaryPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
@@ -5393,7 +7181,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateTokenizationDictionary(nil)
@@ -5421,30 +7208,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateTokenizationDictionaryWithContext(ctx, createTokenizationDictionaryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateTokenizationDictionary(createTokenizationDictionaryOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateTokenizationDictionaryWithContext(ctx, createTokenizationDictionaryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateTokenizationDictionary with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -5488,8 +7251,51 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(202)
+				}))
+			})
+			It(`Invoke CreateTokenizationDictionary successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the TokenDictRule model
+				tokenDictRuleModel := new(discoveryv1.TokenDictRule)
+				tokenDictRuleModel.Text = core.StringPtr("testString")
+				tokenDictRuleModel.Tokens = []string{"testString"}
+				tokenDictRuleModel.Readings = []string{"testString"}
+				tokenDictRuleModel.PartOfSpeech = core.StringPtr("testString")
+
+				// Construct an instance of the CreateTokenizationDictionaryOptions model
+				createTokenizationDictionaryOptionsModel := new(discoveryv1.CreateTokenizationDictionaryOptions)
+				createTokenizationDictionaryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createTokenizationDictionaryOptionsModel.CollectionID = core.StringPtr("testString")
+				createTokenizationDictionaryOptionsModel.TokenizationRules = []discoveryv1.TokenDictRule{*tokenDictRuleModel}
+				createTokenizationDictionaryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateTokenizationDictionary(createTokenizationDictionaryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteTokenizationDictionary(deleteTokenizationDictionaryOptions *DeleteTokenizationDictionaryOptions)`, func() {
 		version := "testString"
 		deleteTokenizationDictionaryPath := "/v1/environments/testString/collections/testString/word_lists/tokenization_dictionary"
@@ -5503,7 +7309,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -5515,7 +7320,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteTokenizationDictionary(nil)
@@ -5529,12 +7333,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteTokenizationDictionaryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteTokenizationDictionary(deleteTokenizationDictionaryOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteTokenizationDictionary(deleteTokenizationDictionaryOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -5575,7 +7373,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions) - Operation response error`, func() {
 		version := "testString"
 		getStopwordListStatusPath := "/v1/environments/testString/collections/testString/word_lists/stopwords"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5584,7 +7382,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getStopwordListStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5622,14 +7419,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetStopwordListStatus(getStopwordListStatusOptions *GetStopwordListStatusOptions)`, func() {
 		version := "testString"
 		getStopwordListStatusPath := "/v1/environments/testString/collections/testString/word_lists/stopwords"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5638,10 +7432,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"status": "active", "type": "Type"}`)
+				}))
+			})
+			It(`Invoke GetStopwordListStatus successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetStopwordListStatusOptions model
+				getStopwordListStatusOptionsModel := new(discoveryv1.GetStopwordListStatusOptions)
+				getStopwordListStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getStopwordListStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getStopwordListStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetStopwordListStatusWithContext(ctx, getStopwordListStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetStopwordListStatus(getStopwordListStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetStopwordListStatusWithContext(ctx, getStopwordListStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getStopwordListStatusPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -5656,7 +7506,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetStopwordListStatus(nil)
@@ -5676,30 +7525,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetStopwordListStatusWithContext(ctx, getStopwordListStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetStopwordListStatus(getStopwordListStatusOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetStopwordListStatusWithContext(ctx, getStopwordListStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetStopwordListStatus with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -5735,11 +7560,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetStopwordListStatus successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetStopwordListStatusOptions model
+				getStopwordListStatusOptionsModel := new(discoveryv1.GetStopwordListStatusOptions)
+				getStopwordListStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getStopwordListStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getStopwordListStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetStopwordListStatus(getStopwordListStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions) - Operation response error`, func() {
 		version := "testString"
 		createStopwordListPath := "/v1/environments/testString/collections/testString/word_lists/stopwords"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -5748,7 +7609,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createStopwordListPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -5788,14 +7648,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateStopwordList(createStopwordListOptions *CreateStopwordListOptions)`, func() {
 		version := "testString"
 		createStopwordListPath := "/v1/environments/testString/collections/testString/word_lists/stopwords"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5804,10 +7661,68 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"status": "active", "type": "Type"}`)
+				}))
+			})
+			It(`Invoke CreateStopwordList successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateStopwordListOptions model
+				createStopwordListOptionsModel := new(discoveryv1.CreateStopwordListOptions)
+				createStopwordListOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createStopwordListOptionsModel.CollectionID = core.StringPtr("testString")
+				createStopwordListOptionsModel.StopwordFile = CreateMockReader("This is a mock file.")
+				createStopwordListOptionsModel.StopwordFilename = core.StringPtr("testString")
+				createStopwordListOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateStopwordListWithContext(ctx, createStopwordListOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateStopwordList(createStopwordListOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateStopwordListWithContext(ctx, createStopwordListOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createStopwordListPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -5822,7 +7737,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateStopwordList(nil)
@@ -5844,30 +7758,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateStopwordListWithContext(ctx, createStopwordListOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateStopwordList(createStopwordListOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateStopwordListWithContext(ctx, createStopwordListOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateStopwordList with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -5905,8 +7795,45 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateStopwordList successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CreateStopwordListOptions model
+				createStopwordListOptionsModel := new(discoveryv1.CreateStopwordListOptions)
+				createStopwordListOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createStopwordListOptionsModel.CollectionID = core.StringPtr("testString")
+				createStopwordListOptionsModel.StopwordFile = CreateMockReader("This is a mock file.")
+				createStopwordListOptionsModel.StopwordFilename = core.StringPtr("testString")
+				createStopwordListOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateStopwordList(createStopwordListOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteStopwordList(deleteStopwordListOptions *DeleteStopwordListOptions)`, func() {
 		version := "testString"
 		deleteStopwordListPath := "/v1/environments/testString/collections/testString/word_lists/stopwords"
@@ -5920,7 +7847,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -5932,7 +7858,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteStopwordList(nil)
@@ -5946,12 +7871,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteStopwordListOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteStopwordList(deleteStopwordListOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteStopwordList(deleteStopwordListOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -5989,156 +7908,10 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`AddDocument(addDocumentOptions *AddDocumentOptions) - Operation response error`, func() {
 		version := "testString"
 		addDocumentPath := "/v1/environments/testString/collections/testString/documents"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6147,7 +7920,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(addDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6189,14 +7961,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`AddDocument(addDocumentOptions *AddDocumentOptions)`, func() {
 		version := "testString"
 		addDocumentPath := "/v1/environments/testString/collections/testString/documents"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6205,14 +7974,74 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+				}))
+			})
+			It(`Invoke AddDocument successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the AddDocumentOptions model
+				addDocumentOptionsModel := new(discoveryv1.AddDocumentOptions)
+				addDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				addDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				addDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				addDocumentOptionsModel.Filename = core.StringPtr("testString")
+				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
+				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
+				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.AddDocumentWithContext(ctx, addDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.AddDocument(addDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.AddDocumentWithContext(ctx, addDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(addDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(202)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
 				}))
 			})
 			It(`Invoke AddDocument successfully`, func() {
@@ -6223,7 +8052,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.AddDocument(nil)
@@ -6247,30 +8075,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.AddDocumentWithContext(ctx, addDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.AddDocument(addDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.AddDocumentWithContext(ctx, addDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke AddDocument with error: Param validation error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -6327,11 +8131,51 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(202)
+				}))
+			})
+			It(`Invoke AddDocument successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the AddDocumentOptions model
+				addDocumentOptionsModel := new(discoveryv1.AddDocumentOptions)
+				addDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				addDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				addDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				addDocumentOptionsModel.Filename = core.StringPtr("testString")
+				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
+				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
+				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.AddDocument(addDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) - Operation response error`, func() {
 		version := "testString"
 		getDocumentStatusPath := "/v1/environments/testString/collections/testString/documents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6340,7 +8184,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6379,14 +8222,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions)`, func() {
 		version := "testString"
 		getDocumentStatusPath := "/v1/environments/testString/collections/testString/documents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6395,14 +8235,71 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "configuration_id": "ConfigurationID", "status": "available", "status_description": "StatusDescription", "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "configuration_id": "ConfigurationID", "status": "available", "status_description": "StatusDescription", "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+				}))
+			})
+			It(`Invoke GetDocumentStatus successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDocumentStatusOptions model
+				getDocumentStatusOptionsModel := new(discoveryv1.GetDocumentStatusOptions)
+				getDocumentStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.DocumentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetDocumentStatus(getDocumentStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "configuration_id": "ConfigurationID", "status": "available", "status_description": "StatusDescription", "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
 				}))
 			})
 			It(`Invoke GetDocumentStatus successfully`, func() {
@@ -6413,7 +8310,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetDocumentStatus(nil)
@@ -6434,30 +8330,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetDocumentStatus(getDocumentStatusOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetDocumentStatus with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -6494,11 +8366,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetDocumentStatus successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetDocumentStatusOptions model
+				getDocumentStatusOptionsModel := new(discoveryv1.GetDocumentStatusOptions)
+				getDocumentStatusOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.CollectionID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.DocumentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetDocumentStatus(getDocumentStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) - Operation response error`, func() {
 		version := "testString"
 		updateDocumentPath := "/v1/environments/testString/collections/testString/documents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6507,7 +8416,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6550,14 +8458,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateDocument(updateDocumentOptions *UpdateDocumentOptions)`, func() {
 		version := "testString"
 		updateDocumentPath := "/v1/environments/testString/collections/testString/documents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6566,14 +8471,75 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
+				}))
+			})
+			It(`Invoke UpdateDocument successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateDocumentOptions model
+				updateDocumentOptionsModel := new(discoveryv1.UpdateDocumentOptions)
+				updateDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				updateDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
+				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
+				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
+				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateDocumentWithContext(ctx, updateDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateDocument(updateDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateDocumentWithContext(ctx, updateDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(202)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "processing", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}`)
 				}))
 			})
 			It(`Invoke UpdateDocument successfully`, func() {
@@ -6584,7 +8550,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateDocument(nil)
@@ -6609,30 +8574,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateDocumentWithContext(ctx, updateDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateDocument(updateDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateDocumentWithContext(ctx, updateDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateDocument with error: Param validation error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -6690,11 +8631,52 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(202)
+				}))
+			})
+			It(`Invoke UpdateDocument successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateDocumentOptions model
+				updateDocumentOptionsModel := new(discoveryv1.UpdateDocumentOptions)
+				updateDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				updateDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				updateDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
+				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
+				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
+				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateDocument(updateDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteDocumentPath := "/v1/environments/testString/collections/testString/documents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -6703,7 +8685,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteDocumentPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -6742,14 +8723,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions)`, func() {
 		version := "testString"
 		deleteDocumentPath := "/v1/environments/testString/collections/testString/documents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6758,10 +8736,67 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "status": "deleted"}`)
+				}))
+			})
+			It(`Invoke DeleteDocument successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteDocumentOptions model
+				deleteDocumentOptionsModel := new(discoveryv1.DeleteDocumentOptions)
+				deleteDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteDocumentWithContext(ctx, deleteDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteDocument(deleteDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteDocumentWithContext(ctx, deleteDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteDocumentPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -6776,7 +8811,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteDocument(nil)
@@ -6797,30 +8831,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteDocumentWithContext(ctx, deleteDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteDocument(deleteDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteDocumentWithContext(ctx, deleteDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteDocument with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -6857,157 +8867,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteDocument successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the DeleteDocumentOptions model
+				deleteDocumentOptionsModel := new(discoveryv1.DeleteDocumentOptions)
+				deleteDocumentOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteDocument(deleteDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`Query(queryOptions *QueryOptions) - Operation response error`, func() {
 		version := "testString"
 		queryPath := "/v1/environments/testString/collections/testString/query"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7018,7 +8919,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
 					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7077,14 +8977,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`Query(queryOptions *QueryOptions)`, func() {
 		version := "testString"
 		queryPath := "/v1/environments/testString/collections/testString/query"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7111,10 +9008,105 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
 					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17, "session_token": "SessionToken", "retrieval_details": {"document_retrieval_strategy": "untrained"}, "suggested_query": "SuggestedQuery"}`)
+				}))
+			})
+			It(`Invoke Query successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the QueryOptions model
+				queryOptionsModel := new(discoveryv1.QueryOptions)
+				queryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				queryOptionsModel.CollectionID = core.StringPtr("testString")
+				queryOptionsModel.Filter = core.StringPtr("testString")
+				queryOptionsModel.Query = core.StringPtr("testString")
+				queryOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				queryOptionsModel.Passages = core.BoolPtr(true)
+				queryOptionsModel.Aggregation = core.StringPtr("testString")
+				queryOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryOptionsModel.Return = core.StringPtr("testString")
+				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryOptionsModel.Sort = core.StringPtr("testString")
+				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.PassagesFields = core.StringPtr("testString")
+				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
+				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
+				queryOptionsModel.SimilarFields = core.StringPtr("testString")
+				queryOptionsModel.Bias = core.StringPtr("testString")
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.QueryWithContext(ctx, queryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.Query(queryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.QueryWithContext(ctx, queryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(queryPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -7129,7 +9121,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.Query(nil)
@@ -7170,30 +9161,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryWithContext(ctx, queryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.Query(queryOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryWithContext(ctx, queryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Query with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -7250,11 +9217,68 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Query successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the QueryOptions model
+				queryOptionsModel := new(discoveryv1.QueryOptions)
+				queryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				queryOptionsModel.CollectionID = core.StringPtr("testString")
+				queryOptionsModel.Filter = core.StringPtr("testString")
+				queryOptionsModel.Query = core.StringPtr("testString")
+				queryOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				queryOptionsModel.Passages = core.BoolPtr(true)
+				queryOptionsModel.Aggregation = core.StringPtr("testString")
+				queryOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryOptionsModel.Return = core.StringPtr("testString")
+				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryOptionsModel.Sort = core.StringPtr("testString")
+				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.PassagesFields = core.StringPtr("testString")
+				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
+				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
+				queryOptionsModel.SimilarFields = core.StringPtr("testString")
+				queryOptionsModel.Bias = core.StringPtr("testString")
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.Query(queryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`QueryNotices(queryNoticesOptions *QueryNoticesOptions) - Operation response error`, func() {
 		version := "testString"
 		queryNoticesPath := "/v1/environments/testString/collections/testString/notices"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7263,31 +9287,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(queryNoticesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for passages query parameter
-
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for highlight query parameter
-
 					Expect(req.URL.Query()["passages.count"]).To(Equal([]string{fmt.Sprint(int64(100))}))
-
 					Expect(req.URL.Query()["passages.characters"]).To(Equal([]string{fmt.Sprint(int64(50))}))
-
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for similar query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7342,14 +9353,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`QueryNotices(queryNoticesOptions *QueryNoticesOptions)`, func() {
 		version := "testString"
 		queryNoticesPath := "/v1/environments/testString/collections/testString/notices"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7358,38 +9366,111 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for passages query parameter
-
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for highlight query parameter
-
 					Expect(req.URL.Query()["passages.count"]).To(Equal([]string{fmt.Sprint(int64(100))}))
-
 					Expect(req.URL.Query()["passages.characters"]).To(Equal([]string{fmt.Sprint(int64(50))}))
-
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for similar query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": {"anyKey": "anyValue"}}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
+				}))
+			})
+			It(`Invoke QueryNotices successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the QueryNoticesOptions model
+				queryNoticesOptionsModel := new(discoveryv1.QueryNoticesOptions)
+				queryNoticesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				queryNoticesOptionsModel.CollectionID = core.StringPtr("testString")
+				queryNoticesOptionsModel.Filter = core.StringPtr("testString")
+				queryNoticesOptionsModel.Query = core.StringPtr("testString")
+				queryNoticesOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				queryNoticesOptionsModel.Passages = core.BoolPtr(true)
+				queryNoticesOptionsModel.Aggregation = core.StringPtr("testString")
+				queryNoticesOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryNoticesOptionsModel.Return = []string{"testString"}
+				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryNoticesOptionsModel.Sort = []string{"testString"}
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
+				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
+				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
+				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
+				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.QueryNoticesWithContext(ctx, queryNoticesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.QueryNotices(queryNoticesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.QueryNoticesWithContext(ctx, queryNoticesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(queryNoticesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for passages query parameter
+					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for highlight query parameter
+					Expect(req.URL.Query()["passages.count"]).To(Equal([]string{fmt.Sprint(int64(100))}))
+					Expect(req.URL.Query()["passages.characters"]).To(Equal([]string{fmt.Sprint(int64(50))}))
+					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for similar query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
 				}))
 			})
 			It(`Invoke QueryNotices successfully`, func() {
@@ -7400,7 +9481,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.QueryNotices(nil)
@@ -7437,30 +9517,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryNoticesWithContext(ctx, queryNoticesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.QueryNotices(queryNoticesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryNoticesWithContext(ctx, queryNoticesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke QueryNotices with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -7513,11 +9569,64 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke QueryNotices successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the QueryNoticesOptions model
+				queryNoticesOptionsModel := new(discoveryv1.QueryNoticesOptions)
+				queryNoticesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				queryNoticesOptionsModel.CollectionID = core.StringPtr("testString")
+				queryNoticesOptionsModel.Filter = core.StringPtr("testString")
+				queryNoticesOptionsModel.Query = core.StringPtr("testString")
+				queryNoticesOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				queryNoticesOptionsModel.Passages = core.BoolPtr(true)
+				queryNoticesOptionsModel.Aggregation = core.StringPtr("testString")
+				queryNoticesOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryNoticesOptionsModel.Return = []string{"testString"}
+				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryNoticesOptionsModel.Sort = []string{"testString"}
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
+				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
+				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
+				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
+				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.QueryNotices(queryNoticesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`FederatedQuery(federatedQueryOptions *FederatedQueryOptions) - Operation response error`, func() {
 		version := "testString"
 		federatedQueryPath := "/v1/environments/testString/query"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7528,7 +9637,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
 					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7586,14 +9694,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`FederatedQuery(federatedQueryOptions *FederatedQueryOptions)`, func() {
 		version := "testString"
 		federatedQueryPath := "/v1/environments/testString/query"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7620,10 +9725,104 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
 					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17, "session_token": "SessionToken", "retrieval_details": {"document_retrieval_strategy": "untrained"}, "suggested_query": "SuggestedQuery"}`)
+				}))
+			})
+			It(`Invoke FederatedQuery successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the FederatedQueryOptions model
+				federatedQueryOptionsModel := new(discoveryv1.FederatedQueryOptions)
+				federatedQueryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				federatedQueryOptionsModel.CollectionIds = core.StringPtr("testString")
+				federatedQueryOptionsModel.Filter = core.StringPtr("testString")
+				federatedQueryOptionsModel.Query = core.StringPtr("testString")
+				federatedQueryOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				federatedQueryOptionsModel.Passages = core.BoolPtr(true)
+				federatedQueryOptionsModel.Aggregation = core.StringPtr("testString")
+				federatedQueryOptionsModel.Count = core.Int64Ptr(int64(38))
+				federatedQueryOptionsModel.Return = core.StringPtr("testString")
+				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
+				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
+				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
+				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
+				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
+				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.FederatedQueryWithContext(ctx, federatedQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.FederatedQuery(federatedQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.FederatedQueryWithContext(ctx, federatedQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(federatedQueryPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -7638,7 +9837,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.FederatedQuery(nil)
@@ -7678,30 +9876,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.FederatedQueryWithContext(ctx, federatedQueryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.FederatedQuery(federatedQueryOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.FederatedQueryWithContext(ctx, federatedQueryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke FederatedQuery with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -7757,11 +9931,67 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke FederatedQuery successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the FederatedQueryOptions model
+				federatedQueryOptionsModel := new(discoveryv1.FederatedQueryOptions)
+				federatedQueryOptionsModel.EnvironmentID = core.StringPtr("testString")
+				federatedQueryOptionsModel.CollectionIds = core.StringPtr("testString")
+				federatedQueryOptionsModel.Filter = core.StringPtr("testString")
+				federatedQueryOptionsModel.Query = core.StringPtr("testString")
+				federatedQueryOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				federatedQueryOptionsModel.Passages = core.BoolPtr(true)
+				federatedQueryOptionsModel.Aggregation = core.StringPtr("testString")
+				federatedQueryOptionsModel.Count = core.Int64Ptr(int64(38))
+				federatedQueryOptionsModel.Return = core.StringPtr("testString")
+				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
+				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
+				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
+				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
+				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
+				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
+				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.FederatedQuery(federatedQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions) - Operation response error`, func() {
 		version := "testString"
 		federatedQueryNoticesPath := "/v1/environments/testString/notices"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -7770,25 +10000,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(federatedQueryNoticesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for highlight query parameter
-
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for similar query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -7839,14 +10059,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`FederatedQueryNotices(federatedQueryNoticesOptions *FederatedQueryNoticesOptions)`, func() {
 		version := "testString"
 		federatedQueryNoticesPath := "/v1/environments/testString/notices"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -7855,32 +10072,101 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// TODO: Add check for highlight query parameter
-
 					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for similar query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": {"anyKey": "anyValue"}}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
+				}))
+			})
+			It(`Invoke FederatedQueryNotices successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the FederatedQueryNoticesOptions model
+				federatedQueryNoticesOptionsModel := new(discoveryv1.FederatedQueryNoticesOptions)
+				federatedQueryNoticesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.CollectionIds = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Filter = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Query = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Aggregation = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Count = core.Int64Ptr(int64(38))
+				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
+				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
+				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.FederatedQueryNoticesWithContext(ctx, federatedQueryNoticesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.FederatedQueryNotices(federatedQueryNoticesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.FederatedQueryNoticesWithContext(ctx, federatedQueryNoticesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(federatedQueryNoticesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["natural_language_query"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["aggregation"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// TODO: Add check for highlight query parameter
+					Expect(req.URL.Query()["deduplicate.field"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for similar query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"id": "ID", "metadata": {"mapKey": "anyValue"}, "collection_id": "CollectionID", "result_metadata": {"score": 5, "confidence": 10}, "code": 4, "filename": "Filename", "file_type": "pdf", "sha1": "Sha1", "notices": [{"notice_id": "NoticeID", "created": "2019-01-01T12:00:00.000Z", "document_id": "DocumentID", "query_id": "QueryID", "severity": "warning", "step": "Step", "description": "Description"}]}], "aggregations": [{"type": "histogram", "matching_results": 15, "field": "Field", "interval": 8}], "passages": [{"document_id": "DocumentID", "passage_score": 12, "passage_text": "PassageText", "start_offset": 11, "end_offset": 9, "field": "Field"}], "duplicates_removed": 17}`)
 				}))
 			})
 			It(`Invoke FederatedQueryNotices successfully`, func() {
@@ -7891,7 +10177,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.FederatedQueryNotices(nil)
@@ -7924,30 +10209,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.FederatedQueryNoticesWithContext(ctx, federatedQueryNoticesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.FederatedQueryNotices(federatedQueryNoticesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.FederatedQueryNoticesWithContext(ctx, federatedQueryNoticesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke FederatedQueryNotices with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -7996,11 +10257,60 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke FederatedQueryNotices successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the FederatedQueryNoticesOptions model
+				federatedQueryNoticesOptionsModel := new(discoveryv1.FederatedQueryNoticesOptions)
+				federatedQueryNoticesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.CollectionIds = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Filter = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Query = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Aggregation = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Count = core.Int64Ptr(int64(38))
+				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
+				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
+				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
+				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.FederatedQueryNotices(federatedQueryNoticesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions) - Operation response error`, func() {
 		version := "testString"
 		getAutocompletionPath := "/v1/environments/testString/collections/testString/autocompletion"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8009,13 +10319,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getAutocompletionPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["prefix"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["field"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8056,14 +10362,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetAutocompletion(getAutocompletionOptions *GetAutocompletionOptions)`, func() {
 		version := "testString"
 		getAutocompletionPath := "/v1/environments/testString/collections/testString/autocompletion"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8072,16 +10375,75 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["prefix"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["field"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"completions": ["Completions"]}`)
+				}))
+			})
+			It(`Invoke GetAutocompletion successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetAutocompletionOptions model
+				getAutocompletionOptionsModel := new(discoveryv1.GetAutocompletionOptions)
+				getAutocompletionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getAutocompletionOptionsModel.CollectionID = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Prefix = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Field = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Count = core.Int64Ptr(int64(38))
+				getAutocompletionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetAutocompletionWithContext(ctx, getAutocompletionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetAutocompletion(getAutocompletionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetAutocompletionWithContext(ctx, getAutocompletionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getAutocompletionPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["prefix"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["field"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -8096,7 +10458,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetAutocompletion(nil)
@@ -8119,30 +10480,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetAutocompletionWithContext(ctx, getAutocompletionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetAutocompletion(getAutocompletionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetAutocompletionWithContext(ctx, getAutocompletionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetAutocompletion with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -8181,157 +10518,50 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetAutocompletion successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the GetAutocompletionOptions model
+				getAutocompletionOptionsModel := new(discoveryv1.GetAutocompletionOptions)
+				getAutocompletionOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getAutocompletionOptionsModel.CollectionID = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Prefix = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Field = core.StringPtr("testString")
+				getAutocompletionOptionsModel.Count = core.Int64Ptr(int64(38))
+				getAutocompletionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetAutocompletion(getAutocompletionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions) - Operation response error`, func() {
 		version := "testString"
 		listTrainingDataPath := "/v1/environments/testString/collections/testString/training_data"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8340,7 +10570,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listTrainingDataPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8378,14 +10607,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListTrainingData(listTrainingDataOptions *ListTrainingDataOptions)`, func() {
 		version := "testString"
 		listTrainingDataPath := "/v1/environments/testString/collections/testString/training_data"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8394,10 +10620,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"environment_id": "EnvironmentID", "collection_id": "CollectionID", "queries": [{"query_id": "QueryID", "natural_language_query": "NaturalLanguageQuery", "filter": "Filter", "examples": [{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}]}]}`)
+				}))
+			})
+			It(`Invoke ListTrainingData successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListTrainingDataOptions model
+				listTrainingDataOptionsModel := new(discoveryv1.ListTrainingDataOptions)
+				listTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				listTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListTrainingDataWithContext(ctx, listTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListTrainingData(listTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListTrainingDataWithContext(ctx, listTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listTrainingDataPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -8412,7 +10694,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListTrainingData(nil)
@@ -8432,30 +10713,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListTrainingDataWithContext(ctx, listTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListTrainingData(listTrainingDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListTrainingDataWithContext(ctx, listTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListTrainingData with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -8491,11 +10748,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListTrainingData successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListTrainingDataOptions model
+				listTrainingDataOptionsModel := new(discoveryv1.ListTrainingDataOptions)
+				listTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				listTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListTrainingData(listTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions) - Operation response error`, func() {
 		version := "testString"
 		addTrainingDataPath := "/v1/environments/testString/collections/testString/training_data"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8504,7 +10797,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(addTrainingDataPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8551,14 +10843,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`AddTrainingData(addTrainingDataOptions *AddTrainingDataOptions)`, func() {
 		version := "testString"
 		addTrainingDataPath := "/v1/environments/testString/collections/testString/training_data"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8583,10 +10872,91 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"query_id": "QueryID", "natural_language_query": "NaturalLanguageQuery", "filter": "Filter", "examples": [{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}]}`)
+				}))
+			})
+			It(`Invoke AddTrainingData successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the TrainingExample model
+				trainingExampleModel := new(discoveryv1.TrainingExample)
+				trainingExampleModel.DocumentID = core.StringPtr("testString")
+				trainingExampleModel.CrossReference = core.StringPtr("testString")
+				trainingExampleModel.Relevance = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the AddTrainingDataOptions model
+				addTrainingDataOptionsModel := new(discoveryv1.AddTrainingDataOptions)
+				addTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				addTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				addTrainingDataOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				addTrainingDataOptionsModel.Filter = core.StringPtr("testString")
+				addTrainingDataOptionsModel.Examples = []discoveryv1.TrainingExample{*trainingExampleModel}
+				addTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.AddTrainingDataWithContext(ctx, addTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.AddTrainingData(addTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.AddTrainingDataWithContext(ctx, addTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(addTrainingDataPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -8601,7 +10971,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.AddTrainingData(nil)
@@ -8630,30 +10999,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.AddTrainingDataWithContext(ctx, addTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.AddTrainingData(addTrainingDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.AddTrainingDataWithContext(ctx, addTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke AddTrainingData with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -8698,8 +11043,52 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke AddTrainingData successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the TrainingExample model
+				trainingExampleModel := new(discoveryv1.TrainingExample)
+				trainingExampleModel.DocumentID = core.StringPtr("testString")
+				trainingExampleModel.CrossReference = core.StringPtr("testString")
+				trainingExampleModel.Relevance = core.Int64Ptr(int64(38))
+
+				// Construct an instance of the AddTrainingDataOptions model
+				addTrainingDataOptionsModel := new(discoveryv1.AddTrainingDataOptions)
+				addTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				addTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				addTrainingDataOptionsModel.NaturalLanguageQuery = core.StringPtr("testString")
+				addTrainingDataOptionsModel.Filter = core.StringPtr("testString")
+				addTrainingDataOptionsModel.Examples = []discoveryv1.TrainingExample{*trainingExampleModel}
+				addTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.AddTrainingData(addTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteAllTrainingData(deleteAllTrainingDataOptions *DeleteAllTrainingDataOptions)`, func() {
 		version := "testString"
 		deleteAllTrainingDataPath := "/v1/environments/testString/collections/testString/training_data"
@@ -8713,7 +11102,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(204)
 				}))
 			})
@@ -8725,7 +11113,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteAllTrainingData(nil)
@@ -8739,12 +11126,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteAllTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteAllTrainingData(deleteAllTrainingDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteAllTrainingData(deleteAllTrainingDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -8785,7 +11166,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions) - Operation response error`, func() {
 		version := "testString"
 		getTrainingDataPath := "/v1/environments/testString/collections/testString/training_data/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -8794,7 +11175,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getTrainingDataPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -8833,14 +11213,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetTrainingData(getTrainingDataOptions *GetTrainingDataOptions)`, func() {
 		version := "testString"
 		getTrainingDataPath := "/v1/environments/testString/collections/testString/training_data/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -8849,10 +11226,67 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"query_id": "QueryID", "natural_language_query": "NaturalLanguageQuery", "filter": "Filter", "examples": [{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}]}`)
+				}))
+			})
+			It(`Invoke GetTrainingData successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetTrainingDataOptions model
+				getTrainingDataOptionsModel := new(discoveryv1.GetTrainingDataOptions)
+				getTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.QueryID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetTrainingDataWithContext(ctx, getTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetTrainingData(getTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetTrainingDataWithContext(ctx, getTrainingDataOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getTrainingDataPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -8867,7 +11301,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetTrainingData(nil)
@@ -8888,30 +11321,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTrainingDataWithContext(ctx, getTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetTrainingData(getTrainingDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTrainingDataWithContext(ctx, getTrainingDataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTrainingData with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -8948,8 +11357,44 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetTrainingData successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetTrainingDataOptions model
+				getTrainingDataOptionsModel := new(discoveryv1.GetTrainingDataOptions)
+				getTrainingDataOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.CollectionID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.QueryID = core.StringPtr("testString")
+				getTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetTrainingData(getTrainingDataOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteTrainingData(deleteTrainingDataOptions *DeleteTrainingDataOptions)`, func() {
 		version := "testString"
 		deleteTrainingDataPath := "/v1/environments/testString/collections/testString/training_data/testString"
@@ -8963,7 +11408,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(204)
 				}))
 			})
@@ -8975,7 +11419,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteTrainingData(nil)
@@ -8990,12 +11433,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteTrainingDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteTrainingData(deleteTrainingDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteTrainingData(deleteTrainingDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -9037,7 +11474,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions) - Operation response error`, func() {
 		version := "testString"
 		listTrainingExamplesPath := "/v1/environments/testString/collections/testString/training_data/testString/examples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9046,7 +11483,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listTrainingExamplesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9085,14 +11521,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListTrainingExamples(listTrainingExamplesOptions *ListTrainingExamplesOptions)`, func() {
 		version := "testString"
 		listTrainingExamplesPath := "/v1/environments/testString/collections/testString/training_data/testString/examples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9101,10 +11534,67 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"examples": [{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}]}`)
+				}))
+			})
+			It(`Invoke ListTrainingExamples successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListTrainingExamplesOptions model
+				listTrainingExamplesOptionsModel := new(discoveryv1.ListTrainingExamplesOptions)
+				listTrainingExamplesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.CollectionID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.QueryID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListTrainingExamplesWithContext(ctx, listTrainingExamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListTrainingExamples(listTrainingExamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListTrainingExamplesWithContext(ctx, listTrainingExamplesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listTrainingExamplesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -9119,7 +11609,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListTrainingExamples(nil)
@@ -9140,30 +11629,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListTrainingExamplesWithContext(ctx, listTrainingExamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListTrainingExamples(listTrainingExamplesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListTrainingExamplesWithContext(ctx, listTrainingExamplesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListTrainingExamples with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -9200,11 +11665,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListTrainingExamples successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListTrainingExamplesOptions model
+				listTrainingExamplesOptionsModel := new(discoveryv1.ListTrainingExamplesOptions)
+				listTrainingExamplesOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.CollectionID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.QueryID = core.StringPtr("testString")
+				listTrainingExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListTrainingExamples(listTrainingExamplesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		createTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9213,7 +11715,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createTrainingExamplePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9255,14 +11756,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateTrainingExample(createTrainingExampleOptions *CreateTrainingExampleOptions)`, func() {
 		version := "testString"
 		createTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9287,10 +11785,86 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}`)
+				}))
+			})
+			It(`Invoke CreateTrainingExample successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateTrainingExampleOptions model
+				createTrainingExampleOptionsModel := new(discoveryv1.CreateTrainingExampleOptions)
+				createTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.DocumentID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.CrossReference = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.Relevance = core.Int64Ptr(int64(38))
+				createTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateTrainingExampleWithContext(ctx, createTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateTrainingExample(createTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateTrainingExampleWithContext(ctx, createTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createTrainingExamplePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
@@ -9305,7 +11879,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateTrainingExample(nil)
@@ -9329,30 +11902,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateTrainingExampleWithContext(ctx, createTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateTrainingExample(createTrainingExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateTrainingExampleWithContext(ctx, createTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateTrainingExample with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -9392,8 +11941,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateTrainingExample successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CreateTrainingExampleOptions model
+				createTrainingExampleOptionsModel := new(discoveryv1.CreateTrainingExampleOptions)
+				createTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.DocumentID = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.CrossReference = core.StringPtr("testString")
+				createTrainingExampleOptionsModel.Relevance = core.Int64Ptr(int64(38))
+				createTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateTrainingExample(createTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteTrainingExample(deleteTrainingExampleOptions *DeleteTrainingExampleOptions)`, func() {
 		version := "testString"
 		deleteTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples/testString"
@@ -9407,7 +11995,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(204)
 				}))
 			})
@@ -9419,7 +12006,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteTrainingExample(nil)
@@ -9435,12 +12021,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteTrainingExample(deleteTrainingExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteTrainingExample(deleteTrainingExampleOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -9483,7 +12063,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 	Describe(`UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		updateTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9492,7 +12072,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateTrainingExamplePath))
 					Expect(req.Method).To(Equal("PUT"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9534,14 +12113,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateTrainingExample(updateTrainingExampleOptions *UpdateTrainingExampleOptions)`, func() {
 		version := "testString"
 		updateTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9566,10 +12142,86 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}`)
+				}))
+			})
+			It(`Invoke UpdateTrainingExample successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateTrainingExampleOptions model
+				updateTrainingExampleOptionsModel := new(discoveryv1.UpdateTrainingExampleOptions)
+				updateTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.ExampleID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.CrossReference = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.Relevance = core.Int64Ptr(int64(38))
+				updateTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateTrainingExampleWithContext(ctx, updateTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateTrainingExample(updateTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateTrainingExampleWithContext(ctx, updateTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateTrainingExamplePath))
+					Expect(req.Method).To(Equal("PUT"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -9584,7 +12236,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateTrainingExample(nil)
@@ -9608,30 +12259,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateTrainingExampleWithContext(ctx, updateTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateTrainingExample(updateTrainingExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateTrainingExampleWithContext(ctx, updateTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateTrainingExample with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -9671,11 +12298,51 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateTrainingExample successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateTrainingExampleOptions model
+				updateTrainingExampleOptionsModel := new(discoveryv1.UpdateTrainingExampleOptions)
+				updateTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.ExampleID = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.CrossReference = core.StringPtr("testString")
+				updateTrainingExampleOptionsModel.Relevance = core.Int64Ptr(int64(38))
+				updateTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateTrainingExample(updateTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions) - Operation response error`, func() {
 		version := "testString"
 		getTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -9684,7 +12351,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getTrainingExamplePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -9724,14 +12390,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetTrainingExample(getTrainingExampleOptions *GetTrainingExampleOptions)`, func() {
 		version := "testString"
 		getTrainingExamplePath := "/v1/environments/testString/collections/testString/training_data/testString/examples/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -9740,10 +12403,68 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "cross_reference": "CrossReference", "relevance": 9}`)
+				}))
+			})
+			It(`Invoke GetTrainingExample successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetTrainingExampleOptions model
+				getTrainingExampleOptionsModel := new(discoveryv1.GetTrainingExampleOptions)
+				getTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.ExampleID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetTrainingExampleWithContext(ctx, getTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetTrainingExample(getTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetTrainingExampleWithContext(ctx, getTrainingExampleOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getTrainingExamplePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -9758,7 +12479,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetTrainingExample(nil)
@@ -9780,30 +12500,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTrainingExampleWithContext(ctx, getTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetTrainingExample(getTrainingExampleOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetTrainingExampleWithContext(ctx, getTrainingExampleOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTrainingExample with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -9841,154 +12537,45 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetTrainingExample successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
+				// Construct an instance of the GetTrainingExampleOptions model
+				getTrainingExampleOptionsModel := new(discoveryv1.GetTrainingExampleOptions)
+				getTrainingExampleOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.CollectionID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.QueryID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.ExampleID = core.StringPtr("testString")
+				getTrainingExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetTrainingExample(getTrainingExampleOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		version := "testString"
 		deleteUserDataPath := "/v1/user_data"
@@ -10002,9 +12589,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["customer_id"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -10016,7 +12601,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := discoveryService.DeleteUserData(nil)
@@ -10029,12 +12613,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				deleteUserDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = discoveryService.DeleteUserData(deleteUserDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
 				response, operationErr = discoveryService.DeleteUserData(deleteUserDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -10071,156 +12649,10 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
 	Describe(`CreateEvent(createEventOptions *CreateEventOptions) - Operation response error`, func() {
 		version := "testString"
 		createEventPath := "/v1/events"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10229,7 +12661,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createEventPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10248,7 +12679,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				eventDataModel := new(discoveryv1.EventData)
 				eventDataModel.EnvironmentID = core.StringPtr("testString")
 				eventDataModel.SessionToken = core.StringPtr("testString")
-				eventDataModel.ClientTimestamp = CreateMockDateTime()
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
 				eventDataModel.CollectionID = core.StringPtr("testString")
 				eventDataModel.DocumentID = core.StringPtr("testString")
@@ -10276,14 +12707,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateEvent(createEventOptions *CreateEventOptions)`, func() {
 		version := "testString"
 		createEventPath := "/v1/events"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10308,14 +12736,95 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"type": "click", "data": {"environment_id": "EnvironmentID", "session_token": "SessionToken", "client_timestamp": "2019-01-01T12:00:00", "display_rank": 11, "collection_id": "CollectionID", "document_id": "DocumentID", "query_id": "QueryID"}}`)
+					fmt.Fprintf(res, "%s", `{"type": "click", "data": {"environment_id": "EnvironmentID", "session_token": "SessionToken", "client_timestamp": "2019-01-01T12:00:00.000Z", "display_rank": 11, "collection_id": "CollectionID", "document_id": "DocumentID", "query_id": "QueryID"}}`)
+				}))
+			})
+			It(`Invoke CreateEvent successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the EventData model
+				eventDataModel := new(discoveryv1.EventData)
+				eventDataModel.EnvironmentID = core.StringPtr("testString")
+				eventDataModel.SessionToken = core.StringPtr("testString")
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
+				eventDataModel.CollectionID = core.StringPtr("testString")
+				eventDataModel.DocumentID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateEventOptions model
+				createEventOptionsModel := new(discoveryv1.CreateEventOptions)
+				createEventOptionsModel.Type = core.StringPtr("click")
+				createEventOptionsModel.Data = eventDataModel
+				createEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateEventWithContext(ctx, createEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateEvent(createEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateEventWithContext(ctx, createEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createEventPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(201)
+					fmt.Fprintf(res, "%s", `{"type": "click", "data": {"environment_id": "EnvironmentID", "session_token": "SessionToken", "client_timestamp": "2019-01-01T12:00:00.000Z", "display_rank": 11, "collection_id": "CollectionID", "document_id": "DocumentID", "query_id": "QueryID"}}`)
 				}))
 			})
 			It(`Invoke CreateEvent successfully`, func() {
@@ -10326,7 +12835,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateEvent(nil)
@@ -10338,7 +12846,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				eventDataModel := new(discoveryv1.EventData)
 				eventDataModel.EnvironmentID = core.StringPtr("testString")
 				eventDataModel.SessionToken = core.StringPtr("testString")
-				eventDataModel.ClientTimestamp = CreateMockDateTime()
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
 				eventDataModel.CollectionID = core.StringPtr("testString")
 				eventDataModel.DocumentID = core.StringPtr("testString")
@@ -10355,30 +12863,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateEventWithContext(ctx, createEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateEvent(createEventOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateEventWithContext(ctx, createEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateEvent with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -10393,7 +12877,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 				eventDataModel := new(discoveryv1.EventData)
 				eventDataModel.EnvironmentID = core.StringPtr("testString")
 				eventDataModel.SessionToken = core.StringPtr("testString")
-				eventDataModel.ClientTimestamp = CreateMockDateTime()
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
 				eventDataModel.CollectionID = core.StringPtr("testString")
 				eventDataModel.DocumentID = core.StringPtr("testString")
@@ -10423,11 +12907,56 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(201)
+				}))
+			})
+			It(`Invoke CreateEvent successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the EventData model
+				eventDataModel := new(discoveryv1.EventData)
+				eventDataModel.EnvironmentID = core.StringPtr("testString")
+				eventDataModel.SessionToken = core.StringPtr("testString")
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
+				eventDataModel.CollectionID = core.StringPtr("testString")
+				eventDataModel.DocumentID = core.StringPtr("testString")
+
+				// Construct an instance of the CreateEventOptions model
+				createEventOptionsModel := new(discoveryv1.CreateEventOptions)
+				createEventOptionsModel.Type = core.StringPtr("click")
+				createEventOptionsModel.Data = eventDataModel
+				createEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateEvent(createEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`QueryLog(queryLogOptions *QueryLogOptions) - Operation response error`, func() {
 		version := "testString"
 		queryLogPath := "/v1/logs"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10436,15 +12965,10 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(queryLogPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10485,14 +13009,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`QueryLog(queryLogOptions *QueryLogOptions)`, func() {
 		version := "testString"
 		queryLogPath := "/v1/logs"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10501,22 +13022,81 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"environment_id": "EnvironmentID", "customer_id": "CustomerID", "document_type": "query", "natural_language_query": "NaturalLanguageQuery", "document_results": {"results": [{"position": 8, "document_id": "DocumentID", "score": 5, "confidence": 10, "collection_id": "CollectionID"}], "count": 5}, "created_timestamp": "2019-01-01T12:00:00", "client_timestamp": "2019-01-01T12:00:00", "query_id": "QueryID", "session_token": "SessionToken", "collection_id": "CollectionID", "display_rank": 11, "document_id": "DocumentID", "event_type": "click", "result_type": "document"}]}`)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"environment_id": "EnvironmentID", "customer_id": "CustomerID", "document_type": "query", "natural_language_query": "NaturalLanguageQuery", "document_results": {"results": [{"position": 8, "document_id": "DocumentID", "score": 5, "confidence": 10, "collection_id": "CollectionID"}], "count": 5}, "created_timestamp": "2019-01-01T12:00:00.000Z", "client_timestamp": "2019-01-01T12:00:00.000Z", "query_id": "QueryID", "session_token": "SessionToken", "collection_id": "CollectionID", "display_rank": 11, "document_id": "DocumentID", "event_type": "click", "result_type": "document"}]}`)
+				}))
+			})
+			It(`Invoke QueryLog successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the QueryLogOptions model
+				queryLogOptionsModel := new(discoveryv1.QueryLogOptions)
+				queryLogOptionsModel.Filter = core.StringPtr("testString")
+				queryLogOptionsModel.Query = core.StringPtr("testString")
+				queryLogOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryLogOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryLogOptionsModel.Sort = []string{"testString"}
+				queryLogOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.QueryLogWithContext(ctx, queryLogOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.QueryLog(queryLogOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.QueryLogWithContext(ctx, queryLogOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(queryLogPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["filter"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["query"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(38))}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"matching_results": 15, "results": [{"environment_id": "EnvironmentID", "customer_id": "CustomerID", "document_type": "query", "natural_language_query": "NaturalLanguageQuery", "document_results": {"results": [{"position": 8, "document_id": "DocumentID", "score": 5, "confidence": 10, "collection_id": "CollectionID"}], "count": 5}, "created_timestamp": "2019-01-01T12:00:00.000Z", "client_timestamp": "2019-01-01T12:00:00.000Z", "query_id": "QueryID", "session_token": "SessionToken", "collection_id": "CollectionID", "display_rank": 11, "document_id": "DocumentID", "event_type": "click", "result_type": "document"}]}`)
 				}))
 			})
 			It(`Invoke QueryLog successfully`, func() {
@@ -10527,7 +13107,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.QueryLog(nil)
@@ -10550,30 +13129,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryLogWithContext(ctx, queryLogOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.QueryLog(queryLogOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.QueryLogWithContext(ctx, queryLogOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke QueryLog with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -10605,11 +13160,50 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke QueryLog successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the QueryLogOptions model
+				queryLogOptionsModel := new(discoveryv1.QueryLogOptions)
+				queryLogOptionsModel.Filter = core.StringPtr("testString")
+				queryLogOptionsModel.Query = core.StringPtr("testString")
+				queryLogOptionsModel.Count = core.Int64Ptr(int64(38))
+				queryLogOptionsModel.Offset = core.Int64Ptr(int64(38))
+				queryLogOptionsModel.Sort = []string{"testString"}
+				queryLogOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.QueryLog(queryLogOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions) - Operation response error`, func() {
 		version := "testString"
 		getMetricsQueryPath := "/v1/metrics/number_of_queries"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10618,13 +13212,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10641,8 +13231,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryOptions model
 				getMetricsQueryOptionsModel := new(discoveryv1.GetMetricsQueryOptions)
-				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -10663,14 +13253,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetMetricsQuery(getMetricsQueryOptions *GetMetricsQueryOptions)`, func() {
 		version := "testString"
 		getMetricsQueryPath := "/v1/metrics/number_of_queries"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10679,20 +13266,77 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+				}))
+			})
+			It(`Invoke GetMetricsQuery successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetMetricsQueryOptions model
+				getMetricsQueryOptionsModel := new(discoveryv1.GetMetricsQueryOptions)
+				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetMetricsQueryWithContext(ctx, getMetricsQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetMetricsQuery(getMetricsQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetMetricsQueryWithContext(ctx, getMetricsQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for start_time query parameter
+					// TODO: Add check for end_time query parameter
+					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
 				}))
 			})
 			It(`Invoke GetMetricsQuery successfully`, func() {
@@ -10703,7 +13347,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetMetricsQuery(nil)
@@ -10713,8 +13356,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryOptions model
 				getMetricsQueryOptionsModel := new(discoveryv1.GetMetricsQueryOptions)
-				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -10724,30 +13367,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryWithContext(ctx, getMetricsQueryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetMetricsQuery(getMetricsQueryOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryWithContext(ctx, getMetricsQueryOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetMetricsQuery with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -10760,8 +13379,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryOptions model
 				getMetricsQueryOptionsModel := new(discoveryv1.GetMetricsQueryOptions)
-				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -10777,11 +13396,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetMetricsQuery successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetMetricsQueryOptions model
+				getMetricsQueryOptionsModel := new(discoveryv1.GetMetricsQueryOptions)
+				getMetricsQueryOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetMetricsQuery(getMetricsQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions) - Operation response error`, func() {
 		version := "testString"
 		getMetricsQueryEventPath := "/v1/metrics/number_of_queries_with_event"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10790,13 +13446,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryEventPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10813,8 +13465,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryEventOptions model
 				getMetricsQueryEventOptionsModel := new(discoveryv1.GetMetricsQueryEventOptions)
-				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryEventOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -10835,14 +13487,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetMetricsQueryEvent(getMetricsQueryEventOptions *GetMetricsQueryEventOptions)`, func() {
 		version := "testString"
 		getMetricsQueryEventPath := "/v1/metrics/number_of_queries_with_event"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -10851,20 +13500,77 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+				}))
+			})
+			It(`Invoke GetMetricsQueryEvent successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetMetricsQueryEventOptions model
+				getMetricsQueryEventOptionsModel := new(discoveryv1.GetMetricsQueryEventOptions)
+				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetMetricsQueryEventWithContext(ctx, getMetricsQueryEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetMetricsQueryEvent(getMetricsQueryEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetMetricsQueryEventWithContext(ctx, getMetricsQueryEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryEventPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for start_time query parameter
+					// TODO: Add check for end_time query parameter
+					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
 				}))
 			})
 			It(`Invoke GetMetricsQueryEvent successfully`, func() {
@@ -10875,7 +13581,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetMetricsQueryEvent(nil)
@@ -10885,8 +13590,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryEventOptions model
 				getMetricsQueryEventOptionsModel := new(discoveryv1.GetMetricsQueryEventOptions)
-				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryEventOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -10896,30 +13601,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryEventWithContext(ctx, getMetricsQueryEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetMetricsQueryEvent(getMetricsQueryEventOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryEventWithContext(ctx, getMetricsQueryEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetMetricsQueryEvent with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -10932,8 +13613,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryEventOptions model
 				getMetricsQueryEventOptionsModel := new(discoveryv1.GetMetricsQueryEventOptions)
-				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryEventOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -10949,11 +13630,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetMetricsQueryEvent successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetMetricsQueryEventOptions model
+				getMetricsQueryEventOptionsModel := new(discoveryv1.GetMetricsQueryEventOptions)
+				getMetricsQueryEventOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryEventOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetMetricsQueryEvent(getMetricsQueryEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions) - Operation response error`, func() {
 		version := "testString"
 		getMetricsQueryNoResultsPath := "/v1/metrics/number_of_queries_with_no_search_results"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -10962,13 +13680,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryNoResultsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -10985,8 +13699,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryNoResultsOptions model
 				getMetricsQueryNoResultsOptionsModel := new(discoveryv1.GetMetricsQueryNoResultsOptions)
-				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryNoResultsOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryNoResultsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -11007,14 +13721,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetMetricsQueryNoResults(getMetricsQueryNoResultsOptions *GetMetricsQueryNoResultsOptions)`, func() {
 		version := "testString"
 		getMetricsQueryNoResultsPath := "/v1/metrics/number_of_queries_with_no_search_results"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11023,20 +13734,77 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+				}))
+			})
+			It(`Invoke GetMetricsQueryNoResults successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetMetricsQueryNoResultsOptions model
+				getMetricsQueryNoResultsOptionsModel := new(discoveryv1.GetMetricsQueryNoResultsOptions)
+				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryNoResultsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetMetricsQueryNoResultsWithContext(ctx, getMetricsQueryNoResultsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetMetricsQueryNoResults(getMetricsQueryNoResultsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetMetricsQueryNoResultsWithContext(ctx, getMetricsQueryNoResultsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryNoResultsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for start_time query parameter
+					// TODO: Add check for end_time query parameter
+					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
 				}))
 			})
 			It(`Invoke GetMetricsQueryNoResults successfully`, func() {
@@ -11047,7 +13815,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetMetricsQueryNoResults(nil)
@@ -11057,8 +13824,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryNoResultsOptions model
 				getMetricsQueryNoResultsOptionsModel := new(discoveryv1.GetMetricsQueryNoResultsOptions)
-				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryNoResultsOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryNoResultsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -11068,30 +13835,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryNoResultsWithContext(ctx, getMetricsQueryNoResultsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetMetricsQueryNoResults(getMetricsQueryNoResultsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryNoResultsWithContext(ctx, getMetricsQueryNoResultsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetMetricsQueryNoResults with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -11104,8 +13847,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsQueryNoResultsOptions model
 				getMetricsQueryNoResultsOptionsModel := new(discoveryv1.GetMetricsQueryNoResultsOptions)
-				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsQueryNoResultsOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsQueryNoResultsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -11121,11 +13864,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetMetricsQueryNoResults successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetMetricsQueryNoResultsOptions model
+				getMetricsQueryNoResultsOptionsModel := new(discoveryv1.GetMetricsQueryNoResultsOptions)
+				getMetricsQueryNoResultsOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsQueryNoResultsOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsQueryNoResultsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetMetricsQueryNoResults(getMetricsQueryNoResultsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions) - Operation response error`, func() {
 		version := "testString"
 		getMetricsEventRatePath := "/v1/metrics/event_rate"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -11134,13 +13914,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getMetricsEventRatePath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -11157,8 +13933,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsEventRateOptions model
 				getMetricsEventRateOptionsModel := new(discoveryv1.GetMetricsEventRateOptions)
-				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsEventRateOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsEventRateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -11179,14 +13955,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetMetricsEventRate(getMetricsEventRateOptions *GetMetricsEventRateOptions)`, func() {
 		version := "testString"
 		getMetricsEventRatePath := "/v1/metrics/event_rate"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11195,20 +13968,77 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for start_time query parameter
-
 					// TODO: Add check for end_time query parameter
-
 					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
+				}))
+			})
+			It(`Invoke GetMetricsEventRate successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetMetricsEventRateOptions model
+				getMetricsEventRateOptionsModel := new(discoveryv1.GetMetricsEventRateOptions)
+				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsEventRateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetMetricsEventRateWithContext(ctx, getMetricsEventRateOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetMetricsEventRate(getMetricsEventRateOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetMetricsEventRateWithContext(ctx, getMetricsEventRateOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getMetricsEventRatePath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for start_time query parameter
+					// TODO: Add check for end_time query parameter
+					Expect(req.URL.Query()["result_type"]).To(Equal([]string{"document"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"interval": "Interval", "event_type": "EventType", "results": [{"key_as_string": "2019-01-01T12:00:00.000Z", "key": 3, "matching_results": 15, "event_rate": 9}]}]}`)
 				}))
 			})
 			It(`Invoke GetMetricsEventRate successfully`, func() {
@@ -11219,7 +14049,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetMetricsEventRate(nil)
@@ -11229,8 +14058,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsEventRateOptions model
 				getMetricsEventRateOptionsModel := new(discoveryv1.GetMetricsEventRateOptions)
-				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsEventRateOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsEventRateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -11240,30 +14069,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsEventRateWithContext(ctx, getMetricsEventRateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetMetricsEventRate(getMetricsEventRateOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsEventRateWithContext(ctx, getMetricsEventRateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetMetricsEventRate with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -11276,8 +14081,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the GetMetricsEventRateOptions model
 				getMetricsEventRateOptionsModel := new(discoveryv1.GetMetricsEventRateOptions)
-				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime()
-				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime()
+				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				getMetricsEventRateOptionsModel.ResultType = core.StringPtr("document")
 				getMetricsEventRateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -11293,11 +14098,48 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetMetricsEventRate successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetMetricsEventRateOptions model
+				getMetricsEventRateOptionsModel := new(discoveryv1.GetMetricsEventRateOptions)
+				getMetricsEventRateOptionsModel.StartTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.EndTime = CreateMockDateTime("2019-01-01T12:00:00.000Z")
+				getMetricsEventRateOptionsModel.ResultType = core.StringPtr("document")
+				getMetricsEventRateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetMetricsEventRate(getMetricsEventRateOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions) - Operation response error`, func() {
 		version := "testString"
 		getMetricsQueryTokenEventPath := "/v1/metrics/top_query_tokens_with_event_rate"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -11306,9 +14148,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryTokenEventPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -11345,14 +14185,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptions *GetMetricsQueryTokenEventOptions)`, func() {
 		version := "testString"
 		getMetricsQueryTokenEventPath := "/v1/metrics/top_query_tokens_with_event_rate"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11361,12 +14198,67 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"aggregations": [{"event_type": "EventType", "results": [{"key": "Key", "matching_results": 15, "event_rate": 9}]}]}`)
+				}))
+			})
+			It(`Invoke GetMetricsQueryTokenEvent successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetMetricsQueryTokenEventOptions model
+				getMetricsQueryTokenEventOptionsModel := new(discoveryv1.GetMetricsQueryTokenEventOptions)
+				getMetricsQueryTokenEventOptionsModel.Count = core.Int64Ptr(int64(38))
+				getMetricsQueryTokenEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetMetricsQueryTokenEventWithContext(ctx, getMetricsQueryTokenEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetMetricsQueryTokenEventWithContext(ctx, getMetricsQueryTokenEventOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getMetricsQueryTokenEventPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["count"]).To(Equal([]string{fmt.Sprint(int64(38))}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -11381,7 +14273,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetMetricsQueryTokenEvent(nil)
@@ -11400,30 +14291,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryTokenEventWithContext(ctx, getMetricsQueryTokenEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetMetricsQueryTokenEventWithContext(ctx, getMetricsQueryTokenEventOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetMetricsQueryTokenEvent with error: Operation request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -11451,157 +14318,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetMetricsQueryTokenEvent successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the GetMetricsQueryTokenEventOptions model
+				getMetricsQueryTokenEventOptionsModel := new(discoveryv1.GetMetricsQueryTokenEventOptions)
+				getMetricsQueryTokenEventOptionsModel.Count = core.Int64Ptr(int64(38))
+				getMetricsQueryTokenEventOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetMetricsQueryTokenEvent(getMetricsQueryTokenEventOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListCredentials(listCredentialsOptions *ListCredentialsOptions) - Operation response error`, func() {
 		version := "testString"
 		listCredentialsPath := "/v1/environments/testString/credentials"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -11610,7 +14366,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listCredentialsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -11647,14 +14402,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListCredentials(listCredentialsOptions *ListCredentialsOptions)`, func() {
 		version := "testString"
 		listCredentialsPath := "/v1/environments/testString/credentials"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11663,10 +14415,65 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}]}`)
+				}))
+			})
+			It(`Invoke ListCredentials successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListCredentialsOptions model
+				listCredentialsOptionsModel := new(discoveryv1.ListCredentialsOptions)
+				listCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListCredentialsWithContext(ctx, listCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListCredentials(listCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListCredentialsWithContext(ctx, listCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listCredentialsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -11681,7 +14488,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListCredentials(nil)
@@ -11700,30 +14506,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCredentialsWithContext(ctx, listCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListCredentials(listCredentialsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListCredentialsWithContext(ctx, listCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListCredentials with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -11758,11 +14540,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListCredentials successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListCredentialsOptions model
+				listCredentialsOptionsModel := new(discoveryv1.ListCredentialsOptions)
+				listCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListCredentials(listCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateCredentials(createCredentialsOptions *CreateCredentialsOptions) - Operation response error`, func() {
 		version := "testString"
 		createCredentialsPath := "/v1/environments/testString/credentials"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -11771,7 +14588,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createCredentialsPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -11833,14 +14649,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateCredentials(createCredentialsOptions *CreateCredentialsOptions)`, func() {
 		version := "testString"
 		createCredentialsPath := "/v1/environments/testString/credentials"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -11865,10 +14678,106 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+				}))
+			})
+			It(`Invoke CreateCredentials successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CredentialDetails model
+				credentialDetailsModel := new(discoveryv1.CredentialDetails)
+				credentialDetailsModel.CredentialType = core.StringPtr("oauth2")
+				credentialDetailsModel.ClientID = core.StringPtr("testString")
+				credentialDetailsModel.EnterpriseID = core.StringPtr("testString")
+				credentialDetailsModel.URL = core.StringPtr("testString")
+				credentialDetailsModel.Username = core.StringPtr("testString")
+				credentialDetailsModel.OrganizationURL = core.StringPtr("testString")
+				credentialDetailsModel.SiteCollectionPath = core.StringPtr("testString")
+				credentialDetailsModel.ClientSecret = core.StringPtr("testString")
+				credentialDetailsModel.PublicKeyID = core.StringPtr("testString")
+				credentialDetailsModel.PrivateKey = core.StringPtr("testString")
+				credentialDetailsModel.Passphrase = core.StringPtr("testString")
+				credentialDetailsModel.Password = core.StringPtr("testString")
+				credentialDetailsModel.GatewayID = core.StringPtr("testString")
+				credentialDetailsModel.SourceVersion = core.StringPtr("online")
+				credentialDetailsModel.WebApplicationURL = core.StringPtr("testString")
+				credentialDetailsModel.Domain = core.StringPtr("testString")
+				credentialDetailsModel.Endpoint = core.StringPtr("testString")
+				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
+				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
+
+				// Construct an instance of the CreateCredentialsOptions model
+				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
+				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
+				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
+				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateCredentialsWithContext(ctx, createCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateCredentials(createCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateCredentialsWithContext(ctx, createCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createCredentialsPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -11883,7 +14792,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateCredentials(nil)
@@ -11927,30 +14835,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateCredentialsWithContext(ctx, createCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateCredentials(createCredentialsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateCredentialsWithContext(ctx, createCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateCredentials with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -12010,11 +14894,71 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateCredentials successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CredentialDetails model
+				credentialDetailsModel := new(discoveryv1.CredentialDetails)
+				credentialDetailsModel.CredentialType = core.StringPtr("oauth2")
+				credentialDetailsModel.ClientID = core.StringPtr("testString")
+				credentialDetailsModel.EnterpriseID = core.StringPtr("testString")
+				credentialDetailsModel.URL = core.StringPtr("testString")
+				credentialDetailsModel.Username = core.StringPtr("testString")
+				credentialDetailsModel.OrganizationURL = core.StringPtr("testString")
+				credentialDetailsModel.SiteCollectionPath = core.StringPtr("testString")
+				credentialDetailsModel.ClientSecret = core.StringPtr("testString")
+				credentialDetailsModel.PublicKeyID = core.StringPtr("testString")
+				credentialDetailsModel.PrivateKey = core.StringPtr("testString")
+				credentialDetailsModel.Passphrase = core.StringPtr("testString")
+				credentialDetailsModel.Password = core.StringPtr("testString")
+				credentialDetailsModel.GatewayID = core.StringPtr("testString")
+				credentialDetailsModel.SourceVersion = core.StringPtr("online")
+				credentialDetailsModel.WebApplicationURL = core.StringPtr("testString")
+				credentialDetailsModel.Domain = core.StringPtr("testString")
+				credentialDetailsModel.Endpoint = core.StringPtr("testString")
+				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
+				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
+
+				// Construct an instance of the CreateCredentialsOptions model
+				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
+				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
+				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
+				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateCredentials(createCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetCredentials(getCredentialsOptions *GetCredentialsOptions) - Operation response error`, func() {
 		version := "testString"
 		getCredentialsPath := "/v1/environments/testString/credentials/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -12023,7 +14967,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getCredentialsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -12061,14 +15004,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetCredentials(getCredentialsOptions *GetCredentialsOptions)`, func() {
 		version := "testString"
 		getCredentialsPath := "/v1/environments/testString/credentials/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -12077,10 +15017,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+				}))
+			})
+			It(`Invoke GetCredentials successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCredentialsOptions model
+				getCredentialsOptionsModel := new(discoveryv1.GetCredentialsOptions)
+				getCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				getCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetCredentialsWithContext(ctx, getCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetCredentials(getCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetCredentialsWithContext(ctx, getCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCredentialsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -12095,7 +15091,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetCredentials(nil)
@@ -12115,30 +15110,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetCredentialsWithContext(ctx, getCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetCredentials(getCredentialsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetCredentialsWithContext(ctx, getCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetCredentials with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -12174,11 +15145,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCredentials successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetCredentialsOptions model
+				getCredentialsOptionsModel := new(discoveryv1.GetCredentialsOptions)
+				getCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				getCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetCredentials(getCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions) - Operation response error`, func() {
 		version := "testString"
 		updateCredentialsPath := "/v1/environments/testString/credentials/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -12187,7 +15194,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateCredentialsPath))
 					Expect(req.Method).To(Equal("PUT"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -12250,14 +15256,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateCredentials(updateCredentialsOptions *UpdateCredentialsOptions)`, func() {
 		version := "testString"
 		updateCredentialsPath := "/v1/environments/testString/credentials/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -12282,10 +15285,107 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+				}))
+			})
+			It(`Invoke UpdateCredentials successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CredentialDetails model
+				credentialDetailsModel := new(discoveryv1.CredentialDetails)
+				credentialDetailsModel.CredentialType = core.StringPtr("oauth2")
+				credentialDetailsModel.ClientID = core.StringPtr("testString")
+				credentialDetailsModel.EnterpriseID = core.StringPtr("testString")
+				credentialDetailsModel.URL = core.StringPtr("testString")
+				credentialDetailsModel.Username = core.StringPtr("testString")
+				credentialDetailsModel.OrganizationURL = core.StringPtr("testString")
+				credentialDetailsModel.SiteCollectionPath = core.StringPtr("testString")
+				credentialDetailsModel.ClientSecret = core.StringPtr("testString")
+				credentialDetailsModel.PublicKeyID = core.StringPtr("testString")
+				credentialDetailsModel.PrivateKey = core.StringPtr("testString")
+				credentialDetailsModel.Passphrase = core.StringPtr("testString")
+				credentialDetailsModel.Password = core.StringPtr("testString")
+				credentialDetailsModel.GatewayID = core.StringPtr("testString")
+				credentialDetailsModel.SourceVersion = core.StringPtr("online")
+				credentialDetailsModel.WebApplicationURL = core.StringPtr("testString")
+				credentialDetailsModel.Domain = core.StringPtr("testString")
+				credentialDetailsModel.Endpoint = core.StringPtr("testString")
+				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
+				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
+
+				// Construct an instance of the UpdateCredentialsOptions model
+				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
+				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
+				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
+				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.UpdateCredentialsWithContext(ctx, updateCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.UpdateCredentials(updateCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.UpdateCredentialsWithContext(ctx, updateCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateCredentialsPath))
+					Expect(req.Method).To(Equal("PUT"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -12300,7 +15400,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.UpdateCredentials(nil)
@@ -12345,30 +15444,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateCredentialsWithContext(ctx, updateCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.UpdateCredentials(updateCredentialsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.UpdateCredentialsWithContext(ctx, updateCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateCredentials with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -12429,11 +15504,72 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateCredentials successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CredentialDetails model
+				credentialDetailsModel := new(discoveryv1.CredentialDetails)
+				credentialDetailsModel.CredentialType = core.StringPtr("oauth2")
+				credentialDetailsModel.ClientID = core.StringPtr("testString")
+				credentialDetailsModel.EnterpriseID = core.StringPtr("testString")
+				credentialDetailsModel.URL = core.StringPtr("testString")
+				credentialDetailsModel.Username = core.StringPtr("testString")
+				credentialDetailsModel.OrganizationURL = core.StringPtr("testString")
+				credentialDetailsModel.SiteCollectionPath = core.StringPtr("testString")
+				credentialDetailsModel.ClientSecret = core.StringPtr("testString")
+				credentialDetailsModel.PublicKeyID = core.StringPtr("testString")
+				credentialDetailsModel.PrivateKey = core.StringPtr("testString")
+				credentialDetailsModel.Passphrase = core.StringPtr("testString")
+				credentialDetailsModel.Password = core.StringPtr("testString")
+				credentialDetailsModel.GatewayID = core.StringPtr("testString")
+				credentialDetailsModel.SourceVersion = core.StringPtr("online")
+				credentialDetailsModel.WebApplicationURL = core.StringPtr("testString")
+				credentialDetailsModel.Domain = core.StringPtr("testString")
+				credentialDetailsModel.Endpoint = core.StringPtr("testString")
+				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
+				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
+
+				// Construct an instance of the UpdateCredentialsOptions model
+				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
+				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
+				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
+				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.UpdateCredentials(updateCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteCredentialsPath := "/v1/environments/testString/credentials/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -12442,7 +15578,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteCredentialsPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -12480,14 +15615,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteCredentials(deleteCredentialsOptions *DeleteCredentialsOptions)`, func() {
 		version := "testString"
 		deleteCredentialsPath := "/v1/environments/testString/credentials/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -12496,10 +15628,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "status": "deleted"}`)
+				}))
+			})
+			It(`Invoke DeleteCredentials successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteCredentialsOptions model
+				deleteCredentialsOptionsModel := new(discoveryv1.DeleteCredentialsOptions)
+				deleteCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				deleteCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteCredentialsWithContext(ctx, deleteCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteCredentials(deleteCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteCredentialsWithContext(ctx, deleteCredentialsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteCredentialsPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -12514,7 +15702,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteCredentials(nil)
@@ -12534,30 +15721,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteCredentialsWithContext(ctx, deleteCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteCredentials(deleteCredentialsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteCredentialsWithContext(ctx, deleteCredentialsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteCredentials with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -12593,157 +15756,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(discoveryService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeFalse())
-			discoveryService.DisableSSLVerification()
-			Expect(discoveryService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "https://discoveryv1/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{})
-			Expect(discoveryService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteCredentials successfully`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(discoveryService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-					Version: core.StringPtr(version),
-				})
-				err := discoveryService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(discoveryService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(discoveryService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the DeleteCredentialsOptions model
+				deleteCredentialsOptionsModel := new(discoveryv1.DeleteCredentialsOptions)
+				deleteCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
+				deleteCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := discoveryService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != discoveryService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(discoveryService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(discoveryService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_URL":       "https://discoveryv1/api",
-				"DISCOVERY_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteCredentials(deleteCredentialsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"DISCOVERY_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(discoveryService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = discoveryv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListGateways(listGatewaysOptions *ListGatewaysOptions) - Operation response error`, func() {
 		version := "testString"
 		listGatewaysPath := "/v1/environments/testString/gateways"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -12752,7 +15805,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listGatewaysPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -12789,14 +15841,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListGateways(listGatewaysOptions *ListGatewaysOptions)`, func() {
 		version := "testString"
 		listGatewaysPath := "/v1/environments/testString/gateways"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -12805,10 +15854,65 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"gateways": [{"gateway_id": "GatewayID", "name": "Name", "status": "connected", "token": "Token", "token_id": "TokenID"}]}`)
+				}))
+			})
+			It(`Invoke ListGateways successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListGatewaysOptions model
+				listGatewaysOptionsModel := new(discoveryv1.ListGatewaysOptions)
+				listGatewaysOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listGatewaysOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.ListGatewaysWithContext(ctx, listGatewaysOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.ListGateways(listGatewaysOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.ListGatewaysWithContext(ctx, listGatewaysOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listGatewaysPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -12823,7 +15927,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.ListGateways(nil)
@@ -12842,30 +15945,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListGatewaysWithContext(ctx, listGatewaysOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.ListGateways(listGatewaysOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.ListGatewaysWithContext(ctx, listGatewaysOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListGateways with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -12900,11 +15979,46 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListGateways successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the ListGatewaysOptions model
+				listGatewaysOptionsModel := new(discoveryv1.ListGatewaysOptions)
+				listGatewaysOptionsModel.EnvironmentID = core.StringPtr("testString")
+				listGatewaysOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.ListGateways(listGatewaysOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateGateway(createGatewayOptions *CreateGatewayOptions) - Operation response error`, func() {
 		version := "testString"
 		createGatewayPath := "/v1/environments/testString/gateways"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -12913,7 +16027,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createGatewayPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -12951,14 +16064,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateGateway(createGatewayOptions *CreateGatewayOptions)`, func() {
 		version := "testString"
 		createGatewayPath := "/v1/environments/testString/gateways"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -12983,10 +16093,82 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"gateway_id": "GatewayID", "name": "Name", "status": "connected", "token": "Token", "token_id": "TokenID"}`)
+				}))
+			})
+			It(`Invoke CreateGateway successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateGatewayOptions model
+				createGatewayOptionsModel := new(discoveryv1.CreateGatewayOptions)
+				createGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createGatewayOptionsModel.Name = core.StringPtr("testString")
+				createGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.CreateGatewayWithContext(ctx, createGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.CreateGateway(createGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.CreateGatewayWithContext(ctx, createGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createGatewayPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -13001,7 +16183,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.CreateGateway(nil)
@@ -13021,30 +16202,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateGatewayWithContext(ctx, createGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.CreateGateway(createGatewayOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.CreateGatewayWithContext(ctx, createGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateGateway with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -13080,11 +16237,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateGateway successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the CreateGatewayOptions model
+				createGatewayOptionsModel := new(discoveryv1.CreateGatewayOptions)
+				createGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				createGatewayOptionsModel.Name = core.StringPtr("testString")
+				createGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.CreateGateway(createGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetGateway(getGatewayOptions *GetGatewayOptions) - Operation response error`, func() {
 		version := "testString"
 		getGatewayPath := "/v1/environments/testString/gateways/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -13093,7 +16286,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getGatewayPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -13131,14 +16323,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetGateway(getGatewayOptions *GetGatewayOptions)`, func() {
 		version := "testString"
 		getGatewayPath := "/v1/environments/testString/gateways/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -13147,10 +16336,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"gateway_id": "GatewayID", "name": "Name", "status": "connected", "token": "Token", "token_id": "TokenID"}`)
+				}))
+			})
+			It(`Invoke GetGateway successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetGatewayOptions model
+				getGatewayOptionsModel := new(discoveryv1.GetGatewayOptions)
+				getGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getGatewayOptionsModel.GatewayID = core.StringPtr("testString")
+				getGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.GetGatewayWithContext(ctx, getGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.GetGateway(getGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.GetGatewayWithContext(ctx, getGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getGatewayPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -13165,7 +16410,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.GetGateway(nil)
@@ -13185,30 +16429,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetGatewayWithContext(ctx, getGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.GetGateway(getGatewayOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.GetGatewayWithContext(ctx, getGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetGateway with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -13244,11 +16464,47 @@ var _ = Describe(`DiscoveryV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetGateway successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the GetGatewayOptions model
+				getGatewayOptionsModel := new(discoveryv1.GetGatewayOptions)
+				getGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				getGatewayOptionsModel.GatewayID = core.StringPtr("testString")
+				getGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.GetGateway(getGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteGatewayPath := "/v1/environments/testString/gateways/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -13257,7 +16513,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteGatewayPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -13295,14 +16550,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteGateway(deleteGatewayOptions *DeleteGatewayOptions)`, func() {
 		version := "testString"
 		deleteGatewayPath := "/v1/environments/testString/gateways/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -13311,10 +16563,66 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"gateway_id": "GatewayID", "status": "Status"}`)
+				}))
+			})
+			It(`Invoke DeleteGateway successfully with retries`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+				discoveryService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteGatewayOptions model
+				deleteGatewayOptionsModel := new(discoveryv1.DeleteGatewayOptions)
+				deleteGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteGatewayOptionsModel.GatewayID = core.StringPtr("testString")
+				deleteGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := discoveryService.DeleteGatewayWithContext(ctx, deleteGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				discoveryService.DisableRetries()
+				result, response, operationErr := discoveryService.DeleteGateway(deleteGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = discoveryService.DeleteGatewayWithContext(ctx, deleteGatewayOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteGatewayPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -13329,7 +16637,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(discoveryService).ToNot(BeNil())
-				discoveryService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := discoveryService.DeleteGateway(nil)
@@ -13349,30 +16656,6 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteGatewayWithContext(ctx, deleteGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				discoveryService.DisableRetries()
-				result, response, operationErr = discoveryService.DeleteGateway(deleteGatewayOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = discoveryService.DeleteGatewayWithContext(ctx, deleteGatewayOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteGateway with error: Operation validation and request error`, func() {
 				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
@@ -13402,6 +16685,42 @@ var _ = Describe(`DiscoveryV1`, func() {
 				result, response, operationErr = discoveryService.DeleteGateway(deleteGatewayOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteGateway successfully`, func() {
+				discoveryService, serviceErr := discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(discoveryService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteGatewayOptions model
+				deleteGatewayOptionsModel := new(discoveryv1.DeleteGatewayOptions)
+				deleteGatewayOptionsModel.EnvironmentID = core.StringPtr("testString")
+				deleteGatewayOptionsModel.GatewayID = core.StringPtr("testString")
+				deleteGatewayOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := discoveryService.DeleteGateway(deleteGatewayOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
 				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
@@ -13907,13 +17226,13 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(eventDataModel).ToNot(BeNil())
 				eventDataModel.EnvironmentID = core.StringPtr("testString")
 				eventDataModel.SessionToken = core.StringPtr("testString")
-				eventDataModel.ClientTimestamp = CreateMockDateTime()
+				eventDataModel.ClientTimestamp = CreateMockDateTime("2019-01-01T12:00:00.000Z")
 				eventDataModel.DisplayRank = core.Int64Ptr(int64(38))
 				eventDataModel.CollectionID = core.StringPtr("testString")
 				eventDataModel.DocumentID = core.StringPtr("testString")
 				Expect(eventDataModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
 				Expect(eventDataModel.SessionToken).To(Equal(core.StringPtr("testString")))
-				Expect(eventDataModel.ClientTimestamp).To(Equal(CreateMockDateTime()))
+				Expect(eventDataModel.ClientTimestamp).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
 				Expect(eventDataModel.DisplayRank).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(eventDataModel.CollectionID).To(Equal(core.StringPtr("testString")))
 				Expect(eventDataModel.DocumentID).To(Equal(core.StringPtr("testString")))
@@ -14431,52 +17750,52 @@ var _ = Describe(`DiscoveryV1`, func() {
 			It(`Invoke NewGetMetricsEventRateOptions successfully`, func() {
 				// Construct an instance of the GetMetricsEventRateOptions model
 				getMetricsEventRateOptionsModel := discoveryService.NewGetMetricsEventRateOptions()
-				getMetricsEventRateOptionsModel.SetStartTime(CreateMockDateTime())
-				getMetricsEventRateOptionsModel.SetEndTime(CreateMockDateTime())
+				getMetricsEventRateOptionsModel.SetStartTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
+				getMetricsEventRateOptionsModel.SetEndTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
 				getMetricsEventRateOptionsModel.SetResultType("document")
 				getMetricsEventRateOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getMetricsEventRateOptionsModel).ToNot(BeNil())
-				Expect(getMetricsEventRateOptionsModel.StartTime).To(Equal(CreateMockDateTime()))
-				Expect(getMetricsEventRateOptionsModel.EndTime).To(Equal(CreateMockDateTime()))
+				Expect(getMetricsEventRateOptionsModel.StartTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
+				Expect(getMetricsEventRateOptionsModel.EndTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
 				Expect(getMetricsEventRateOptionsModel.ResultType).To(Equal(core.StringPtr("document")))
 				Expect(getMetricsEventRateOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetMetricsQueryEventOptions successfully`, func() {
 				// Construct an instance of the GetMetricsQueryEventOptions model
 				getMetricsQueryEventOptionsModel := discoveryService.NewGetMetricsQueryEventOptions()
-				getMetricsQueryEventOptionsModel.SetStartTime(CreateMockDateTime())
-				getMetricsQueryEventOptionsModel.SetEndTime(CreateMockDateTime())
+				getMetricsQueryEventOptionsModel.SetStartTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
+				getMetricsQueryEventOptionsModel.SetEndTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
 				getMetricsQueryEventOptionsModel.SetResultType("document")
 				getMetricsQueryEventOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getMetricsQueryEventOptionsModel).ToNot(BeNil())
-				Expect(getMetricsQueryEventOptionsModel.StartTime).To(Equal(CreateMockDateTime()))
-				Expect(getMetricsQueryEventOptionsModel.EndTime).To(Equal(CreateMockDateTime()))
+				Expect(getMetricsQueryEventOptionsModel.StartTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
+				Expect(getMetricsQueryEventOptionsModel.EndTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
 				Expect(getMetricsQueryEventOptionsModel.ResultType).To(Equal(core.StringPtr("document")))
 				Expect(getMetricsQueryEventOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetMetricsQueryNoResultsOptions successfully`, func() {
 				// Construct an instance of the GetMetricsQueryNoResultsOptions model
 				getMetricsQueryNoResultsOptionsModel := discoveryService.NewGetMetricsQueryNoResultsOptions()
-				getMetricsQueryNoResultsOptionsModel.SetStartTime(CreateMockDateTime())
-				getMetricsQueryNoResultsOptionsModel.SetEndTime(CreateMockDateTime())
+				getMetricsQueryNoResultsOptionsModel.SetStartTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
+				getMetricsQueryNoResultsOptionsModel.SetEndTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
 				getMetricsQueryNoResultsOptionsModel.SetResultType("document")
 				getMetricsQueryNoResultsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getMetricsQueryNoResultsOptionsModel).ToNot(BeNil())
-				Expect(getMetricsQueryNoResultsOptionsModel.StartTime).To(Equal(CreateMockDateTime()))
-				Expect(getMetricsQueryNoResultsOptionsModel.EndTime).To(Equal(CreateMockDateTime()))
+				Expect(getMetricsQueryNoResultsOptionsModel.StartTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
+				Expect(getMetricsQueryNoResultsOptionsModel.EndTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
 				Expect(getMetricsQueryNoResultsOptionsModel.ResultType).To(Equal(core.StringPtr("document")))
 				Expect(getMetricsQueryNoResultsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetMetricsQueryOptions successfully`, func() {
 				// Construct an instance of the GetMetricsQueryOptions model
 				getMetricsQueryOptionsModel := discoveryService.NewGetMetricsQueryOptions()
-				getMetricsQueryOptionsModel.SetStartTime(CreateMockDateTime())
-				getMetricsQueryOptionsModel.SetEndTime(CreateMockDateTime())
+				getMetricsQueryOptionsModel.SetStartTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
+				getMetricsQueryOptionsModel.SetEndTime(CreateMockDateTime("2019-01-01T12:00:00.000Z"))
 				getMetricsQueryOptionsModel.SetResultType("document")
 				getMetricsQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getMetricsQueryOptionsModel).ToNot(BeNil())
-				Expect(getMetricsQueryOptionsModel.StartTime).To(Equal(CreateMockDateTime()))
-				Expect(getMetricsQueryOptionsModel.EndTime).To(Equal(CreateMockDateTime()))
+				Expect(getMetricsQueryOptionsModel.StartTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
+				Expect(getMetricsQueryOptionsModel.EndTime).To(Equal(CreateMockDateTime("2019-01-01T12:00:00.000Z")))
 				Expect(getMetricsQueryOptionsModel.ResultType).To(Equal(core.StringPtr("document")))
 				Expect(getMetricsQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -15329,11 +18648,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -15358,13 +18677,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

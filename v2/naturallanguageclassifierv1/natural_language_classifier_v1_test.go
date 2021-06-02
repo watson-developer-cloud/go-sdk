@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -166,7 +166,7 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 	})
 	Describe(`Classify(classifyOptions *ClassifyOptions) - Operation response error`, func() {
 		classifyPath := "/v1/classifiers/testString/classify"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -210,13 +210,10 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 		})
 	})
-
 	Describe(`Classify(classifyOptions *ClassifyOptions)`, func() {
 		classifyPath := "/v1/classifiers/testString/classify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -241,7 +238,78 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "url": "URL", "text": "Text", "top_class": "TopClass", "classes": [{"confidence": 10, "class_name": "ClassName"}]}`)
+				}))
+			})
+			It(`Invoke Classify successfully with retries`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+				naturalLanguageClassifierService.EnableRetries(0, 0)
+
+				// Construct an instance of the ClassifyOptions model
+				classifyOptionsModel := new(naturallanguageclassifierv1.ClassifyOptions)
+				classifyOptionsModel.ClassifierID = core.StringPtr("testString")
+				classifyOptionsModel.Text = core.StringPtr("testString")
+				classifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := naturalLanguageClassifierService.ClassifyWithContext(ctx, classifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				naturalLanguageClassifierService.DisableRetries()
+				result, response, operationErr := naturalLanguageClassifierService.Classify(classifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = naturalLanguageClassifierService.ClassifyWithContext(ctx, classifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(classifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -256,7 +324,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := naturalLanguageClassifierService.Classify(nil)
@@ -276,30 +343,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ClassifyWithContext(ctx, classifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
-				result, response, operationErr = naturalLanguageClassifierService.Classify(classifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ClassifyWithContext(ctx, classifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Classify with error: Operation validation and request error`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
@@ -334,10 +377,45 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Classify successfully`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+
+				// Construct an instance of the ClassifyOptions model
+				classifyOptionsModel := new(naturallanguageclassifierv1.ClassifyOptions)
+				classifyOptionsModel.ClassifierID = core.StringPtr("testString")
+				classifyOptionsModel.Text = core.StringPtr("testString")
+				classifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := naturalLanguageClassifierService.Classify(classifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions) - Operation response error`, func() {
 		classifyCollectionPath := "/v1/classifiers/testString/classify_collection"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -385,13 +463,10 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ClassifyCollection(classifyCollectionOptions *ClassifyCollectionOptions)`, func() {
 		classifyCollectionPath := "/v1/classifiers/testString/classify_collection"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -416,7 +491,82 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "url": "URL", "collection": [{"text": "Text", "top_class": "TopClass", "classes": [{"confidence": 10, "class_name": "ClassName"}]}]}`)
+				}))
+			})
+			It(`Invoke ClassifyCollection successfully with retries`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+				naturalLanguageClassifierService.EnableRetries(0, 0)
+
+				// Construct an instance of the ClassifyInput model
+				classifyInputModel := new(naturallanguageclassifierv1.ClassifyInput)
+				classifyInputModel.Text = core.StringPtr("How hot will it be today?")
+
+				// Construct an instance of the ClassifyCollectionOptions model
+				classifyCollectionOptionsModel := new(naturallanguageclassifierv1.ClassifyCollectionOptions)
+				classifyCollectionOptionsModel.ClassifierID = core.StringPtr("testString")
+				classifyCollectionOptionsModel.Collection = []naturallanguageclassifierv1.ClassifyInput{*classifyInputModel}
+				classifyCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := naturalLanguageClassifierService.ClassifyCollectionWithContext(ctx, classifyCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				naturalLanguageClassifierService.DisableRetries()
+				result, response, operationErr := naturalLanguageClassifierService.ClassifyCollection(classifyCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = naturalLanguageClassifierService.ClassifyCollectionWithContext(ctx, classifyCollectionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(classifyCollectionPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -431,7 +581,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := naturalLanguageClassifierService.ClassifyCollection(nil)
@@ -455,30 +604,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ClassifyCollectionWithContext(ctx, classifyCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
-				result, response, operationErr = naturalLanguageClassifierService.ClassifyCollection(classifyCollectionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ClassifyCollectionWithContext(ctx, classifyCollectionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ClassifyCollection with error: Operation validation and request error`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
@@ -517,138 +642,49 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		It(`Instantiate service client`, func() {
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-			})
-			Expect(naturalLanguageClassifierService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(naturalLanguageClassifierService.Service.IsSSLDisabled()).To(BeFalse())
-			naturalLanguageClassifierService.DisableSSLVerification()
-			Expect(naturalLanguageClassifierService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-			Expect(naturalLanguageClassifierService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				URL: "https://naturallanguageclassifierv1/api",
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(naturalLanguageClassifierService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
-				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
-				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := naturalLanguageClassifierService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != naturalLanguageClassifierService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(naturalLanguageClassifierService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(naturalLanguageClassifierService.Service.Options.Authenticator))
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
 			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+			It(`Invoke ClassifyCollection successfully`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-					URL: "https://testService/api",
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
 				})
-				Expect(naturalLanguageClassifierService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				Expect(naturalLanguageClassifierService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := naturalLanguageClassifierService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != naturalLanguageClassifierService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(naturalLanguageClassifierService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(naturalLanguageClassifierService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
-				err := naturalLanguageClassifierService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(naturalLanguageClassifierService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := naturalLanguageClassifierService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != naturalLanguageClassifierService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(naturalLanguageClassifierService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(naturalLanguageClassifierService.Service.Options.Authenticator))
+				// Construct an instance of the ClassifyInput model
+				classifyInputModel := new(naturallanguageclassifierv1.ClassifyInput)
+				classifyInputModel.Text = core.StringPtr("How hot will it be today?")
+
+				// Construct an instance of the ClassifyCollectionOptions model
+				classifyCollectionOptionsModel := new(naturallanguageclassifierv1.ClassifyCollectionOptions)
+				classifyCollectionOptionsModel.ClassifierID = core.StringPtr("testString")
+				classifyCollectionOptionsModel.Collection = []naturallanguageclassifierv1.ClassifyInput{*classifyInputModel}
+				classifyCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := naturalLanguageClassifierService.ClassifyCollection(classifyCollectionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_URL":       "https://naturallanguageclassifierv1/api",
-				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(naturalLanguageClassifierService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"NATURAL_LANGUAGE_CLASSIFIER_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
-				URL: "{BAD_URL_STRING",
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(naturalLanguageClassifierService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = naturallanguageclassifierv1.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions) - Operation response error`, func() {
 		createClassifierPath := "/v1/classifiers"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -692,13 +728,10 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions)`, func() {
 		createClassifierPath := "/v1/classifiers"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -707,12 +740,67 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00", "status_description": "StatusDescription", "language": "Language"}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}`)
+				}))
+			})
+			It(`Invoke CreateClassifier successfully with retries`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+				naturalLanguageClassifierService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateClassifierOptions model
+				createClassifierOptionsModel := new(naturallanguageclassifierv1.CreateClassifierOptions)
+				createClassifierOptionsModel.TrainingMetadata = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.TrainingData = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := naturalLanguageClassifierService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				naturalLanguageClassifierService.DisableRetries()
+				result, response, operationErr := naturalLanguageClassifierService.CreateClassifier(createClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = naturalLanguageClassifierService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createClassifierPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}`)
 				}))
 			})
 			It(`Invoke CreateClassifier successfully`, func() {
@@ -722,7 +810,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := naturalLanguageClassifierService.CreateClassifier(nil)
@@ -742,30 +829,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
-				result, response, operationErr = naturalLanguageClassifierService.CreateClassifier(createClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateClassifier with error: Operation validation and request error`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
@@ -800,10 +863,45 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateClassifier successfully`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+
+				// Construct an instance of the CreateClassifierOptions model
+				createClassifierOptionsModel := new(naturallanguageclassifierv1.CreateClassifierOptions)
+				createClassifierOptionsModel.TrainingMetadata = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.TrainingData = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := naturalLanguageClassifierService.CreateClassifier(createClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListClassifiers(listClassifiersOptions *ListClassifiersOptions) - Operation response error`, func() {
 		listClassifiersPath := "/v1/classifiers"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -845,13 +943,10 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 		})
 	})
-
 	Describe(`ListClassifiers(listClassifiersOptions *ListClassifiersOptions)`, func() {
 		listClassifiersPath := "/v1/classifiers"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -860,12 +955,65 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"classifiers": [{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00", "status_description": "StatusDescription", "language": "Language"}]}`)
+					fmt.Fprintf(res, "%s", `{"classifiers": [{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}]}`)
+				}))
+			})
+			It(`Invoke ListClassifiers successfully with retries`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+				naturalLanguageClassifierService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListClassifiersOptions model
+				listClassifiersOptionsModel := new(naturallanguageclassifierv1.ListClassifiersOptions)
+				listClassifiersOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := naturalLanguageClassifierService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				naturalLanguageClassifierService.DisableRetries()
+				result, response, operationErr := naturalLanguageClassifierService.ListClassifiers(listClassifiersOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = naturalLanguageClassifierService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listClassifiersPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifiers": [{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}]}`)
 				}))
 			})
 			It(`Invoke ListClassifiers successfully`, func() {
@@ -875,7 +1023,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := naturalLanguageClassifierService.ListClassifiers(nil)
@@ -893,30 +1040,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
-				result, response, operationErr = naturalLanguageClassifierService.ListClassifiers(listClassifiersOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListClassifiers with error: Operation request error`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
@@ -942,10 +1065,43 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListClassifiers successfully`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+
+				// Construct an instance of the ListClassifiersOptions model
+				listClassifiersOptionsModel := new(naturallanguageclassifierv1.ListClassifiersOptions)
+				listClassifiersOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := naturalLanguageClassifierService.ListClassifiers(listClassifiersOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetClassifier(getClassifierOptions *GetClassifierOptions) - Operation response error`, func() {
 		getClassifierPath := "/v1/classifiers/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -988,13 +1144,10 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 		})
 	})
-
 	Describe(`GetClassifier(getClassifierOptions *GetClassifierOptions)`, func() {
 		getClassifierPath := "/v1/classifiers/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1003,12 +1156,66 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00", "status_description": "StatusDescription", "language": "Language"}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}`)
+				}))
+			})
+			It(`Invoke GetClassifier successfully with retries`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+				naturalLanguageClassifierService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetClassifierOptions model
+				getClassifierOptionsModel := new(naturallanguageclassifierv1.GetClassifierOptions)
+				getClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				getClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := naturalLanguageClassifierService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				naturalLanguageClassifierService.DisableRetries()
+				result, response, operationErr := naturalLanguageClassifierService.GetClassifier(getClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = naturalLanguageClassifierService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getClassifierPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "url": "URL", "status": "Non Existent", "classifier_id": "ClassifierID", "created": "2019-01-01T12:00:00.000Z", "status_description": "StatusDescription", "language": "Language"}`)
 				}))
 			})
 			It(`Invoke GetClassifier successfully`, func() {
@@ -1018,7 +1225,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := naturalLanguageClassifierService.GetClassifier(nil)
@@ -1037,30 +1243,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
-				result, response, operationErr = naturalLanguageClassifierService.GetClassifier(getClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = naturalLanguageClassifierService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetClassifier with error: Operation validation and request error`, func() {
 				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
@@ -1094,8 +1276,41 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetClassifier successfully`, func() {
+				naturalLanguageClassifierService, serviceErr := naturallanguageclassifierv1.NewNaturalLanguageClassifierV1(&naturallanguageclassifierv1.NaturalLanguageClassifierV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(naturalLanguageClassifierService).ToNot(BeNil())
+
+				// Construct an instance of the GetClassifierOptions model
+				getClassifierOptionsModel := new(naturallanguageclassifierv1.GetClassifierOptions)
+				getClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				getClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := naturalLanguageClassifierService.GetClassifier(getClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions)`, func() {
 		deleteClassifierPath := "/v1/classifiers/testString"
 		Context(`Using mock server endpoint`, func() {
@@ -1117,7 +1332,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(naturalLanguageClassifierService).ToNot(BeNil())
-				naturalLanguageClassifierService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := naturalLanguageClassifierService.DeleteClassifier(nil)
@@ -1130,12 +1344,6 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 				deleteClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = naturalLanguageClassifierService.DeleteClassifier(deleteClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				naturalLanguageClassifierService.DisableRetries()
 				response, operationErr = naturalLanguageClassifierService.DeleteClassifier(deleteClassifierOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1271,11 +1479,11 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -1300,13 +1508,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

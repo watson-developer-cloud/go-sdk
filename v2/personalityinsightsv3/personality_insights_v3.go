@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
@@ -30,17 +30,19 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
-// PersonalityInsightsV3 : IBM&reg; will begin sunsetting IBM Watson&trade; Personality Insights on 1 December 2020. For
-// a period of one year from this date, you will still be able to use Watson Personality Insights. However, as of 1
-// December 2021, the offering will no longer be available.<br/><br/>As an alternative, we encourage you to consider
-// migrating to IBM Watson&trade; Natural Language Understanding, a service on IBM Cloud&reg; that uses deep learning to
-// extract data and insights from text such as keywords, categories, sentiment, emotion, and syntax to provide insights
-// for your business or industry. For more information, see [About Natural Language
-// Understanding](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-about).
+// PersonalityInsightsV3 : IBM Watson&trade; Personality Insights is discontinued. Existing instances are supported
+// until 1 December 2021, but as of 1 December 2020, you cannot create new instances. Any instance that exists on 1
+// December 2021 will be deleted.<br/><br/>No direct replacement exists for Personality Insights. However, you can
+// consider using [IBM Watson&trade; Natural Language
+// Understanding](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-about)
+// on IBM Cloud&reg; as part of a replacement analytic workflow for your Personality Insights use cases. You can use
+// Natural Language Understanding to extract data and insights from text, such as keywords, categories, sentiment,
+// emotion, and syntax. For more information about the personality models in Personality Insights, see [The science
+// behind the service](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-science).
 // {: deprecated}
 //
 // The IBM Watson Personality Insights service enables applications to derive insights from social media, enterprise
@@ -300,11 +302,13 @@ func (personalityInsights *PersonalityInsightsV3) ProfileWithContext(ctx context
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalProfile)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalProfile)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -763,16 +767,16 @@ type ProfileOptions struct {
 	// [Providing sufficient
 	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
 	// provide an object of type `Content`.
-	Content *Content `json:"content,omitempty"`
+	Content *Content
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient
 	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
 	// provide an object of type `Content`.
-	Body *string `json:"body,omitempty"`
+	Body *string
 
 	// The type of the input. For more information, see **Content types** in the method description.
-	ContentType *string `json:"Content-Type,omitempty"`
+	ContentType *string
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
 	// treated as their parent language; for example, `en-US` is interpreted as `en`.
@@ -783,24 +787,24 @@ type ProfileOptions struct {
 	// `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base
 	// the language on the specification of the content items. You can specify any combination of languages for
 	// **Content-Language** and **Accept-Language**.
-	ContentLanguage *string `json:"Content-Language,omitempty"`
+	ContentLanguage *string
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input
 	// and response content.
-	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+	AcceptLanguage *string
 
 	// Indicates whether a raw score in addition to a normalized percentile is returned for each characteristic; raw scores
 	// are not compared with a sample population. By default, only normalized percentiles are returned.
-	RawScores *bool `json:"raw_scores,omitempty"`
+	RawScores *bool
 
 	// Indicates whether column labels are returned with a CSV response. By default, no column labels are returned. Applies
 	// only when the response type is CSV (`text/csv`).
-	CSVHeaders *bool `json:"csv_headers,omitempty"`
+	CSVHeaders *bool
 
 	// Indicates whether consumption preferences are returned with the results. By default, no consumption preferences are
 	// returned.
-	ConsumptionPreferences *bool `json:"consumption_preferences,omitempty"`
+	ConsumptionPreferences *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string

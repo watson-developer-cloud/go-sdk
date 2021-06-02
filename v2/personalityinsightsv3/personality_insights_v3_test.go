@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 	Describe(`Profile(profileOptions *ProfileOptions) - Operation response error`, func() {
 		version := "testString"
 		profilePath := "/v3/profile"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -200,13 +200,9 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for raw_scores query parameter
-
 					// TODO: Add check for csv_headers query parameter
-
 					// TODO: Add check for consumption_preferences query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -265,14 +261,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 			})
 		})
 	})
-
 	Describe(`Profile(profileOptions *ProfileOptions)`, func() {
 		version := "testString"
 		profilePath := "/v3/profile"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -303,16 +296,115 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for raw_scores query parameter
-
 					// TODO: Add check for csv_headers query parameter
-
 					// TODO: Add check for consumption_preferences query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"processed_language": "ar", "word_count": 9, "word_count_message": "WordCountMessage", "personality": [{"trait_id": "TraitID", "name": "Name", "category": "personality", "percentile": 10, "raw_score": 8, "significant": false}], "needs": [{"trait_id": "TraitID", "name": "Name", "category": "personality", "percentile": 10, "raw_score": 8, "significant": false}], "values": [{"trait_id": "TraitID", "name": "Name", "category": "personality", "percentile": 10, "raw_score": 8, "significant": false}], "behavior": [{"trait_id": "TraitID", "name": "Name", "category": "Category", "percentage": 10}], "consumption_preferences": [{"consumption_preference_category_id": "ConsumptionPreferenceCategoryID", "name": "Name", "consumption_preferences": [{"consumption_preference_id": "ConsumptionPreferenceID", "name": "Name", "score": 0.0}]}], "warnings": [{"warning_id": "WORD_COUNT_MESSAGE", "message": "Message"}]}`)
+				}))
+			})
+			It(`Invoke Profile successfully with retries`, func() {
+				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(personalityInsightsService).ToNot(BeNil())
+				personalityInsightsService.EnableRetries(0, 0)
+
+				// Construct an instance of the ContentItem model
+				contentItemModel := new(personalityinsightsv3.ContentItem)
+				contentItemModel.Content = core.StringPtr("testString")
+				contentItemModel.ID = core.StringPtr("testString")
+				contentItemModel.Created = core.Int64Ptr(int64(26))
+				contentItemModel.Updated = core.Int64Ptr(int64(26))
+				contentItemModel.Contenttype = core.StringPtr("text/plain")
+				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Parentid = core.StringPtr("testString")
+				contentItemModel.Reply = core.BoolPtr(true)
+				contentItemModel.Forward = core.BoolPtr(true)
+
+				// Construct an instance of the Content model
+				contentModel := new(personalityinsightsv3.Content)
+				contentModel.ContentItems = []personalityinsightsv3.ContentItem{*contentItemModel}
+
+				// Construct an instance of the ProfileOptions model
+				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
+				profileOptionsModel.Content = contentModel
+				profileOptionsModel.ContentType = core.StringPtr("application/json")
+				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				profileOptionsModel.RawScores = core.BoolPtr(true)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := personalityInsightsService.ProfileWithContext(ctx, profileOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				personalityInsightsService.DisableRetries()
+				result, response, operationErr := personalityInsightsService.Profile(profileOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = personalityInsightsService.ProfileWithContext(ctx, profileOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(profilePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["Content-Type"]).ToNot(BeNil())
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Language"]).ToNot(BeNil())
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for raw_scores query parameter
+					// TODO: Add check for csv_headers query parameter
+					// TODO: Add check for consumption_preferences query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -327,7 +419,6 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
-				personalityInsightsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := personalityInsightsService.Profile(nil)
@@ -368,30 +459,6 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = personalityInsightsService.ProfileWithContext(ctx, profileOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				personalityInsightsService.DisableRetries()
-				result, response, operationErr = personalityInsightsService.Profile(profileOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = personalityInsightsService.ProfileWithContext(ctx, profileOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Profile with error: Operation request error`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
@@ -441,15 +508,69 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Profile successfully`, func() {
+				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(personalityInsightsService).ToNot(BeNil())
+
+				// Construct an instance of the ContentItem model
+				contentItemModel := new(personalityinsightsv3.ContentItem)
+				contentItemModel.Content = core.StringPtr("testString")
+				contentItemModel.ID = core.StringPtr("testString")
+				contentItemModel.Created = core.Int64Ptr(int64(26))
+				contentItemModel.Updated = core.Int64Ptr(int64(26))
+				contentItemModel.Contenttype = core.StringPtr("text/plain")
+				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Parentid = core.StringPtr("testString")
+				contentItemModel.Reply = core.BoolPtr(true)
+				contentItemModel.Forward = core.BoolPtr(true)
+
+				// Construct an instance of the Content model
+				contentModel := new(personalityinsightsv3.Content)
+				contentModel.ContentItems = []personalityinsightsv3.ContentItem{*contentItemModel}
+
+				// Construct an instance of the ProfileOptions model
+				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
+				profileOptionsModel.Content = contentModel
+				profileOptionsModel.ContentType = core.StringPtr("application/json")
+				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				profileOptionsModel.RawScores = core.BoolPtr(true)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := personalityInsightsService.Profile(profileOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`ProfileAsCSV(profileOptions *ProfileOptions)`, func() {
 		version := "testString"
 		profileAsCSVPath := "/v3/profile"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -480,16 +601,115 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for raw_scores query parameter
-
 					// TODO: Add check for csv_headers query parameter
-
 					// TODO: Add check for consumption_preferences query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "text/csv")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `"OperationResponse"`)
+				}))
+			})
+			It(`Invoke ProfileAsCSV successfully with retries`, func() {
+				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(personalityInsightsService).ToNot(BeNil())
+				personalityInsightsService.EnableRetries(0, 0)
+
+				// Construct an instance of the ContentItem model
+				contentItemModel := new(personalityinsightsv3.ContentItem)
+				contentItemModel.Content = core.StringPtr("testString")
+				contentItemModel.ID = core.StringPtr("testString")
+				contentItemModel.Created = core.Int64Ptr(int64(26))
+				contentItemModel.Updated = core.Int64Ptr(int64(26))
+				contentItemModel.Contenttype = core.StringPtr("text/plain")
+				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Parentid = core.StringPtr("testString")
+				contentItemModel.Reply = core.BoolPtr(true)
+				contentItemModel.Forward = core.BoolPtr(true)
+
+				// Construct an instance of the Content model
+				contentModel := new(personalityinsightsv3.Content)
+				contentModel.ContentItems = []personalityinsightsv3.ContentItem{*contentItemModel}
+
+				// Construct an instance of the ProfileOptions model
+				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
+				profileOptionsModel.Content = contentModel
+				profileOptionsModel.ContentType = core.StringPtr("application/json")
+				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				profileOptionsModel.RawScores = core.BoolPtr(true)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := personalityInsightsService.ProfileAsCSVWithContext(ctx, profileOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				personalityInsightsService.DisableRetries()
+				result, response, operationErr := personalityInsightsService.ProfileAsCSV(profileOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = personalityInsightsService.ProfileAsCSVWithContext(ctx, profileOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(profileAsCSVPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.Header["Content-Type"]).ToNot(BeNil())
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Language"]).ToNot(BeNil())
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for raw_scores query parameter
+					// TODO: Add check for csv_headers query parameter
+					// TODO: Add check for consumption_preferences query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "text/csv")
 					res.WriteHeader(200)
@@ -504,7 +724,6 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(personalityInsightsService).ToNot(BeNil())
-				personalityInsightsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := personalityInsightsService.ProfileAsCSV(nil)
@@ -545,30 +764,6 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = personalityInsightsService.ProfileAsCSVWithContext(ctx, profileOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				personalityInsightsService.DisableRetries()
-				result, response, operationErr = personalityInsightsService.ProfileAsCSV(profileOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = personalityInsightsService.ProfileAsCSVWithContext(ctx, profileOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ProfileAsCSV with error: Operation request error`, func() {
 				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
@@ -613,6 +808,67 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ProfileAsCSV successfully`, func() {
+				personalityInsightsService, serviceErr := personalityinsightsv3.NewPersonalityInsightsV3(&personalityinsightsv3.PersonalityInsightsV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(personalityInsightsService).ToNot(BeNil())
+
+				// Construct an instance of the ContentItem model
+				contentItemModel := new(personalityinsightsv3.ContentItem)
+				contentItemModel.Content = core.StringPtr("testString")
+				contentItemModel.ID = core.StringPtr("testString")
+				contentItemModel.Created = core.Int64Ptr(int64(26))
+				contentItemModel.Updated = core.Int64Ptr(int64(26))
+				contentItemModel.Contenttype = core.StringPtr("text/plain")
+				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Parentid = core.StringPtr("testString")
+				contentItemModel.Reply = core.BoolPtr(true)
+				contentItemModel.Forward = core.BoolPtr(true)
+
+				// Construct an instance of the Content model
+				contentModel := new(personalityinsightsv3.Content)
+				contentModel.ContentItems = []personalityinsightsv3.ContentItem{*contentItemModel}
+
+				// Construct an instance of the ProfileOptions model
+				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
+				profileOptionsModel.Content = contentModel
+				profileOptionsModel.ContentType = core.StringPtr("application/json")
+				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				profileOptionsModel.RawScores = core.BoolPtr(true)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := personalityInsightsService.ProfileAsCSV(profileOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify empty byte buffer.
+				Expect(result).ToNot(BeNil())
+				buffer, operationErr := ioutil.ReadAll(result)
+				Expect(operationErr).To(BeNil())
+				Expect(buffer).ToNot(BeNil())
+				Expect(len(buffer)).To(Equal(0))
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -706,11 +962,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -735,13 +991,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 	Describe(`Classify(classifyOptions *ClassifyOptions) - Operation response error`, func() {
 		version := "testString"
 		classifyPath := "/v3/classify"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -196,7 +196,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -240,14 +239,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-
 	Describe(`Classify(classifyOptions *ClassifyOptions)`, func() {
 		version := "testString"
 		classifyPath := "/v3/classify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -258,10 +254,74 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
 					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"custom_classes": 13, "images_processed": 15, "images": [{"source_url": "SourceURL", "resolved_url": "ResolvedURL", "image": "Image", "error": {"code": 4, "description": "Description", "error_id": "ErrorID"}, "classifiers": [{"name": "Name", "classifier_id": "ClassifierID", "classes": [{"class": "Class", "score": 0, "type_hierarchy": "TypeHierarchy"}]}]}], "warnings": [{"warning_id": "WarningID", "description": "Description"}]}`)
+				}))
+			})
+			It(`Invoke Classify successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the ClassifyOptions model
+				classifyOptionsModel := new(visualrecognitionv3.ClassifyOptions)
+				classifyOptionsModel.ImagesFile = CreateMockReader("This is a mock file.")
+				classifyOptionsModel.ImagesFilename = core.StringPtr("testString")
+				classifyOptionsModel.ImagesFileContentType = core.StringPtr("testString")
+				classifyOptionsModel.URL = core.StringPtr("testString")
+				classifyOptionsModel.Threshold = core.Float32Ptr(float32(36.0))
+				classifyOptionsModel.Owners = []string{"testString"}
+				classifyOptionsModel.ClassifierIds = []string{"testString"}
+				classifyOptionsModel.AcceptLanguage = core.StringPtr("en")
+				classifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.ClassifyWithContext(ctx, classifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.Classify(classifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.ClassifyWithContext(ctx, classifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(classifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -276,7 +336,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.Classify(nil)
@@ -302,30 +361,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.ClassifyWithContext(ctx, classifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.Classify(classifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.ClassifyWithContext(ctx, classifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Classify with error: Param validation error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -377,157 +412,53 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeFalse())
-			visualRecognitionService.DisableSSLVerification()
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "https://visualrecognitionv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Classify successfully`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(visualRecognitionService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := visualRecognitionService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the ClassifyOptions model
+				classifyOptionsModel := new(visualrecognitionv3.ClassifyOptions)
+				classifyOptionsModel.ImagesFile = CreateMockReader("This is a mock file.")
+				classifyOptionsModel.ImagesFilename = core.StringPtr("testString")
+				classifyOptionsModel.ImagesFileContentType = core.StringPtr("testString")
+				classifyOptionsModel.URL = core.StringPtr("testString")
+				classifyOptionsModel.Threshold = core.Float32Ptr(float32(36.0))
+				classifyOptionsModel.Owners = []string{"testString"}
+				classifyOptionsModel.ClassifierIds = []string{"testString"}
+				classifyOptionsModel.AcceptLanguage = core.StringPtr("en")
+				classifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.Classify(classifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = visualrecognitionv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions) - Operation response error`, func() {
 		version := "testString"
 		createClassifierPath := "/v3/classifiers"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -536,7 +467,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createClassifierPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -576,14 +506,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateClassifier(createClassifierOptions *CreateClassifierOptions)`, func() {
 		version := "testString"
 		createClassifierPath := "/v3/classifiers"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -592,14 +519,72 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke CreateClassifier successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateClassifierOptions model
+				createClassifierOptionsModel := new(visualrecognitionv3.CreateClassifierOptions)
+				createClassifierOptionsModel.Name = core.StringPtr("testString")
+				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
+				createClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
+				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.CreateClassifier(createClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createClassifierPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateClassifier successfully`, func() {
@@ -610,7 +595,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.CreateClassifier(nil)
@@ -632,30 +616,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.CreateClassifier(createClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.CreateClassifierWithContext(ctx, createClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateClassifier with error: Operation validation and request error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -693,11 +653,49 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateClassifier successfully`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+
+				// Construct an instance of the CreateClassifierOptions model
+				createClassifierOptionsModel := new(visualrecognitionv3.CreateClassifierOptions)
+				createClassifierOptionsModel.Name = core.StringPtr("testString")
+				createClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
+				createClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
+				createClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
+				createClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.CreateClassifier(createClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`ListClassifiers(listClassifiersOptions *ListClassifiersOptions) - Operation response error`, func() {
 		version := "testString"
 		listClassifiersPath := "/v3/classifiers"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -706,9 +704,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listClassifiersPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for verbose query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -745,14 +741,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-
 	Describe(`ListClassifiers(listClassifiersOptions *ListClassifiersOptions)`, func() {
 		version := "testString"
 		listClassifiersPath := "/v3/classifiers"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -761,16 +754,71 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for verbose query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"classifiers": [{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"classifiers": [{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
+				}))
+			})
+			It(`Invoke ListClassifiers successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListClassifiersOptions model
+				listClassifiersOptionsModel := new(visualrecognitionv3.ListClassifiersOptions)
+				listClassifiersOptionsModel.Verbose = core.BoolPtr(true)
+				listClassifiersOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.ListClassifiers(listClassifiersOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listClassifiersPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for verbose query parameter
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifiers": [{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke ListClassifiers successfully`, func() {
@@ -781,7 +829,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.ListClassifiers(nil)
@@ -800,30 +847,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.ListClassifiers(listClassifiersOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.ListClassifiersWithContext(ctx, listClassifiersOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListClassifiers with error: Operation request error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -851,11 +874,46 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListClassifiers successfully`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+
+				// Construct an instance of the ListClassifiersOptions model
+				listClassifiersOptionsModel := new(visualrecognitionv3.ListClassifiersOptions)
+				listClassifiersOptionsModel.Verbose = core.BoolPtr(true)
+				listClassifiersOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.ListClassifiers(listClassifiersOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetClassifier(getClassifierOptions *GetClassifierOptions) - Operation response error`, func() {
 		version := "testString"
 		getClassifierPath := "/v3/classifiers/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -864,7 +922,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getClassifierPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -901,14 +958,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-
 	Describe(`GetClassifier(getClassifierOptions *GetClassifierOptions)`, func() {
 		version := "testString"
 		getClassifierPath := "/v3/classifiers/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -917,14 +971,69 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke GetClassifier successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetClassifierOptions model
+				getClassifierOptionsModel := new(visualrecognitionv3.GetClassifierOptions)
+				getClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				getClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.GetClassifier(getClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getClassifierPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetClassifier successfully`, func() {
@@ -935,7 +1044,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.GetClassifier(nil)
@@ -954,30 +1062,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.GetClassifier(getClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.GetClassifierWithContext(ctx, getClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetClassifier with error: Operation validation and request error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -1012,11 +1096,46 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetClassifier successfully`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+
+				// Construct an instance of the GetClassifierOptions model
+				getClassifierOptionsModel := new(visualrecognitionv3.GetClassifierOptions)
+				getClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				getClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.GetClassifier(getClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions) - Operation response error`, func() {
 		version := "testString"
 		updateClassifierPath := "/v3/classifiers/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1025,7 +1144,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateClassifierPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1065,14 +1183,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-
 	Describe(`UpdateClassifier(updateClassifierOptions *UpdateClassifierOptions)`, func() {
 		version := "testString"
 		updateClassifierPath := "/v3/classifiers/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1081,14 +1196,72 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00", "updated": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+				}))
+			})
+			It(`Invoke UpdateClassifier successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the UpdateClassifierOptions model
+				updateClassifierOptionsModel := new(visualrecognitionv3.UpdateClassifierOptions)
+				updateClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
+				updateClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
+				updateClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
+				updateClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.UpdateClassifierWithContext(ctx, updateClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.UpdateClassifier(updateClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.UpdateClassifierWithContext(ctx, updateClassifierOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateClassifierPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"classifier_id": "ClassifierID", "name": "Name", "owner": "Owner", "status": "ready", "core_ml_enabled": false, "explanation": "Explanation", "created": "2019-01-01T12:00:00.000Z", "classes": [{"class": "Class"}], "retrained": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateClassifier successfully`, func() {
@@ -1099,7 +1272,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.UpdateClassifier(nil)
@@ -1121,30 +1293,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.UpdateClassifierWithContext(ctx, updateClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.UpdateClassifier(updateClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.UpdateClassifierWithContext(ctx, updateClassifierOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateClassifier with error: Param validation error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -1199,8 +1347,45 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke UpdateClassifier successfully`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateClassifierOptions model
+				updateClassifierOptionsModel := new(visualrecognitionv3.UpdateClassifierOptions)
+				updateClassifierOptionsModel.ClassifierID = core.StringPtr("testString")
+				updateClassifierOptionsModel.PositiveExamples = map[string]io.ReadCloser{"key1": CreateMockReader("This is a mock file.")}
+				updateClassifierOptionsModel.NegativeExamples = CreateMockReader("This is a mock file.")
+				updateClassifierOptionsModel.NegativeExamplesFilename = core.StringPtr("testString")
+				updateClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.UpdateClassifier(updateClassifierOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteClassifier(deleteClassifierOptions *DeleteClassifierOptions)`, func() {
 		version := "testString"
 		deleteClassifierPath := "/v3/classifiers/testString"
@@ -1214,7 +1399,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(200)
 				}))
 			})
@@ -1226,7 +1410,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := visualRecognitionService.DeleteClassifier(nil)
@@ -1239,12 +1422,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				deleteClassifierOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = visualRecognitionService.DeleteClassifier(deleteClassifierOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
 				response, operationErr = visualRecognitionService.DeleteClassifier(deleteClassifierOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1281,160 +1458,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			})
 		})
 	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeFalse())
-			visualRecognitionService.DisableSSLVerification()
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "https://visualrecognitionv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
-			}
-
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
-				})
-				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
-				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := visualRecognitionService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = visualrecognitionv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`GetCoreMlModel(getCoreMlModelOptions *GetCoreMlModelOptions)`, func() {
 		version := "testString"
 		getCoreMlModelPath := "/v3/classifiers/testString/core_ml_model"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1443,10 +1471,65 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/octet-stream")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `This is a mock binary response.`)
+				}))
+			})
+			It(`Invoke GetCoreMlModel successfully with retries`, func() {
+				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(visualRecognitionService).ToNot(BeNil())
+				visualRecognitionService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetCoreMlModelOptions model
+				getCoreMlModelOptionsModel := new(visualrecognitionv3.GetCoreMlModelOptions)
+				getCoreMlModelOptionsModel.ClassifierID = core.StringPtr("testString")
+				getCoreMlModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := visualRecognitionService.GetCoreMlModelWithContext(ctx, getCoreMlModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				visualRecognitionService.DisableRetries()
+				result, response, operationErr := visualRecognitionService.GetCoreMlModel(getCoreMlModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = visualRecognitionService.GetCoreMlModelWithContext(ctx, getCoreMlModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getCoreMlModelPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/octet-stream")
 					res.WriteHeader(200)
@@ -1461,7 +1544,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := visualRecognitionService.GetCoreMlModel(nil)
@@ -1480,30 +1562,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.GetCoreMlModelWithContext(ctx, getCoreMlModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
-				result, response, operationErr = visualRecognitionService.GetCoreMlModel(getCoreMlModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = visualRecognitionService.GetCoreMlModelWithContext(ctx, getCoreMlModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetCoreMlModel with error: Operation validation and request error`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
@@ -1538,154 +1596,46 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeFalse())
-			visualRecognitionService.DisableSSLVerification()
-			Expect(visualRecognitionService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "https://visualrecognitionv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{})
-			Expect(visualRecognitionService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetCoreMlModel successfully`, func() {
 				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(visualRecognitionService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
+				// Construct an instance of the GetCoreMlModelOptions model
+				getCoreMlModelOptionsModel := new(visualrecognitionv3.GetCoreMlModelOptions)
+				getCoreMlModelOptionsModel.ClassifierID = core.StringPtr("testString")
+				getCoreMlModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := visualRecognitionService.GetCoreMlModel(getCoreMlModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify empty byte buffer.
+				Expect(result).ToNot(BeNil())
+				buffer, operationErr := ioutil.ReadAll(result)
+				Expect(operationErr).To(BeNil())
+				Expect(buffer).ToNot(BeNil())
+				Expect(len(buffer)).To(Equal(0))
 			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := visualRecognitionService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(visualRecognitionService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(visualRecognitionService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
-
-				clone := visualRecognitionService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != visualRecognitionService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(visualRecognitionService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(visualRecognitionService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_URL":       "https://visualrecognitionv3/api",
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "someOtherAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"WATSON_VISION_COMBINED_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			visualRecognitionService, serviceErr := visualrecognitionv3.NewVisualRecognitionV3(&visualrecognitionv3.VisualRecognitionV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(visualRecognitionService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
 		})
 	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = visualrecognitionv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
-		})
-	})
-
 	Describe(`DeleteUserData(deleteUserDataOptions *DeleteUserDataOptions)`, func() {
 		version := "testString"
 		deleteUserDataPath := "/v3/user_data"
@@ -1699,9 +1649,7 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["customer_id"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(202)
 				}))
 			})
@@ -1713,7 +1661,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(visualRecognitionService).ToNot(BeNil())
-				visualRecognitionService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := visualRecognitionService.DeleteUserData(nil)
@@ -1726,12 +1673,6 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 				deleteUserDataOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = visualRecognitionService.DeleteUserData(deleteUserDataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				visualRecognitionService.DisableRetries()
 				response, operationErr = visualRecognitionService.DeleteUserData(deleteUserDataOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -1896,11 +1837,11 @@ var _ = Describe(`VisualRecognitionV3`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -1925,13 +1866,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

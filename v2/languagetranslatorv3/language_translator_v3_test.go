@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -185,7 +185,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 	Describe(`ListLanguages(listLanguagesOptions *ListLanguagesOptions) - Operation response error`, func() {
 		version := "testString"
 		listLanguagesPath := "/v3/languages"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -194,7 +194,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -230,14 +229,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`ListLanguages(listLanguagesOptions *ListLanguagesOptions)`, func() {
 		version := "testString"
 		listLanguagesPath := "/v3/languages"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -246,10 +242,64 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"languages": [{"language": "Language", "language_name": "LanguageName", "native_language_name": "NativeLanguageName", "country_code": "CountryCode", "words_separated": true, "direction": "Direction", "supported_as_source": false, "supported_as_target": false, "identifiable": true}]}`)
+				}))
+			})
+			It(`Invoke ListLanguages successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListLanguagesOptions model
+				listLanguagesOptionsModel := new(languagetranslatorv3.ListLanguagesOptions)
+				listLanguagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.ListLanguagesWithContext(ctx, listLanguagesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.ListLanguages(listLanguagesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.ListLanguagesWithContext(ctx, listLanguagesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listLanguagesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -264,7 +314,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.ListLanguages(nil)
@@ -282,30 +331,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListLanguagesWithContext(ctx, listLanguagesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.ListLanguages(listLanguagesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListLanguagesWithContext(ctx, listLanguagesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListLanguages with error: Operation request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -332,157 +357,45 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeFalse())
-			languageTranslatorService.DisableSSLVerification()
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "https://languagetranslatorv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListLanguages successfully`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(languageTranslatorService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := languageTranslatorService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the ListLanguagesOptions model
+				listLanguagesOptionsModel := new(languagetranslatorv3.ListLanguagesOptions)
+				listLanguagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.ListLanguages(listLanguagesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = languagetranslatorv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`Translate(translateOptions *TranslateOptions) - Operation response error`, func() {
 		version := "testString"
 		translatePath := "/v3/translate"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -491,7 +404,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(translatePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -531,14 +443,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`Translate(translateOptions *TranslateOptions)`, func() {
 		version := "testString"
 		translatePath := "/v3/translate"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -563,10 +472,84 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"word_count": 9, "character_count": 14, "detected_language": "DetectedLanguage", "detected_language_confidence": 0, "translations": [{"translation": "Translation"}]}`)
+				}))
+			})
+			It(`Invoke Translate successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the TranslateOptions model
+				translateOptionsModel := new(languagetranslatorv3.TranslateOptions)
+				translateOptionsModel.Text = []string{"testString"}
+				translateOptionsModel.ModelID = core.StringPtr("testString")
+				translateOptionsModel.Source = core.StringPtr("testString")
+				translateOptionsModel.Target = core.StringPtr("testString")
+				translateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.TranslateWithContext(ctx, translateOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.Translate(translateOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.TranslateWithContext(ctx, translateOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(translatePath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -581,7 +564,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.Translate(nil)
@@ -603,30 +585,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.TranslateWithContext(ctx, translateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.Translate(translateOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.TranslateWithContext(ctx, translateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Translate with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -664,157 +622,49 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeFalse())
-			languageTranslatorService.DisableSSLVerification()
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "https://languagetranslatorv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Translate successfully`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(languageTranslatorService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := languageTranslatorService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the TranslateOptions model
+				translateOptionsModel := new(languagetranslatorv3.TranslateOptions)
+				translateOptionsModel.Text = []string{"testString"}
+				translateOptionsModel.ModelID = core.StringPtr("testString")
+				translateOptionsModel.Source = core.StringPtr("testString")
+				translateOptionsModel.Target = core.StringPtr("testString")
+				translateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.Translate(translateOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = languagetranslatorv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) - Operation response error`, func() {
 		version := "testString"
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -823,7 +673,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listIdentifiableLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -859,14 +708,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions)`, func() {
 		version := "testString"
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -875,10 +721,64 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"languages": [{"language": "Language", "name": "Name"}]}`)
+				}))
+			})
+			It(`Invoke ListIdentifiableLanguages successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListIdentifiableLanguagesOptions model
+				listIdentifiableLanguagesOptionsModel := new(languagetranslatorv3.ListIdentifiableLanguagesOptions)
+				listIdentifiableLanguagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.ListIdentifiableLanguagesWithContext(ctx, listIdentifiableLanguagesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.ListIdentifiableLanguages(listIdentifiableLanguagesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.ListIdentifiableLanguagesWithContext(ctx, listIdentifiableLanguagesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listIdentifiableLanguagesPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -893,7 +793,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.ListIdentifiableLanguages(nil)
@@ -911,30 +810,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListIdentifiableLanguagesWithContext(ctx, listIdentifiableLanguagesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.ListIdentifiableLanguages(listIdentifiableLanguagesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListIdentifiableLanguagesWithContext(ctx, listIdentifiableLanguagesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListIdentifiableLanguages with error: Operation request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -961,11 +836,45 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListIdentifiableLanguages successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the ListIdentifiableLanguagesOptions model
+				listIdentifiableLanguagesOptionsModel := new(languagetranslatorv3.ListIdentifiableLanguagesOptions)
+				listIdentifiableLanguagesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.ListIdentifiableLanguages(listIdentifiableLanguagesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`Identify(identifyOptions *IdentifyOptions) - Operation response error`, func() {
 		version := "testString"
 		identifyPath := "/v3/identify"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -974,7 +883,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(identifyPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1011,14 +919,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`Identify(identifyOptions *IdentifyOptions)`, func() {
 		version := "testString"
 		identifyPath := "/v3/identify"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1043,10 +948,81 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"languages": [{"language": "Language", "confidence": 0}]}`)
+				}))
+			})
+			It(`Invoke Identify successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the IdentifyOptions model
+				identifyOptionsModel := new(languagetranslatorv3.IdentifyOptions)
+				identifyOptionsModel.Text = core.StringPtr("testString")
+				identifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.IdentifyWithContext(ctx, identifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.Identify(identifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.IdentifyWithContext(ctx, identifyOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(identifyPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					// For gzip-disabled operation, verify Content-Encoding is not set.
+					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
+
+					// If there is a body, then make sure we can read it
+					bodyBuf := new(bytes.Buffer)
+					if req.Header.Get("Content-Encoding") == "gzip" {
+						body, err := core.NewGzipDecompressionReader(req.Body)
+						Expect(err).To(BeNil())
+						_, err = bodyBuf.ReadFrom(body)
+						Expect(err).To(BeNil())
+					} else {
+						_, err := bodyBuf.ReadFrom(req.Body)
+						Expect(err).To(BeNil())
+					}
+					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1061,7 +1037,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.Identify(nil)
@@ -1080,30 +1055,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.IdentifyWithContext(ctx, identifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.Identify(identifyOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.IdentifyWithContext(ctx, identifyOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke Identify with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -1138,157 +1089,46 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeFalse())
-			languageTranslatorService.DisableSSLVerification()
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "https://languagetranslatorv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke Identify successfully`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(languageTranslatorService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := languageTranslatorService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the IdentifyOptions model
+				identifyOptionsModel := new(languagetranslatorv3.IdentifyOptions)
+				identifyOptionsModel.Text = core.StringPtr("testString")
+				identifyOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.Identify(identifyOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = languagetranslatorv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListModels(listModelsOptions *ListModelsOptions) - Operation response error`, func() {
 		version := "testString"
 		listModelsPath := "/v3/models"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1297,13 +1137,9 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listModelsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for default query parameter
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1342,14 +1178,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`ListModels(listModelsOptions *ListModelsOptions)`, func() {
 		version := "testString"
 		listModelsPath := "/v3/models"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1358,16 +1191,73 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
-
 					// TODO: Add check for default query parameter
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"models": [{"model_id": "ModelID", "name": "Name", "source": "Source", "target": "Target", "base_model_id": "BaseModelID", "domain": "Domain", "customizable": true, "default_model": true, "owner": "Owner", "status": "uploading"}]}`)
+				}))
+			})
+			It(`Invoke ListModels successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListModelsOptions model
+				listModelsOptionsModel := new(languagetranslatorv3.ListModelsOptions)
+				listModelsOptionsModel.Source = core.StringPtr("testString")
+				listModelsOptionsModel.Target = core.StringPtr("testString")
+				listModelsOptionsModel.Default = core.BoolPtr(true)
+				listModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.ListModelsWithContext(ctx, listModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.ListModels(listModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.ListModelsWithContext(ctx, listModelsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listModelsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
+					// TODO: Add check for default query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1382,7 +1272,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.ListModels(nil)
@@ -1403,30 +1292,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListModelsWithContext(ctx, listModelsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.ListModels(listModelsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListModelsWithContext(ctx, listModelsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListModels with error: Operation request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -1456,11 +1321,48 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListModels successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the ListModelsOptions model
+				listModelsOptionsModel := new(languagetranslatorv3.ListModelsOptions)
+				listModelsOptionsModel.Source = core.StringPtr("testString")
+				listModelsOptionsModel.Target = core.StringPtr("testString")
+				listModelsOptionsModel.Default = core.BoolPtr(true)
+				listModelsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.ListModels(listModelsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`CreateModel(createModelOptions *CreateModelOptions) - Operation response error`, func() {
 		version := "testString"
 		createModelPath := "/v3/models"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1469,11 +1371,8 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createModelPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1513,14 +1412,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`CreateModel(createModelOptions *CreateModelOptions)`, func() {
 		version := "testString"
 		createModelPath := "/v3/models"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1529,14 +1425,72 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
-
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"model_id": "ModelID", "name": "Name", "source": "Source", "target": "Target", "base_model_id": "BaseModelID", "domain": "Domain", "customizable": true, "default_model": true, "owner": "Owner", "status": "uploading"}`)
+				}))
+			})
+			It(`Invoke CreateModel successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the CreateModelOptions model
+				createModelOptionsModel := new(languagetranslatorv3.CreateModelOptions)
+				createModelOptionsModel.BaseModelID = core.StringPtr("testString")
+				createModelOptionsModel.ForcedGlossary = CreateMockReader("This is a mock file.")
+				createModelOptionsModel.ParallelCorpus = CreateMockReader("This is a mock file.")
+				createModelOptionsModel.Name = core.StringPtr("testString")
+				createModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.CreateModelWithContext(ctx, createModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.CreateModel(createModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.CreateModelWithContext(ctx, createModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createModelPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1551,7 +1505,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.CreateModel(nil)
@@ -1573,30 +1526,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.CreateModelWithContext(ctx, createModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.CreateModel(createModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.CreateModelWithContext(ctx, createModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateModel with error: Param validation error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -1651,11 +1580,49 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke CreateModel successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the CreateModelOptions model
+				createModelOptionsModel := new(languagetranslatorv3.CreateModelOptions)
+				createModelOptionsModel.BaseModelID = core.StringPtr("testString")
+				createModelOptionsModel.ForcedGlossary = CreateMockReader("This is a mock file.")
+				createModelOptionsModel.ParallelCorpus = CreateMockReader("This is a mock file.")
+				createModelOptionsModel.Name = core.StringPtr("testString")
+				createModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.CreateModel(createModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`DeleteModel(deleteModelOptions *DeleteModelOptions) - Operation response error`, func() {
 		version := "testString"
 		deleteModelPath := "/v3/models/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1664,7 +1631,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteModelPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1701,14 +1667,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`DeleteModel(deleteModelOptions *DeleteModelOptions)`, func() {
 		version := "testString"
 		deleteModelPath := "/v3/models/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1717,10 +1680,65 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"status": "Status"}`)
+				}))
+			})
+			It(`Invoke DeleteModel successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the DeleteModelOptions model
+				deleteModelOptionsModel := new(languagetranslatorv3.DeleteModelOptions)
+				deleteModelOptionsModel.ModelID = core.StringPtr("testString")
+				deleteModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.DeleteModelWithContext(ctx, deleteModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.DeleteModel(deleteModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.DeleteModelWithContext(ctx, deleteModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteModelPath))
+					Expect(req.Method).To(Equal("DELETE"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1735,7 +1753,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.DeleteModel(nil)
@@ -1754,30 +1771,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.DeleteModelWithContext(ctx, deleteModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.DeleteModel(deleteModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.DeleteModelWithContext(ctx, deleteModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteModel with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -1812,11 +1805,46 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke DeleteModel successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteModelOptions model
+				deleteModelOptionsModel := new(languagetranslatorv3.DeleteModelOptions)
+				deleteModelOptionsModel.ModelID = core.StringPtr("testString")
+				deleteModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.DeleteModel(deleteModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetModel(getModelOptions *GetModelOptions) - Operation response error`, func() {
 		version := "testString"
 		getModelPath := "/v3/models/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -1825,7 +1853,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getModelPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1862,14 +1889,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`GetModel(getModelOptions *GetModelOptions)`, func() {
 		version := "testString"
 		getModelPath := "/v3/models/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -1878,10 +1902,65 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"model_id": "ModelID", "name": "Name", "source": "Source", "target": "Target", "base_model_id": "BaseModelID", "domain": "Domain", "customizable": true, "default_model": true, "owner": "Owner", "status": "uploading"}`)
+				}))
+			})
+			It(`Invoke GetModel successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetModelOptions model
+				getModelOptionsModel := new(languagetranslatorv3.GetModelOptions)
+				getModelOptionsModel.ModelID = core.StringPtr("testString")
+				getModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.GetModelWithContext(ctx, getModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.GetModel(getModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.GetModelWithContext(ctx, getModelOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getModelPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1896,7 +1975,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.GetModel(nil)
@@ -1915,30 +1993,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetModelWithContext(ctx, getModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.GetModel(getModelOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetModelWithContext(ctx, getModelOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetModel with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -1973,157 +2027,46 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
-	Describe(`Service constructor tests`, func() {
-		version := "testString"
-		It(`Instantiate service client`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Authenticator: &core.NoAuthAuthenticator{},
-				Version:       core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).ToNot(BeNil())
-			Expect(serviceErr).To(BeNil())
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeFalse())
-			languageTranslatorService.DisableSSLVerification()
-			Expect(languageTranslatorService.Service.IsSSLDisabled()).To(BeTrue())
-		})
-		It(`Instantiate service client with error: Invalid URL`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Invalid Auth`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "https://languagetranslatorv3/api",
-				Version: core.StringPtr(version),
-				Authenticator: &core.BasicAuthenticator{
-					Username: "",
-					Password: "",
-				},
-			})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-		It(`Instantiate service client with error: Validation Error`, func() {
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{})
-			Expect(languageTranslatorService).To(BeNil())
-			Expect(serviceErr).ToNot(BeNil())
-		})
-	})
-	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
-		Context(`Using external config, construct service client instances`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "noauth",
-			}
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
-			It(`Create service client using external config successfully`, func() {
-				SetTestEnvironment(testEnvironment)
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetModel successfully`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
 				})
-				Expect(languageTranslatorService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
-				ClearTestEnvironment(testEnvironment)
-
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url from constructor successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					URL:     "https://testService/api",
-					Version: core.StringPtr(version),
-				})
 				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-			It(`Create service client using external config and set url programatically successfully`, func() {
-				SetTestEnvironment(testEnvironment)
-				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-					Version: core.StringPtr(version),
-				})
-				err := languageTranslatorService.SetServiceURL("https://testService/api")
-				Expect(err).To(BeNil())
-				Expect(languageTranslatorService).ToNot(BeNil())
-				Expect(serviceErr).To(BeNil())
-				Expect(languageTranslatorService.Service.GetServiceURL()).To(Equal("https://testService/api"))
-				ClearTestEnvironment(testEnvironment)
+				// Construct an instance of the GetModelOptions model
+				getModelOptionsModel := new(languagetranslatorv3.GetModelOptions)
+				getModelOptionsModel.ModelID = core.StringPtr("testString")
+				getModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
-				clone := languageTranslatorService.Clone()
-				Expect(clone).ToNot(BeNil())
-				Expect(clone.Service != languageTranslatorService.Service).To(BeTrue())
-				Expect(clone.GetServiceURL()).To(Equal(languageTranslatorService.GetServiceURL()))
-				Expect(clone.Service.Options.Authenticator).To(Equal(languageTranslatorService.Service.Options.Authenticator))
-			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_URL":       "https://languagetranslatorv3/api",
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "someOtherAuth",
-			}
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.GetModel(getModelOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
 
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				Version: core.StringPtr(version),
+				// Verify a nil result
+				Expect(result).To(BeNil())
 			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
+			AfterEach(func() {
+				testServer.Close()
 			})
-		})
-		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
-			// Map containing environment variables used in testing.
-			var testEnvironment = map[string]string{
-				"LANGUAGE_TRANSLATOR_AUTH_TYPE": "NOAuth",
-			}
-
-			SetTestEnvironment(testEnvironment)
-			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
-				URL:     "{BAD_URL_STRING",
-				Version: core.StringPtr(version),
-			})
-
-			It(`Instantiate service client with error`, func() {
-				Expect(languageTranslatorService).To(BeNil())
-				Expect(serviceErr).ToNot(BeNil())
-				ClearTestEnvironment(testEnvironment)
-			})
-		})
-	})
-	Describe(`Regional endpoint tests`, func() {
-		It(`GetServiceURLForRegion(region string)`, func() {
-			var url string
-			var err error
-			url, err = languagetranslatorv3.GetServiceURLForRegion("INVALID_REGION")
-			Expect(url).To(BeEmpty())
-			Expect(err).ToNot(BeNil())
-			fmt.Fprintf(GinkgoWriter, "Expected error: %s\n", err.Error())
 		})
 	})
 	Describe(`ListDocuments(listDocumentsOptions *ListDocumentsOptions) - Operation response error`, func() {
 		version := "testString"
 		listDocumentsPath := "/v3/documents"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2132,7 +2075,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listDocumentsPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2168,14 +2110,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`ListDocuments(listDocumentsOptions *ListDocumentsOptions)`, func() {
 		version := "testString"
 		listDocumentsPath := "/v3/documents"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2184,14 +2123,68 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"documents": [{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00", "completed": "2019-01-01T12:00:00", "word_count": 9, "character_count": 14}]}`)
+					fmt.Fprintf(res, "%s", `{"documents": [{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}]}`)
+				}))
+			})
+			It(`Invoke ListDocuments successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the ListDocumentsOptions model
+				listDocumentsOptionsModel := new(languagetranslatorv3.ListDocumentsOptions)
+				listDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.ListDocumentsWithContext(ctx, listDocumentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.ListDocuments(listDocumentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.ListDocumentsWithContext(ctx, listDocumentsOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listDocumentsPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"documents": [{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}]}`)
 				}))
 			})
 			It(`Invoke ListDocuments successfully`, func() {
@@ -2202,7 +2195,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.ListDocuments(nil)
@@ -2220,30 +2212,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListDocumentsWithContext(ctx, listDocumentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.ListDocuments(listDocumentsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.ListDocumentsWithContext(ctx, listDocumentsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListDocuments with error: Operation request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -2270,11 +2238,45 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke ListDocuments successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the ListDocumentsOptions model
+				listDocumentsOptionsModel := new(languagetranslatorv3.ListDocumentsOptions)
+				listDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.ListDocuments(listDocumentsOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`TranslateDocument(translateDocumentOptions *TranslateDocumentOptions) - Operation response error`, func() {
 		version := "testString"
 		translateDocumentPath := "/v3/documents"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2283,7 +2285,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(translateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2326,14 +2327,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`TranslateDocument(translateDocumentOptions *TranslateDocumentOptions)`, func() {
 		version := "testString"
 		translateDocumentPath := "/v3/documents"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2342,14 +2340,75 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00", "completed": "2019-01-01T12:00:00", "word_count": 9, "character_count": 14}`)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}`)
+				}))
+			})
+			It(`Invoke TranslateDocument successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the TranslateDocumentOptions model
+				translateDocumentOptionsModel := new(languagetranslatorv3.TranslateDocumentOptions)
+				translateDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				translateDocumentOptionsModel.Filename = core.StringPtr("testString")
+				translateDocumentOptionsModel.FileContentType = core.StringPtr("application/powerpoint")
+				translateDocumentOptionsModel.ModelID = core.StringPtr("testString")
+				translateDocumentOptionsModel.Source = core.StringPtr("testString")
+				translateDocumentOptionsModel.Target = core.StringPtr("testString")
+				translateDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				translateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.TranslateDocumentWithContext(ctx, translateDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.TranslateDocument(translateDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.TranslateDocumentWithContext(ctx, translateDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(translateDocumentPath))
+					Expect(req.Method).To(Equal("POST"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(202)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}`)
 				}))
 			})
 			It(`Invoke TranslateDocument successfully`, func() {
@@ -2360,7 +2419,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.TranslateDocument(nil)
@@ -2385,30 +2443,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.TranslateDocumentWithContext(ctx, translateDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.TranslateDocument(translateDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.TranslateDocumentWithContext(ctx, translateDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke TranslateDocument with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -2449,11 +2483,52 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(202)
+				}))
+			})
+			It(`Invoke TranslateDocument successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the TranslateDocumentOptions model
+				translateDocumentOptionsModel := new(languagetranslatorv3.TranslateDocumentOptions)
+				translateDocumentOptionsModel.File = CreateMockReader("This is a mock file.")
+				translateDocumentOptionsModel.Filename = core.StringPtr("testString")
+				translateDocumentOptionsModel.FileContentType = core.StringPtr("application/powerpoint")
+				translateDocumentOptionsModel.ModelID = core.StringPtr("testString")
+				translateDocumentOptionsModel.Source = core.StringPtr("testString")
+				translateDocumentOptionsModel.Target = core.StringPtr("testString")
+				translateDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				translateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.TranslateDocument(translateDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
 	})
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) - Operation response error`, func() {
 		version := "testString"
 		getDocumentStatusPath := "/v3/documents/testString"
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
@@ -2462,7 +2537,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2499,14 +2573,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions)`, func() {
 		version := "testString"
 		getDocumentStatusPath := "/v3/documents/testString"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2515,14 +2586,69 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00", "completed": "2019-01-01T12:00:00", "word_count": 9, "character_count": 14}`)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}`)
+				}))
+			})
+			It(`Invoke GetDocumentStatus successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetDocumentStatusOptions model
+				getDocumentStatusOptionsModel := new(languagetranslatorv3.GetDocumentStatusOptions)
+				getDocumentStatusOptionsModel.DocumentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.GetDocumentStatus(getDocumentStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					// Set mock response
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"document_id": "DocumentID", "filename": "Filename", "status": "processing", "model_id": "ModelID", "base_model_id": "BaseModelID", "source": "Source", "detected_language_confidence": 0, "target": "Target", "created": "2019-01-01T12:00:00.000Z", "completed": "2019-01-01T12:00:00.000Z", "word_count": 9, "character_count": 14}`)
 				}))
 			})
 			It(`Invoke GetDocumentStatus successfully`, func() {
@@ -2533,7 +2659,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.GetDocumentStatus(nil)
@@ -2552,30 +2677,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.GetDocumentStatus(getDocumentStatusOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetDocumentStatusWithContext(ctx, getDocumentStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetDocumentStatus with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -2610,8 +2711,42 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				testServer.Close()
 			})
 		})
-	})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
 
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetDocumentStatus successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the GetDocumentStatusOptions model
+				getDocumentStatusOptionsModel := new(languagetranslatorv3.GetDocumentStatusOptions)
+				getDocumentStatusOptionsModel.DocumentID = core.StringPtr("testString")
+				getDocumentStatusOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.GetDocumentStatus(getDocumentStatusOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify a nil result
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
 	Describe(`DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions)`, func() {
 		version := "testString"
 		deleteDocumentPath := "/v3/documents/testString"
@@ -2625,7 +2760,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					res.WriteHeader(204)
 				}))
 			})
@@ -2637,7 +2771,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := languageTranslatorService.DeleteDocument(nil)
@@ -2650,12 +2783,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = languageTranslatorService.DeleteDocument(deleteDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
 				response, operationErr = languageTranslatorService.DeleteDocument(deleteDocumentOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -2692,14 +2819,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			})
 		})
 	})
-
 	Describe(`GetTranslatedDocument(getTranslatedDocumentOptions *GetTranslatedDocumentOptions)`, func() {
 		version := "testString"
 		getTranslatedDocumentPath := "/v3/documents/testString/translated_document"
-		var serverSleepTime time.Duration
-		Context(`Using mock server endpoint`, func() {
+		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -2710,10 +2834,68 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.Header["Accept"]).ToNot(BeNil())
 					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "application/powerpoint")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-
 					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
+					time.Sleep(100 * time.Millisecond)
 
+					// Set mock response
+					res.Header().Set("Content-type", "application/powerpoint")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `This is a mock binary response.`)
+				}))
+			})
+			It(`Invoke GetTranslatedDocument successfully with retries`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+				languageTranslatorService.EnableRetries(0, 0)
+
+				// Construct an instance of the GetTranslatedDocumentOptions model
+				getTranslatedDocumentOptionsModel := new(languagetranslatorv3.GetTranslatedDocumentOptions)
+				getTranslatedDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getTranslatedDocumentOptionsModel.Accept = core.StringPtr("application/powerpoint")
+				getTranslatedDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with a Context to test a timeout error
+				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc()
+				_, _, operationErr := languageTranslatorService.GetTranslatedDocumentWithContext(ctx, getTranslatedDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+
+				// Disable retries and test again
+				languageTranslatorService.DisableRetries()
+				result, response, operationErr := languageTranslatorService.GetTranslatedDocument(getTranslatedDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+
+				// Re-test the timeout error with retries disabled
+				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
+				defer cancelFunc2()
+				_, _, operationErr = languageTranslatorService.GetTranslatedDocumentWithContext(ctx, getTranslatedDocumentOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getTranslatedDocumentPath))
+					Expect(req.Method).To(Equal("GET"))
+
+					Expect(req.Header["Accept"]).ToNot(BeNil())
+					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "application/powerpoint")))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/powerpoint")
 					res.WriteHeader(200)
@@ -2728,7 +2910,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(languageTranslatorService).ToNot(BeNil())
-				languageTranslatorService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := languageTranslatorService.GetTranslatedDocument(nil)
@@ -2748,30 +2929,6 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
 
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetTranslatedDocumentWithContext(ctx, getTranslatedDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				languageTranslatorService.DisableRetries()
-				result, response, operationErr = languageTranslatorService.GetTranslatedDocument(getTranslatedDocumentOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = languageTranslatorService.GetTranslatedDocumentWithContext(ctx, getTranslatedDocumentOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTranslatedDocument with error: Operation validation and request error`, func() {
 				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
@@ -2802,6 +2959,46 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+		Context(`Using mock server endpoint with missing response body`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Set success status code with no respoonse body
+					res.WriteHeader(200)
+				}))
+			})
+			It(`Invoke GetTranslatedDocument successfully`, func() {
+				languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+					Version:       core.StringPtr(version),
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(languageTranslatorService).ToNot(BeNil())
+
+				// Construct an instance of the GetTranslatedDocumentOptions model
+				getTranslatedDocumentOptionsModel := new(languagetranslatorv3.GetTranslatedDocumentOptions)
+				getTranslatedDocumentOptionsModel.DocumentID = core.StringPtr("testString")
+				getTranslatedDocumentOptionsModel.Accept = core.StringPtr("application/powerpoint")
+				getTranslatedDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation
+				result, response, operationErr := languageTranslatorService.GetTranslatedDocument(getTranslatedDocumentOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+
+				// Verify empty byte buffer.
+				Expect(result).ToNot(BeNil())
+				buffer, operationErr := ioutil.ReadAll(result)
+				Expect(operationErr).To(BeNil())
+				Expect(buffer).ToNot(BeNil())
+				Expect(len(buffer)).To(Equal(0))
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -2983,11 +3180,11 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 			Expect(mockReader).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDate() successfully`, func() {
-			mockDate := CreateMockDate()
+			mockDate := CreateMockDate("2019-01-01")
 			Expect(mockDate).ToNot(BeNil())
 		})
 		It(`Invoke CreateMockDateTime() successfully`, func() {
-			mockDateTime := CreateMockDateTime()
+			mockDateTime := CreateMockDateTime("2019-01-01T12:00:00.000Z")
 			Expect(mockDateTime).ToNot(BeNil())
 		})
 	})
@@ -3012,13 +3209,19 @@ func CreateMockReader(mockData string) io.ReadCloser {
 	return ioutil.NopCloser(bytes.NewReader([]byte(mockData)))
 }
 
-func CreateMockDate() *strfmt.Date {
-	d := strfmt.Date(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDate(mockData string) *strfmt.Date {
+	d, err := core.ParseDate(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 
-func CreateMockDateTime() *strfmt.DateTime {
-	d := strfmt.DateTime(time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC))
+func CreateMockDateTime(mockData string) *strfmt.DateTime {
+	d, err := core.ParseDateTime(mockData)
+	if err != nil {
+		return nil
+	}
 	return &d
 }
 

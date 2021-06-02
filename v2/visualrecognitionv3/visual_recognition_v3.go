@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 99-SNAPSHOT-9dacd99b-20201204-091925
+ * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
  */
 
 // Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
@@ -30,7 +30,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/go-openapi/strfmt"
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
@@ -252,11 +252,13 @@ func (visualRecognition *VisualRecognitionV3) ClassifyWithContext(ctx context.Co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiedImages)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiedImages)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -329,11 +331,13 @@ func (visualRecognition *VisualRecognitionV3) CreateClassifierWithContext(ctx co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -383,11 +387,13 @@ func (visualRecognition *VisualRecognitionV3) ListClassifiersWithContext(ctx con
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiers)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifiers)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -443,11 +449,13 @@ func (visualRecognition *VisualRecognitionV3) GetClassifierWithContext(ctx conte
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -531,11 +539,13 @@ func (visualRecognition *VisualRecognitionV3) UpdateClassifierWithContext(ctx co
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
-	if err != nil {
-		return
+	if rawResponse != nil {
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassifier)
+		if err != nil {
+			return
+		}
+		response.Result = result
 	}
-	response.Result = result
 
 	return
 }
@@ -982,23 +992,23 @@ type ClassifyOptions struct {
 	// characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 	//
 	// You can also include an image with the **url** parameter.
-	ImagesFile io.ReadCloser `json:"images_file,omitempty"`
+	ImagesFile io.ReadCloser
 
 	// The filename for imagesFile.
-	ImagesFilename *string `json:"images_filename,omitempty"`
+	ImagesFilename *string
 
 	// The content type of imagesFile.
-	ImagesFileContentType *string `json:"images_file_content_type,omitempty"`
+	ImagesFileContentType *string
 
 	// The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel density is 32X32 pixels, but
 	// the service tends to perform better with images that are at least 224 x 224 pixels. The maximum image size is 10 MB.
 	//
 	// You can also include images with the **images_file** parameter.
-	URL *string `json:"url,omitempty"`
+	URL *string
 
 	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to return all
 	// identified classes.
-	Threshold *float32 `json:"threshold,omitempty"`
+	Threshold *float32
 
 	// The categories of classifiers to apply. The **classifier_ids** parameter overrides **owners**, so make sure that
 	// **classifier_ids** is empty.
@@ -1007,7 +1017,7 @@ type ClassifyOptions struct {
 	// - Use `me` to classify against all your custom classifiers. However, for better performance use **classifier_ids**
 	// to specify the specific custom classifiers to apply.
 	// - Use both `IBM` and `me` to analyze the image against both classifier categories.
-	Owners []string `json:"owners,omitempty"`
+	Owners []string
 
 	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier
 	// IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
@@ -1016,10 +1026,10 @@ type ClassifyOptions struct {
 	// - `default`: Returns classes from thousands of general tags.
 	// - `food`: Enhances specificity and accuracy for images of food items.
 	// - `explicit`: Evaluates whether the image might be pornographic.
-	ClassifierIds []string `json:"classifier_ids,omitempty"`
+	ClassifierIds []string
 
 	// The desired language of parts of the response. See the response for details.
-	AcceptLanguage *string `json:"Accept-Language,omitempty"`
+	AcceptLanguage *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1103,7 +1113,7 @@ func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOpt
 // CreateClassifierOptions : The CreateClassifier options.
 type CreateClassifierOptions struct {
 	// The name of the new classifier. Encode special characters in UTF-8.
-	Name *string `json:"name" validate:"required"`
+	Name *string `validate:"required"`
 
 	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one
 	// positive example file in a call.
@@ -1116,16 +1126,16 @@ type CreateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]io.ReadCloser `json:"positive_examples" validate:"required"`
+	PositiveExamples map[string]io.ReadCloser `validate:"required"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples io.ReadCloser `json:"negative_examples,omitempty"`
+	NegativeExamples io.ReadCloser
 
 	// The filename for negativeExamples.
-	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
+	NegativeExamplesFilename *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1174,7 +1184,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 // DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1202,7 +1212,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `json:"customer_id" validate:"required"`
+	CustomerID *string `validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1262,7 +1272,7 @@ func UnmarshalErrorInfo(m map[string]json.RawMessage, result interface{}) (err e
 // GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1290,7 +1300,7 @@ func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetCla
 // GetCoreMlModelOptions : The GetCoreMlModel options.
 type GetCoreMlModelOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1318,7 +1328,7 @@ func (options *GetCoreMlModelOptions) SetHeaders(param map[string]string) *GetCo
 // ListClassifiersOptions : The ListClassifiers options.
 type ListClassifiersOptions struct {
 	// Specify `true` to return details about the classifiers. Omit this parameter to return a brief list of classifiers.
-	Verbose *bool `json:"verbose,omitempty"`
+	Verbose *bool
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1344,7 +1354,7 @@ func (options *ListClassifiersOptions) SetHeaders(param map[string]string) *List
 // UpdateClassifierOptions : The UpdateClassifier options.
 type UpdateClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `json:"classifier_id" validate:"required,ne="`
+	ClassifierID *string `validate:"required,ne="`
 
 	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or
 	// update classes in the classifier. You can include more than one positive example file in a call.
@@ -1357,16 +1367,16 @@ type UpdateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]io.ReadCloser `json:"positive_examples,omitempty"`
+	PositiveExamples map[string]io.ReadCloser
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples io.ReadCloser `json:"negative_examples,omitempty"`
+	NegativeExamples io.ReadCloser
 
 	// The filename for negativeExamples.
-	NegativeExamplesFilename *string `json:"negative_examples_filename,omitempty"`
+	NegativeExamplesFilename *string
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
