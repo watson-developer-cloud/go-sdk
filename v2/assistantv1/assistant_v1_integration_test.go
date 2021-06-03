@@ -21,7 +21,9 @@ package assistantv1_test
 import (
 	"net/http"
 	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/joho/godotenv"
@@ -32,10 +34,12 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *assistantv1.AssistantV1
 var workspaceId string
+
+var hashedIntentName string
 
 func shouldSkipTest(t *testing.T) {
 	if !configLoaded {
@@ -54,6 +58,9 @@ func TestLoadConfig(t *testing.T) {
 	if workspaceId != "" {
 		configLoaded = true
 	}
+
+	// used for intent based tests
+	hashedIntentName = strconv.FormatInt(time.Now().UnixNano(), 10)
 }
 
 func TestConstructService(t *testing.T) {
@@ -65,6 +72,7 @@ func TestConstructService(t *testing.T) {
 		Version:     core.StringPtr("2020-04-01"),
 		ServiceName: "assistant",
 	})
+
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
 
@@ -343,7 +351,7 @@ func TestIntents(t *testing.T) {
 	createIntent, _, responseErr := service.CreateIntent(
 		&assistantv1.CreateIntentOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hello"),
+			Intent:      &hashedIntentName,
 			Description: core.StringPtr("greetings"),
 		},
 	)
@@ -355,7 +363,7 @@ func TestIntents(t *testing.T) {
 	getIntent, _, responseErr := service.GetIntent(
 		&assistantv1.GetIntentOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hello"),
+			Intent:      &hashedIntentName,
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -366,8 +374,8 @@ func TestIntents(t *testing.T) {
 	updateIntent, _, responseErr := service.UpdateIntent(
 		&assistantv1.UpdateIntentOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hello"),
-			NewIntent:   core.StringPtr("hi"),
+			Intent:      &hashedIntentName,
+			NewIntent:   core.StringPtr("hi" + hashedIntentName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -382,7 +390,7 @@ func TestExamples(t *testing.T) {
 	listExamples, _, responseErr := service.ListExamples(
 		&assistantv1.ListExamplesOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -393,7 +401,7 @@ func TestExamples(t *testing.T) {
 	createExample, _, responseErr := service.CreateExample(
 		&assistantv1.CreateExampleOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 			Text:        core.StringPtr("Howdy"),
 		},
 	)
@@ -405,7 +413,7 @@ func TestExamples(t *testing.T) {
 	getExample, _, responseErr := service.GetExample(
 		&assistantv1.GetExampleOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 			Text:        core.StringPtr("Howdy"),
 		},
 	)
@@ -417,7 +425,7 @@ func TestExamples(t *testing.T) {
 	updateExample, _, responseErr := service.UpdateExample(
 		&assistantv1.UpdateExampleOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 			Text:        core.StringPtr("Howdy"),
 			NewText:     core.StringPtr("Hello there!"),
 		},
@@ -430,7 +438,7 @@ func TestExamples(t *testing.T) {
 	_, responseErr = service.DeleteExample(
 		&assistantv1.DeleteExampleOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 			Text:        core.StringPtr("Hello there!"),
 		},
 	)
@@ -440,7 +448,7 @@ func TestExamples(t *testing.T) {
 	_, responseErr = service.DeleteIntent(
 		&assistantv1.DeleteIntentOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
-			Intent:      core.StringPtr("hi"),
+			Intent:      core.StringPtr("hi" + hashedIntentName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -584,6 +592,7 @@ func TestMessage(t *testing.T) {
 	message, _, responseErr := service.Message(
 		&assistantv1.MessageOptions{
 			WorkspaceID: core.StringPtr(workspaceId),
+			UserID:      nil,
 			Input: &assistantv1.MessageInput{
 				Text: core.StringPtr("Hello World"),
 			},

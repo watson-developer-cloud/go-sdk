@@ -19,8 +19,12 @@ package texttospeechv1_test
  */
 
 import (
+	"math/rand"
 	"net/http"
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/joho/godotenv"
@@ -31,7 +35,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *texttospeechv1.TextToSpeechV1
 var customizationID *string
@@ -285,4 +289,122 @@ func TestWords(t *testing.T) {
 		},
 	)
 	assert.Nil(t, responseErr)
+}
+
+func TestCustomPromptsCRUD(t *testing.T) {
+	shouldSkipTest(t)
+
+	hashedConfigurationName := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+	createVoiceModel, _, responseErr := service.CreateCustomModel(
+		&texttospeechv1.CreateCustomModelOptions{
+			Name:        core.StringPtr("Go custom prompt model" + hashedConfigurationName),
+			Language:    core.StringPtr(texttospeechv1.CreateCustomModelOptionsLanguageEnUsConst),
+			Description: core.StringPtr("First custom voice model"),
+		},
+	)
+	assert.Nil(t, responseErr)
+	assert.NotNil(t, createVoiceModel)
+
+	audio, audioErr := os.Open("../resources/tts_audio.wav")
+	assert.Nil(t, audioErr)
+	defer audio.Close()
+
+	hashedPromptName := strconv.FormatInt(rand.Int63n(1000), 10)
+
+	addedPrompt, _, addPromptErr := service.AddCustomPrompt(
+		&texttospeechv1.AddCustomPromptOptions{
+			CustomizationID: createVoiceModel.CustomizationID,
+			PromptID:        core.StringPtr("gosdkprompt" + hashedPromptName),
+			File:            audio,
+			Metadata: &texttospeechv1.PromptMetadata{
+				PromptText: core.StringPtr("Hello world"),
+			},
+		},
+	)
+
+	assert.Nil(t, addPromptErr)
+	assert.NotNil(t, addedPrompt)
+
+	readPrompt, _, readPromptErr := service.GetCustomPrompt(
+		&texttospeechv1.GetCustomPromptOptions{
+			CustomizationID: createVoiceModel.CustomizationID,
+			PromptID:        addedPrompt.PromptID,
+		},
+	)
+
+	assert.Nil(t, readPromptErr)
+	assert.Equal(t, *addedPrompt.PromptID, *readPrompt.PromptID)
+
+	listedPrompts, _, listPromptsErr := service.ListCustomPrompts(
+		&texttospeechv1.ListCustomPromptsOptions{
+			CustomizationID: createVoiceModel.CustomizationID,
+		},
+	)
+
+	assert.Nil(t, listPromptsErr)
+	assert.NotNil(t, listedPrompts)
+
+	response, deletePromptErr := service.DeleteCustomPrompt(
+		&texttospeechv1.DeleteCustomPromptOptions{
+			CustomizationID: createVoiceModel.CustomizationID,
+			PromptID:        addedPrompt.PromptID,
+		},
+	)
+
+	assert.Nil(t, deletePromptErr)
+	assert.NotNil(t, response)
+
+	// Delete voice model
+	_, responseErr = service.DeleteCustomModel(
+		&texttospeechv1.DeleteCustomModelOptions{
+			CustomizationID: createVoiceModel.CustomizationID,
+		},
+	)
+	assert.Nil(t, responseErr)
+}
+
+func TestSpeakerModelsCRUD(t *testing.T) {
+	shouldSkipTest(t)
+
+	audio, audioErr := os.Open("../resources/tts_audio.wav")
+	assert.Nil(t, audioErr)
+	defer audio.Close()
+
+	hashedSpeakerName := strconv.FormatInt(rand.Int63n(1000), 10)
+
+	createdModel, _, createModelErr := service.CreateSpeakerModel(
+		&texttospeechv1.CreateSpeakerModelOptions{
+			SpeakerName: core.StringPtr("gospeaker" + hashedSpeakerName),
+			Audio:       audio,
+		},
+	)
+
+	assert.Nil(t, createModelErr)
+	assert.NotNil(t, createdModel)
+
+	readModel, _, readModelErr := service.GetSpeakerModel(
+		&texttospeechv1.GetSpeakerModelOptions{
+			SpeakerID: createdModel.SpeakerID,
+		},
+	)
+
+	assert.Nil(t, readModelErr)
+	assert.NotNil(t, readModel)
+
+	listedModels, _, listModelErr := service.ListSpeakerModels(
+		&texttospeechv1.ListSpeakerModelsOptions{},
+	)
+
+	assert.Nil(t, listModelErr)
+	assert.NotNil(t, listedModels)
+
+	response, deleteModelErr := service.DeleteSpeakerModel(
+		&texttospeechv1.DeleteSpeakerModelOptions{
+			SpeakerID: createdModel.SpeakerID,
+		},
+	)
+
+	assert.Nil(t, deleteModelErr)
+	assert.NotNil(t, response)
 }

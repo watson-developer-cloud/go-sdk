@@ -34,7 +34,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *speechtotextv1.SpeechToTextV1
 var languageModel *speechtotextv1.LanguageModel
@@ -404,11 +404,12 @@ func (cb myCallBack) OnClose() {
 func (cb myCallBack) OnData(resp *core.DetailedResponse) {
 	var speechResults speechtotextv1.SpeechRecognitionResults
 	result := resp.GetResult().([]byte)
+	assert.NotNil(cb.T, result)
+
 	err := json.Unmarshal(result, &speechResults)
-	if err != nil {
-		cb.T.Fail()
-	}
+	assert.Nil(cb.T, err)
 	assert.NotNil(cb.T, speechResults)
+
 	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].WordConfidence)
 	assert.NotNil(cb.T, speechResults.SpeakerLabels)
 	assert.NotNil(cb.T, speechResults.Results[0].Alternatives[0].Timestamps)
@@ -419,7 +420,10 @@ func (cb myCallBack) OnError(err error) {
 
 func TestRecognizeUsingWebsocket(t *testing.T) {
 	shouldSkipTest(t)
-	f, _ := os.Open("../resources/audio_example.mp3")
+
+	f, err := os.Open("../resources/audio_example.mp3")
+	assert.Nil(t, err)
+
 	callback := myCallBack{T: t}
 
 	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mp3")

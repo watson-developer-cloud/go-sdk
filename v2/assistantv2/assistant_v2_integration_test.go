@@ -32,7 +32,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *assistantv2.AssistantV2
 var assistantId string
@@ -93,15 +93,11 @@ func TestSession(t *testing.T) {
 		&assistantv2.MessageOptions{
 			AssistantID: core.StringPtr(assistantId),
 			SessionID:   createSession.SessionID,
+			UserID:      core.StringPtr("dummy"),
 			Input: &assistantv2.MessageInput{
 				Text: core.StringPtr("Whats the weather like?"),
 			},
 			Context: &assistantv2.MessageContext{
-				Global: &assistantv2.MessageContextGlobal{
-					System: &assistantv2.MessageContextGlobalSystem{
-						UserID: core.StringPtr("dummy"),
-					},
-				},
 				Skills: map[string]assistantv2.MessageContextSkill{
 					"main_skill": {
 						UserDefined: map[string]interface{}{
