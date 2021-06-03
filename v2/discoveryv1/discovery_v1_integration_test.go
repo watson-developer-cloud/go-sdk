@@ -79,7 +79,8 @@ func TestConstructService(t *testing.T) {
 		Version: core.StringPtr("2020-11-05"),
 	})
 
-	service.SetServiceURL(*serviceURL)
+	setServiceURLErr := service.SetServiceURL(*serviceURL)
+	assert.Nil(t, setServiceURLErr)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
