@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/watson-developer-cloud/go-sdk/v2/assistantv2"
 )
 
