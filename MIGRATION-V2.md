@@ -16,10 +16,10 @@ Where `{service}` represents the service you are attempting to import, i.e. `ass
 
 ### Breaking `go-sdk-core` version change
 
-For all packages, we now import the `go-sdk-core/v4` module as a dependency. This replaces `go-sdk-core`. Any code that previously imported the Go Core should replace their existing imports with:
+For all packages, we now import the `go-sdk-core/v5` module as a dependency. This replaces `go-sdk-core`. Any code that previously imported the Go Core should replace their existing imports with:
 
 ```
-"github.com/IBM/go-sdk-core/v4/core"
+"github.com/IBM/go-sdk-core/v5/core"
 ```
 
 ### Breaking Version Date Type Change
