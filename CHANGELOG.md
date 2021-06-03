@@ -69,7 +69,7 @@
 * docs(examples): update examples
 
 * build(update modules): update go modules
-* the go sdk now requires go-sdk-core/v4 as a dependency
+* the go sdk now requires go-sdk-core/v5 as a dependency
 
 * chore(personalityinsightsv3): log deprecation warning
 
