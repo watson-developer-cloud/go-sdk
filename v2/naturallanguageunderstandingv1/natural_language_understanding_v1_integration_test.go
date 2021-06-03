@@ -20,7 +20,10 @@ package naturallanguageunderstandingv1_test
 
 import (
 	"net/http"
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/joho/godotenv"
@@ -31,7 +34,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *naturallanguageunderstandingv1.NaturalLanguageUnderstandingV1
 
@@ -104,4 +107,201 @@ func TestListModels(t *testing.T) {
 	assert.Nil(t, responseErr)
 	assert.NotNil(t, response)
 	assert.NotNil(t, listModels)
+}
+
+func TestSentimentModelsCRUD(t *testing.T) {
+	shouldSkipTest(t)
+
+	trainingData, err := os.Open("../resources/nlu_training_data.csv")
+	assert.Nil(t, err)
+
+	createdModel, _, createModelErr := service.CreateSentimentModel(
+		&naturallanguageunderstandingv1.CreateSentimentModelOptions{
+			Name:         core.StringPtr("Go test sentiment model"),
+			Description:  core.StringPtr("go test model"),
+			Language:     core.StringPtr("en"),
+			TrainingData: trainingData,
+		},
+	)
+
+	assert.Nil(t, createModelErr)
+	assert.Equal(t, "Go test sentiment model", *createdModel.Name)
+
+	trainingData.Close()
+
+	readModel, _, readModelErr := service.GetSentimentModel(
+		&naturallanguageunderstandingv1.GetSentimentModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, readModelErr)
+	assert.Equal(t, "Go test sentiment model", *readModel.Name)
+
+	listedModels, _, listModelsErr := service.ListSentimentModels(
+		&naturallanguageunderstandingv1.ListSentimentModelsOptions{},
+	)
+
+	assert.Nil(t, listModelsErr)
+	assert.NotNil(t, listedModels)
+
+	updatedTrainingData, err := os.Open("../resources/nlu_training_data.csv")
+	assert.Nil(t, err)
+	defer updatedTrainingData.Close()
+
+	updatedModel, _, updateModelErr := service.UpdateSentimentModel(
+		&naturallanguageunderstandingv1.UpdateSentimentModelOptions{
+			ModelID:      createdModel.ModelID,
+			Name:         core.StringPtr("Go updated model"),
+			Description:  core.StringPtr("I'm updated"),
+			Language:     core.StringPtr("en"),
+			TrainingData: updatedTrainingData,
+		},
+	)
+
+	assert.Nil(t, updateModelErr)
+	assert.Equal(t, "Go updated model", *updatedModel.Name)
+
+	deletedModel, _, deleteModelErr := service.DeleteSentimentModel(
+		&naturallanguageunderstandingv1.DeleteSentimentModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, deleteModelErr)
+	assert.NotNil(t, deletedModel)
+}
+
+func TestClassificationsModelCRUD(t *testing.T) {
+	shouldSkipTest(t)
+
+	trainingData, err := os.Open("../resources/nlu_classifications_training.json")
+	assert.Nil(t, err)
+
+	hashedModelName := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+	createdModel, _, createModelErr := service.CreateClassificationsModel(
+		&naturallanguageunderstandingv1.CreateClassificationsModelOptions{
+			Name:                    core.StringPtr("Go" + hashedModelName),
+			Description:             core.StringPtr("Description"),
+			TrainingData:            trainingData,
+			TrainingDataContentType: core.StringPtr("application/json"),
+			Language:                core.StringPtr("en"),
+		},
+	)
+
+	assert.Nil(t, createModelErr)
+	assert.Equal(t, "Go"+hashedModelName, *createdModel.Name)
+
+	trainingData.Close()
+
+	readModel, _, readModelErr := service.GetClassificationsModel(
+		&naturallanguageunderstandingv1.GetClassificationsModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, readModelErr)
+	assert.Equal(t, *createdModel.Name, *readModel.Name)
+
+	listedModels, _, listModelsErr := service.ListClassificationsModels(
+		&naturallanguageunderstandingv1.ListClassificationsModelsOptions{},
+	)
+
+	assert.Nil(t, listModelsErr)
+	assert.NotNil(t, listedModels)
+
+	updateTrainingData, err := os.Open("../resources/nlu_classifications_training.json")
+	assert.Nil(t, err)
+	defer updateTrainingData.Close()
+
+	updatedModel, _, updateModelErr := service.UpdateClassificationsModel(
+		&naturallanguageunderstandingv1.UpdateClassificationsModelOptions{
+			ModelID:                 createdModel.ModelID,
+			Name:                    core.StringPtr("Go update" + hashedModelName),
+			Description:             core.StringPtr("Description"),
+			TrainingData:            updateTrainingData,
+			TrainingDataContentType: core.StringPtr("application/json"),
+			Language:                core.StringPtr("en"),
+		},
+	)
+
+	assert.Nil(t, updateModelErr)
+	assert.Equal(t, "Go update"+hashedModelName, *updatedModel.Name)
+
+	deletedModel, _, deleteModelErr := service.DeleteClassificationsModel(
+		&naturallanguageunderstandingv1.DeleteClassificationsModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, deleteModelErr)
+	assert.NotNil(t, deletedModel)
+}
+
+func TestCategoriesModels(t *testing.T) {
+	shouldSkipTest(t)
+
+	trainingData, err := os.Open("../resources/nlu_categories_training.json")
+	assert.Nil(t, err)
+
+	hashedModelName := strconv.FormatInt(time.Now().UnixNano(), 10)
+
+	createdModel, _, createModelErr := service.CreateCategoriesModel(
+		&naturallanguageunderstandingv1.CreateCategoriesModelOptions{
+			Name:                    core.StringPtr("Go" + hashedModelName),
+			Description:             core.StringPtr("Description"),
+			TrainingData:            trainingData,
+			TrainingDataContentType: core.StringPtr("application/json"),
+			Language:                core.StringPtr("en"),
+		},
+	)
+
+	assert.Nil(t, createModelErr)
+	assert.Equal(t, "Go"+hashedModelName, *createdModel.Name)
+
+	trainingData.Close()
+
+	readModel, _, readModelErr := service.GetCategoriesModel(
+		&naturallanguageunderstandingv1.GetCategoriesModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, readModelErr)
+	assert.Equal(t, *createdModel.Name, *readModel.Name)
+
+	listedModels, _, listModelsErr := service.ListCategoriesModels(
+		&naturallanguageunderstandingv1.ListCategoriesModelsOptions{},
+	)
+
+	assert.Nil(t, listModelsErr)
+	assert.NotNil(t, listedModels)
+
+	updateTrainingData, err := os.Open("../resources/nlu_categories_training.json")
+	assert.Nil(t, err)
+	defer updateTrainingData.Close()
+
+	updatedModel, _, updateModelErr := service.UpdateCategoriesModel(
+		&naturallanguageunderstandingv1.UpdateCategoriesModelOptions{
+			ModelID:                 createdModel.ModelID,
+			Name:                    core.StringPtr("Go update" + hashedModelName),
+			Description:             core.StringPtr("Description"),
+			TrainingData:            updateTrainingData,
+			TrainingDataContentType: core.StringPtr("application/json"),
+			Language:                core.StringPtr("en"),
+		},
+	)
+
+	assert.Nil(t, updateModelErr)
+	assert.Equal(t, "Go update"+hashedModelName, *updatedModel.Name)
+
+	deletedModel, _, deleteModelErr := service.DeleteCategoriesModel(
+		&naturallanguageunderstandingv1.DeleteCategoriesModelOptions{
+			ModelID: createdModel.ModelID,
+		},
+	)
+
+	assert.Nil(t, deleteModelErr)
+	assert.NotNil(t, deletedModel)
 }

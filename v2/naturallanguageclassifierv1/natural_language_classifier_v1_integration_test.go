@@ -33,7 +33,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *naturallanguageclassifierv1.NaturalLanguageClassifierV1
 var testClassifierID string

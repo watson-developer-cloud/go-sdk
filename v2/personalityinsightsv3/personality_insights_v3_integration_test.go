@@ -22,6 +22,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/IBM/go-sdk-core/v5/core"
@@ -33,7 +34,8 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
+var serviceURL *string
 
 var service *personalityinsightsv3.PersonalityInsightsV3
 
@@ -50,6 +52,14 @@ func TestLoadConfig(t *testing.T) {
 	} else {
 		configLoaded = true
 	}
+
+	url := os.Getenv("PERSONALITY_INSIGHTS_URL")
+	assert.NotEmpty(t, url)
+
+	if url != "" {
+		configLoaded = true
+		serviceURL = &url
+	}
 }
 
 func TestConstructService(t *testing.T) {
@@ -61,6 +71,9 @@ func TestConstructService(t *testing.T) {
 		&personalityinsightsv3.PersonalityInsightsV3Options{
 			Version: core.StringPtr("2017-10-13"),
 		})
+
+	service.SetServiceURL(*serviceURL)
+
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
 

@@ -22,7 +22,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/joho/godotenv"
@@ -33,9 +35,10 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *discoveryv1.DiscoveryV1
+var serviceURL *string
 var environmentID *string
 var configurationID *string
 var collectionID *string
@@ -58,6 +61,13 @@ func TestLoadConfig(t *testing.T) {
 		configLoaded = true
 		environmentID = &s
 	}
+
+	url := os.Getenv("DISCOVERY_URL")
+	assert.NotEmpty(t, s)
+	if s != "" {
+		configLoaded = true
+		serviceURL = &url
+	}
 }
 
 func TestConstructService(t *testing.T) {
@@ -68,6 +78,9 @@ func TestConstructService(t *testing.T) {
 	service, err = discoveryv1.NewDiscoveryV1(&discoveryv1.DiscoveryV1Options{
 		Version: core.StringPtr("2020-11-05"),
 	})
+
+	service.SetServiceURL(*serviceURL)
+
 	assert.Nil(t, err)
 	assert.NotNil(t, service)
 
@@ -141,11 +154,13 @@ func TestEnvironment(t *testing.T) {
 func TestConfiguration(t *testing.T) {
 	shouldSkipTest(t)
 
+	hashedConfigurationName := strconv.FormatInt(time.Now().UnixNano(), 10)
+
 	// Create Configuraion
 	createConfiguration, _, responseErr := service.CreateConfiguration(
 		&discoveryv1.CreateConfigurationOptions{
 			EnvironmentID: environmentID,
-			Name:          core.StringPtr("Test configuration for GO"),
+			Name:          core.StringPtr("Go" + hashedConfigurationName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -175,7 +190,7 @@ func TestConfiguration(t *testing.T) {
 		&discoveryv1.UpdateConfigurationOptions{
 			EnvironmentID:   environmentID,
 			ConfigurationID: createConfiguration.ConfigurationID,
-			Name:            core.StringPtr("Test configuration for GO with name update"),
+			Name:            core.StringPtr("Go update" + hashedConfigurationName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -187,12 +202,14 @@ func TestConfiguration(t *testing.T) {
 func TestCollection(t *testing.T) {
 	shouldSkipTest(t)
 
+	hashedCollectionName := strconv.FormatInt(time.Now().UnixNano(), 10)
+
 	// Create collection
 	createCollection, _, responseErr := service.CreateCollection(
 		&discoveryv1.CreateCollectionOptions{
 			EnvironmentID:   environmentID,
 			ConfigurationID: configurationID,
-			Name:            core.StringPtr("Name for GO collection"),
+			Name:            core.StringPtr("Go coll" + hashedCollectionName),
 		},
 	)
 	assert.Nil(t, responseErr)
@@ -223,7 +240,7 @@ func TestCollection(t *testing.T) {
 			EnvironmentID:   environmentID,
 			CollectionID:    createCollection.CollectionID,
 			ConfigurationID: configurationID,
-			Name:            core.StringPtr("Update collection in GO"),
+			Name:            core.StringPtr("Update coll" + hashedCollectionName),
 			Description:     core.StringPtr("Update description in GO"),
 		},
 	)

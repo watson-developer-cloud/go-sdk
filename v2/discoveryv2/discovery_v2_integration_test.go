@@ -32,7 +32,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *discoveryv2.DiscoveryV2
 var projectID *string
@@ -310,4 +310,18 @@ func TestEnrichments(t *testing.T) {
 	)
 
 	assert.Nil(t, deleteErr)
+}
+
+func TestQueryCollectionNotices(t *testing.T) {
+	shouldSkipTest(t)
+
+	collectionNotices, _, noticesErr := service.QueryCollectionNotices(
+		&discoveryv2.QueryCollectionNoticesOptions{
+			ProjectID:    projectID,
+			CollectionID: collectionID,
+		},
+	)
+
+	assert.Nil(t, noticesErr)
+	assert.NotNil(t, collectionNotices)
 }

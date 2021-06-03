@@ -32,7 +32,7 @@ import (
 const skipMessage = "External configuration could not be loaded, skipping..."
 
 var configLoaded bool
-var configFile = "../.env"
+var configFile = "../../.env"
 
 var service *visualrecognitionv4.VisualRecognitionV4
 var collectionID string
