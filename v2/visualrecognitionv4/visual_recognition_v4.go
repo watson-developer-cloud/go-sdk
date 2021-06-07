@@ -1818,9 +1818,6 @@ type CreateCollectionOptions struct {
 	// The description of the collection.
 	Description *string
 
-	// Training status information for the collection.
-	TrainingStatus *TrainingStatus
-
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -1839,12 +1836,6 @@ func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOp
 // SetDescription : Allow user to set Description
 func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
 	options.Description = core.StringPtr(description)
-	return options
-}
-
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (options *CreateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *CreateCollectionOptions {
-	options.TrainingStatus = trainingStatus
 	return options
 }
 
@@ -3144,9 +3135,6 @@ type UpdateCollectionOptions struct {
 	// The description of the collection.
 	Description *string
 
-	// Training status information for the collection.
-	TrainingStatus *TrainingStatus
-
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -3173,12 +3161,6 @@ func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOp
 // SetDescription : Allow user to set Description
 func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
 	options.Description = core.StringPtr(description)
-	return options
-}
-
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (options *UpdateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *UpdateCollectionOptions {
-	options.TrainingStatus = trainingStatus
 	return options
 }
 
