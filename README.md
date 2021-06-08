@@ -1,4 +1,4 @@
-# Watson Developer Cloud Go SDK v2.0.3
+# Watson Developer Cloud Go SDK v2.1.0
 [![Build and Test](https://github.com/watson-developer-cloud/go-sdk/workflows/Build%20and%20Test/badge.svg?branch=master)](https://github.com/watson-developer-cloud/go-sdk/actions?query=workflow%3A"Build+and+Test")
 [![Deploy and Publish](https://github.com/watson-developer-cloud/go-sdk/workflows/Deploy%20and%20Publish/badge.svg?branch=master)](https://github.com/watson-developer-cloud/go-sdk/actions?query=workflow%3A%22Deploy+and+Publish%22)
 [![Release](https://img.shields.io/github/v/release/watson-developer-cloud/go-sdk)](https://github.com/watson-developer-cloud/go-sdk/releases/latest)
