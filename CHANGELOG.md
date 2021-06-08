@@ -1,3 +1,20 @@
+# [2.1.0](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.3...v2.1.0) (2021-06-08)
+
+
+### Bug Fixes
+
+* **hand edit:** remove training status from options models ([9a25eb7](https://github.com/watson-developer-cloud/go-sdk/commit/9a25eb779f3148575f2d6b527d654ef54097fe37))
+* **hand edit:** speechtotext - keep recognize option serialization ([b06c278](https://github.com/watson-developer-cloud/go-sdk/commit/b06c278a97d3a83eda52829f3d790090f3ef5bb7))
+
+
+### Features
+
+* **assistant:** update models based on definitions ([aecf278](https://github.com/watson-developer-cloud/go-sdk/commit/aecf27814870ee29c0dbdf655361ea08d8a2086a))
+* **discoveryv2:** update based on definitions ([1511949](https://github.com/watson-developer-cloud/go-sdk/commit/1511949dfeef187d5ef630761992b511e3552a71))
+* **nlu:** update based on definitions ([700cb1b](https://github.com/watson-developer-cloud/go-sdk/commit/700cb1b384c67b9dd8bc9d4d8cb8ae4586b89db3))
+* **speech to text:** update based on definitions ([796daac](https://github.com/watson-developer-cloud/go-sdk/commit/796daac15d4d0a57807932bb9640de0f92afa544))
+* **text to speech:** update based on definitions ([1c5e529](https://github.com/watson-developer-cloud/go-sdk/commit/1c5e529d808069dbacbfaafa84d29a71d426cec4))
+
 ## [2.0.3](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.2...v2.0.3) (2021-04-05)
 
 
