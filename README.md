@@ -12,33 +12,6 @@
 
 Go client library to quickly get started with the various [Watson APIs](https://www.ibm.com/watson/developercloud/) services.
 
-<details>
-<summary>Table of Contents</summary>
-
-* [Before you begin](#before-you-begin)
-* [Installation](#installation)
-* [Personality Insights Deprecation](#personality-insights-deprecation)
-* [Discovery v2 only on CP4D](#discovery-v2-only-on-cp4d)
-* [Running in IBM Cloud](#running-in-ibm-cloud)
-* [Authentication](#authentication)
-	* [Getting-credentials](#getting-credentials)
-	* [IAM](#iam)
-	* [Username-and-password](#username-and-password)
-* [Use](#use)
-* [Configuring the HTTP Client](#configuring-the-http-client)
-* [Disable SSL certificate verification](#disable-ssl-certificate-verification)
-* [Set Service URL](#set-service-url)
-* [Using the global transaction ID header](#using-the-global-transaction-id)
-* [IBM Cloud Pak for Data(ICP4D)](#ibm-cloud-pak-for-data(icp4d))
-* [Examples](#examples)
-* [Tests](#tests)
-* [Contributing](#contributing)
-* [Migrating](#migrating)
-* [License](#license)
-* [Featured Projects](#featured-projects)
-
-</details>
-
 ## Announcements
 ### Updating endpoint URLs from watsonplatform.net
 Watson API endpoint URLs at watsonplatform.net are changing and will not work after 26 May 2021. Update your calls to use the newer endpoint URLs. For more information, see https://cloud.ibm.com/docs/watson?topic=watson-endpoint-change.
@@ -66,9 +39,6 @@ go get -u github.com/watson-developer-cloud/go-sdk/v2
 ```
 
 Note: For the latest tag release, look into [examples][examples] folder for basic and advanced examples.
-
-## Discovery v2 only on CP4D
-Discovery v2 is only available on Cloud Pak for Data.
 
 ## Running in IBM Cloud
 
