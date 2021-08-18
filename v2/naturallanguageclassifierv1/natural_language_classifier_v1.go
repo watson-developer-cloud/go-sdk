@@ -35,7 +35,14 @@ import (
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
-// NaturalLanguageClassifierV1 : IBM Watson&trade; Natural Language Classifier uses machine learning algorithms to
+// NaturalLanguageClassifierV1 : IBM Watson&trade; Language Classifier is discontinued.
+// On 9 August 2021, IBM announced the deprecation of the Natural Language Classifier service.
+// The service will no longer be available from 8 August 2022. As of 9 September 2021,
+// you will not be able to create new instances. Existing instances will be supported until 8 August 2022.
+// Any instance that still exists on that date will be deleted.
+// {: deprecated}
+
+//Natural Language Classifier uses machine learning algorithms to
 // return the top matching predefined classes for short text input. You create and train a classifier to connect
 // predefined classes to example texts so that the service can apply those classes to new inputs.
 //
@@ -60,6 +67,9 @@ type NaturalLanguageClassifierV1Options struct {
 
 // NewNaturalLanguageClassifierV1 : constructs an instance of NaturalLanguageClassifierV1 with passed in options.
 func NewNaturalLanguageClassifierV1(options *NaturalLanguageClassifierV1Options) (service *NaturalLanguageClassifierV1, err error) {
+	// Log deprecating warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 9 August 2021, IBM announced the deprecation of the Natural Language Classifier service.The service will no longer be available from 8 August 2022. As of 9 September 2021, you will not be able to create new instances. Existing instances will be supported until 8 August 2022. Any instance that still exists on that date will be deleted. https://github.com/watson-developer-cloud/go-sdk/tree/master#natural-language-classifier-deprecation")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
