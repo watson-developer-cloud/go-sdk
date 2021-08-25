@@ -435,7 +435,7 @@ func TestRecognizeUsingWebsocket(t *testing.T) {
 
 }
 
-func TestRecognizeUsingWebsocketWithTranscodeError(t *testing.T) {
+func TestRecognizeUsingWebsocketWithRawAudio(t *testing.T) {
 	shouldSkipTest(t)
 
 	f, err := os.Open("../resources/audio_raw_example.raw")
