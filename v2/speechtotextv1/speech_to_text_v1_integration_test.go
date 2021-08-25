@@ -1,3 +1,5 @@
+// go:build integration
+//go:build integration
 // +build integration
 
 package speechtotextv1_test
@@ -432,4 +434,19 @@ func TestRecognizeUsingWebsocket(t *testing.T) {
 
 	service.RecognizeUsingWebsocket(recognizeOptions, callback)
 
+}
+
+func TestRecognizeUsingWebsocketWithTranscodeError(t *testing.T) {
+	shouldSkipTest(t)
+
+	f, err := os.Open("../resources/audio_raw_example.raw")
+	assert.Nil(t, err)
+
+	callback := myCallBack{T: t}
+
+	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mulaw;rate=8000;channels=1")
+
+	recognizeOptions.SetModel("en-US_NarrowbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
+
+	service.RecognizeUsingWebsocket(recognizeOptions, callback)
 }
