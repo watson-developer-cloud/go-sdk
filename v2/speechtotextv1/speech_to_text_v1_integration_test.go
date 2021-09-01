@@ -435,28 +435,13 @@ func TestRecognizeUsingWebsocket(t *testing.T) {
 
 }
 
-type callBackExpectError struct {
-	T *testing.T
-}
-
-func (cb callBackExpectError) OnOpen() {
-}
-func (cb callBackExpectError) OnClose() {
-}
-func (cb callBackExpectError) OnData(resp *core.DetailedResponse) {
-	cb.T.Fail()
-}
-func (cb callBackExpectError) OnError(err error) {
-	assert.Equal(cb.T, "unable to transcode data stream application/octet-stream -> audio/l16 ", err.Error(), "Expect a Call within the OnError callback")
-}
-
 func TestRecognizeUsingWebsocketWithRawAudioExpectOnError(t *testing.T) {
 	shouldSkipTest(t)
 
 	f, err := os.Open("../resources/audio_raw_example.raw")
 	assert.Nil(t, err)
 
-	callback := callBackExpectError{T: t}
+	callback := myCallBack{T: t}
 
 	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mulaw;rate=8000;channels=1")
 
