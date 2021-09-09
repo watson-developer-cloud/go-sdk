@@ -6945,13 +6945,13 @@ type RecognizeOptions struct {
 	// phrases from the custom model's domain, but it can negatively affect performance on non-domain phrases.
 	//
 	// See [Using customization weight](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageUse#weight).
-	CustomizationWeight *float64 `json:"-"`
+	CustomizationWeight *float64 `json:"customization_weight,omitempty"`
 
 	// The time in seconds after which, if only silence (no speech) is detected in streaming audio, the connection is
 	// closed with a 400 error. The parameter is useful for stopping audio submission from a live microphone when a user
 	// simply walks away. Use `-1` for infinity. See [Inactivity
 	// timeout](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-input#timeouts-inactivity).
-	InactivityTimeout *int64 `json:"-"`
+	InactivityTimeout *int64 `json:"inactivity_timeout,omitempty"`
 
 	// An array of keyword strings to spot in the audio. Each keyword string can include one or more string tokens.
 	// Keywords are spotted only in the final results, not in interim hypotheses. If you specify any keywords, you must
@@ -6963,40 +6963,40 @@ type RecognizeOptions struct {
 	// case-insensitive.
 	//
 	// See [Keyword spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
-	Keywords []string `json:"-"`
+	Keywords []string `json:"keywords,omitempty"`
 
 	// A confidence value that is the lower bound for spotting a keyword. A word is considered to match a keyword if its
 	// confidence is greater than or equal to the threshold. Specify a probability between 0.0 and 1.0. If you specify a
 	// threshold, you must also specify one or more keywords. The service performs no keyword spotting if you omit either
 	// parameter. See [Keyword
 	// spotting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#keyword-spotting).
-	KeywordsThreshold *float32 `json:"-"`
+	KeywordsThreshold *float32 `json:"keywords_threshold,omitempty"`
 
 	// The maximum number of alternative transcripts that the service is to return. By default, the service returns a
 	// single transcript. If you specify a value of `0`, the service uses the default value, `1`. See [Maximum
 	// alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#max-alternatives).
-	MaxAlternatives *int64 `json:"-"`
+	MaxAlternatives *int64 `json:"max_alternatives,omitempty"`
 
 	// A confidence value that is the lower bound for identifying a hypothesis as a possible word alternative (also known
 	// as "Confusion Networks"). An alternative word is considered if its confidence is greater than or equal to the
 	// threshold. Specify a probability between 0.0 and 1.0. By default, the service computes no alternative words. See
 	// [Word alternatives](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-spotting#word-alternatives).
-	WordAlternativesThreshold *float32 `json:"-"`
+	WordAlternativesThreshold *float32 `json:"word_alternatives_threshold,omitempty"`
 
 	// If `true`, the service returns a confidence measure in the range of 0.0 to 1.0 for each word. By default, the
 	// service returns no word confidence scores. See [Word
 	// confidence](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-confidence).
-	WordConfidence *bool `json:"-"`
+	WordConfidence *bool `json:"word_confidence,omitempty"`
 
 	// If `true`, the service returns time alignment for each word. By default, no timestamps are returned. See [Word
 	// timestamps](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metadata#word-timestamps).
-	Timestamps *bool `json:"-"`
+	Timestamps *bool `json:"timestamps,omitempty"`
 
 	// If `true`, the service filters profanity from all output except for keyword results by replacing inappropriate words
 	// with a series of asterisks. Set the parameter to `false` to return results with no censoring. Applies to US English
 	// and Japanese transcription only. See [Profanity
 	// filtering](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#profanity-filtering).
-	ProfanityFilter *bool `json:"-"`
+	ProfanityFilter *bool `json:"profanity_filter,omitempty"`
 
 	// If `true`, the service converts dates, times, series of digits and numbers, phone numbers, currency values, and
 	// internet addresses into more readable, conventional representations in the final transcript of a recognition
@@ -7006,7 +7006,7 @@ type RecognizeOptions struct {
 	// **Beta:** The parameter is beta functionality. Applies to US English, Japanese, and Spanish transcription only.
 	//
 	// See [Smart formatting](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#smart-formatting).
-	SmartFormatting *bool `json:"-"`
+	SmartFormatting *bool `json:"smart_formatting,omitempty"`
 
 	// If `true`, the response includes labels that identify which words were spoken by which participants in a
 	// multi-person exchange. By default, the service returns no speaker labels. Setting `speaker_labels` to `true` forces
@@ -7020,7 +7020,7 @@ type RecognizeOptions struct {
 	//
 	// Restrictions and limitations apply to the use of speaker labels for both types of models. See [Speaker
 	// labels](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-speaker-labels).
-	SpeakerLabels *bool `json:"-"`
+	SpeakerLabels *bool `json:"speaker_labels,omitempty"`
 
 	// **Deprecated.** Use the `language_customization_id` parameter to specify the customization ID (GUID) of a custom
 	// language model that is to be used with the recognition request. Do not specify both parameters with a request.
@@ -7035,7 +7035,7 @@ type RecognizeOptions struct {
 	//
 	// See [Using a grammar for speech
 	// recognition](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-grammarUse).
-	GrammarName *string `json:"-"`
+	GrammarName *string `json:"grammar_name,omitempty"`
 
 	// If `true`, the service redacts, or masks, numeric data from final transcripts. The feature redacts any number that
 	// has three or more consecutive digits by replacing each digit with an `X` character. It is intended to redact
@@ -7050,13 +7050,13 @@ type RecognizeOptions struct {
 	//
 	// See [Numeric
 	// redaction](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-formatting#numeric-redaction).
-	Redaction *bool `json:"-"`
+	Redaction *bool `json:"redaction,omitempty"`
 
 	// If `true`, requests detailed information about the signal characteristics of the input audio. The service returns
 	// audio metrics with the final transcription results. By default, the service returns no audio metrics.
 	//
 	// See [Audio metrics](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-metrics#audio-metrics).
-	AudioMetrics *bool `json:"-"`
+	AudioMetrics *bool `json:"audio_metrics,omitempty"`
 
 	// If `true`, specifies the duration of the pause interval at which the service splits a transcript into multiple final
 	// results. If the service detects pauses or extended silence before it reaches the end of the audio stream, its
@@ -7072,7 +7072,7 @@ type RecognizeOptions struct {
 	//
 	// See [End of phrase silence
 	// time](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#silence-time).
-	EndOfPhraseSilenceTime *float64 `json:"-"`
+	EndOfPhraseSilenceTime *float64 `json:"end_of_phrase_silence_time,omitempty"`
 
 	// If `true`, directs the service to split the transcript into multiple final results based on semantic features of the
 	// input, for example, at the conclusion of meaningful phrases such as sentences. The service bases its understanding
@@ -7082,7 +7082,7 @@ type RecognizeOptions struct {
 	//
 	// See [Split transcript at phrase
 	// end](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-parsing#split-transcript).
-	SplitTranscriptAtPhraseEnd *bool `json:"-"`
+	SplitTranscriptAtPhraseEnd *bool `json:"split_transcript_at_phrase_end,omitempty"`
 
 	// The sensitivity of speech activity detection that the service is to perform. Use the parameter to suppress word
 	// insertions from music, coughing, and other non-speech events. The service biases the audio it passes for speech
@@ -7095,7 +7095,7 @@ type RecognizeOptions struct {
 	//
 	// The values increase on a monotonic curve. See [Speech detector
 	// sensitivity](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-sensitivity).
-	SpeechDetectorSensitivity *float32 `json:"-"`
+	SpeechDetectorSensitivity *float32 `json:"speech_detector_sensitivity,omitempty"`
 
 	// The level to which the service is to suppress background audio based on its volume to prevent it from being
 	// transcribed as speech. Use the parameter to suppress side conversations or background noise.
@@ -7107,7 +7107,7 @@ type RecognizeOptions struct {
 	//
 	// The values increase on a monotonic curve. See [Background audio
 	// suppression](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-parameters-suppression).
-	BackgroundAudioSuppression *float32 `json:"-"`
+	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
 	// If `true` for next-generation `Multimedia` and `Telephony` models that support low latency, directs the service to
 	// produce results even more quickly than it usually does. Next-generation models produce transcription results faster
@@ -7120,7 +7120,7 @@ type RecognizeOptions struct {
 	// models](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models-ng#models-ng-supported).
 	// * For more information about the `low_latency` parameter, see [Low
 	// latency](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-interim#low-latency).
-	LowLatency *bool `json:"-"`
+	LowLatency *bool `json:"low_latency,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
