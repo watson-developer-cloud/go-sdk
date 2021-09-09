@@ -72,6 +72,9 @@ type CompareComplyV1Options struct {
 
 // NewCompareComplyV1 : constructs an instance of CompareComplyV1 with passed in options.
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
+	// Log deprecation warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 30 November 2021, Compare and Comply will no longer be available. For more information, see Compare and Comply deprecation.")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}

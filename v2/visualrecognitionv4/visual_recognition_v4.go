@@ -72,6 +72,9 @@ type VisualRecognitionV4Options struct {
 
 // NewVisualRecognitionV4 : constructs an instance of VisualRecognitionV4 with passed in options.
 func NewVisualRecognitionV4(options *VisualRecognitionV4Options) (service *VisualRecognitionV4, err error) {
+	// Log deprecation warning
+	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see Visual Recognition Deprecation at https://github.com/watson-developer-cloud/go-sdk/tree/master#visual-recognition-deprecation.")
+
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
