@@ -2,6 +2,7 @@ package speechtotextv1
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -59,6 +60,12 @@ func (wsHandle RecognizeListener) OnData(conn *websocket.Conn, recognizeOptions 
 				break
 			}
 		}
+
+		if len(websocketResponse.Error) > 0 {
+			wsHandle.OnError(errors.New(websocketResponse.Error))
+			break
+		}
+
 		detailResp := core.DetailedResponse{}
 		detailResp.Result = result
 		detailResp.StatusCode = SUCCESS

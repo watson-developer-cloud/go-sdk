@@ -6901,7 +6901,7 @@ type RecognizeOptions struct {
 
 	// The format (MIME type) of the audio. For more information about specifying an audio format, see **Audio formats
 	// (content types)** in the method description.
-	ContentType *string `json:"-"`
+	ContentType *string `json:"content-type,omitempty"`
 
 	// The identifier of the model that is to be used for the recognition request. (**Note:** The model
 	// `ar-AR_BroadbandModel` is deprecated; use `ar-MS_BroadbandModel` instead.) See [Previous-generation languages and
