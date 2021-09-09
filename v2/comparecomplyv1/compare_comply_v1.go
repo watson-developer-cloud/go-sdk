@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package comparecomplyv1 : Operations and models for the CompareComplyV1 service
@@ -43,7 +43,7 @@ import (
 //
 // Compare and Comply analyzes governing documents to provide details about critical aspects of the documents.
 //
-// Version: 1.0
+// API Version: 1.0
 // See: https://cloud.ibm.com/docs/compare-comply?topic=compare-comply-about
 type CompareComplyV1 struct {
 	Service *core.BaseService
@@ -72,9 +72,6 @@ type CompareComplyV1Options struct {
 
 // NewCompareComplyV1 : constructs an instance of CompareComplyV1 with passed in options.
 func NewCompareComplyV1(options *CompareComplyV1Options) (service *CompareComplyV1, err error) {
-	// Log deprecation warning
-	core.GetLogger().Log(core.LevelWarn, "", "On 30 November 2021, Compare and Comply will no longer be available. For more information, see Compare and Comply deprecation.")
-
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -1005,13 +1002,13 @@ func (compareComply *CompareComplyV1) UpdateBatchWithContext(ctx context.Context
 // AddFeedbackOptions : The AddFeedback options.
 type AddFeedbackOptions struct {
 	// Feedback data for submission.
-	FeedbackData *FeedbackDataInput `validate:"required"`
+	FeedbackData *FeedbackDataInput `json:"feedback_data" validate:"required"`
 
 	// An optional string identifying the user.
-	UserID *string
+	UserID *string `json:"user_id,omitempty"`
 
 	// An optional comment on or description of the feedback.
-	Comment *string
+	Comment *string `json:"comment,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1025,21 +1022,21 @@ func (*CompareComplyV1) NewAddFeedbackOptions(feedbackData *FeedbackDataInput) *
 }
 
 // SetFeedbackData : Allow user to set FeedbackData
-func (options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
-	options.FeedbackData = feedbackData
-	return options
+func (_options *AddFeedbackOptions) SetFeedbackData(feedbackData *FeedbackDataInput) *AddFeedbackOptions {
+	_options.FeedbackData = feedbackData
+	return _options
 }
 
 // SetUserID : Allow user to set UserID
-func (options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions {
-	options.UserID = core.StringPtr(userID)
-	return options
+func (_options *AddFeedbackOptions) SetUserID(userID string) *AddFeedbackOptions {
+	_options.UserID = core.StringPtr(userID)
+	return _options
 }
 
 // SetComment : Allow user to set Comment
-func (options *AddFeedbackOptions) SetComment(comment string) *AddFeedbackOptions {
-	options.Comment = core.StringPtr(comment)
-	return options
+func (_options *AddFeedbackOptions) SetComment(comment string) *AddFeedbackOptions {
+	_options.Comment = core.StringPtr(comment)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1497,15 +1494,15 @@ func UnmarshalCategoryComparison(m map[string]json.RawMessage, result interface{
 // ClassifyElementsOptions : The ClassifyElements options.
 type ClassifyElementsOptions struct {
 	// The document to classify.
-	File io.ReadCloser `validate:"required"`
+	File io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1528,21 +1525,21 @@ func (*CompareComplyV1) NewClassifyElementsOptions(file io.ReadCloser) *Classify
 }
 
 // SetFile : Allow user to set File
-func (options *ClassifyElementsOptions) SetFile(file io.ReadCloser) *ClassifyElementsOptions {
-	options.File = file
-	return options
+func (_options *ClassifyElementsOptions) SetFile(file io.ReadCloser) *ClassifyElementsOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *ClassifyElementsOptions) SetFileContentType(fileContentType string) *ClassifyElementsOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *ClassifyElementsOptions) SetFileContentType(fileContentType string) *ClassifyElementsOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *ClassifyElementsOptions) SetModel(model string) *ClassifyElementsOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *ClassifyElementsOptions) SetModel(model string) *ClassifyElementsOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1731,27 +1728,27 @@ func UnmarshalColumnHeaders(m map[string]json.RawMessage, result interface{}) (e
 // CompareDocumentsOptions : The CompareDocuments options.
 type CompareDocumentsOptions struct {
 	// The first document to compare.
-	File1 io.ReadCloser `validate:"required"`
+	File1 io.ReadCloser `json:"-" validate:"required"`
 
 	// The second document to compare.
-	File2 io.ReadCloser `validate:"required"`
+	File2 io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of file1.
-	File1ContentType *string
+	File1ContentType *string `json:"-"`
 
 	// The content type of file2.
-	File2ContentType *string
+	File2ContentType *string `json:"-"`
 
 	// A text label for the first document.
-	File1Label *string
+	File1Label *string `json:"-"`
 
 	// A text label for the second document.
-	File2Label *string
+	File2Label *string `json:"-"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1775,45 +1772,45 @@ func (*CompareComplyV1) NewCompareDocumentsOptions(file1 io.ReadCloser, file2 io
 }
 
 // SetFile1 : Allow user to set File1
-func (options *CompareDocumentsOptions) SetFile1(file1 io.ReadCloser) *CompareDocumentsOptions {
-	options.File1 = file1
-	return options
+func (_options *CompareDocumentsOptions) SetFile1(file1 io.ReadCloser) *CompareDocumentsOptions {
+	_options.File1 = file1
+	return _options
 }
 
 // SetFile2 : Allow user to set File2
-func (options *CompareDocumentsOptions) SetFile2(file2 io.ReadCloser) *CompareDocumentsOptions {
-	options.File2 = file2
-	return options
+func (_options *CompareDocumentsOptions) SetFile2(file2 io.ReadCloser) *CompareDocumentsOptions {
+	_options.File2 = file2
+	return _options
 }
 
 // SetFile1ContentType : Allow user to set File1ContentType
-func (options *CompareDocumentsOptions) SetFile1ContentType(file1ContentType string) *CompareDocumentsOptions {
-	options.File1ContentType = core.StringPtr(file1ContentType)
-	return options
+func (_options *CompareDocumentsOptions) SetFile1ContentType(file1ContentType string) *CompareDocumentsOptions {
+	_options.File1ContentType = core.StringPtr(file1ContentType)
+	return _options
 }
 
 // SetFile2ContentType : Allow user to set File2ContentType
-func (options *CompareDocumentsOptions) SetFile2ContentType(file2ContentType string) *CompareDocumentsOptions {
-	options.File2ContentType = core.StringPtr(file2ContentType)
-	return options
+func (_options *CompareDocumentsOptions) SetFile2ContentType(file2ContentType string) *CompareDocumentsOptions {
+	_options.File2ContentType = core.StringPtr(file2ContentType)
+	return _options
 }
 
 // SetFile1Label : Allow user to set File1Label
-func (options *CompareDocumentsOptions) SetFile1Label(file1Label string) *CompareDocumentsOptions {
-	options.File1Label = core.StringPtr(file1Label)
-	return options
+func (_options *CompareDocumentsOptions) SetFile1Label(file1Label string) *CompareDocumentsOptions {
+	_options.File1Label = core.StringPtr(file1Label)
+	return _options
 }
 
 // SetFile2Label : Allow user to set File2Label
-func (options *CompareDocumentsOptions) SetFile2Label(file2Label string) *CompareDocumentsOptions {
-	options.File2Label = core.StringPtr(file2Label)
-	return options
+func (_options *CompareDocumentsOptions) SetFile2Label(file2Label string) *CompareDocumentsOptions {
+	_options.File2Label = core.StringPtr(file2Label)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *CompareDocumentsOptions) SetModel(model string) *CompareDocumentsOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *CompareDocumentsOptions) SetModel(model string) *CompareDocumentsOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2149,15 +2146,15 @@ func UnmarshalContractTypes(m map[string]json.RawMessage, result interface{}) (e
 // ConvertToHTMLOptions : The ConvertToHTML options.
 type ConvertToHTMLOptions struct {
 	// The document to convert.
-	File io.ReadCloser `validate:"required"`
+	File io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2180,21 +2177,21 @@ func (*CompareComplyV1) NewConvertToHTMLOptions(file io.ReadCloser) *ConvertToHT
 }
 
 // SetFile : Allow user to set File
-func (options *ConvertToHTMLOptions) SetFile(file io.ReadCloser) *ConvertToHTMLOptions {
-	options.File = file
-	return options
+func (_options *ConvertToHTMLOptions) SetFile(file io.ReadCloser) *ConvertToHTMLOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *ConvertToHTMLOptions) SetFileContentType(fileContentType string) *ConvertToHTMLOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *ConvertToHTMLOptions) SetFileContentType(fileContentType string) *ConvertToHTMLOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *ConvertToHTMLOptions) SetModel(model string) *ConvertToHTMLOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *ConvertToHTMLOptions) SetModel(model string) *ConvertToHTMLOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2206,34 +2203,34 @@ func (options *ConvertToHTMLOptions) SetHeaders(param map[string]string) *Conver
 // CreateBatchOptions : The CreateBatch options.
 type CreateBatchOptions struct {
 	// The Compare and Comply method to run across the submitted input documents.
-	Function *string `validate:"required"`
+	Function *string `json:"-" validate:"required"`
 
 	// A JSON file containing the input Cloud Object Storage credentials. At a minimum, the credentials must enable `READ`
 	// permissions on the bucket defined by the `input_bucket_name` parameter.
-	InputCredentialsFile io.ReadCloser `validate:"required"`
+	InputCredentialsFile io.ReadCloser `json:"-" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage input bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
-	InputBucketLocation *string `validate:"required"`
+	InputBucketLocation *string `json:"-" validate:"required"`
 
 	// The name of the Cloud Object Storage input bucket.
-	InputBucketName *string `validate:"required"`
+	InputBucketName *string `json:"-" validate:"required"`
 
 	// A JSON file that lists the Cloud Object Storage output credentials. At a minimum, the credentials must enable `READ`
 	// and `WRITE` permissions on the bucket defined by the `output_bucket_name` parameter.
-	OutputCredentialsFile io.ReadCloser `validate:"required"`
+	OutputCredentialsFile io.ReadCloser `json:"-" validate:"required"`
 
 	// The geographical location of the Cloud Object Storage output bucket as listed on the **Endpoint** tab of your Cloud
 	// Object Storage instance; for example, `us-geo`, `eu-geo`, or `ap-geo`.
-	OutputBucketLocation *string `validate:"required"`
+	OutputBucketLocation *string `json:"-" validate:"required"`
 
 	// The name of the Cloud Object Storage output bucket.
-	OutputBucketName *string `validate:"required"`
+	OutputBucketName *string `json:"-" validate:"required"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2270,51 +2267,51 @@ func (*CompareComplyV1) NewCreateBatchOptions(function string, inputCredentialsF
 }
 
 // SetFunction : Allow user to set Function
-func (options *CreateBatchOptions) SetFunction(function string) *CreateBatchOptions {
-	options.Function = core.StringPtr(function)
-	return options
+func (_options *CreateBatchOptions) SetFunction(function string) *CreateBatchOptions {
+	_options.Function = core.StringPtr(function)
+	return _options
 }
 
 // SetInputCredentialsFile : Allow user to set InputCredentialsFile
-func (options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile io.ReadCloser) *CreateBatchOptions {
-	options.InputCredentialsFile = inputCredentialsFile
-	return options
+func (_options *CreateBatchOptions) SetInputCredentialsFile(inputCredentialsFile io.ReadCloser) *CreateBatchOptions {
+	_options.InputCredentialsFile = inputCredentialsFile
+	return _options
 }
 
 // SetInputBucketLocation : Allow user to set InputBucketLocation
-func (options *CreateBatchOptions) SetInputBucketLocation(inputBucketLocation string) *CreateBatchOptions {
-	options.InputBucketLocation = core.StringPtr(inputBucketLocation)
-	return options
+func (_options *CreateBatchOptions) SetInputBucketLocation(inputBucketLocation string) *CreateBatchOptions {
+	_options.InputBucketLocation = core.StringPtr(inputBucketLocation)
+	return _options
 }
 
 // SetInputBucketName : Allow user to set InputBucketName
-func (options *CreateBatchOptions) SetInputBucketName(inputBucketName string) *CreateBatchOptions {
-	options.InputBucketName = core.StringPtr(inputBucketName)
-	return options
+func (_options *CreateBatchOptions) SetInputBucketName(inputBucketName string) *CreateBatchOptions {
+	_options.InputBucketName = core.StringPtr(inputBucketName)
+	return _options
 }
 
 // SetOutputCredentialsFile : Allow user to set OutputCredentialsFile
-func (options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile io.ReadCloser) *CreateBatchOptions {
-	options.OutputCredentialsFile = outputCredentialsFile
-	return options
+func (_options *CreateBatchOptions) SetOutputCredentialsFile(outputCredentialsFile io.ReadCloser) *CreateBatchOptions {
+	_options.OutputCredentialsFile = outputCredentialsFile
+	return _options
 }
 
 // SetOutputBucketLocation : Allow user to set OutputBucketLocation
-func (options *CreateBatchOptions) SetOutputBucketLocation(outputBucketLocation string) *CreateBatchOptions {
-	options.OutputBucketLocation = core.StringPtr(outputBucketLocation)
-	return options
+func (_options *CreateBatchOptions) SetOutputBucketLocation(outputBucketLocation string) *CreateBatchOptions {
+	_options.OutputBucketLocation = core.StringPtr(outputBucketLocation)
+	return _options
 }
 
 // SetOutputBucketName : Allow user to set OutputBucketName
-func (options *CreateBatchOptions) SetOutputBucketName(outputBucketName string) *CreateBatchOptions {
-	options.OutputBucketName = core.StringPtr(outputBucketName)
-	return options
+func (_options *CreateBatchOptions) SetOutputBucketName(outputBucketName string) *CreateBatchOptions {
+	_options.OutputBucketName = core.StringPtr(outputBucketName)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *CreateBatchOptions) SetModel(model string) *CreateBatchOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *CreateBatchOptions) SetModel(model string) *CreateBatchOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2326,12 +2323,12 @@ func (options *CreateBatchOptions) SetHeaders(param map[string]string) *CreateBa
 // DeleteFeedbackOptions : The DeleteFeedback options.
 type DeleteFeedbackOptions struct {
 	// A string that specifies the feedback entry to be deleted from the document.
-	FeedbackID *string `validate:"required,ne="`
+	FeedbackID *string `json:"-" validate:"required,ne="`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2354,15 +2351,15 @@ func (*CompareComplyV1) NewDeleteFeedbackOptions(feedbackID string) *DeleteFeedb
 }
 
 // SetFeedbackID : Allow user to set FeedbackID
-func (options *DeleteFeedbackOptions) SetFeedbackID(feedbackID string) *DeleteFeedbackOptions {
-	options.FeedbackID = core.StringPtr(feedbackID)
-	return options
+func (_options *DeleteFeedbackOptions) SetFeedbackID(feedbackID string) *DeleteFeedbackOptions {
+	_options.FeedbackID = core.StringPtr(feedbackID)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *DeleteFeedbackOptions) SetModel(model string) *DeleteFeedbackOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *DeleteFeedbackOptions) SetModel(model string) *DeleteFeedbackOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2693,15 +2690,15 @@ func UnmarshalElementPair(m map[string]json.RawMessage, result interface{}) (err
 // ExtractTablesOptions : The ExtractTables options.
 type ExtractTablesOptions struct {
 	// The document on which to run table extraction.
-	File io.ReadCloser `validate:"required"`
+	File io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2724,21 +2721,21 @@ func (*CompareComplyV1) NewExtractTablesOptions(file io.ReadCloser) *ExtractTabl
 }
 
 // SetFile : Allow user to set File
-func (options *ExtractTablesOptions) SetFile(file io.ReadCloser) *ExtractTablesOptions {
-	options.File = file
-	return options
+func (_options *ExtractTablesOptions) SetFile(file io.ReadCloser) *ExtractTablesOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *ExtractTablesOptions) SetFileContentType(fileContentType string) *ExtractTablesOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *ExtractTablesOptions) SetFileContentType(fileContentType string) *ExtractTablesOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *ExtractTablesOptions) SetModel(model string) *ExtractTablesOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *ExtractTablesOptions) SetModel(model string) *ExtractTablesOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2776,15 +2773,15 @@ type FeedbackDataInput struct {
 }
 
 // NewFeedbackDataInput : Instantiate FeedbackDataInput (Generic Model Constructor)
-func (*CompareComplyV1) NewFeedbackDataInput(feedbackType string, location *Location, text string, originalLabels *OriginalLabelsIn, updatedLabels *UpdatedLabelsIn) (model *FeedbackDataInput, err error) {
-	model = &FeedbackDataInput{
+func (*CompareComplyV1) NewFeedbackDataInput(feedbackType string, location *Location, text string, originalLabels *OriginalLabelsIn, updatedLabels *UpdatedLabelsIn) (_model *FeedbackDataInput, err error) {
+	_model = &FeedbackDataInput{
 		FeedbackType:   core.StringPtr(feedbackType),
 		Location:       location,
 		Text:           core.StringPtr(text),
 		OriginalLabels: originalLabels,
 		UpdatedLabels:  updatedLabels,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2990,7 +2987,7 @@ func UnmarshalFeedbackReturn(m map[string]json.RawMessage, result interface{}) (
 // GetBatchOptions : The GetBatch options.
 type GetBatchOptions struct {
 	// The ID of the batch-processing job whose information you want to retrieve.
-	BatchID *string `validate:"required,ne="`
+	BatchID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3004,9 +3001,9 @@ func (*CompareComplyV1) NewGetBatchOptions(batchID string) *GetBatchOptions {
 }
 
 // SetBatchID : Allow user to set BatchID
-func (options *GetBatchOptions) SetBatchID(batchID string) *GetBatchOptions {
-	options.BatchID = core.StringPtr(batchID)
-	return options
+func (_options *GetBatchOptions) SetBatchID(batchID string) *GetBatchOptions {
+	_options.BatchID = core.StringPtr(batchID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3056,12 +3053,12 @@ func UnmarshalGetFeedback(m map[string]json.RawMessage, result interface{}) (err
 // GetFeedbackOptions : The GetFeedback options.
 type GetFeedbackOptions struct {
 	// A string that specifies the feedback entry to be included in the output.
-	FeedbackID *string `validate:"required,ne="`
+	FeedbackID *string `json:"-" validate:"required,ne="`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3084,15 +3081,15 @@ func (*CompareComplyV1) NewGetFeedbackOptions(feedbackID string) *GetFeedbackOpt
 }
 
 // SetFeedbackID : Allow user to set FeedbackID
-func (options *GetFeedbackOptions) SetFeedbackID(feedbackID string) *GetFeedbackOptions {
-	options.FeedbackID = core.StringPtr(feedbackID)
-	return options
+func (_options *GetFeedbackOptions) SetFeedbackID(feedbackID string) *GetFeedbackOptions {
+	_options.FeedbackID = core.StringPtr(feedbackID)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *GetFeedbackOptions) SetModel(model string) *GetFeedbackOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *GetFeedbackOptions) SetModel(model string) *GetFeedbackOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3249,12 +3246,12 @@ type Label struct {
 }
 
 // NewLabel : Instantiate Label (Generic Model Constructor)
-func (*CompareComplyV1) NewLabel(nature string, party string) (model *Label, err error) {
-	model = &Label{
+func (*CompareComplyV1) NewLabel(nature string, party string) (_model *Label, err error) {
+	_model = &Label{
 		Nature: core.StringPtr(nature),
 		Party:  core.StringPtr(party),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3327,58 +3324,58 @@ func (options *ListBatchesOptions) SetHeaders(param map[string]string) *ListBatc
 type ListFeedbackOptions struct {
 	// An optional string that filters the output to include only feedback with the specified feedback type. The only
 	// permitted value is `element_classification`.
-	FeedbackType *string
+	FeedbackType *string `json:"-"`
 
 	// An optional string that filters the output to include only feedback from the document with the specified
 	// `document_title`.
-	DocumentTitle *string
+	DocumentTitle *string `json:"-"`
 
 	// An optional string that filters the output to include only feedback with the specified `model_id`. The only
 	// permitted value is `contracts`.
-	ModelID *string
+	ModelID *string `json:"-"`
 
 	// An optional string that filters the output to include only feedback with the specified `model_version`.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// An optional string in the form of a comma-separated list of categories. If it is specified, the service filters the
 	// output to include only feedback that has at least one category from the list removed.
-	CategoryRemoved *string
+	CategoryRemoved *string `json:"-"`
 
 	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
 	// the output to include only feedback that has at least one category from the list added.
-	CategoryAdded *string
+	CategoryAdded *string `json:"-"`
 
 	// An optional string in the form of a comma-separated list of categories. If this is specified, the service filters
 	// the output to include only feedback that has at least one category from the list unchanged.
-	CategoryNotChanged *string
+	CategoryNotChanged *string `json:"-"`
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list removed.
-	TypeRemoved *string
+	TypeRemoved *string `json:"-"`
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list removed.
-	TypeAdded *string
+	TypeAdded *string `json:"-"`
 
 	// An optional string of comma-separated `nature`:`party` pairs. If this is specified, the service filters the output
 	// to include only feedback that has at least one `nature`:`party` pair from the list unchanged.
-	TypeNotChanged *string
+	TypeNotChanged *string `json:"-"`
 
 	// An optional integer specifying the number of documents that you want the service to return.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// An optional string that returns the set of documents after the previous set. Use this parameter with the
 	// `page_limit` parameter.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// An optional comma-separated list of fields in the document to sort on. You can optionally specify the sort direction
 	// by prefixing the value of the field with `-` for descending order or `+` for ascending order (the default).
 	// Currently permitted sorting fields are `created`, `user_id`, and `document_title`.
-	Sort *string
+	Sort *string `json:"-"`
 
 	// An optional boolean value. If specified as `true`, the `pagination` object in the output includes a value called
 	// `total` that gives the total count of feedback created.
-	IncludeTotal *bool
+	IncludeTotal *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3390,87 +3387,87 @@ func (*CompareComplyV1) NewListFeedbackOptions() *ListFeedbackOptions {
 }
 
 // SetFeedbackType : Allow user to set FeedbackType
-func (options *ListFeedbackOptions) SetFeedbackType(feedbackType string) *ListFeedbackOptions {
-	options.FeedbackType = core.StringPtr(feedbackType)
-	return options
+func (_options *ListFeedbackOptions) SetFeedbackType(feedbackType string) *ListFeedbackOptions {
+	_options.FeedbackType = core.StringPtr(feedbackType)
+	return _options
 }
 
 // SetDocumentTitle : Allow user to set DocumentTitle
-func (options *ListFeedbackOptions) SetDocumentTitle(documentTitle string) *ListFeedbackOptions {
-	options.DocumentTitle = core.StringPtr(documentTitle)
-	return options
+func (_options *ListFeedbackOptions) SetDocumentTitle(documentTitle string) *ListFeedbackOptions {
+	_options.DocumentTitle = core.StringPtr(documentTitle)
+	return _options
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *ListFeedbackOptions) SetModelID(modelID string) *ListFeedbackOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *ListFeedbackOptions) SetModelID(modelID string) *ListFeedbackOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *ListFeedbackOptions) SetModelVersion(modelVersion string) *ListFeedbackOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *ListFeedbackOptions) SetModelVersion(modelVersion string) *ListFeedbackOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetCategoryRemoved : Allow user to set CategoryRemoved
-func (options *ListFeedbackOptions) SetCategoryRemoved(categoryRemoved string) *ListFeedbackOptions {
-	options.CategoryRemoved = core.StringPtr(categoryRemoved)
-	return options
+func (_options *ListFeedbackOptions) SetCategoryRemoved(categoryRemoved string) *ListFeedbackOptions {
+	_options.CategoryRemoved = core.StringPtr(categoryRemoved)
+	return _options
 }
 
 // SetCategoryAdded : Allow user to set CategoryAdded
-func (options *ListFeedbackOptions) SetCategoryAdded(categoryAdded string) *ListFeedbackOptions {
-	options.CategoryAdded = core.StringPtr(categoryAdded)
-	return options
+func (_options *ListFeedbackOptions) SetCategoryAdded(categoryAdded string) *ListFeedbackOptions {
+	_options.CategoryAdded = core.StringPtr(categoryAdded)
+	return _options
 }
 
 // SetCategoryNotChanged : Allow user to set CategoryNotChanged
-func (options *ListFeedbackOptions) SetCategoryNotChanged(categoryNotChanged string) *ListFeedbackOptions {
-	options.CategoryNotChanged = core.StringPtr(categoryNotChanged)
-	return options
+func (_options *ListFeedbackOptions) SetCategoryNotChanged(categoryNotChanged string) *ListFeedbackOptions {
+	_options.CategoryNotChanged = core.StringPtr(categoryNotChanged)
+	return _options
 }
 
 // SetTypeRemoved : Allow user to set TypeRemoved
-func (options *ListFeedbackOptions) SetTypeRemoved(typeRemoved string) *ListFeedbackOptions {
-	options.TypeRemoved = core.StringPtr(typeRemoved)
-	return options
+func (_options *ListFeedbackOptions) SetTypeRemoved(typeRemoved string) *ListFeedbackOptions {
+	_options.TypeRemoved = core.StringPtr(typeRemoved)
+	return _options
 }
 
 // SetTypeAdded : Allow user to set TypeAdded
-func (options *ListFeedbackOptions) SetTypeAdded(typeAdded string) *ListFeedbackOptions {
-	options.TypeAdded = core.StringPtr(typeAdded)
-	return options
+func (_options *ListFeedbackOptions) SetTypeAdded(typeAdded string) *ListFeedbackOptions {
+	_options.TypeAdded = core.StringPtr(typeAdded)
+	return _options
 }
 
 // SetTypeNotChanged : Allow user to set TypeNotChanged
-func (options *ListFeedbackOptions) SetTypeNotChanged(typeNotChanged string) *ListFeedbackOptions {
-	options.TypeNotChanged = core.StringPtr(typeNotChanged)
-	return options
+func (_options *ListFeedbackOptions) SetTypeNotChanged(typeNotChanged string) *ListFeedbackOptions {
+	_options.TypeNotChanged = core.StringPtr(typeNotChanged)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListFeedbackOptions) SetPageLimit(pageLimit int64) *ListFeedbackOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListFeedbackOptions) SetPageLimit(pageLimit int64) *ListFeedbackOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListFeedbackOptions) SetCursor(cursor string) *ListFeedbackOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListFeedbackOptions) SetCursor(cursor string) *ListFeedbackOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListFeedbackOptions) SetSort(sort string) *ListFeedbackOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListFeedbackOptions) SetSort(sort string) *ListFeedbackOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetIncludeTotal : Allow user to set IncludeTotal
-func (options *ListFeedbackOptions) SetIncludeTotal(includeTotal bool) *ListFeedbackOptions {
-	options.IncludeTotal = core.BoolPtr(includeTotal)
-	return options
+func (_options *ListFeedbackOptions) SetIncludeTotal(includeTotal bool) *ListFeedbackOptions {
+	_options.IncludeTotal = core.BoolPtr(includeTotal)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3490,12 +3487,12 @@ type Location struct {
 }
 
 // NewLocation : Instantiate Location (Generic Model Constructor)
-func (*CompareComplyV1) NewLocation(begin int64, end int64) (model *Location, err error) {
-	model = &Location{
+func (*CompareComplyV1) NewLocation(begin int64, end int64) (_model *Location, err error) {
+	_model = &Location{
 		Begin: core.Int64Ptr(begin),
 		End:   core.Int64Ptr(end),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3549,12 +3546,12 @@ type OriginalLabelsIn struct {
 }
 
 // NewOriginalLabelsIn : Instantiate OriginalLabelsIn (Generic Model Constructor)
-func (*CompareComplyV1) NewOriginalLabelsIn(types []TypeLabel, categories []Category) (model *OriginalLabelsIn, err error) {
-	model = &OriginalLabelsIn{
+func (*CompareComplyV1) NewOriginalLabelsIn(types []TypeLabel, categories []Category) (_model *OriginalLabelsIn, err error) {
+	_model = &OriginalLabelsIn{
 		Types:      types,
 		Categories: categories,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -4321,15 +4318,15 @@ func UnmarshalUnalignedElement(m map[string]json.RawMessage, result interface{})
 // UpdateBatchOptions : The UpdateBatch options.
 type UpdateBatchOptions struct {
 	// The ID of the batch-processing job you want to update.
-	BatchID *string `validate:"required,ne="`
+	BatchID *string `json:"-" validate:"required,ne="`
 
 	// The action you want to perform on the specified batch-processing job.
-	Action *string `validate:"required"`
+	Action *string `json:"-" validate:"required"`
 
 	// The analysis model to be used by the service. For the **Element classification** and **Compare two documents**
 	// methods, the default is `contracts`. For the **Extract tables** method, the default is `tables`. These defaults
 	// apply to the standalone methods as well as to the methods' use in batch-processing requests.
-	Model *string
+	Model *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4360,21 +4357,21 @@ func (*CompareComplyV1) NewUpdateBatchOptions(batchID string, action string) *Up
 }
 
 // SetBatchID : Allow user to set BatchID
-func (options *UpdateBatchOptions) SetBatchID(batchID string) *UpdateBatchOptions {
-	options.BatchID = core.StringPtr(batchID)
-	return options
+func (_options *UpdateBatchOptions) SetBatchID(batchID string) *UpdateBatchOptions {
+	_options.BatchID = core.StringPtr(batchID)
+	return _options
 }
 
 // SetAction : Allow user to set Action
-func (options *UpdateBatchOptions) SetAction(action string) *UpdateBatchOptions {
-	options.Action = core.StringPtr(action)
-	return options
+func (_options *UpdateBatchOptions) SetAction(action string) *UpdateBatchOptions {
+	_options.Action = core.StringPtr(action)
+	return _options
 }
 
 // SetModel : Allow user to set Model
-func (options *UpdateBatchOptions) SetModel(model string) *UpdateBatchOptions {
-	options.Model = core.StringPtr(model)
-	return options
+func (_options *UpdateBatchOptions) SetModel(model string) *UpdateBatchOptions {
+	_options.Model = core.StringPtr(model)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4393,12 +4390,12 @@ type UpdatedLabelsIn struct {
 }
 
 // NewUpdatedLabelsIn : Instantiate UpdatedLabelsIn (Generic Model Constructor)
-func (*CompareComplyV1) NewUpdatedLabelsIn(types []TypeLabel, categories []Category) (model *UpdatedLabelsIn, err error) {
-	model = &UpdatedLabelsIn{
+func (*CompareComplyV1) NewUpdatedLabelsIn(types []TypeLabel, categories []Category) (_model *UpdatedLabelsIn, err error) {
+	_model = &UpdatedLabelsIn{
 		Types:      types,
 		Categories: categories,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 

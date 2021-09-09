@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package visualrecognitionv4 : Operations and models for the VisualRecognitionV4 service
@@ -43,7 +43,7 @@ import (
 // Provide images to the IBM Watson Visual Recognition service for analysis. The service detects objects based on a set
 // of images with training data.
 //
-// Version: 4.0
+// API Version: 4.0
 // See: https://cloud.ibm.com/docs/visual-recognition?topic=visual-recognition-object-detection-overview
 type VisualRecognitionV4 struct {
 	Service *core.BaseService
@@ -72,9 +72,6 @@ type VisualRecognitionV4Options struct {
 
 // NewVisualRecognitionV4 : constructs an instance of VisualRecognitionV4 with passed in options.
 func NewVisualRecognitionV4(options *VisualRecognitionV4Options) (service *VisualRecognitionV4, err error) {
-	// Log deprecation warning
-	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see Visual Recognition Deprecation at https://github.com/watson-developer-cloud/go-sdk/tree/master#visual-recognition-deprecation.")
-
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -309,7 +306,9 @@ func (visualRecognition *VisualRecognitionV4) CreateCollectionWithContext(ctx co
 	if createCollectionOptions.Description != nil {
 		body["description"] = createCollectionOptions.Description
 	}
-
+	if createCollectionOptions.TrainingStatus != nil {
+		body["training_status"] = createCollectionOptions.TrainingStatus
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -504,7 +503,9 @@ func (visualRecognition *VisualRecognitionV4) UpdateCollectionWithContext(ctx co
 	if updateCollectionOptions.Description != nil {
 		body["description"] = updateCollectionOptions.Description
 	}
-
+	if updateCollectionOptions.TrainingStatus != nil {
+		body["training_status"] = updateCollectionOptions.TrainingStatus
+	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -1467,13 +1468,13 @@ func (visualRecognition *VisualRecognitionV4) DeleteUserDataWithContext(ctx cont
 // AddImageTrainingDataOptions : The AddImageTrainingData options.
 type AddImageTrainingDataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `validate:"required,ne="`
+	ImageID *string `json:"-" validate:"required,ne="`
 
 	// Training data for specific objects.
-	Objects []TrainingDataObject
+	Objects []TrainingDataObject `json:"objects,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1488,21 +1489,21 @@ func (*VisualRecognitionV4) NewAddImageTrainingDataOptions(collectionID string, 
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AddImageTrainingDataOptions) SetCollectionID(collectionID string) *AddImageTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AddImageTrainingDataOptions) SetCollectionID(collectionID string) *AddImageTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetImageID : Allow user to set ImageID
-func (options *AddImageTrainingDataOptions) SetImageID(imageID string) *AddImageTrainingDataOptions {
-	options.ImageID = core.StringPtr(imageID)
-	return options
+func (_options *AddImageTrainingDataOptions) SetImageID(imageID string) *AddImageTrainingDataOptions {
+	_options.ImageID = core.StringPtr(imageID)
+	return _options
 }
 
 // SetObjects : Allow user to set Objects
-func (options *AddImageTrainingDataOptions) SetObjects(objects []TrainingDataObject) *AddImageTrainingDataOptions {
-	options.Objects = objects
-	return options
+func (_options *AddImageTrainingDataOptions) SetObjects(objects []TrainingDataObject) *AddImageTrainingDataOptions {
+	_options.Objects = objects
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1514,7 +1515,7 @@ func (options *AddImageTrainingDataOptions) SetHeaders(param map[string]string) 
 // AddImagesOptions : The AddImages options.
 type AddImagesOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// An array of image files (.jpg or .png) or .zip files with images.
 	// - Include a maximum of 20 images in a request.
@@ -1522,7 +1523,7 @@ type AddImagesOptions struct {
 	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
-	ImagesFile []FileWithMetadata
+	ImagesFile []FileWithMetadata `json:"-"`
 
 	// The array of URLs of image files (.jpg or .png).
 	// - Include a maximum of 20 images in a request.
@@ -1531,13 +1532,13 @@ type AddImagesOptions struct {
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
 	// You can also include images with the **images_file** parameter.
-	ImageURL []string
+	ImageURL []string `json:"-"`
 
 	// Training data for a single image. Include training data only if you add one image with the request.
 	//
 	// The `object` property can contain alphanumeric, underscore, hyphen, space, and dot characters. It cannot begin with
 	// the reserved prefix `sys-` and must be no longer than 32 characters.
-	TrainingData *string
+	TrainingData *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1551,27 +1552,27 @@ func (*VisualRecognitionV4) NewAddImagesOptions(collectionID string) *AddImagesO
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AddImagesOptions) SetCollectionID(collectionID string) *AddImagesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AddImagesOptions) SetCollectionID(collectionID string) *AddImagesOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *AddImagesOptions) SetImagesFile(imagesFile []FileWithMetadata) *AddImagesOptions {
-	options.ImagesFile = imagesFile
-	return options
+func (_options *AddImagesOptions) SetImagesFile(imagesFile []FileWithMetadata) *AddImagesOptions {
+	_options.ImagesFile = imagesFile
+	return _options
 }
 
 // SetImageURL : Allow user to set ImageURL
-func (options *AddImagesOptions) SetImageURL(imageURL []string) *AddImagesOptions {
-	options.ImageURL = imageURL
-	return options
+func (_options *AddImagesOptions) SetImageURL(imageURL []string) *AddImagesOptions {
+	_options.ImageURL = imageURL
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *AddImagesOptions) SetTrainingData(trainingData string) *AddImagesOptions {
-	options.TrainingData = core.StringPtr(trainingData)
-	return options
+func (_options *AddImagesOptions) SetTrainingData(trainingData string) *AddImagesOptions {
+	_options.TrainingData = core.StringPtr(trainingData)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1583,10 +1584,10 @@ func (options *AddImagesOptions) SetHeaders(param map[string]string) *AddImagesO
 // AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 	// The IDs of the collections to analyze.
-	CollectionIds []string `validate:"required"`
+	CollectionIds []string `json:"-" validate:"required"`
 
 	// The features to analyze.
-	Features []string `validate:"required"`
+	Features []string `json:"-" validate:"required"`
 
 	// An array of image files (.jpg or .png) or .zip files with images.
 	// - Include a maximum of 20 images in a request.
@@ -1594,7 +1595,7 @@ type AnalyzeOptions struct {
 	// - Limit each image file to 10 MB.
 	//
 	// You can also include an image with the **image_url** parameter.
-	ImagesFile []FileWithMetadata
+	ImagesFile []FileWithMetadata `json:"-"`
 
 	// An array of URLs of image files (.jpg or .png).
 	// - Include a maximum of 20 images in a request.
@@ -1603,10 +1604,10 @@ type AnalyzeOptions struct {
 	// 300 pixels. Maximum is 5400 pixels for either height or width.
 	//
 	// You can also include images with the **images_file** parameter.
-	ImageURL []string
+	ImageURL []string `json:"-"`
 
 	// The minimum score a feature must have to be returned.
-	Threshold *float32
+	Threshold *float32 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1626,33 +1627,33 @@ func (*VisualRecognitionV4) NewAnalyzeOptions(collectionIds []string, features [
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *AnalyzeOptions) SetCollectionIds(collectionIds []string) *AnalyzeOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *AnalyzeOptions) SetCollectionIds(collectionIds []string) *AnalyzeOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(features []string) *AnalyzeOptions {
-	options.Features = features
-	return options
+func (_options *AnalyzeOptions) SetFeatures(features []string) *AnalyzeOptions {
+	_options.Features = features
+	return _options
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *AnalyzeOptions) SetImagesFile(imagesFile []FileWithMetadata) *AnalyzeOptions {
-	options.ImagesFile = imagesFile
-	return options
+func (_options *AnalyzeOptions) SetImagesFile(imagesFile []FileWithMetadata) *AnalyzeOptions {
+	_options.ImagesFile = imagesFile
+	return _options
 }
 
 // SetImageURL : Allow user to set ImageURL
-func (options *AnalyzeOptions) SetImageURL(imageURL []string) *AnalyzeOptions {
-	options.ImageURL = imageURL
-	return options
+func (_options *AnalyzeOptions) SetImageURL(imageURL []string) *AnalyzeOptions {
+	_options.ImageURL = imageURL
+	return _options
 }
 
 // SetThreshold : Allow user to set Threshold
-func (options *AnalyzeOptions) SetThreshold(threshold float32) *AnalyzeOptions {
-	options.Threshold = core.Float32Ptr(threshold)
-	return options
+func (_options *AnalyzeOptions) SetThreshold(threshold float32) *AnalyzeOptions {
+	_options.Threshold = core.Float32Ptr(threshold)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1813,10 +1814,13 @@ func UnmarshalCollectionsList(m map[string]json.RawMessage, result interface{}) 
 type CreateCollectionOptions struct {
 	// The name of the collection. The name can contain alphanumeric, underscore, hyphen, and dot characters. It cannot
 	// begin with the reserved prefix `sys-`.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// The description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
+
+	// Training status information for the collection.
+	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1828,15 +1832,21 @@ func (*VisualRecognitionV4) NewCreateCollectionOptions() *CreateCollectionOption
 }
 
 // SetName : Allow user to set Name
-func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
+}
+
+// SetTrainingStatus : Allow user to set TrainingStatus
+func (_options *CreateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *CreateCollectionOptions {
+	_options.TrainingStatus = trainingStatus
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1848,7 +1858,7 @@ func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *Cre
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1862,9 +1872,9 @@ func (*VisualRecognitionV4) NewDeleteCollectionOptions(collectionID string) *Del
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1876,10 +1886,10 @@ func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *Del
 // DeleteImageOptions : The DeleteImage options.
 type DeleteImageOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `validate:"required,ne="`
+	ImageID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1894,15 +1904,15 @@ func (*VisualRecognitionV4) NewDeleteImageOptions(collectionID string, imageID s
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteImageOptions) SetCollectionID(collectionID string) *DeleteImageOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteImageOptions) SetCollectionID(collectionID string) *DeleteImageOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetImageID : Allow user to set ImageID
-func (options *DeleteImageOptions) SetImageID(imageID string) *DeleteImageOptions {
-	options.ImageID = core.StringPtr(imageID)
-	return options
+func (_options *DeleteImageOptions) SetImageID(imageID string) *DeleteImageOptions {
+	_options.ImageID = core.StringPtr(imageID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1914,10 +1924,10 @@ func (options *DeleteImageOptions) SetHeaders(param map[string]string) *DeleteIm
 // DeleteObjectOptions : The DeleteObject options.
 type DeleteObjectOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `validate:"required,ne="`
+	Object *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1932,15 +1942,15 @@ func (*VisualRecognitionV4) NewDeleteObjectOptions(collectionID string, object s
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteObjectOptions) SetCollectionID(collectionID string) *DeleteObjectOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteObjectOptions) SetCollectionID(collectionID string) *DeleteObjectOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetObject : Allow user to set Object
-func (options *DeleteObjectOptions) SetObject(object string) *DeleteObjectOptions {
-	options.Object = core.StringPtr(object)
-	return options
+func (_options *DeleteObjectOptions) SetObject(object string) *DeleteObjectOptions {
+	_options.Object = core.StringPtr(object)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1952,7 +1962,7 @@ func (options *DeleteObjectOptions) SetHeaders(param map[string]string) *DeleteO
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1966,9 +1976,9 @@ func (*VisualRecognitionV4) NewDeleteUserDataOptions(customerID string) *DeleteU
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2087,11 +2097,11 @@ type FileWithMetadata struct {
 }
 
 // NewFileWithMetadata : Instantiate FileWithMetadata (Generic Model Constructor)
-func (*VisualRecognitionV4) NewFileWithMetadata(data io.ReadCloser) (model *FileWithMetadata, err error) {
-	model = &FileWithMetadata{
+func (*VisualRecognitionV4) NewFileWithMetadata(data io.ReadCloser) (_model *FileWithMetadata, err error) {
+	_model = &FileWithMetadata{
 		Data: data,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2114,7 +2124,7 @@ func UnmarshalFileWithMetadata(m map[string]json.RawMessage, result interface{})
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2128,9 +2138,9 @@ func (*VisualRecognitionV4) NewGetCollectionOptions(collectionID string) *GetCol
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2142,10 +2152,10 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 // GetImageDetailsOptions : The GetImageDetails options.
 type GetImageDetailsOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `validate:"required,ne="`
+	ImageID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2160,15 +2170,15 @@ func (*VisualRecognitionV4) NewGetImageDetailsOptions(collectionID string, image
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetImageDetailsOptions) SetCollectionID(collectionID string) *GetImageDetailsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetImageDetailsOptions) SetCollectionID(collectionID string) *GetImageDetailsOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetImageID : Allow user to set ImageID
-func (options *GetImageDetailsOptions) SetImageID(imageID string) *GetImageDetailsOptions {
-	options.ImageID = core.StringPtr(imageID)
-	return options
+func (_options *GetImageDetailsOptions) SetImageID(imageID string) *GetImageDetailsOptions {
+	_options.ImageID = core.StringPtr(imageID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2180,14 +2190,14 @@ func (options *GetImageDetailsOptions) SetHeaders(param map[string]string) *GetI
 // GetJpegImageOptions : The GetJpegImage options.
 type GetJpegImageOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The identifier of the image.
-	ImageID *string `validate:"required,ne="`
+	ImageID *string `json:"-" validate:"required,ne="`
 
 	// The image size. Specify `thumbnail` to return a version that maintains the original aspect ratio but is no larger
 	// than 200 pixels in the larger dimension. For example, an original 800 x 1000 image is resized to 160 x 200 pixels.
-	Size *string
+	Size *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2210,21 +2220,21 @@ func (*VisualRecognitionV4) NewGetJpegImageOptions(collectionID string, imageID 
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetJpegImageOptions) SetCollectionID(collectionID string) *GetJpegImageOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetJpegImageOptions) SetCollectionID(collectionID string) *GetJpegImageOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetImageID : Allow user to set ImageID
-func (options *GetJpegImageOptions) SetImageID(imageID string) *GetJpegImageOptions {
-	options.ImageID = core.StringPtr(imageID)
-	return options
+func (_options *GetJpegImageOptions) SetImageID(imageID string) *GetJpegImageOptions {
+	_options.ImageID = core.StringPtr(imageID)
+	return _options
 }
 
 // SetSize : Allow user to set Size
-func (options *GetJpegImageOptions) SetSize(size string) *GetJpegImageOptions {
-	options.Size = core.StringPtr(size)
-	return options
+func (_options *GetJpegImageOptions) SetSize(size string) *GetJpegImageOptions {
+	_options.Size = core.StringPtr(size)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2236,13 +2246,13 @@ func (options *GetJpegImageOptions) SetHeaders(param map[string]string) *GetJpeg
 // GetModelFileOptions : The GetModelFile options.
 type GetModelFileOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The feature for the model.
-	Feature *string `validate:"required"`
+	Feature *string `json:"-" validate:"required"`
 
 	// The format of the returned model.
-	ModelFormat *string `validate:"required"`
+	ModelFormat *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2270,21 +2280,21 @@ func (*VisualRecognitionV4) NewGetModelFileOptions(collectionID string, feature 
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetModelFileOptions) SetCollectionID(collectionID string) *GetModelFileOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetModelFileOptions) SetCollectionID(collectionID string) *GetModelFileOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFeature : Allow user to set Feature
-func (options *GetModelFileOptions) SetFeature(feature string) *GetModelFileOptions {
-	options.Feature = core.StringPtr(feature)
-	return options
+func (_options *GetModelFileOptions) SetFeature(feature string) *GetModelFileOptions {
+	_options.Feature = core.StringPtr(feature)
+	return _options
 }
 
 // SetModelFormat : Allow user to set ModelFormat
-func (options *GetModelFileOptions) SetModelFormat(modelFormat string) *GetModelFileOptions {
-	options.ModelFormat = core.StringPtr(modelFormat)
-	return options
+func (_options *GetModelFileOptions) SetModelFormat(modelFormat string) *GetModelFileOptions {
+	_options.ModelFormat = core.StringPtr(modelFormat)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2296,10 +2306,10 @@ func (options *GetModelFileOptions) SetHeaders(param map[string]string) *GetMode
 // GetObjectMetadataOptions : The GetObjectMetadata options.
 type GetObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `validate:"required,ne="`
+	Object *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2314,15 +2324,15 @@ func (*VisualRecognitionV4) NewGetObjectMetadataOptions(collectionID string, obj
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetObjectMetadataOptions) SetCollectionID(collectionID string) *GetObjectMetadataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetObjectMetadataOptions) SetCollectionID(collectionID string) *GetObjectMetadataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetObject : Allow user to set Object
-func (options *GetObjectMetadataOptions) SetObject(object string) *GetObjectMetadataOptions {
-	options.Object = core.StringPtr(object)
-	return options
+func (_options *GetObjectMetadataOptions) SetObject(object string) *GetObjectMetadataOptions {
+	_options.Object = core.StringPtr(object)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2335,12 +2345,12 @@ func (options *GetObjectMetadataOptions) SetHeaders(param map[string]string) *Ge
 type GetTrainingUsageOptions struct {
 	// The earliest day to include training events. Specify dates in YYYY-MM-DD format. If empty or not specified, the
 	// earliest training event is included.
-	StartTime *strfmt.Date
+	StartTime *strfmt.Date `json:"-"`
 
 	// The most recent day to include training events. Specify dates in YYYY-MM-DD format. All events for the day are
 	// included. If empty or not specified, the current day is used. Specify the same value as `start_time` to request
 	// events for a single day.
-	EndTime *strfmt.Date
+	EndTime *strfmt.Date `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2352,15 +2362,15 @@ func (*VisualRecognitionV4) NewGetTrainingUsageOptions() *GetTrainingUsageOption
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetTrainingUsageOptions) SetStartTime(startTime *strfmt.Date) *GetTrainingUsageOptions {
-	options.StartTime = startTime
-	return options
+func (_options *GetTrainingUsageOptions) SetStartTime(startTime *strfmt.Date) *GetTrainingUsageOptions {
+	_options.StartTime = startTime
+	return _options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetTrainingUsageOptions) SetEndTime(endTime *strfmt.Date) *GetTrainingUsageOptions {
-	options.EndTime = endTime
-	return options
+func (_options *GetTrainingUsageOptions) SetEndTime(endTime *strfmt.Date) *GetTrainingUsageOptions {
+	_options.EndTime = endTime
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2635,7 +2645,7 @@ func (options *ListCollectionsOptions) SetHeaders(param map[string]string) *List
 // ListImagesOptions : The ListImages options.
 type ListImagesOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2649,9 +2659,9 @@ func (*VisualRecognitionV4) NewListImagesOptions(collectionID string) *ListImage
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListImagesOptions) SetCollectionID(collectionID string) *ListImagesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListImagesOptions) SetCollectionID(collectionID string) *ListImagesOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2663,7 +2673,7 @@ func (options *ListImagesOptions) SetHeaders(param map[string]string) *ListImage
 // ListObjectMetadataOptions : The ListObjectMetadata options.
 type ListObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2677,9 +2687,9 @@ func (*VisualRecognitionV4) NewListObjectMetadataOptions(collectionID string) *L
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListObjectMetadataOptions) SetCollectionID(collectionID string) *ListObjectMetadataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListObjectMetadataOptions) SetCollectionID(collectionID string) *ListObjectMetadataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2704,14 +2714,14 @@ type Location struct {
 }
 
 // NewLocation : Instantiate Location (Generic Model Constructor)
-func (*VisualRecognitionV4) NewLocation(top int64, left int64, width int64, height int64) (model *Location, err error) {
-	model = &Location{
+func (*VisualRecognitionV4) NewLocation(top int64, left int64, width int64, height int64) (_model *Location, err error) {
+	_model = &Location{
 		Top:    core.Int64Ptr(top),
 		Left:   core.Int64Ptr(left),
 		Width:  core.Int64Ptr(width),
 		Height: core.Int64Ptr(height),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2879,8 +2889,8 @@ type ObjectTrainingStatus struct {
 }
 
 // NewObjectTrainingStatus : Instantiate ObjectTrainingStatus (Generic Model Constructor)
-func (*VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool, dataChanged bool, latestFailed bool, rscnnReady bool, description string) (model *ObjectTrainingStatus, err error) {
-	model = &ObjectTrainingStatus{
+func (*VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool, dataChanged bool, latestFailed bool, rscnnReady bool, description string) (_model *ObjectTrainingStatus, err error) {
+	_model = &ObjectTrainingStatus{
 		Ready:        core.BoolPtr(ready),
 		InProgress:   core.BoolPtr(inProgress),
 		DataChanged:  core.BoolPtr(dataChanged),
@@ -2888,7 +2898,7 @@ func (*VisualRecognitionV4) NewObjectTrainingStatus(ready bool, inProgress bool,
 		RscnnReady:   core.BoolPtr(rscnnReady),
 		Description:  core.StringPtr(description),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2926,7 +2936,7 @@ func UnmarshalObjectTrainingStatus(m map[string]json.RawMessage, result interfac
 // TrainOptions : The Train options.
 type TrainOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2940,9 +2950,9 @@ func (*VisualRecognitionV4) NewTrainOptions(collectionID string) *TrainOptions {
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *TrainOptions) SetCollectionID(collectionID string) *TrainOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *TrainOptions) SetCollectionID(collectionID string) *TrainOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3104,11 +3114,11 @@ type TrainingStatus struct {
 }
 
 // NewTrainingStatus : Instantiate TrainingStatus (Generic Model Constructor)
-func (*VisualRecognitionV4) NewTrainingStatus(objects *ObjectTrainingStatus) (model *TrainingStatus, err error) {
-	model = &TrainingStatus{
+func (*VisualRecognitionV4) NewTrainingStatus(objects *ObjectTrainingStatus) (_model *TrainingStatus, err error) {
+	_model = &TrainingStatus{
 		Objects: objects,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3126,14 +3136,17 @@ func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the collection. The name can contain alphanumeric, underscore, hyphen, and dot characters. It cannot
 	// begin with the reserved prefix `sys-`.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// The description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
+
+	// Training status information for the collection.
+	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3147,21 +3160,27 @@ func (*VisualRecognitionV4) NewUpdateCollectionOptions(collectionID string) *Upd
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
+}
+
+// SetTrainingStatus : Allow user to set TrainingStatus
+func (_options *UpdateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *UpdateCollectionOptions {
+	_options.TrainingStatus = trainingStatus
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3181,11 +3200,11 @@ type UpdateObjectMetadata struct {
 }
 
 // NewUpdateObjectMetadata : Instantiate UpdateObjectMetadata (Generic Model Constructor)
-func (*VisualRecognitionV4) NewUpdateObjectMetadata(object string) (model *UpdateObjectMetadata, err error) {
-	model = &UpdateObjectMetadata{
+func (*VisualRecognitionV4) NewUpdateObjectMetadata(object string) (_model *UpdateObjectMetadata, err error) {
+	_model = &UpdateObjectMetadata{
 		Object: core.StringPtr(object),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3207,14 +3226,14 @@ func UnmarshalUpdateObjectMetadata(m map[string]json.RawMessage, result interfac
 // UpdateObjectMetadataOptions : The UpdateObjectMetadata options.
 type UpdateObjectMetadataOptions struct {
 	// The identifier of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the object.
-	Object *string `validate:"required,ne="`
+	Object *string `json:"-" validate:"required,ne="`
 
 	// The updated name of the object. The name can contain alphanumeric, underscore, hyphen, space, and dot characters. It
 	// cannot begin with the reserved prefix `sys-`.
-	NewObject *string `validate:"required"`
+	NewObject *string `json:"object" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3230,21 +3249,21 @@ func (*VisualRecognitionV4) NewUpdateObjectMetadataOptions(collectionID string, 
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateObjectMetadataOptions) SetCollectionID(collectionID string) *UpdateObjectMetadataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateObjectMetadataOptions) SetCollectionID(collectionID string) *UpdateObjectMetadataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetObject : Allow user to set Object
-func (options *UpdateObjectMetadataOptions) SetObject(object string) *UpdateObjectMetadataOptions {
-	options.Object = core.StringPtr(object)
-	return options
+func (_options *UpdateObjectMetadataOptions) SetObject(object string) *UpdateObjectMetadataOptions {
+	_options.Object = core.StringPtr(object)
+	return _options
 }
 
 // SetNewObject : Allow user to set NewObject
-func (options *UpdateObjectMetadataOptions) SetNewObject(newObject string) *UpdateObjectMetadataOptions {
-	options.NewObject = core.StringPtr(newObject)
-	return options
+func (_options *UpdateObjectMetadataOptions) SetNewObject(newObject string) *UpdateObjectMetadataOptions {
+	_options.NewObject = core.StringPtr(newObject)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

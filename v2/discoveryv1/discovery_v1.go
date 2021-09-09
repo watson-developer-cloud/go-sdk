@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package discoveryv1 : Operations and models for the DiscoveryV1 service
@@ -41,7 +41,7 @@ import (
 // structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
 // for manual filtering of results.
 //
-// Version: 1.0
+// API Version: 1.0
 // See: https://cloud.ibm.com/docs/discovery
 type DiscoveryV1 struct {
 	Service *core.BaseService
@@ -4564,27 +4564,27 @@ func (discovery *DiscoveryV1) DeleteGatewayWithContext(ctx context.Context, dele
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File io.ReadCloser
+	File io.ReadCloser `json:"-"`
 
 	// The filename for file.
-	Filename *string
+	Filename *string `json:"-"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string
+	Metadata *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4599,39 +4599,39 @@ func (*DiscoveryV1) NewAddDocumentOptions(environmentID string, collectionID str
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *AddDocumentOptions) SetEnvironmentID(environmentID string) *AddDocumentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *AddDocumentOptions) SetEnvironmentID(environmentID string) *AddDocumentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AddDocumentOptions) SetCollectionID(collectionID string) *AddDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AddDocumentOptions) SetCollectionID(collectionID string) *AddDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *AddDocumentOptions) SetFile(file io.ReadCloser) *AddDocumentOptions {
-	options.File = file
-	return options
+func (_options *AddDocumentOptions) SetFile(file io.ReadCloser) *AddDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *AddDocumentOptions) SetFilename(filename string) *AddDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *AddDocumentOptions) SetFilename(filename string) *AddDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *AddDocumentOptions) SetFileContentType(fileContentType string) *AddDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *AddDocumentOptions) SetFileContentType(fileContentType string) *AddDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
+func (_options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
+	_options.Metadata = core.StringPtr(metadata)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4643,19 +4643,19 @@ func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocum
 // AddTrainingDataOptions : The AddTrainingData options.
 type AddTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The natural text query for the new training query.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// The filter used on the collection before the **natural_language_query** is applied.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// Array of training examples.
-	Examples []TrainingExample
+	Examples []TrainingExample `json:"examples,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4670,33 +4670,33 @@ func (*DiscoveryV1) NewAddTrainingDataOptions(environmentID string, collectionID
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *AddTrainingDataOptions) SetEnvironmentID(environmentID string) *AddTrainingDataOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *AddTrainingDataOptions) SetEnvironmentID(environmentID string) *AddTrainingDataOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AddTrainingDataOptions) SetCollectionID(collectionID string) *AddTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AddTrainingDataOptions) SetCollectionID(collectionID string) *AddTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *AddTrainingDataOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *AddTrainingDataOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *AddTrainingDataOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *AddTrainingDataOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *AddTrainingDataOptions) SetFilter(filter string) *AddTrainingDataOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *AddTrainingDataOptions) SetFilter(filter string) *AddTrainingDataOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetExamples : Allow user to set Examples
-func (options *AddTrainingDataOptions) SetExamples(examples []TrainingExample) *AddTrainingDataOptions {
-	options.Examples = examples
-	return options
+func (_options *AddTrainingDataOptions) SetExamples(examples []TrainingExample) *AddTrainingDataOptions {
+	_options.Examples = examples
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4722,10 +4722,7 @@ func UnmarshalAggregationResult(m map[string]json.RawMessage, result interface{}
 	obj := new(AggregationResult)
 	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
 	if err != nil {
-		err = core.UnmarshalPrimitive(m, "key_as_string", &obj.Key)
-		if err != nil {
-			return
-		}
+		return
 	}
 	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
 	if err != nil {
@@ -4956,11 +4953,11 @@ type Configuration struct {
 }
 
 // NewConfiguration : Instantiate Configuration (Generic Model Constructor)
-func (*DiscoveryV1) NewConfiguration(name string) (model *Configuration, err error) {
-	model = &Configuration{
+func (*DiscoveryV1) NewConfiguration(name string) (_model *Configuration, err error) {
+	_model = &Configuration{
 		Name: core.StringPtr(name),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -5065,19 +5062,19 @@ func UnmarshalConversions(m map[string]json.RawMessage, result interface{}) (err
 // CreateCollectionOptions : The CreateCollection options.
 type CreateCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The name of the collection to be created.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// A description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The ID of the configuration in which the collection is to be created.
-	ConfigurationID *string
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// The language of the documents stored in the collection, in the form of an ISO 639-1 language code.
-	Language *string
+	Language *string `json:"language,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5108,33 +5105,33 @@ func (*DiscoveryV1) NewCreateCollectionOptions(environmentID string, name string
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateCollectionOptions) SetEnvironmentID(environmentID string) *CreateCollectionOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateCollectionOptions) SetEnvironmentID(environmentID string) *CreateCollectionOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
-func (options *CreateCollectionOptions) SetConfigurationID(configurationID string) *CreateCollectionOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
+func (_options *CreateCollectionOptions) SetConfigurationID(configurationID string) *CreateCollectionOptions {
+	_options.ConfigurationID = core.StringPtr(configurationID)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateCollectionOptions) SetLanguage(language string) *CreateCollectionOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateCollectionOptions) SetLanguage(language string) *CreateCollectionOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5146,26 +5143,26 @@ func (options *CreateCollectionOptions) SetHeaders(param map[string]string) *Cre
 // CreateConfigurationOptions : The CreateConfiguration options.
 type CreateConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The name of the configuration.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// The description of the configuration, if available.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Document conversion settings.
-	Conversions *Conversions
+	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
-	Enrichments []Enrichment
+	Enrichments []Enrichment `json:"enrichments,omitempty"`
 
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are
 	// executed in the order that they appear in the array.
-	Normalizations []NormalizationOperation
+	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
 
 	// Object containing source parameters for the configuration.
-	Source *Source
+	Source *Source `json:"source,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5180,45 +5177,45 @@ func (*DiscoveryV1) NewCreateConfigurationOptions(environmentID string, name str
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateConfigurationOptions) SetEnvironmentID(environmentID string) *CreateConfigurationOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateConfigurationOptions) SetEnvironmentID(environmentID string) *CreateConfigurationOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateConfigurationOptions) SetName(name string) *CreateConfigurationOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateConfigurationOptions) SetName(name string) *CreateConfigurationOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateConfigurationOptions) SetDescription(description string) *CreateConfigurationOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateConfigurationOptions) SetDescription(description string) *CreateConfigurationOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetConversions : Allow user to set Conversions
-func (options *CreateConfigurationOptions) SetConversions(conversions *Conversions) *CreateConfigurationOptions {
-	options.Conversions = conversions
-	return options
+func (_options *CreateConfigurationOptions) SetConversions(conversions *Conversions) *CreateConfigurationOptions {
+	_options.Conversions = conversions
+	return _options
 }
 
 // SetEnrichments : Allow user to set Enrichments
-func (options *CreateConfigurationOptions) SetEnrichments(enrichments []Enrichment) *CreateConfigurationOptions {
-	options.Enrichments = enrichments
-	return options
+func (_options *CreateConfigurationOptions) SetEnrichments(enrichments []Enrichment) *CreateConfigurationOptions {
+	_options.Enrichments = enrichments
+	return _options
 }
 
 // SetNormalizations : Allow user to set Normalizations
-func (options *CreateConfigurationOptions) SetNormalizations(normalizations []NormalizationOperation) *CreateConfigurationOptions {
-	options.Normalizations = normalizations
-	return options
+func (_options *CreateConfigurationOptions) SetNormalizations(normalizations []NormalizationOperation) *CreateConfigurationOptions {
+	_options.Normalizations = normalizations
+	return _options
 }
 
 // SetSource : Allow user to set Source
-func (options *CreateConfigurationOptions) SetSource(source *Source) *CreateConfigurationOptions {
-	options.Source = source
-	return options
+func (_options *CreateConfigurationOptions) SetSource(source *Source) *CreateConfigurationOptions {
+	_options.Source = source
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5230,7 +5227,7 @@ func (options *CreateConfigurationOptions) SetHeaders(param map[string]string) *
 // CreateCredentialsOptions : The CreateCredentials options.
 type CreateCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -5238,17 +5235,17 @@ type CreateCredentialsOptions struct {
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-	SourceType *string
+	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
 	//
 	// Obtain credentials for your source from the administrator of the source.
-	CredentialDetails *CredentialDetails
+	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
 	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
 	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
 	// has expired) and must be corrected before they can be used with a collection.
-	Status *string
+	Status *string `json:"status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5286,27 +5283,27 @@ func (*DiscoveryV1) NewCreateCredentialsOptions(environmentID string) *CreateCre
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateCredentialsOptions) SetEnvironmentID(environmentID string) *CreateCredentialsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateCredentialsOptions) SetEnvironmentID(environmentID string) *CreateCredentialsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetSourceType : Allow user to set SourceType
-func (options *CreateCredentialsOptions) SetSourceType(sourceType string) *CreateCredentialsOptions {
-	options.SourceType = core.StringPtr(sourceType)
-	return options
+func (_options *CreateCredentialsOptions) SetSourceType(sourceType string) *CreateCredentialsOptions {
+	_options.SourceType = core.StringPtr(sourceType)
+	return _options
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
-func (options *CreateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *CreateCredentialsOptions {
-	options.CredentialDetails = credentialDetails
-	return options
+func (_options *CreateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *CreateCredentialsOptions {
+	_options.CredentialDetails = credentialDetails
+	return _options
 }
 
 // SetStatus : Allow user to set Status
-func (options *CreateCredentialsOptions) SetStatus(status string) *CreateCredentialsOptions {
-	options.Status = core.StringPtr(status)
-	return options
+func (_options *CreateCredentialsOptions) SetStatus(status string) *CreateCredentialsOptions {
+	_options.Status = core.StringPtr(status)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5318,14 +5315,14 @@ func (options *CreateCredentialsOptions) SetHeaders(param map[string]string) *Cr
 // CreateEnvironmentOptions : The CreateEnvironment options.
 type CreateEnvironmentOptions struct {
 	// Name that identifies the environment.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// Description of the environment.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Size of the environment. In the Lite plan the default and only accepted value is `LT`, in all other plans the
 	// default is `S`.
-	Size *string
+	Size *string `json:"size,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5355,21 +5352,21 @@ func (*DiscoveryV1) NewCreateEnvironmentOptions(name string) *CreateEnvironmentO
 }
 
 // SetName : Allow user to set Name
-func (options *CreateEnvironmentOptions) SetName(name string) *CreateEnvironmentOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateEnvironmentOptions) SetName(name string) *CreateEnvironmentOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateEnvironmentOptions) SetDescription(description string) *CreateEnvironmentOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateEnvironmentOptions) SetDescription(description string) *CreateEnvironmentOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetSize : Allow user to set Size
-func (options *CreateEnvironmentOptions) SetSize(size string) *CreateEnvironmentOptions {
-	options.Size = core.StringPtr(size)
-	return options
+func (_options *CreateEnvironmentOptions) SetSize(size string) *CreateEnvironmentOptions {
+	_options.Size = core.StringPtr(size)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5381,10 +5378,10 @@ func (options *CreateEnvironmentOptions) SetHeaders(param map[string]string) *Cr
 // CreateEventOptions : The CreateEvent options.
 type CreateEventOptions struct {
 	// The event type to be created.
-	Type *string `validate:"required"`
+	Type *string `json:"type" validate:"required"`
 
 	// Query event data object.
-	Data *EventData `validate:"required"`
+	Data *EventData `json:"data" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5405,15 +5402,15 @@ func (*DiscoveryV1) NewCreateEventOptions(typeVar string, data *EventData) *Crea
 }
 
 // SetType : Allow user to set Type
-func (options *CreateEventOptions) SetType(typeVar string) *CreateEventOptions {
-	options.Type = core.StringPtr(typeVar)
-	return options
+func (_options *CreateEventOptions) SetType(typeVar string) *CreateEventOptions {
+	_options.Type = core.StringPtr(typeVar)
+	return _options
 }
 
 // SetData : Allow user to set Data
-func (options *CreateEventOptions) SetData(data *EventData) *CreateEventOptions {
-	options.Data = data
-	return options
+func (_options *CreateEventOptions) SetData(data *EventData) *CreateEventOptions {
+	_options.Data = data
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5455,10 +5452,10 @@ func UnmarshalCreateEventResponse(m map[string]json.RawMessage, result interface
 // CreateExpansionsOptions : The CreateExpansions options.
 type CreateExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// An array of query expansion definitions.
 	//
@@ -5473,7 +5470,7 @@ type CreateExpansionsOptions struct {
 	//  To create a uni-directional expansion, specify both an array of **input_terms** and an array of **expanded_terms**.
 	// When items in the **input_terms** array are present in a query, they are expanded using the items listed in the
 	// **expanded_terms** array.
-	Expansions []Expansion `validate:"required"`
+	Expansions []Expansion `json:"expansions" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5489,21 +5486,21 @@ func (*DiscoveryV1) NewCreateExpansionsOptions(environmentID string, collectionI
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateExpansionsOptions) SetEnvironmentID(environmentID string) *CreateExpansionsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateExpansionsOptions) SetEnvironmentID(environmentID string) *CreateExpansionsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *CreateExpansionsOptions) SetCollectionID(collectionID string) *CreateExpansionsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *CreateExpansionsOptions) SetCollectionID(collectionID string) *CreateExpansionsOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetExpansions : Allow user to set Expansions
-func (options *CreateExpansionsOptions) SetExpansions(expansions []Expansion) *CreateExpansionsOptions {
-	options.Expansions = expansions
-	return options
+func (_options *CreateExpansionsOptions) SetExpansions(expansions []Expansion) *CreateExpansionsOptions {
+	_options.Expansions = expansions
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5515,10 +5512,10 @@ func (options *CreateExpansionsOptions) SetHeaders(param map[string]string) *Cre
 // CreateGatewayOptions : The CreateGateway options.
 type CreateGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// User-defined name.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5532,15 +5529,15 @@ func (*DiscoveryV1) NewCreateGatewayOptions(environmentID string) *CreateGateway
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateGatewayOptions) SetEnvironmentID(environmentID string) *CreateGatewayOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateGatewayOptions) SetEnvironmentID(environmentID string) *CreateGatewayOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateGatewayOptions) SetName(name string) *CreateGatewayOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateGatewayOptions) SetName(name string) *CreateGatewayOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5552,16 +5549,16 @@ func (options *CreateGatewayOptions) SetHeaders(param map[string]string) *Create
 // CreateStopwordListOptions : The CreateStopwordList options.
 type CreateStopwordListOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The content of the stopword list to ingest.
-	StopwordFile io.ReadCloser `validate:"required"`
+	StopwordFile io.ReadCloser `json:"-" validate:"required"`
 
 	// The filename for stopwordFile.
-	StopwordFilename *string `validate:"required"`
+	StopwordFilename *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5578,27 +5575,27 @@ func (*DiscoveryV1) NewCreateStopwordListOptions(environmentID string, collectio
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateStopwordListOptions) SetEnvironmentID(environmentID string) *CreateStopwordListOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateStopwordListOptions) SetEnvironmentID(environmentID string) *CreateStopwordListOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *CreateStopwordListOptions) SetCollectionID(collectionID string) *CreateStopwordListOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *CreateStopwordListOptions) SetCollectionID(collectionID string) *CreateStopwordListOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetStopwordFile : Allow user to set StopwordFile
-func (options *CreateStopwordListOptions) SetStopwordFile(stopwordFile io.ReadCloser) *CreateStopwordListOptions {
-	options.StopwordFile = stopwordFile
-	return options
+func (_options *CreateStopwordListOptions) SetStopwordFile(stopwordFile io.ReadCloser) *CreateStopwordListOptions {
+	_options.StopwordFile = stopwordFile
+	return _options
 }
 
 // SetStopwordFilename : Allow user to set StopwordFilename
-func (options *CreateStopwordListOptions) SetStopwordFilename(stopwordFilename string) *CreateStopwordListOptions {
-	options.StopwordFilename = core.StringPtr(stopwordFilename)
-	return options
+func (_options *CreateStopwordListOptions) SetStopwordFilename(stopwordFilename string) *CreateStopwordListOptions {
+	_options.StopwordFilename = core.StringPtr(stopwordFilename)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5610,14 +5607,14 @@ func (options *CreateStopwordListOptions) SetHeaders(param map[string]string) *C
 // CreateTokenizationDictionaryOptions : The CreateTokenizationDictionary options.
 type CreateTokenizationDictionaryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// An array of tokenization rules. Each rule contains, the original `text` string, component `tokens`, any alternate
 	// character set `readings`, and which `part_of_speech` the text is from.
-	TokenizationRules []TokenDictRule
+	TokenizationRules []TokenDictRule `json:"tokenization_rules,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5632,21 +5629,21 @@ func (*DiscoveryV1) NewCreateTokenizationDictionaryOptions(environmentID string,
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *CreateTokenizationDictionaryOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *CreateTokenizationDictionaryOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *CreateTokenizationDictionaryOptions) SetCollectionID(collectionID string) *CreateTokenizationDictionaryOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *CreateTokenizationDictionaryOptions) SetCollectionID(collectionID string) *CreateTokenizationDictionaryOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetTokenizationRules : Allow user to set TokenizationRules
-func (options *CreateTokenizationDictionaryOptions) SetTokenizationRules(tokenizationRules []TokenDictRule) *CreateTokenizationDictionaryOptions {
-	options.TokenizationRules = tokenizationRules
-	return options
+func (_options *CreateTokenizationDictionaryOptions) SetTokenizationRules(tokenizationRules []TokenDictRule) *CreateTokenizationDictionaryOptions {
+	_options.TokenizationRules = tokenizationRules
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5658,22 +5655,22 @@ func (options *CreateTokenizationDictionaryOptions) SetHeaders(param map[string]
 // CreateTrainingExampleOptions : The CreateTrainingExample options.
 type CreateTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// The document ID associated with this training example.
-	DocumentID *string
+	DocumentID *string `json:"document_id,omitempty"`
 
 	// The cross reference associated with this training example.
-	CrossReference *string
+	CrossReference *string `json:"cross_reference,omitempty"`
 
 	// The relevance of the training example.
-	Relevance *int64
+	Relevance *int64 `json:"relevance,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5689,39 +5686,39 @@ func (*DiscoveryV1) NewCreateTrainingExampleOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *CreateTrainingExampleOptions) SetEnvironmentID(environmentID string) *CreateTrainingExampleOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *CreateTrainingExampleOptions) SetEnvironmentID(environmentID string) *CreateTrainingExampleOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *CreateTrainingExampleOptions) SetCollectionID(collectionID string) *CreateTrainingExampleOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *CreateTrainingExampleOptions) SetCollectionID(collectionID string) *CreateTrainingExampleOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *CreateTrainingExampleOptions) SetQueryID(queryID string) *CreateTrainingExampleOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *CreateTrainingExampleOptions) SetQueryID(queryID string) *CreateTrainingExampleOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *CreateTrainingExampleOptions) SetDocumentID(documentID string) *CreateTrainingExampleOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *CreateTrainingExampleOptions) SetDocumentID(documentID string) *CreateTrainingExampleOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetCrossReference : Allow user to set CrossReference
-func (options *CreateTrainingExampleOptions) SetCrossReference(crossReference string) *CreateTrainingExampleOptions {
-	options.CrossReference = core.StringPtr(crossReference)
-	return options
+func (_options *CreateTrainingExampleOptions) SetCrossReference(crossReference string) *CreateTrainingExampleOptions {
+	_options.CrossReference = core.StringPtr(crossReference)
+	return _options
 }
 
 // SetRelevance : Allow user to set Relevance
-func (options *CreateTrainingExampleOptions) SetRelevance(relevance int64) *CreateTrainingExampleOptions {
-	options.Relevance = core.Int64Ptr(relevance)
-	return options
+func (_options *CreateTrainingExampleOptions) SetRelevance(relevance int64) *CreateTrainingExampleOptions {
+	_options.Relevance = core.Int64Ptr(relevance)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6030,10 +6027,10 @@ func UnmarshalCredentialsList(m map[string]json.RawMessage, result interface{}) 
 // DeleteAllTrainingDataOptions : The DeleteAllTrainingData options.
 type DeleteAllTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6048,15 +6045,15 @@ func (*DiscoveryV1) NewDeleteAllTrainingDataOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteAllTrainingDataOptions) SetEnvironmentID(environmentID string) *DeleteAllTrainingDataOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteAllTrainingDataOptions) SetEnvironmentID(environmentID string) *DeleteAllTrainingDataOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteAllTrainingDataOptions) SetCollectionID(collectionID string) *DeleteAllTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteAllTrainingDataOptions) SetCollectionID(collectionID string) *DeleteAllTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6068,10 +6065,10 @@ func (options *DeleteAllTrainingDataOptions) SetHeaders(param map[string]string)
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6086,15 +6083,15 @@ func (*DiscoveryV1) NewDeleteCollectionOptions(environmentID string, collectionI
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteCollectionOptions) SetEnvironmentID(environmentID string) *DeleteCollectionOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteCollectionOptions) SetEnvironmentID(environmentID string) *DeleteCollectionOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6136,10 +6133,10 @@ func UnmarshalDeleteCollectionResponse(m map[string]json.RawMessage, result inte
 // DeleteConfigurationOptions : The DeleteConfiguration options.
 type DeleteConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `validate:"required,ne="`
+	ConfigurationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6154,15 +6151,15 @@ func (*DiscoveryV1) NewDeleteConfigurationOptions(environmentID string, configur
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteConfigurationOptions) SetEnvironmentID(environmentID string) *DeleteConfigurationOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteConfigurationOptions) SetEnvironmentID(environmentID string) *DeleteConfigurationOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
-func (options *DeleteConfigurationOptions) SetConfigurationID(configurationID string) *DeleteConfigurationOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
+func (_options *DeleteConfigurationOptions) SetConfigurationID(configurationID string) *DeleteConfigurationOptions {
+	_options.ConfigurationID = core.StringPtr(configurationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6241,10 +6238,10 @@ func UnmarshalDeleteCredentials(m map[string]json.RawMessage, result interface{}
 // DeleteCredentialsOptions : The DeleteCredentials options.
 type DeleteCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `validate:"required,ne="`
+	CredentialID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6259,15 +6256,15 @@ func (*DiscoveryV1) NewDeleteCredentialsOptions(environmentID string, credential
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteCredentialsOptions) SetEnvironmentID(environmentID string) *DeleteCredentialsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteCredentialsOptions) SetEnvironmentID(environmentID string) *DeleteCredentialsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCredentialID : Allow user to set CredentialID
-func (options *DeleteCredentialsOptions) SetCredentialID(credentialID string) *DeleteCredentialsOptions {
-	options.CredentialID = core.StringPtr(credentialID)
-	return options
+func (_options *DeleteCredentialsOptions) SetCredentialID(credentialID string) *DeleteCredentialsOptions {
+	_options.CredentialID = core.StringPtr(credentialID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6279,13 +6276,13 @@ func (options *DeleteCredentialsOptions) SetHeaders(param map[string]string) *De
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6301,21 +6298,21 @@ func (*DiscoveryV1) NewDeleteDocumentOptions(environmentID string, collectionID 
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteDocumentOptions) SetEnvironmentID(environmentID string) *DeleteDocumentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteDocumentOptions) SetEnvironmentID(environmentID string) *DeleteDocumentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteDocumentOptions) SetCollectionID(collectionID string) *DeleteDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteDocumentOptions) SetCollectionID(collectionID string) *DeleteDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6357,7 +6354,7 @@ func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interf
 // DeleteEnvironmentOptions : The DeleteEnvironment options.
 type DeleteEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6371,9 +6368,9 @@ func (*DiscoveryV1) NewDeleteEnvironmentOptions(environmentID string) *DeleteEnv
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteEnvironmentOptions) SetEnvironmentID(environmentID string) *DeleteEnvironmentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteEnvironmentOptions) SetEnvironmentID(environmentID string) *DeleteEnvironmentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6415,10 +6412,10 @@ func UnmarshalDeleteEnvironmentResponse(m map[string]json.RawMessage, result int
 // DeleteExpansionsOptions : The DeleteExpansions options.
 type DeleteExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6433,15 +6430,15 @@ func (*DiscoveryV1) NewDeleteExpansionsOptions(environmentID string, collectionI
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteExpansionsOptions) SetEnvironmentID(environmentID string) *DeleteExpansionsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteExpansionsOptions) SetEnvironmentID(environmentID string) *DeleteExpansionsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteExpansionsOptions) SetCollectionID(collectionID string) *DeleteExpansionsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteExpansionsOptions) SetCollectionID(collectionID string) *DeleteExpansionsOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6453,10 +6450,10 @@ func (options *DeleteExpansionsOptions) SetHeaders(param map[string]string) *Del
 // DeleteGatewayOptions : The DeleteGateway options.
 type DeleteGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `validate:"required,ne="`
+	GatewayID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6471,15 +6468,15 @@ func (*DiscoveryV1) NewDeleteGatewayOptions(environmentID string, gatewayID stri
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteGatewayOptions) SetEnvironmentID(environmentID string) *DeleteGatewayOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteGatewayOptions) SetEnvironmentID(environmentID string) *DeleteGatewayOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetGatewayID : Allow user to set GatewayID
-func (options *DeleteGatewayOptions) SetGatewayID(gatewayID string) *DeleteGatewayOptions {
-	options.GatewayID = core.StringPtr(gatewayID)
-	return options
+func (_options *DeleteGatewayOptions) SetGatewayID(gatewayID string) *DeleteGatewayOptions {
+	_options.GatewayID = core.StringPtr(gatewayID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6491,10 +6488,10 @@ func (options *DeleteGatewayOptions) SetHeaders(param map[string]string) *Delete
 // DeleteStopwordListOptions : The DeleteStopwordList options.
 type DeleteStopwordListOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6509,15 +6506,15 @@ func (*DiscoveryV1) NewDeleteStopwordListOptions(environmentID string, collectio
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteStopwordListOptions) SetEnvironmentID(environmentID string) *DeleteStopwordListOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteStopwordListOptions) SetEnvironmentID(environmentID string) *DeleteStopwordListOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteStopwordListOptions) SetCollectionID(collectionID string) *DeleteStopwordListOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteStopwordListOptions) SetCollectionID(collectionID string) *DeleteStopwordListOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6529,10 +6526,10 @@ func (options *DeleteStopwordListOptions) SetHeaders(param map[string]string) *D
 // DeleteTokenizationDictionaryOptions : The DeleteTokenizationDictionary options.
 type DeleteTokenizationDictionaryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6547,15 +6544,15 @@ func (*DiscoveryV1) NewDeleteTokenizationDictionaryOptions(environmentID string,
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *DeleteTokenizationDictionaryOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteTokenizationDictionaryOptions) SetEnvironmentID(environmentID string) *DeleteTokenizationDictionaryOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteTokenizationDictionaryOptions) SetCollectionID(collectionID string) *DeleteTokenizationDictionaryOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteTokenizationDictionaryOptions) SetCollectionID(collectionID string) *DeleteTokenizationDictionaryOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6567,13 +6564,13 @@ func (options *DeleteTokenizationDictionaryOptions) SetHeaders(param map[string]
 // DeleteTrainingDataOptions : The DeleteTrainingData options.
 type DeleteTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6589,21 +6586,21 @@ func (*DiscoveryV1) NewDeleteTrainingDataOptions(environmentID string, collectio
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteTrainingDataOptions) SetEnvironmentID(environmentID string) *DeleteTrainingDataOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteTrainingDataOptions) SetEnvironmentID(environmentID string) *DeleteTrainingDataOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteTrainingDataOptions) SetCollectionID(collectionID string) *DeleteTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteTrainingDataOptions) SetCollectionID(collectionID string) *DeleteTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *DeleteTrainingDataOptions) SetQueryID(queryID string) *DeleteTrainingDataOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *DeleteTrainingDataOptions) SetQueryID(queryID string) *DeleteTrainingDataOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6615,16 +6612,16 @@ func (options *DeleteTrainingDataOptions) SetHeaders(param map[string]string) *D
 // DeleteTrainingExampleOptions : The DeleteTrainingExample options.
 type DeleteTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `validate:"required,ne="`
+	ExampleID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6641,27 +6638,27 @@ func (*DiscoveryV1) NewDeleteTrainingExampleOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *DeleteTrainingExampleOptions) SetEnvironmentID(environmentID string) *DeleteTrainingExampleOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *DeleteTrainingExampleOptions) SetEnvironmentID(environmentID string) *DeleteTrainingExampleOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteTrainingExampleOptions) SetCollectionID(collectionID string) *DeleteTrainingExampleOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteTrainingExampleOptions) SetCollectionID(collectionID string) *DeleteTrainingExampleOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *DeleteTrainingExampleOptions) SetQueryID(queryID string) *DeleteTrainingExampleOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *DeleteTrainingExampleOptions) SetQueryID(queryID string) *DeleteTrainingExampleOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetExampleID : Allow user to set ExampleID
-func (options *DeleteTrainingExampleOptions) SetExampleID(exampleID string) *DeleteTrainingExampleOptions {
-	options.ExampleID = core.StringPtr(exampleID)
-	return options
+func (_options *DeleteTrainingExampleOptions) SetExampleID(exampleID string) *DeleteTrainingExampleOptions {
+	_options.ExampleID = core.StringPtr(exampleID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6673,7 +6670,7 @@ func (options *DeleteTrainingExampleOptions) SetHeaders(param map[string]string)
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6687,9 +6684,9 @@ func (*DiscoveryV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataO
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6910,7 +6907,7 @@ type Enrichment struct {
 	//  When using `natual_language_understanding`, the **options** object must contain Natural Language Understanding
 	// options.
 	//
-	//  When using `elements` the **options** object must contain Element Classification options. Additionally, when using
+	// When using `elements` the **options** object must contain Element Classification options. Additionally, when using
 	// the `elements` enrichment the configuration specified and files ingested must meet all the criteria specified in
 	// [the
 	// documentation](https://cloud.ibm.com/docs/discovery?topic=discovery-element-classification#element-classification).
@@ -6925,13 +6922,13 @@ type Enrichment struct {
 }
 
 // NewEnrichment : Instantiate Enrichment (Generic Model Constructor)
-func (*DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (model *Enrichment, err error) {
-	model = &Enrichment{
+func (*DiscoveryV1) NewEnrichment(destinationField string, sourceField string, enrichment string) (_model *Enrichment, err error) {
+	_model = &Enrichment{
 		DestinationField: core.StringPtr(destinationField),
 		SourceField:      core.StringPtr(sourceField),
 		Enrichment:       core.StringPtr(enrichment),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6981,7 +6978,8 @@ type EnrichmentOptions struct {
 	// all languages, automatic detection is recommended.
 	Language *string `json:"language,omitempty"`
 
-	// *For use with `elements` enrichments only.* The element extraction model to use. Models available are: `contract`.
+	// For use with `elements` enrichments only. The element extraction model to use. The only model available is
+	// `contract`.
 	Model *string `json:"model,omitempty"`
 }
 
@@ -7187,14 +7185,14 @@ type EventData struct {
 }
 
 // NewEventData : Instantiate EventData (Generic Model Constructor)
-func (*DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (model *EventData, err error) {
-	model = &EventData{
+func (*DiscoveryV1) NewEventData(environmentID string, sessionToken string, collectionID string, documentID string) (_model *EventData, err error) {
+	_model = &EventData{
 		EnvironmentID: core.StringPtr(environmentID),
 		SessionToken:  core.StringPtr(sessionToken),
 		CollectionID:  core.StringPtr(collectionID),
 		DocumentID:    core.StringPtr(documentID),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -7245,11 +7243,11 @@ type Expansion struct {
 }
 
 // NewExpansion : Instantiate Expansion (Generic Model Constructor)
-func (*DiscoveryV1) NewExpansion(expandedTerms []string) (model *Expansion, err error) {
-	model = &Expansion{
+func (*DiscoveryV1) NewExpansion(expandedTerms []string) (_model *Expansion, err error) {
+	_model = &Expansion{
 		ExpandedTerms: expandedTerms,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -7287,11 +7285,11 @@ type Expansions struct {
 }
 
 // NewExpansions : Instantiate Expansions (Generic Model Constructor)
-func (*DiscoveryV1) NewExpansions(expansions []Expansion) (model *Expansions, err error) {
-	model = &Expansions{
+func (*DiscoveryV1) NewExpansions(expansions []Expansion) (_model *Expansions, err error) {
+	_model = &Expansions{
 		Expansions: expansions,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -7309,67 +7307,67 @@ func UnmarshalExpansions(m map[string]json.RawMessage, result interface{}) (err 
 // FederatedQueryNoticesOptions : The FederatedQueryNotices options.
 type FederatedQueryNoticesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `validate:"required"`
+	CollectionIds []string `json:"-" validate:"required"`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"-"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string
+	Query *string `json:"-"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"-"`
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string
+	Aggregation *string `json:"-"`
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return []string
+	Return []string `json:"-"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64
+	Offset *int64 `json:"-"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string
+	Sort []string `json:"-"`
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool
+	Highlight *bool `json:"-"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string
+	DeduplicateField *string `json:"-"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool
+	Similar *bool `json:"-"`
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds []string
+	SimilarDocumentIds []string `json:"-"`
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields []string
+	SimilarFields []string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7384,93 +7382,93 @@ func (*DiscoveryV1) NewFederatedQueryNoticesOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *FederatedQueryNoticesOptions) SetEnvironmentID(environmentID string) *FederatedQueryNoticesOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetEnvironmentID(environmentID string) *FederatedQueryNoticesOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *FederatedQueryNoticesOptions) SetCollectionIds(collectionIds []string) *FederatedQueryNoticesOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *FederatedQueryNoticesOptions) SetCollectionIds(collectionIds []string) *FederatedQueryNoticesOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *FederatedQueryNoticesOptions) SetFilter(filter string) *FederatedQueryNoticesOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetFilter(filter string) *FederatedQueryNoticesOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *FederatedQueryNoticesOptions) SetQuery(query string) *FederatedQueryNoticesOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetQuery(query string) *FederatedQueryNoticesOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *FederatedQueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *FederatedQueryNoticesOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *FederatedQueryNoticesOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetAggregation : Allow user to set Aggregation
-func (options *FederatedQueryNoticesOptions) SetAggregation(aggregation string) *FederatedQueryNoticesOptions {
-	options.Aggregation = core.StringPtr(aggregation)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetAggregation(aggregation string) *FederatedQueryNoticesOptions {
+	_options.Aggregation = core.StringPtr(aggregation)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *FederatedQueryNoticesOptions) SetCount(count int64) *FederatedQueryNoticesOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetCount(count int64) *FederatedQueryNoticesOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetReturn : Allow user to set Return
-func (options *FederatedQueryNoticesOptions) SetReturn(returnVar []string) *FederatedQueryNoticesOptions {
-	options.Return = returnVar
-	return options
+func (_options *FederatedQueryNoticesOptions) SetReturn(returnVar []string) *FederatedQueryNoticesOptions {
+	_options.Return = returnVar
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *FederatedQueryNoticesOptions) SetOffset(offset int64) *FederatedQueryNoticesOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetOffset(offset int64) *FederatedQueryNoticesOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *FederatedQueryNoticesOptions) SetSort(sort []string) *FederatedQueryNoticesOptions {
-	options.Sort = sort
-	return options
+func (_options *FederatedQueryNoticesOptions) SetSort(sort []string) *FederatedQueryNoticesOptions {
+	_options.Sort = sort
+	return _options
 }
 
 // SetHighlight : Allow user to set Highlight
-func (options *FederatedQueryNoticesOptions) SetHighlight(highlight bool) *FederatedQueryNoticesOptions {
-	options.Highlight = core.BoolPtr(highlight)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetHighlight(highlight bool) *FederatedQueryNoticesOptions {
+	_options.Highlight = core.BoolPtr(highlight)
+	return _options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
-func (options *FederatedQueryNoticesOptions) SetDeduplicateField(deduplicateField string) *FederatedQueryNoticesOptions {
-	options.DeduplicateField = core.StringPtr(deduplicateField)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetDeduplicateField(deduplicateField string) *FederatedQueryNoticesOptions {
+	_options.DeduplicateField = core.StringPtr(deduplicateField)
+	return _options
 }
 
 // SetSimilar : Allow user to set Similar
-func (options *FederatedQueryNoticesOptions) SetSimilar(similar bool) *FederatedQueryNoticesOptions {
-	options.Similar = core.BoolPtr(similar)
-	return options
+func (_options *FederatedQueryNoticesOptions) SetSimilar(similar bool) *FederatedQueryNoticesOptions {
+	_options.Similar = core.BoolPtr(similar)
+	return _options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *FederatedQueryNoticesOptions) SetSimilarDocumentIds(similarDocumentIds []string) *FederatedQueryNoticesOptions {
-	options.SimilarDocumentIds = similarDocumentIds
-	return options
+func (_options *FederatedQueryNoticesOptions) SetSimilarDocumentIds(similarDocumentIds []string) *FederatedQueryNoticesOptions {
+	_options.SimilarDocumentIds = similarDocumentIds
+	return _options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *FederatedQueryNoticesOptions) SetSimilarFields(similarFields []string) *FederatedQueryNoticesOptions {
-	options.SimilarFields = similarFields
-	return options
+func (_options *FederatedQueryNoticesOptions) SetSimilarFields(similarFields []string) *FederatedQueryNoticesOptions {
+	_options.SimilarFields = similarFields
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7482,93 +7480,93 @@ func (options *FederatedQueryNoticesOptions) SetHeaders(param map[string]string)
 // FederatedQueryOptions : The FederatedQuery options.
 type FederatedQueryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds *string `validate:"required"`
+	CollectionIds *string `json:"collection_ids" validate:"required"`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first. Use a query search when you want to find the most relevant search results.
-	Query *string
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool
+	Passages *bool `json:"passages,omitempty"`
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count *int64
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return *string
+	Return *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
-	Offset *int64
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
-	Sort *string
+	Sort *string `json:"sort,omitempty"`
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields *string
+	PassagesFields *string `json:"passages.fields,omitempty"`
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
 	// default is `10`. The maximum is `100`.
-	PassagesCount *int64
+	PassagesCount *int64 `json:"passages.count,omitempty"`
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
-	Deduplicate *bool
+	Deduplicate *bool `json:"deduplicate,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds *string
+	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields *string
+	SimilarFields *string `json:"similar.fields,omitempty"`
 
 	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
 	// format. When a **date** type field is specified returned results are biased towards field values closer to the
 	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
 	// This parameter cannot be used in the same query as the **sort** parameter.
-	Bias *string
+	Bias *string `json:"bias,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	XWatsonLoggingOptOut *bool
+	XWatsonLoggingOptOut *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7583,135 +7581,135 @@ func (*DiscoveryV1) NewFederatedQueryOptions(environmentID string, collectionIds
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *FederatedQueryOptions) SetEnvironmentID(environmentID string) *FederatedQueryOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *FederatedQueryOptions) SetEnvironmentID(environmentID string) *FederatedQueryOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
-	options.CollectionIds = core.StringPtr(collectionIds)
-	return options
+func (_options *FederatedQueryOptions) SetCollectionIds(collectionIds string) *FederatedQueryOptions {
+	_options.CollectionIds = core.StringPtr(collectionIds)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *FederatedQueryOptions) SetFilter(filter string) *FederatedQueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *FederatedQueryOptions) SetFilter(filter string) *FederatedQueryOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *FederatedQueryOptions) SetQuery(query string) *FederatedQueryOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *FederatedQueryOptions) SetQuery(query string) *FederatedQueryOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *FederatedQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *FederatedQueryOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *FederatedQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *FederatedQueryOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetPassages : Allow user to set Passages
-func (options *FederatedQueryOptions) SetPassages(passages bool) *FederatedQueryOptions {
-	options.Passages = core.BoolPtr(passages)
-	return options
+func (_options *FederatedQueryOptions) SetPassages(passages bool) *FederatedQueryOptions {
+	_options.Passages = core.BoolPtr(passages)
+	return _options
 }
 
 // SetAggregation : Allow user to set Aggregation
-func (options *FederatedQueryOptions) SetAggregation(aggregation string) *FederatedQueryOptions {
-	options.Aggregation = core.StringPtr(aggregation)
-	return options
+func (_options *FederatedQueryOptions) SetAggregation(aggregation string) *FederatedQueryOptions {
+	_options.Aggregation = core.StringPtr(aggregation)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *FederatedQueryOptions) SetCount(count int64) *FederatedQueryOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *FederatedQueryOptions) SetCount(count int64) *FederatedQueryOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetReturn : Allow user to set Return
-func (options *FederatedQueryOptions) SetReturn(returnVar string) *FederatedQueryOptions {
-	options.Return = core.StringPtr(returnVar)
-	return options
+func (_options *FederatedQueryOptions) SetReturn(returnVar string) *FederatedQueryOptions {
+	_options.Return = core.StringPtr(returnVar)
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *FederatedQueryOptions) SetOffset(offset int64) *FederatedQueryOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *FederatedQueryOptions) SetOffset(offset int64) *FederatedQueryOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *FederatedQueryOptions) SetSort(sort string) *FederatedQueryOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *FederatedQueryOptions) SetSort(sort string) *FederatedQueryOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetHighlight : Allow user to set Highlight
-func (options *FederatedQueryOptions) SetHighlight(highlight bool) *FederatedQueryOptions {
-	options.Highlight = core.BoolPtr(highlight)
-	return options
+func (_options *FederatedQueryOptions) SetHighlight(highlight bool) *FederatedQueryOptions {
+	_options.Highlight = core.BoolPtr(highlight)
+	return _options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
-func (options *FederatedQueryOptions) SetPassagesFields(passagesFields string) *FederatedQueryOptions {
-	options.PassagesFields = core.StringPtr(passagesFields)
-	return options
+func (_options *FederatedQueryOptions) SetPassagesFields(passagesFields string) *FederatedQueryOptions {
+	_options.PassagesFields = core.StringPtr(passagesFields)
+	return _options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
-func (options *FederatedQueryOptions) SetPassagesCount(passagesCount int64) *FederatedQueryOptions {
-	options.PassagesCount = core.Int64Ptr(passagesCount)
-	return options
+func (_options *FederatedQueryOptions) SetPassagesCount(passagesCount int64) *FederatedQueryOptions {
+	_options.PassagesCount = core.Int64Ptr(passagesCount)
+	return _options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
-func (options *FederatedQueryOptions) SetPassagesCharacters(passagesCharacters int64) *FederatedQueryOptions {
-	options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
-	return options
+func (_options *FederatedQueryOptions) SetPassagesCharacters(passagesCharacters int64) *FederatedQueryOptions {
+	_options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
+	return _options
 }
 
 // SetDeduplicate : Allow user to set Deduplicate
-func (options *FederatedQueryOptions) SetDeduplicate(deduplicate bool) *FederatedQueryOptions {
-	options.Deduplicate = core.BoolPtr(deduplicate)
-	return options
+func (_options *FederatedQueryOptions) SetDeduplicate(deduplicate bool) *FederatedQueryOptions {
+	_options.Deduplicate = core.BoolPtr(deduplicate)
+	return _options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
-func (options *FederatedQueryOptions) SetDeduplicateField(deduplicateField string) *FederatedQueryOptions {
-	options.DeduplicateField = core.StringPtr(deduplicateField)
-	return options
+func (_options *FederatedQueryOptions) SetDeduplicateField(deduplicateField string) *FederatedQueryOptions {
+	_options.DeduplicateField = core.StringPtr(deduplicateField)
+	return _options
 }
 
 // SetSimilar : Allow user to set Similar
-func (options *FederatedQueryOptions) SetSimilar(similar bool) *FederatedQueryOptions {
-	options.Similar = core.BoolPtr(similar)
-	return options
+func (_options *FederatedQueryOptions) SetSimilar(similar bool) *FederatedQueryOptions {
+	_options.Similar = core.BoolPtr(similar)
+	return _options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *FederatedQueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *FederatedQueryOptions {
-	options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
-	return options
+func (_options *FederatedQueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *FederatedQueryOptions {
+	_options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
+	return _options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *FederatedQueryOptions) SetSimilarFields(similarFields string) *FederatedQueryOptions {
-	options.SimilarFields = core.StringPtr(similarFields)
-	return options
+func (_options *FederatedQueryOptions) SetSimilarFields(similarFields string) *FederatedQueryOptions {
+	_options.SimilarFields = core.StringPtr(similarFields)
+	return _options
 }
 
 // SetBias : Allow user to set Bias
-func (options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOptions {
-	options.Bias = core.StringPtr(bias)
-	return options
+func (_options *FederatedQueryOptions) SetBias(bias string) *FederatedQueryOptions {
+	_options.Bias = core.StringPtr(bias)
+	return _options
 }
 
 // SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
-func (options *FederatedQueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *FederatedQueryOptions {
-	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
-	return options
+func (_options *FederatedQueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *FederatedQueryOptions {
+	_options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7912,20 +7910,19 @@ func UnmarshalGatewayList(m map[string]json.RawMessage, result interface{}) (err
 // GetAutocompletionOptions : The GetAutocompletion options.
 type GetAutocompletionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
-	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
-	// do I upgrade`. Possible completions are.
-	Prefix *string `validate:"required"`
+	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `hot`, `housing`, or `how`.
+	Prefix *string `json:"-" validate:"required"`
 
 	// The field in the result documents that autocompletion suggestions are identified from.
-	Field *string
+	Field *string `json:"-"`
 
 	// The number of autocompletion suggestions to return.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7941,33 +7938,33 @@ func (*DiscoveryV1) NewGetAutocompletionOptions(environmentID string, collection
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetAutocompletionOptions) SetEnvironmentID(environmentID string) *GetAutocompletionOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetAutocompletionOptions) SetEnvironmentID(environmentID string) *GetAutocompletionOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetAutocompletionOptions) SetCollectionID(collectionID string) *GetAutocompletionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetAutocompletionOptions) SetCollectionID(collectionID string) *GetAutocompletionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetPrefix : Allow user to set Prefix
-func (options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
-	options.Prefix = core.StringPtr(prefix)
-	return options
+func (_options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
+	_options.Prefix = core.StringPtr(prefix)
+	return _options
 }
 
 // SetField : Allow user to set Field
-func (options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
-	options.Field = core.StringPtr(field)
-	return options
+func (_options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
+	_options.Field = core.StringPtr(field)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *GetAutocompletionOptions) SetCount(count int64) *GetAutocompletionOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *GetAutocompletionOptions) SetCount(count int64) *GetAutocompletionOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7979,10 +7976,10 @@ func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *Ge
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7997,15 +7994,15 @@ func (*DiscoveryV1) NewGetCollectionOptions(environmentID string, collectionID s
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetCollectionOptions) SetEnvironmentID(environmentID string) *GetCollectionOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetCollectionOptions) SetEnvironmentID(environmentID string) *GetCollectionOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8017,10 +8014,10 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 // GetConfigurationOptions : The GetConfiguration options.
 type GetConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `validate:"required,ne="`
+	ConfigurationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8035,15 +8032,15 @@ func (*DiscoveryV1) NewGetConfigurationOptions(environmentID string, configurati
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetConfigurationOptions) SetEnvironmentID(environmentID string) *GetConfigurationOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetConfigurationOptions) SetEnvironmentID(environmentID string) *GetConfigurationOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
-func (options *GetConfigurationOptions) SetConfigurationID(configurationID string) *GetConfigurationOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
+func (_options *GetConfigurationOptions) SetConfigurationID(configurationID string) *GetConfigurationOptions {
+	_options.ConfigurationID = core.StringPtr(configurationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8055,10 +8052,10 @@ func (options *GetConfigurationOptions) SetHeaders(param map[string]string) *Get
 // GetCredentialsOptions : The GetCredentials options.
 type GetCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `validate:"required,ne="`
+	CredentialID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8073,15 +8070,15 @@ func (*DiscoveryV1) NewGetCredentialsOptions(environmentID string, credentialID 
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetCredentialsOptions) SetEnvironmentID(environmentID string) *GetCredentialsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetCredentialsOptions) SetEnvironmentID(environmentID string) *GetCredentialsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCredentialID : Allow user to set CredentialID
-func (options *GetCredentialsOptions) SetCredentialID(credentialID string) *GetCredentialsOptions {
-	options.CredentialID = core.StringPtr(credentialID)
-	return options
+func (_options *GetCredentialsOptions) SetCredentialID(credentialID string) *GetCredentialsOptions {
+	_options.CredentialID = core.StringPtr(credentialID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8093,13 +8090,13 @@ func (options *GetCredentialsOptions) SetHeaders(param map[string]string) *GetCr
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8115,21 +8112,21 @@ func (*DiscoveryV1) NewGetDocumentStatusOptions(environmentID string, collection
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetDocumentStatusOptions) SetEnvironmentID(environmentID string) *GetDocumentStatusOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetDocumentStatusOptions) SetEnvironmentID(environmentID string) *GetDocumentStatusOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetDocumentStatusOptions) SetCollectionID(collectionID string) *GetDocumentStatusOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetDocumentStatusOptions) SetCollectionID(collectionID string) *GetDocumentStatusOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *GetDocumentStatusOptions) SetDocumentID(documentID string) *GetDocumentStatusOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *GetDocumentStatusOptions) SetDocumentID(documentID string) *GetDocumentStatusOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8141,7 +8138,7 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 // GetEnvironmentOptions : The GetEnvironment options.
 type GetEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8155,9 +8152,9 @@ func (*DiscoveryV1) NewGetEnvironmentOptions(environmentID string) *GetEnvironme
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetEnvironmentOptions) SetEnvironmentID(environmentID string) *GetEnvironmentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetEnvironmentOptions) SetEnvironmentID(environmentID string) *GetEnvironmentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8169,10 +8166,10 @@ func (options *GetEnvironmentOptions) SetHeaders(param map[string]string) *GetEn
 // GetGatewayOptions : The GetGateway options.
 type GetGatewayOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The requested gateway ID.
-	GatewayID *string `validate:"required,ne="`
+	GatewayID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8187,15 +8184,15 @@ func (*DiscoveryV1) NewGetGatewayOptions(environmentID string, gatewayID string)
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetGatewayOptions) SetEnvironmentID(environmentID string) *GetGatewayOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetGatewayOptions) SetEnvironmentID(environmentID string) *GetGatewayOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetGatewayID : Allow user to set GatewayID
-func (options *GetGatewayOptions) SetGatewayID(gatewayID string) *GetGatewayOptions {
-	options.GatewayID = core.StringPtr(gatewayID)
-	return options
+func (_options *GetGatewayOptions) SetGatewayID(gatewayID string) *GetGatewayOptions {
+	_options.GatewayID = core.StringPtr(gatewayID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8207,13 +8204,13 @@ func (options *GetGatewayOptions) SetHeaders(param map[string]string) *GetGatewa
 // GetMetricsEventRateOptions : The GetMetricsEventRate options.
 type GetMetricsEventRateOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime
+	StartTime *strfmt.DateTime `json:"-"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime
+	EndTime *strfmt.DateTime `json:"-"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string
+	ResultType *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8231,21 +8228,21 @@ func (*DiscoveryV1) NewGetMetricsEventRateOptions() *GetMetricsEventRateOptions 
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsEventRateOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsEventRateOptions {
-	options.StartTime = startTime
-	return options
+func (_options *GetMetricsEventRateOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsEventRateOptions {
+	_options.StartTime = startTime
+	return _options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsEventRateOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsEventRateOptions {
-	options.EndTime = endTime
-	return options
+func (_options *GetMetricsEventRateOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsEventRateOptions {
+	_options.EndTime = endTime
+	return _options
 }
 
 // SetResultType : Allow user to set ResultType
-func (options *GetMetricsEventRateOptions) SetResultType(resultType string) *GetMetricsEventRateOptions {
-	options.ResultType = core.StringPtr(resultType)
-	return options
+func (_options *GetMetricsEventRateOptions) SetResultType(resultType string) *GetMetricsEventRateOptions {
+	_options.ResultType = core.StringPtr(resultType)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8257,13 +8254,13 @@ func (options *GetMetricsEventRateOptions) SetHeaders(param map[string]string) *
 // GetMetricsQueryEventOptions : The GetMetricsQueryEvent options.
 type GetMetricsQueryEventOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime
+	StartTime *strfmt.DateTime `json:"-"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime
+	EndTime *strfmt.DateTime `json:"-"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string
+	ResultType *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8281,21 +8278,21 @@ func (*DiscoveryV1) NewGetMetricsQueryEventOptions() *GetMetricsQueryEventOption
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryEventOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
-	options.StartTime = startTime
-	return options
+func (_options *GetMetricsQueryEventOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
+	_options.StartTime = startTime
+	return _options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryEventOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
-	options.EndTime = endTime
-	return options
+func (_options *GetMetricsQueryEventOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryEventOptions {
+	_options.EndTime = endTime
+	return _options
 }
 
 // SetResultType : Allow user to set ResultType
-func (options *GetMetricsQueryEventOptions) SetResultType(resultType string) *GetMetricsQueryEventOptions {
-	options.ResultType = core.StringPtr(resultType)
-	return options
+func (_options *GetMetricsQueryEventOptions) SetResultType(resultType string) *GetMetricsQueryEventOptions {
+	_options.ResultType = core.StringPtr(resultType)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8307,13 +8304,13 @@ func (options *GetMetricsQueryEventOptions) SetHeaders(param map[string]string) 
 // GetMetricsQueryNoResultsOptions : The GetMetricsQueryNoResults options.
 type GetMetricsQueryNoResultsOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime
+	StartTime *strfmt.DateTime `json:"-"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime
+	EndTime *strfmt.DateTime `json:"-"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string
+	ResultType *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8331,21 +8328,21 @@ func (*DiscoveryV1) NewGetMetricsQueryNoResultsOptions() *GetMetricsQueryNoResul
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryNoResultsOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-	options.StartTime = startTime
-	return options
+func (_options *GetMetricsQueryNoResultsOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+	_options.StartTime = startTime
+	return _options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryNoResultsOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
-	options.EndTime = endTime
-	return options
+func (_options *GetMetricsQueryNoResultsOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryNoResultsOptions {
+	_options.EndTime = endTime
+	return _options
 }
 
 // SetResultType : Allow user to set ResultType
-func (options *GetMetricsQueryNoResultsOptions) SetResultType(resultType string) *GetMetricsQueryNoResultsOptions {
-	options.ResultType = core.StringPtr(resultType)
-	return options
+func (_options *GetMetricsQueryNoResultsOptions) SetResultType(resultType string) *GetMetricsQueryNoResultsOptions {
+	_options.ResultType = core.StringPtr(resultType)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8357,13 +8354,13 @@ func (options *GetMetricsQueryNoResultsOptions) SetHeaders(param map[string]stri
 // GetMetricsQueryOptions : The GetMetricsQuery options.
 type GetMetricsQueryOptions struct {
 	// Metric is computed from data recorded after this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	StartTime *strfmt.DateTime
+	StartTime *strfmt.DateTime `json:"-"`
 
 	// Metric is computed from data recorded before this timestamp; must be in `YYYY-MM-DDThh:mm:ssZ` format.
-	EndTime *strfmt.DateTime
+	EndTime *strfmt.DateTime `json:"-"`
 
 	// The type of result to consider when calculating the metric.
-	ResultType *string
+	ResultType *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8381,21 +8378,21 @@ func (*DiscoveryV1) NewGetMetricsQueryOptions() *GetMetricsQueryOptions {
 }
 
 // SetStartTime : Allow user to set StartTime
-func (options *GetMetricsQueryOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryOptions {
-	options.StartTime = startTime
-	return options
+func (_options *GetMetricsQueryOptions) SetStartTime(startTime *strfmt.DateTime) *GetMetricsQueryOptions {
+	_options.StartTime = startTime
+	return _options
 }
 
 // SetEndTime : Allow user to set EndTime
-func (options *GetMetricsQueryOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryOptions {
-	options.EndTime = endTime
-	return options
+func (_options *GetMetricsQueryOptions) SetEndTime(endTime *strfmt.DateTime) *GetMetricsQueryOptions {
+	_options.EndTime = endTime
+	return _options
 }
 
 // SetResultType : Allow user to set ResultType
-func (options *GetMetricsQueryOptions) SetResultType(resultType string) *GetMetricsQueryOptions {
-	options.ResultType = core.StringPtr(resultType)
-	return options
+func (_options *GetMetricsQueryOptions) SetResultType(resultType string) *GetMetricsQueryOptions {
+	_options.ResultType = core.StringPtr(resultType)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8408,7 +8405,7 @@ func (options *GetMetricsQueryOptions) SetHeaders(param map[string]string) *GetM
 type GetMetricsQueryTokenEventOptions struct {
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8420,9 +8417,9 @@ func (*DiscoveryV1) NewGetMetricsQueryTokenEventOptions() *GetMetricsQueryTokenE
 }
 
 // SetCount : Allow user to set Count
-func (options *GetMetricsQueryTokenEventOptions) SetCount(count int64) *GetMetricsQueryTokenEventOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *GetMetricsQueryTokenEventOptions) SetCount(count int64) *GetMetricsQueryTokenEventOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8434,10 +8431,10 @@ func (options *GetMetricsQueryTokenEventOptions) SetHeaders(param map[string]str
 // GetStopwordListStatusOptions : The GetStopwordListStatus options.
 type GetStopwordListStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8452,15 +8449,15 @@ func (*DiscoveryV1) NewGetStopwordListStatusOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetStopwordListStatusOptions) SetEnvironmentID(environmentID string) *GetStopwordListStatusOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetStopwordListStatusOptions) SetEnvironmentID(environmentID string) *GetStopwordListStatusOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetStopwordListStatusOptions) SetCollectionID(collectionID string) *GetStopwordListStatusOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetStopwordListStatusOptions) SetCollectionID(collectionID string) *GetStopwordListStatusOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8472,10 +8469,10 @@ func (options *GetStopwordListStatusOptions) SetHeaders(param map[string]string)
 // GetTokenizationDictionaryStatusOptions : The GetTokenizationDictionaryStatus options.
 type GetTokenizationDictionaryStatusOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8490,15 +8487,15 @@ func (*DiscoveryV1) NewGetTokenizationDictionaryStatusOptions(environmentID stri
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetTokenizationDictionaryStatusOptions) SetEnvironmentID(environmentID string) *GetTokenizationDictionaryStatusOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetTokenizationDictionaryStatusOptions) SetEnvironmentID(environmentID string) *GetTokenizationDictionaryStatusOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetTokenizationDictionaryStatusOptions) SetCollectionID(collectionID string) *GetTokenizationDictionaryStatusOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetTokenizationDictionaryStatusOptions) SetCollectionID(collectionID string) *GetTokenizationDictionaryStatusOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8510,13 +8507,13 @@ func (options *GetTokenizationDictionaryStatusOptions) SetHeaders(param map[stri
 // GetTrainingDataOptions : The GetTrainingData options.
 type GetTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8532,21 +8529,21 @@ func (*DiscoveryV1) NewGetTrainingDataOptions(environmentID string, collectionID
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetTrainingDataOptions) SetEnvironmentID(environmentID string) *GetTrainingDataOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetTrainingDataOptions) SetEnvironmentID(environmentID string) *GetTrainingDataOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetTrainingDataOptions) SetCollectionID(collectionID string) *GetTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetTrainingDataOptions) SetCollectionID(collectionID string) *GetTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *GetTrainingDataOptions) SetQueryID(queryID string) *GetTrainingDataOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *GetTrainingDataOptions) SetQueryID(queryID string) *GetTrainingDataOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8558,16 +8555,16 @@ func (options *GetTrainingDataOptions) SetHeaders(param map[string]string) *GetT
 // GetTrainingExampleOptions : The GetTrainingExample options.
 type GetTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `validate:"required,ne="`
+	ExampleID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8584,27 +8581,27 @@ func (*DiscoveryV1) NewGetTrainingExampleOptions(environmentID string, collectio
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *GetTrainingExampleOptions) SetEnvironmentID(environmentID string) *GetTrainingExampleOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *GetTrainingExampleOptions) SetEnvironmentID(environmentID string) *GetTrainingExampleOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetTrainingExampleOptions) SetCollectionID(collectionID string) *GetTrainingExampleOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetTrainingExampleOptions) SetCollectionID(collectionID string) *GetTrainingExampleOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *GetTrainingExampleOptions) SetQueryID(queryID string) *GetTrainingExampleOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *GetTrainingExampleOptions) SetQueryID(queryID string) *GetTrainingExampleOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetExampleID : Allow user to set ExampleID
-func (options *GetTrainingExampleOptions) SetExampleID(exampleID string) *GetTrainingExampleOptions {
-	options.ExampleID = core.StringPtr(exampleID)
-	return options
+func (_options *GetTrainingExampleOptions) SetExampleID(exampleID string) *GetTrainingExampleOptions {
+	_options.ExampleID = core.StringPtr(exampleID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8699,10 +8696,10 @@ func UnmarshalIndexCapacity(m map[string]json.RawMessage, result interface{}) (e
 // ListCollectionFieldsOptions : The ListCollectionFields options.
 type ListCollectionFieldsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8717,15 +8714,15 @@ func (*DiscoveryV1) NewListCollectionFieldsOptions(environmentID string, collect
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListCollectionFieldsOptions) SetEnvironmentID(environmentID string) *ListCollectionFieldsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListCollectionFieldsOptions) SetEnvironmentID(environmentID string) *ListCollectionFieldsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListCollectionFieldsOptions) SetCollectionID(collectionID string) *ListCollectionFieldsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListCollectionFieldsOptions) SetCollectionID(collectionID string) *ListCollectionFieldsOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8765,10 +8762,10 @@ func UnmarshalListCollectionFieldsResponse(m map[string]json.RawMessage, result 
 // ListCollectionsOptions : The ListCollections options.
 type ListCollectionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Find collections with the given name.
-	Name *string
+	Name *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8782,15 +8779,15 @@ func (*DiscoveryV1) NewListCollectionsOptions(environmentID string) *ListCollect
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListCollectionsOptions) SetEnvironmentID(environmentID string) *ListCollectionsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListCollectionsOptions) SetEnvironmentID(environmentID string) *ListCollectionsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *ListCollectionsOptions) SetName(name string) *ListCollectionsOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *ListCollectionsOptions) SetName(name string) *ListCollectionsOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8819,10 +8816,10 @@ func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result inter
 // ListConfigurationsOptions : The ListConfigurations options.
 type ListConfigurationsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Find configurations with the given name.
-	Name *string
+	Name *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8836,15 +8833,15 @@ func (*DiscoveryV1) NewListConfigurationsOptions(environmentID string) *ListConf
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListConfigurationsOptions) SetEnvironmentID(environmentID string) *ListConfigurationsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListConfigurationsOptions) SetEnvironmentID(environmentID string) *ListConfigurationsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *ListConfigurationsOptions) SetName(name string) *ListConfigurationsOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *ListConfigurationsOptions) SetName(name string) *ListConfigurationsOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8873,7 +8870,7 @@ func UnmarshalListConfigurationsResponse(m map[string]json.RawMessage, result in
 // ListCredentialsOptions : The ListCredentials options.
 type ListCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8887,9 +8884,9 @@ func (*DiscoveryV1) NewListCredentialsOptions(environmentID string) *ListCredent
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListCredentialsOptions) SetEnvironmentID(environmentID string) *ListCredentialsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListCredentialsOptions) SetEnvironmentID(environmentID string) *ListCredentialsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8901,7 +8898,7 @@ func (options *ListCredentialsOptions) SetHeaders(param map[string]string) *List
 // ListEnvironmentsOptions : The ListEnvironments options.
 type ListEnvironmentsOptions struct {
 	// Show only the environment with the given name.
-	Name *string
+	Name *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8913,9 +8910,9 @@ func (*DiscoveryV1) NewListEnvironmentsOptions() *ListEnvironmentsOptions {
 }
 
 // SetName : Allow user to set Name
-func (options *ListEnvironmentsOptions) SetName(name string) *ListEnvironmentsOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *ListEnvironmentsOptions) SetName(name string) *ListEnvironmentsOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8944,10 +8941,10 @@ func UnmarshalListEnvironmentsResponse(m map[string]json.RawMessage, result inte
 // ListExpansionsOptions : The ListExpansions options.
 type ListExpansionsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8962,15 +8959,15 @@ func (*DiscoveryV1) NewListExpansionsOptions(environmentID string, collectionID 
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListExpansionsOptions) SetEnvironmentID(environmentID string) *ListExpansionsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListExpansionsOptions) SetEnvironmentID(environmentID string) *ListExpansionsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListExpansionsOptions) SetCollectionID(collectionID string) *ListExpansionsOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListExpansionsOptions) SetCollectionID(collectionID string) *ListExpansionsOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8982,10 +8979,10 @@ func (options *ListExpansionsOptions) SetHeaders(param map[string]string) *ListE
 // ListFieldsOptions : The ListFields options.
 type ListFieldsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string `validate:"required"`
+	CollectionIds []string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9000,15 +8997,15 @@ func (*DiscoveryV1) NewListFieldsOptions(environmentID string, collectionIds []s
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListFieldsOptions) SetEnvironmentID(environmentID string) *ListFieldsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListFieldsOptions) SetEnvironmentID(environmentID string) *ListFieldsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *ListFieldsOptions) SetCollectionIds(collectionIds []string) *ListFieldsOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *ListFieldsOptions) SetCollectionIds(collectionIds []string) *ListFieldsOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9020,7 +9017,7 @@ func (options *ListFieldsOptions) SetHeaders(param map[string]string) *ListField
 // ListGatewaysOptions : The ListGateways options.
 type ListGatewaysOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9034,9 +9031,9 @@ func (*DiscoveryV1) NewListGatewaysOptions(environmentID string) *ListGatewaysOp
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListGatewaysOptions) SetEnvironmentID(environmentID string) *ListGatewaysOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListGatewaysOptions) SetEnvironmentID(environmentID string) *ListGatewaysOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9048,10 +9045,10 @@ func (options *ListGatewaysOptions) SetHeaders(param map[string]string) *ListGat
 // ListTrainingDataOptions : The ListTrainingData options.
 type ListTrainingDataOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9066,15 +9063,15 @@ func (*DiscoveryV1) NewListTrainingDataOptions(environmentID string, collectionI
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListTrainingDataOptions) SetEnvironmentID(environmentID string) *ListTrainingDataOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListTrainingDataOptions) SetEnvironmentID(environmentID string) *ListTrainingDataOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListTrainingDataOptions) SetCollectionID(collectionID string) *ListTrainingDataOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListTrainingDataOptions) SetCollectionID(collectionID string) *ListTrainingDataOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9086,13 +9083,13 @@ func (options *ListTrainingDataOptions) SetHeaders(param map[string]string) *Lis
 // ListTrainingExamplesOptions : The ListTrainingExamples options.
 type ListTrainingExamplesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9108,21 +9105,21 @@ func (*DiscoveryV1) NewListTrainingExamplesOptions(environmentID string, collect
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *ListTrainingExamplesOptions) SetEnvironmentID(environmentID string) *ListTrainingExamplesOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *ListTrainingExamplesOptions) SetEnvironmentID(environmentID string) *ListTrainingExamplesOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *ListTrainingExamplesOptions) SetCollectionID(collectionID string) *ListTrainingExamplesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *ListTrainingExamplesOptions) SetCollectionID(collectionID string) *ListTrainingExamplesOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *ListTrainingExamplesOptions) SetQueryID(queryID string) *ListTrainingExamplesOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *ListTrainingExamplesOptions) SetQueryID(queryID string) *ListTrainingExamplesOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9912,7 +9909,7 @@ type Notice struct {
 	// `smart_document_understanding_failed_incompatible_field`, `smart_document_understanding_failed_internal_error`,
 	// `smart_document_understanding_failed_internal_error`, `smart_document_understanding_failed_warning`,
 	// `smart_document_understanding_page_error`, `smart_document_understanding_page_warning`. **Note:** This is not a
-	// complete list, other values might be returned.
+	// complete list; other values might be returned.
 	NoticeID *string `json:"notice_id,omitempty"`
 
 	// The creation date of the collection in the format yyyy-MM-dd'T'HH:mm:ss.SSS'Z'.
@@ -9927,9 +9924,8 @@ type Notice struct {
 	// Severity level of the notice.
 	Severity *string `json:"severity,omitempty"`
 
-	// Ingestion or training step in which the notice occurred. Typical step values include: `classify_elements`,
-	// `smartDocumentUnderstanding`, `ingestion`, `indexing`, `convert`. **Note:** This is not a complete list, other
-	// values might be returned.
+	// Ingestion or training step in which the notice occurred. Typical step values include: `smartDocumentUnderstanding`,
+	// `ingestion`, `indexing`, `convert`. **Note:** This is not a complete list; other values might be returned.
 	Step *string `json:"step,omitempty"`
 
 	// The description of the notice.
@@ -10080,25 +10076,25 @@ func UnmarshalQueryAggregation(m map[string]json.RawMessage, result interface{})
 type QueryLogOptions struct {
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"-"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string
+	Query *string `json:"-"`
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64
+	Offset *int64 `json:"-"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string
+	Sort []string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10110,33 +10106,33 @@ func (*DiscoveryV1) NewQueryLogOptions() *QueryLogOptions {
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryLogOptions) SetFilter(filter string) *QueryLogOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryLogOptions) SetFilter(filter string) *QueryLogOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryLogOptions) SetQuery(query string) *QueryLogOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryLogOptions) SetQuery(query string) *QueryLogOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryLogOptions) SetCount(count int64) *QueryLogOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryLogOptions) SetCount(count int64) *QueryLogOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryLogOptions) SetOffset(offset int64) *QueryLogOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryLogOptions) SetOffset(offset int64) *QueryLogOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *QueryLogOptions) SetSort(sort []string) *QueryLogOptions {
-	options.Sort = sort
-	return options
+func (_options *QueryLogOptions) SetSort(sort []string) *QueryLogOptions {
+	_options.Sort = sort
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10148,80 +10144,80 @@ func (options *QueryLogOptions) SetHeaders(param map[string]string) *QueryLogOpt
 // QueryNoticesOptions : The QueryNotices options.
 type QueryNoticesOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"-"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string
+	Query *string `json:"-"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"-"`
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool
+	Passages *bool `json:"-"`
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string
+	Aggregation *string `json:"-"`
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return []string
+	Return []string `json:"-"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64
+	Offset *int64 `json:"-"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort []string
+	Sort []string `json:"-"`
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool
+	Highlight *bool `json:"-"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields []string
+	PassagesFields []string `json:"-"`
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found.
-	PassagesCount *int64
+	PassagesCount *int64 `json:"-"`
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64
+	PassagesCharacters *int64 `json:"-"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string
+	DeduplicateField *string `json:"-"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool
+	Similar *bool `json:"-"`
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds []string
+	SimilarDocumentIds []string `json:"-"`
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields []string
+	SimilarFields []string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10236,117 +10232,117 @@ func (*DiscoveryV1) NewQueryNoticesOptions(environmentID string, collectionID st
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *QueryNoticesOptions) SetEnvironmentID(environmentID string) *QueryNoticesOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *QueryNoticesOptions) SetEnvironmentID(environmentID string) *QueryNoticesOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *QueryNoticesOptions) SetCollectionID(collectionID string) *QueryNoticesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *QueryNoticesOptions) SetCollectionID(collectionID string) *QueryNoticesOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryNoticesOptions) SetFilter(filter string) *QueryNoticesOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryNoticesOptions) SetFilter(filter string) *QueryNoticesOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryNoticesOptions) SetQuery(query string) *QueryNoticesOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryNoticesOptions) SetQuery(query string) *QueryNoticesOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *QueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryNoticesOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *QueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryNoticesOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetPassages : Allow user to set Passages
-func (options *QueryNoticesOptions) SetPassages(passages bool) *QueryNoticesOptions {
-	options.Passages = core.BoolPtr(passages)
-	return options
+func (_options *QueryNoticesOptions) SetPassages(passages bool) *QueryNoticesOptions {
+	_options.Passages = core.BoolPtr(passages)
+	return _options
 }
 
 // SetAggregation : Allow user to set Aggregation
-func (options *QueryNoticesOptions) SetAggregation(aggregation string) *QueryNoticesOptions {
-	options.Aggregation = core.StringPtr(aggregation)
-	return options
+func (_options *QueryNoticesOptions) SetAggregation(aggregation string) *QueryNoticesOptions {
+	_options.Aggregation = core.StringPtr(aggregation)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryNoticesOptions) SetCount(count int64) *QueryNoticesOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryNoticesOptions) SetCount(count int64) *QueryNoticesOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetReturn : Allow user to set Return
-func (options *QueryNoticesOptions) SetReturn(returnVar []string) *QueryNoticesOptions {
-	options.Return = returnVar
-	return options
+func (_options *QueryNoticesOptions) SetReturn(returnVar []string) *QueryNoticesOptions {
+	_options.Return = returnVar
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryNoticesOptions) SetOffset(offset int64) *QueryNoticesOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryNoticesOptions) SetOffset(offset int64) *QueryNoticesOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *QueryNoticesOptions) SetSort(sort []string) *QueryNoticesOptions {
-	options.Sort = sort
-	return options
+func (_options *QueryNoticesOptions) SetSort(sort []string) *QueryNoticesOptions {
+	_options.Sort = sort
+	return _options
 }
 
 // SetHighlight : Allow user to set Highlight
-func (options *QueryNoticesOptions) SetHighlight(highlight bool) *QueryNoticesOptions {
-	options.Highlight = core.BoolPtr(highlight)
-	return options
+func (_options *QueryNoticesOptions) SetHighlight(highlight bool) *QueryNoticesOptions {
+	_options.Highlight = core.BoolPtr(highlight)
+	return _options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
-func (options *QueryNoticesOptions) SetPassagesFields(passagesFields []string) *QueryNoticesOptions {
-	options.PassagesFields = passagesFields
-	return options
+func (_options *QueryNoticesOptions) SetPassagesFields(passagesFields []string) *QueryNoticesOptions {
+	_options.PassagesFields = passagesFields
+	return _options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
-func (options *QueryNoticesOptions) SetPassagesCount(passagesCount int64) *QueryNoticesOptions {
-	options.PassagesCount = core.Int64Ptr(passagesCount)
-	return options
+func (_options *QueryNoticesOptions) SetPassagesCount(passagesCount int64) *QueryNoticesOptions {
+	_options.PassagesCount = core.Int64Ptr(passagesCount)
+	return _options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
-func (options *QueryNoticesOptions) SetPassagesCharacters(passagesCharacters int64) *QueryNoticesOptions {
-	options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
-	return options
+func (_options *QueryNoticesOptions) SetPassagesCharacters(passagesCharacters int64) *QueryNoticesOptions {
+	_options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
+	return _options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
-func (options *QueryNoticesOptions) SetDeduplicateField(deduplicateField string) *QueryNoticesOptions {
-	options.DeduplicateField = core.StringPtr(deduplicateField)
-	return options
+func (_options *QueryNoticesOptions) SetDeduplicateField(deduplicateField string) *QueryNoticesOptions {
+	_options.DeduplicateField = core.StringPtr(deduplicateField)
+	return _options
 }
 
 // SetSimilar : Allow user to set Similar
-func (options *QueryNoticesOptions) SetSimilar(similar bool) *QueryNoticesOptions {
-	options.Similar = core.BoolPtr(similar)
-	return options
+func (_options *QueryNoticesOptions) SetSimilar(similar bool) *QueryNoticesOptions {
+	_options.Similar = core.BoolPtr(similar)
+	return _options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *QueryNoticesOptions) SetSimilarDocumentIds(similarDocumentIds []string) *QueryNoticesOptions {
-	options.SimilarDocumentIds = similarDocumentIds
-	return options
+func (_options *QueryNoticesOptions) SetSimilarDocumentIds(similarDocumentIds []string) *QueryNoticesOptions {
+	_options.SimilarDocumentIds = similarDocumentIds
+	return _options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *QueryNoticesOptions) SetSimilarFields(similarFields []string) *QueryNoticesOptions {
-	options.SimilarFields = similarFields
-	return options
+func (_options *QueryNoticesOptions) SetSimilarFields(similarFields []string) *QueryNoticesOptions {
+	_options.SimilarFields = similarFields
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10449,6 +10445,14 @@ func (o *QueryNoticesResult) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of QueryNoticesResult
+func (o *QueryNoticesResult) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of QueryNoticesResult
@@ -10564,99 +10568,99 @@ func UnmarshalQueryNoticesResult(m map[string]json.RawMessage, result interface{
 // QueryOptions : The Query options.
 type QueryOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first. Use a query search when you want to find the most relevant search results.
-	Query *string
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// A passages query that returns the most relevant passages from the results.
-	Passages *bool
+	Passages *bool `json:"passages,omitempty"`
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count *int64
+	Count *int64 `json:"count,omitempty"`
 
 	// A comma-separated list of the portion of the document hierarchy to return.
-	Return *string
+	Return *string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
-	Offset *int64
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified. This parameter cannot be used in the same query as the **bias** parameter.
-	Sort *string
+	Sort *string `json:"sort,omitempty"`
 
 	// When true, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// A comma-separated list of fields that passages are drawn from. If this parameter not specified, then all top-level
 	// fields are included.
-	PassagesFields *string
+	PassagesFields *string `json:"passages.fields,omitempty"`
 
 	// The maximum number of passages to return. The search returns fewer passages if the requested total is not found. The
 	// default is `10`. The maximum is `100`.
-	PassagesCount *int64
+	PassagesCount *int64 `json:"passages.count,omitempty"`
 
 	// The approximate number of characters that any one passage will have.
-	PassagesCharacters *int64
+	PassagesCharacters *int64 `json:"passages.characters,omitempty"`
 
 	// When `true`, and used with a Watson Discovery News collection, duplicate results (based on the contents of the
 	// **title** field) are removed. Duplicate comparison is limited to the current query only; **offset** is not
 	// considered. This parameter is currently Beta functionality.
-	Deduplicate *bool
+	Deduplicate *bool `json:"deduplicate,omitempty"`
 
 	// When specified, duplicate results based on the field specified are removed from the returned results. Duplicate
 	// comparison is limited to the current query only, **offset** is not considered. This parameter is currently Beta
 	// functionality.
-	DeduplicateField *string
+	DeduplicateField *string `json:"deduplicate.field,omitempty"`
 
 	// When `true`, results are returned based on their similarity to the document IDs specified in the
 	// **similar.document_ids** parameter.
-	Similar *bool
+	Similar *bool `json:"similar,omitempty"`
 
 	// A comma-separated list of document IDs to find similar documents.
 	//
 	// **Tip:** Include the **natural_language_query** parameter to expand the scope of the document similarity search with
 	// the natural language query. Other query parameters, such as **filter** and **query**, are subsequently applied and
 	// reduce the scope.
-	SimilarDocumentIds *string
+	SimilarDocumentIds *string `json:"similar.document_ids,omitempty"`
 
 	// A comma-separated list of field names that are used as a basis for comparison to identify similar documents. If not
 	// specified, the entire document is used for comparison.
-	SimilarFields *string
+	SimilarFields *string `json:"similar.fields,omitempty"`
 
 	// Field which the returned results will be biased against. The specified field must be either a **date** or **number**
 	// format. When a **date** type field is specified returned results are biased towards field values closer to the
 	// current date. When a **number** type field is specified, returned results are biased towards higher field values.
 	// This parameter cannot be used in the same query as the **sort** parameter.
-	Bias *string
+	Bias *string `json:"bias,omitempty"`
 
 	// When `true` and the **natural_language_query** parameter is used, the **natural_languge_query** parameter is spell
 	// checked. The most likely correction is returned in the **suggested_query** field of the response (if one exists).
 	//
 	// **Important:** this parameter is only valid when using the Cloud Pak version of Discovery.
-	SpellingSuggestions *bool
+	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
 
 	// If `true`, queries are not stored in the Discovery **Logs** endpoint.
-	XWatsonLoggingOptOut *bool
+	XWatsonLoggingOptOut *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10671,141 +10675,141 @@ func (*DiscoveryV1) NewQueryOptions(environmentID string, collectionID string) *
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *QueryOptions) SetEnvironmentID(environmentID string) *QueryOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *QueryOptions) SetEnvironmentID(environmentID string) *QueryOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *QueryOptions) SetCollectionID(collectionID string) *QueryOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *QueryOptions) SetCollectionID(collectionID string) *QueryOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryOptions) SetFilter(filter string) *QueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryOptions) SetFilter(filter string) *QueryOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryOptions) SetQuery(query string) *QueryOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryOptions) SetQuery(query string) *QueryOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *QueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *QueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetPassages : Allow user to set Passages
-func (options *QueryOptions) SetPassages(passages bool) *QueryOptions {
-	options.Passages = core.BoolPtr(passages)
-	return options
+func (_options *QueryOptions) SetPassages(passages bool) *QueryOptions {
+	_options.Passages = core.BoolPtr(passages)
+	return _options
 }
 
 // SetAggregation : Allow user to set Aggregation
-func (options *QueryOptions) SetAggregation(aggregation string) *QueryOptions {
-	options.Aggregation = core.StringPtr(aggregation)
-	return options
+func (_options *QueryOptions) SetAggregation(aggregation string) *QueryOptions {
+	_options.Aggregation = core.StringPtr(aggregation)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryOptions) SetCount(count int64) *QueryOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryOptions) SetCount(count int64) *QueryOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetReturn : Allow user to set Return
-func (options *QueryOptions) SetReturn(returnVar string) *QueryOptions {
-	options.Return = core.StringPtr(returnVar)
-	return options
+func (_options *QueryOptions) SetReturn(returnVar string) *QueryOptions {
+	_options.Return = core.StringPtr(returnVar)
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryOptions) SetOffset(offset int64) *QueryOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryOptions) SetOffset(offset int64) *QueryOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *QueryOptions) SetSort(sort string) *QueryOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *QueryOptions) SetSort(sort string) *QueryOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetHighlight : Allow user to set Highlight
-func (options *QueryOptions) SetHighlight(highlight bool) *QueryOptions {
-	options.Highlight = core.BoolPtr(highlight)
-	return options
+func (_options *QueryOptions) SetHighlight(highlight bool) *QueryOptions {
+	_options.Highlight = core.BoolPtr(highlight)
+	return _options
 }
 
 // SetPassagesFields : Allow user to set PassagesFields
-func (options *QueryOptions) SetPassagesFields(passagesFields string) *QueryOptions {
-	options.PassagesFields = core.StringPtr(passagesFields)
-	return options
+func (_options *QueryOptions) SetPassagesFields(passagesFields string) *QueryOptions {
+	_options.PassagesFields = core.StringPtr(passagesFields)
+	return _options
 }
 
 // SetPassagesCount : Allow user to set PassagesCount
-func (options *QueryOptions) SetPassagesCount(passagesCount int64) *QueryOptions {
-	options.PassagesCount = core.Int64Ptr(passagesCount)
-	return options
+func (_options *QueryOptions) SetPassagesCount(passagesCount int64) *QueryOptions {
+	_options.PassagesCount = core.Int64Ptr(passagesCount)
+	return _options
 }
 
 // SetPassagesCharacters : Allow user to set PassagesCharacters
-func (options *QueryOptions) SetPassagesCharacters(passagesCharacters int64) *QueryOptions {
-	options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
-	return options
+func (_options *QueryOptions) SetPassagesCharacters(passagesCharacters int64) *QueryOptions {
+	_options.PassagesCharacters = core.Int64Ptr(passagesCharacters)
+	return _options
 }
 
 // SetDeduplicate : Allow user to set Deduplicate
-func (options *QueryOptions) SetDeduplicate(deduplicate bool) *QueryOptions {
-	options.Deduplicate = core.BoolPtr(deduplicate)
-	return options
+func (_options *QueryOptions) SetDeduplicate(deduplicate bool) *QueryOptions {
+	_options.Deduplicate = core.BoolPtr(deduplicate)
+	return _options
 }
 
 // SetDeduplicateField : Allow user to set DeduplicateField
-func (options *QueryOptions) SetDeduplicateField(deduplicateField string) *QueryOptions {
-	options.DeduplicateField = core.StringPtr(deduplicateField)
-	return options
+func (_options *QueryOptions) SetDeduplicateField(deduplicateField string) *QueryOptions {
+	_options.DeduplicateField = core.StringPtr(deduplicateField)
+	return _options
 }
 
 // SetSimilar : Allow user to set Similar
-func (options *QueryOptions) SetSimilar(similar bool) *QueryOptions {
-	options.Similar = core.BoolPtr(similar)
-	return options
+func (_options *QueryOptions) SetSimilar(similar bool) *QueryOptions {
+	_options.Similar = core.BoolPtr(similar)
+	return _options
 }
 
 // SetSimilarDocumentIds : Allow user to set SimilarDocumentIds
-func (options *QueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *QueryOptions {
-	options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
-	return options
+func (_options *QueryOptions) SetSimilarDocumentIds(similarDocumentIds string) *QueryOptions {
+	_options.SimilarDocumentIds = core.StringPtr(similarDocumentIds)
+	return _options
 }
 
 // SetSimilarFields : Allow user to set SimilarFields
-func (options *QueryOptions) SetSimilarFields(similarFields string) *QueryOptions {
-	options.SimilarFields = core.StringPtr(similarFields)
-	return options
+func (_options *QueryOptions) SetSimilarFields(similarFields string) *QueryOptions {
+	_options.SimilarFields = core.StringPtr(similarFields)
+	return _options
 }
 
 // SetBias : Allow user to set Bias
-func (options *QueryOptions) SetBias(bias string) *QueryOptions {
-	options.Bias = core.StringPtr(bias)
-	return options
+func (_options *QueryOptions) SetBias(bias string) *QueryOptions {
+	_options.Bias = core.StringPtr(bias)
+	return _options
 }
 
 // SetSpellingSuggestions : Allow user to set SpellingSuggestions
-func (options *QueryOptions) SetSpellingSuggestions(spellingSuggestions bool) *QueryOptions {
-	options.SpellingSuggestions = core.BoolPtr(spellingSuggestions)
-	return options
+func (_options *QueryOptions) SetSpellingSuggestions(spellingSuggestions bool) *QueryOptions {
+	_options.SpellingSuggestions = core.BoolPtr(spellingSuggestions)
+	return _options
 }
 
 // SetXWatsonLoggingOptOut : Allow user to set XWatsonLoggingOptOut
-func (options *QueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *QueryOptions {
-	options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
-	return options
+func (_options *QueryOptions) SetXWatsonLoggingOptOut(xWatsonLoggingOptOut bool) *QueryOptions {
+	_options.XWatsonLoggingOptOut = core.BoolPtr(xWatsonLoggingOptOut)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10959,6 +10963,14 @@ func (o *QueryResult) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of QueryResult
+func (o *QueryResult) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of QueryResult
@@ -11389,11 +11401,11 @@ type SourceOptionsBuckets struct {
 }
 
 // NewSourceOptionsBuckets : Instantiate SourceOptionsBuckets (Generic Model Constructor)
-func (*DiscoveryV1) NewSourceOptionsBuckets(name string) (model *SourceOptionsBuckets, err error) {
-	model = &SourceOptionsBuckets{
+func (*DiscoveryV1) NewSourceOptionsBuckets(name string) (_model *SourceOptionsBuckets, err error) {
+	_model = &SourceOptionsBuckets{
 		Name: core.StringPtr(name),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11425,12 +11437,12 @@ type SourceOptionsFolder struct {
 }
 
 // NewSourceOptionsFolder : Instantiate SourceOptionsFolder (Generic Model Constructor)
-func (*DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (model *SourceOptionsFolder, err error) {
-	model = &SourceOptionsFolder{
+func (*DiscoveryV1) NewSourceOptionsFolder(ownerUserID string, folderID string) (_model *SourceOptionsFolder, err error) {
+	_model = &SourceOptionsFolder{
 		OwnerUserID: core.StringPtr(ownerUserID),
 		FolderID:    core.StringPtr(folderID),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11464,11 +11476,11 @@ type SourceOptionsObject struct {
 }
 
 // NewSourceOptionsObject : Instantiate SourceOptionsObject (Generic Model Constructor)
-func (*DiscoveryV1) NewSourceOptionsObject(name string) (model *SourceOptionsObject, err error) {
-	model = &SourceOptionsObject{
+func (*DiscoveryV1) NewSourceOptionsObject(name string) (_model *SourceOptionsObject, err error) {
+	_model = &SourceOptionsObject{
 		Name: core.StringPtr(name),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11499,11 +11511,11 @@ type SourceOptionsSiteColl struct {
 }
 
 // NewSourceOptionsSiteColl : Instantiate SourceOptionsSiteColl (Generic Model Constructor)
-func (*DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (model *SourceOptionsSiteColl, err error) {
-	model = &SourceOptionsSiteColl{
+func (*DiscoveryV1) NewSourceOptionsSiteColl(siteCollectionPath string) (_model *SourceOptionsSiteColl, err error) {
+	_model = &SourceOptionsSiteColl{
 		SiteCollectionPath: core.StringPtr(siteCollectionPath),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11567,11 +11579,11 @@ const (
 )
 
 // NewSourceOptionsWebCrawl : Instantiate SourceOptionsWebCrawl (Generic Model Constructor)
-func (*DiscoveryV1) NewSourceOptionsWebCrawl(url string) (model *SourceOptionsWebCrawl, err error) {
-	model = &SourceOptionsWebCrawl{
+func (*DiscoveryV1) NewSourceOptionsWebCrawl(url string) (_model *SourceOptionsWebCrawl, err error) {
+	_model = &SourceOptionsWebCrawl{
 		URL: core.StringPtr(url),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11731,13 +11743,13 @@ type TokenDictRule struct {
 }
 
 // NewTokenDictRule : Instantiate TokenDictRule (Generic Model Constructor)
-func (*DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (model *TokenDictRule, err error) {
-	model = &TokenDictRule{
+func (*DiscoveryV1) NewTokenDictRule(text string, tokens []string, partOfSpeech string) (_model *TokenDictRule, err error) {
+	_model = &TokenDictRule{
 		Text:         core.StringPtr(text),
 		Tokens:       tokens,
 		PartOfSpeech: core.StringPtr(partOfSpeech),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -12013,19 +12025,19 @@ func UnmarshalTrainingStatus(m map[string]json.RawMessage, result interface{}) (
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the collection.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// A description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The ID of the configuration in which the collection is to be updated.
-	ConfigurationID *string
+	ConfigurationID *string `json:"configuration_id,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12041,33 +12053,33 @@ func (*DiscoveryV1) NewUpdateCollectionOptions(environmentID string, collectionI
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateCollectionOptions) SetEnvironmentID(environmentID string) *UpdateCollectionOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateCollectionOptions) SetEnvironmentID(environmentID string) *UpdateCollectionOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
-func (options *UpdateCollectionOptions) SetConfigurationID(configurationID string) *UpdateCollectionOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
+func (_options *UpdateCollectionOptions) SetConfigurationID(configurationID string) *UpdateCollectionOptions {
+	_options.ConfigurationID = core.StringPtr(configurationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -12079,29 +12091,29 @@ func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *Upd
 // UpdateConfigurationOptions : The UpdateConfiguration options.
 type UpdateConfigurationOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the configuration.
-	ConfigurationID *string `validate:"required,ne="`
+	ConfigurationID *string `json:"-" validate:"required,ne="`
 
 	// The name of the configuration.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// The description of the configuration, if available.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Document conversion settings.
-	Conversions *Conversions
+	Conversions *Conversions `json:"conversions,omitempty"`
 
 	// An array of document enrichment settings for the configuration.
-	Enrichments []Enrichment
+	Enrichments []Enrichment `json:"enrichments,omitempty"`
 
 	// Defines operations that can be used to transform the final output JSON into a normalized form. Operations are
 	// executed in the order that they appear in the array.
-	Normalizations []NormalizationOperation
+	Normalizations []NormalizationOperation `json:"normalizations,omitempty"`
 
 	// Object containing source parameters for the configuration.
-	Source *Source
+	Source *Source `json:"source,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12117,51 +12129,51 @@ func (*DiscoveryV1) NewUpdateConfigurationOptions(environmentID string, configur
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateConfigurationOptions) SetEnvironmentID(environmentID string) *UpdateConfigurationOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateConfigurationOptions) SetEnvironmentID(environmentID string) *UpdateConfigurationOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetConfigurationID : Allow user to set ConfigurationID
-func (options *UpdateConfigurationOptions) SetConfigurationID(configurationID string) *UpdateConfigurationOptions {
-	options.ConfigurationID = core.StringPtr(configurationID)
-	return options
+func (_options *UpdateConfigurationOptions) SetConfigurationID(configurationID string) *UpdateConfigurationOptions {
+	_options.ConfigurationID = core.StringPtr(configurationID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateConfigurationOptions) SetName(name string) *UpdateConfigurationOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateConfigurationOptions) SetName(name string) *UpdateConfigurationOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateConfigurationOptions) SetDescription(description string) *UpdateConfigurationOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateConfigurationOptions) SetDescription(description string) *UpdateConfigurationOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetConversions : Allow user to set Conversions
-func (options *UpdateConfigurationOptions) SetConversions(conversions *Conversions) *UpdateConfigurationOptions {
-	options.Conversions = conversions
-	return options
+func (_options *UpdateConfigurationOptions) SetConversions(conversions *Conversions) *UpdateConfigurationOptions {
+	_options.Conversions = conversions
+	return _options
 }
 
 // SetEnrichments : Allow user to set Enrichments
-func (options *UpdateConfigurationOptions) SetEnrichments(enrichments []Enrichment) *UpdateConfigurationOptions {
-	options.Enrichments = enrichments
-	return options
+func (_options *UpdateConfigurationOptions) SetEnrichments(enrichments []Enrichment) *UpdateConfigurationOptions {
+	_options.Enrichments = enrichments
+	return _options
 }
 
 // SetNormalizations : Allow user to set Normalizations
-func (options *UpdateConfigurationOptions) SetNormalizations(normalizations []NormalizationOperation) *UpdateConfigurationOptions {
-	options.Normalizations = normalizations
-	return options
+func (_options *UpdateConfigurationOptions) SetNormalizations(normalizations []NormalizationOperation) *UpdateConfigurationOptions {
+	_options.Normalizations = normalizations
+	return _options
 }
 
 // SetSource : Allow user to set Source
-func (options *UpdateConfigurationOptions) SetSource(source *Source) *UpdateConfigurationOptions {
-	options.Source = source
-	return options
+func (_options *UpdateConfigurationOptions) SetSource(source *Source) *UpdateConfigurationOptions {
+	_options.Source = source
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -12173,10 +12185,10 @@ func (options *UpdateConfigurationOptions) SetHeaders(param map[string]string) *
 // UpdateCredentialsOptions : The UpdateCredentials options.
 type UpdateCredentialsOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The unique identifier for a set of source credentials.
-	CredentialID *string `validate:"required,ne="`
+	CredentialID *string `json:"-" validate:"required,ne="`
 
 	// The source that this credentials object connects to.
 	// -  `box` indicates the credentials are used to connect an instance of Enterprise Box.
@@ -12184,17 +12196,17 @@ type UpdateCredentialsOptions struct {
 	// -  `sharepoint` indicates the credentials are used to connect to Microsoft SharePoint Online.
 	// -  `web_crawl` indicates the credentials are used to perform a web crawl.
 	// =  `cloud_object_storage` indicates the credentials are used to connect to an IBM Cloud Object Store.
-	SourceType *string
+	SourceType *string `json:"source_type,omitempty"`
 
 	// Object containing details of the stored credentials.
 	//
 	// Obtain credentials for your source from the administrator of the source.
-	CredentialDetails *CredentialDetails
+	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
 	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
 	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
 	// has expired) and must be corrected before they can be used with a collection.
-	Status *string
+	Status *string `json:"status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12233,33 +12245,33 @@ func (*DiscoveryV1) NewUpdateCredentialsOptions(environmentID string, credential
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateCredentialsOptions) SetEnvironmentID(environmentID string) *UpdateCredentialsOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateCredentialsOptions) SetEnvironmentID(environmentID string) *UpdateCredentialsOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCredentialID : Allow user to set CredentialID
-func (options *UpdateCredentialsOptions) SetCredentialID(credentialID string) *UpdateCredentialsOptions {
-	options.CredentialID = core.StringPtr(credentialID)
-	return options
+func (_options *UpdateCredentialsOptions) SetCredentialID(credentialID string) *UpdateCredentialsOptions {
+	_options.CredentialID = core.StringPtr(credentialID)
+	return _options
 }
 
 // SetSourceType : Allow user to set SourceType
-func (options *UpdateCredentialsOptions) SetSourceType(sourceType string) *UpdateCredentialsOptions {
-	options.SourceType = core.StringPtr(sourceType)
-	return options
+func (_options *UpdateCredentialsOptions) SetSourceType(sourceType string) *UpdateCredentialsOptions {
+	_options.SourceType = core.StringPtr(sourceType)
+	return _options
 }
 
 // SetCredentialDetails : Allow user to set CredentialDetails
-func (options *UpdateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *UpdateCredentialsOptions {
-	options.CredentialDetails = credentialDetails
-	return options
+func (_options *UpdateCredentialsOptions) SetCredentialDetails(credentialDetails *CredentialDetails) *UpdateCredentialsOptions {
+	_options.CredentialDetails = credentialDetails
+	return _options
 }
 
 // SetStatus : Allow user to set Status
-func (options *UpdateCredentialsOptions) SetStatus(status string) *UpdateCredentialsOptions {
-	options.Status = core.StringPtr(status)
-	return options
+func (_options *UpdateCredentialsOptions) SetStatus(status string) *UpdateCredentialsOptions {
+	_options.Status = core.StringPtr(status)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -12271,30 +12283,30 @@ func (options *UpdateCredentialsOptions) SetHeaders(param map[string]string) *Up
 // UpdateDocumentOptions : The UpdateDocument options.
 type UpdateDocumentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 50
 	// megabytes, the maximum supported file size when testing a configuration is 1 megabyte. Files larger than the
 	// supported size are rejected.
-	File io.ReadCloser
+	File io.ReadCloser `json:"-"`
 
 	// The filename for file.
-	Filename *string
+	Filename *string `json:"-"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected. Example:  ``` {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string
+	Metadata *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12310,45 +12322,45 @@ func (*DiscoveryV1) NewUpdateDocumentOptions(environmentID string, collectionID 
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateDocumentOptions) SetEnvironmentID(environmentID string) *UpdateDocumentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateDocumentOptions) SetEnvironmentID(environmentID string) *UpdateDocumentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateDocumentOptions) SetCollectionID(collectionID string) *UpdateDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateDocumentOptions) SetCollectionID(collectionID string) *UpdateDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *UpdateDocumentOptions) SetDocumentID(documentID string) *UpdateDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *UpdateDocumentOptions) SetDocumentID(documentID string) *UpdateDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *UpdateDocumentOptions) SetFile(file io.ReadCloser) *UpdateDocumentOptions {
-	options.File = file
-	return options
+func (_options *UpdateDocumentOptions) SetFile(file io.ReadCloser) *UpdateDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *UpdateDocumentOptions) SetFilename(filename string) *UpdateDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *UpdateDocumentOptions) SetFilename(filename string) *UpdateDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *UpdateDocumentOptions) SetFileContentType(fileContentType string) *UpdateDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *UpdateDocumentOptions) SetFileContentType(fileContentType string) *UpdateDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
+func (_options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
+	_options.Metadata = core.StringPtr(metadata)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -12360,17 +12372,17 @@ func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *Updat
 // UpdateEnvironmentOptions : The UpdateEnvironment options.
 type UpdateEnvironmentOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// Name that identifies the environment.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// Description of the environment.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Size that the environment should be increased to. Environment size cannot be modified when using a Lite plan.
 	// Environment size can only increased and not decreased.
-	Size *string
+	Size *string `json:"size,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12398,27 +12410,27 @@ func (*DiscoveryV1) NewUpdateEnvironmentOptions(environmentID string) *UpdateEnv
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateEnvironmentOptions) SetEnvironmentID(environmentID string) *UpdateEnvironmentOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateEnvironmentOptions) SetEnvironmentID(environmentID string) *UpdateEnvironmentOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateEnvironmentOptions) SetName(name string) *UpdateEnvironmentOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateEnvironmentOptions) SetName(name string) *UpdateEnvironmentOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateEnvironmentOptions) SetDescription(description string) *UpdateEnvironmentOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateEnvironmentOptions) SetDescription(description string) *UpdateEnvironmentOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetSize : Allow user to set Size
-func (options *UpdateEnvironmentOptions) SetSize(size string) *UpdateEnvironmentOptions {
-	options.Size = core.StringPtr(size)
-	return options
+func (_options *UpdateEnvironmentOptions) SetSize(size string) *UpdateEnvironmentOptions {
+	_options.Size = core.StringPtr(size)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -12430,22 +12442,22 @@ func (options *UpdateEnvironmentOptions) SetHeaders(param map[string]string) *Up
 // UpdateTrainingExampleOptions : The UpdateTrainingExample options.
 type UpdateTrainingExampleOptions struct {
 	// The ID of the environment.
-	EnvironmentID *string `validate:"required,ne="`
+	EnvironmentID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document as it is indexed.
-	ExampleID *string `validate:"required,ne="`
+	ExampleID *string `json:"-" validate:"required,ne="`
 
 	// The example to add.
-	CrossReference *string
+	CrossReference *string `json:"cross_reference,omitempty"`
 
 	// The relevance value for this example.
-	Relevance *int64
+	Relevance *int64 `json:"relevance,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12462,39 +12474,39 @@ func (*DiscoveryV1) NewUpdateTrainingExampleOptions(environmentID string, collec
 }
 
 // SetEnvironmentID : Allow user to set EnvironmentID
-func (options *UpdateTrainingExampleOptions) SetEnvironmentID(environmentID string) *UpdateTrainingExampleOptions {
-	options.EnvironmentID = core.StringPtr(environmentID)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetEnvironmentID(environmentID string) *UpdateTrainingExampleOptions {
+	_options.EnvironmentID = core.StringPtr(environmentID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateTrainingExampleOptions) SetCollectionID(collectionID string) *UpdateTrainingExampleOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetCollectionID(collectionID string) *UpdateTrainingExampleOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *UpdateTrainingExampleOptions) SetQueryID(queryID string) *UpdateTrainingExampleOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetQueryID(queryID string) *UpdateTrainingExampleOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetExampleID : Allow user to set ExampleID
-func (options *UpdateTrainingExampleOptions) SetExampleID(exampleID string) *UpdateTrainingExampleOptions {
-	options.ExampleID = core.StringPtr(exampleID)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetExampleID(exampleID string) *UpdateTrainingExampleOptions {
+	_options.ExampleID = core.StringPtr(exampleID)
+	return _options
 }
 
 // SetCrossReference : Allow user to set CrossReference
-func (options *UpdateTrainingExampleOptions) SetCrossReference(crossReference string) *UpdateTrainingExampleOptions {
-	options.CrossReference = core.StringPtr(crossReference)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetCrossReference(crossReference string) *UpdateTrainingExampleOptions {
+	_options.CrossReference = core.StringPtr(crossReference)
+	return _options
 }
 
 // SetRelevance : Allow user to set Relevance
-func (options *UpdateTrainingExampleOptions) SetRelevance(relevance int64) *UpdateTrainingExampleOptions {
-	options.Relevance = core.Int64Ptr(relevance)
-	return options
+func (_options *UpdateTrainingExampleOptions) SetRelevance(relevance int64) *UpdateTrainingExampleOptions {
+	_options.Relevance = core.Int64Ptr(relevance)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
