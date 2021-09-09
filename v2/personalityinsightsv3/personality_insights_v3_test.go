@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -194,11 +194,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(profilePath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.Header["Content-Type"]).ToNot(BeNil())
-					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "text/plain")))
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
-					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for raw_scores query parameter
 					// TODO: Add check for csv_headers query parameter
@@ -224,10 +224,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -236,12 +236,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := personalityInsightsService.Profile(profileOptionsModel)
@@ -290,11 +290,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Content-Type"]).ToNot(BeNil())
-					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "text/plain")))
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
-					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for raw_scores query parameter
 					// TODO: Add check for csv_headers query parameter
@@ -325,10 +325,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -337,12 +337,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -396,11 +396,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Content-Type"]).ToNot(BeNil())
-					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "text/plain")))
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
-					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for raw_scores query parameter
 					// TODO: Add check for csv_headers query parameter
@@ -433,10 +433,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -445,12 +445,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -476,10 +476,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -488,12 +488,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := personalityInsightsService.SetServiceURL("")
@@ -533,10 +533,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -545,12 +545,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -595,11 +595,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Content-Type"]).ToNot(BeNil())
-					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "text/plain")))
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
-					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for raw_scores query parameter
 					// TODO: Add check for csv_headers query parameter
@@ -630,10 +630,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -642,12 +642,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -701,11 +701,11 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Content-Type"]).ToNot(BeNil())
-					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "application/json")))
+					Expect(req.Header["Content-Type"][0]).To(Equal(fmt.Sprintf("%v", "text/plain")))
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
-					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for raw_scores query parameter
 					// TODO: Add check for csv_headers query parameter
@@ -738,10 +738,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -750,12 +750,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -781,10 +781,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -793,12 +793,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := personalityInsightsService.SetServiceURL("")
@@ -838,10 +838,10 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -850,12 +850,12 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				// Construct an instance of the ProfileOptions model
 				profileOptionsModel := new(personalityinsightsv3.ProfileOptions)
 				profileOptionsModel.Content = contentModel
-				profileOptionsModel.ContentType = core.StringPtr("application/json")
-				profileOptionsModel.ContentLanguage = core.StringPtr("ar")
-				profileOptionsModel.AcceptLanguage = core.StringPtr("ar")
-				profileOptionsModel.RawScores = core.BoolPtr(true)
-				profileOptionsModel.CSVHeaders = core.BoolPtr(true)
-				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(true)
+				profileOptionsModel.ContentType = core.StringPtr("text/plain")
+				profileOptionsModel.ContentLanguage = core.StringPtr("en")
+				profileOptionsModel.AcceptLanguage = core.StringPtr("en")
+				profileOptionsModel.RawScores = core.BoolPtr(false)
+				profileOptionsModel.CSVHeaders = core.BoolPtr(false)
+				profileOptionsModel.ConsumptionPreferences = core.BoolPtr(false)
 				profileOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -885,14 +885,14 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 			})
 			It(`Invoke NewContent successfully`, func() {
 				contentItems := []personalityinsightsv3.ContentItem{}
-				model, err := personalityInsightsService.NewContent(contentItems)
-				Expect(model).ToNot(BeNil())
+				_model, err := personalityInsightsService.NewContent(contentItems)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewContentItem successfully`, func() {
 				content := "testString"
-				model, err := personalityInsightsService.NewContentItem(content)
-				Expect(model).ToNot(BeNil())
+				_model, err := personalityInsightsService.NewContentItem(content)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewProfileOptions successfully`, func() {
@@ -904,19 +904,19 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				contentItemModel.Created = core.Int64Ptr(int64(26))
 				contentItemModel.Updated = core.Int64Ptr(int64(26))
 				contentItemModel.Contenttype = core.StringPtr("text/plain")
-				contentItemModel.Language = core.StringPtr("ar")
+				contentItemModel.Language = core.StringPtr("en")
 				contentItemModel.Parentid = core.StringPtr("testString")
-				contentItemModel.Reply = core.BoolPtr(true)
-				contentItemModel.Forward = core.BoolPtr(true)
+				contentItemModel.Reply = core.BoolPtr(false)
+				contentItemModel.Forward = core.BoolPtr(false)
 				Expect(contentItemModel.Content).To(Equal(core.StringPtr("testString")))
 				Expect(contentItemModel.ID).To(Equal(core.StringPtr("testString")))
 				Expect(contentItemModel.Created).To(Equal(core.Int64Ptr(int64(26))))
 				Expect(contentItemModel.Updated).To(Equal(core.Int64Ptr(int64(26))))
 				Expect(contentItemModel.Contenttype).To(Equal(core.StringPtr("text/plain")))
-				Expect(contentItemModel.Language).To(Equal(core.StringPtr("ar")))
+				Expect(contentItemModel.Language).To(Equal(core.StringPtr("en")))
 				Expect(contentItemModel.Parentid).To(Equal(core.StringPtr("testString")))
-				Expect(contentItemModel.Reply).To(Equal(core.BoolPtr(true)))
-				Expect(contentItemModel.Forward).To(Equal(core.BoolPtr(true)))
+				Expect(contentItemModel.Reply).To(Equal(core.BoolPtr(false)))
+				Expect(contentItemModel.Forward).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the Content model
 				contentModel := new(personalityinsightsv3.Content)
@@ -928,22 +928,22 @@ var _ = Describe(`PersonalityInsightsV3`, func() {
 				profileOptionsModel := personalityInsightsService.NewProfileOptions()
 				profileOptionsModel.SetContent(contentModel)
 				profileOptionsModel.SetBody("testString")
-				profileOptionsModel.SetContentType("application/json")
-				profileOptionsModel.SetContentLanguage("ar")
-				profileOptionsModel.SetAcceptLanguage("ar")
-				profileOptionsModel.SetRawScores(true)
-				profileOptionsModel.SetCSVHeaders(true)
-				profileOptionsModel.SetConsumptionPreferences(true)
+				profileOptionsModel.SetContentType("text/plain")
+				profileOptionsModel.SetContentLanguage("en")
+				profileOptionsModel.SetAcceptLanguage("en")
+				profileOptionsModel.SetRawScores(false)
+				profileOptionsModel.SetCSVHeaders(false)
+				profileOptionsModel.SetConsumptionPreferences(false)
 				profileOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(profileOptionsModel).ToNot(BeNil())
 				Expect(profileOptionsModel.Content).To(Equal(contentModel))
 				Expect(profileOptionsModel.Body).To(Equal(core.StringPtr("testString")))
-				Expect(profileOptionsModel.ContentType).To(Equal(core.StringPtr("application/json")))
-				Expect(profileOptionsModel.ContentLanguage).To(Equal(core.StringPtr("ar")))
-				Expect(profileOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("ar")))
-				Expect(profileOptionsModel.RawScores).To(Equal(core.BoolPtr(true)))
-				Expect(profileOptionsModel.CSVHeaders).To(Equal(core.BoolPtr(true)))
-				Expect(profileOptionsModel.ConsumptionPreferences).To(Equal(core.BoolPtr(true)))
+				Expect(profileOptionsModel.ContentType).To(Equal(core.StringPtr("text/plain")))
+				Expect(profileOptionsModel.ContentLanguage).To(Equal(core.StringPtr("en")))
+				Expect(profileOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("en")))
+				Expect(profileOptionsModel.RawScores).To(Equal(core.BoolPtr(false)))
+				Expect(profileOptionsModel.CSVHeaders).To(Equal(core.BoolPtr(false)))
+				Expect(profileOptionsModel.ConsumptionPreferences).To(Equal(core.BoolPtr(false)))
 				Expect(profileOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 		})

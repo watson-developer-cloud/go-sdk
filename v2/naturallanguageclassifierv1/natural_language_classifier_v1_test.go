@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1406,8 +1406,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 			It(`Invoke NewClassifyInput successfully`, func() {
 				text := "testString"
-				model, err := naturalLanguageClassifierService.NewClassifyInput(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := naturalLanguageClassifierService.NewClassifyInput(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewClassifyOptions successfully`, func() {
