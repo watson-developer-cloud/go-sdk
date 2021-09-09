@@ -309,9 +309,6 @@ func (visualRecognition *VisualRecognitionV4) CreateCollectionWithContext(ctx co
 	if createCollectionOptions.Description != nil {
 		body["description"] = createCollectionOptions.Description
 	}
-	if createCollectionOptions.TrainingStatus != nil {
-		body["training_status"] = createCollectionOptions.TrainingStatus
-	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
 		return
@@ -505,9 +502,6 @@ func (visualRecognition *VisualRecognitionV4) UpdateCollectionWithContext(ctx co
 	}
 	if updateCollectionOptions.Description != nil {
 		body["description"] = updateCollectionOptions.Description
-	}
-	if updateCollectionOptions.TrainingStatus != nil {
-		body["training_status"] = updateCollectionOptions.TrainingStatus
 	}
 	_, err = builder.SetBodyContentJSON(body)
 	if err != nil {
@@ -1822,9 +1816,6 @@ type CreateCollectionOptions struct {
 	// The description of the collection.
 	Description *string `json:"description,omitempty"`
 
-	// Training status information for the collection.
-	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
-
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -1843,12 +1834,6 @@ func (_options *CreateCollectionOptions) SetName(name string) *CreateCollectionO
 // SetDescription : Allow user to set Description
 func (_options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
 	_options.Description = core.StringPtr(description)
-	return _options
-}
-
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (_options *CreateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *CreateCollectionOptions {
-	_options.TrainingStatus = trainingStatus
 	return _options
 }
 
@@ -3148,9 +3133,6 @@ type UpdateCollectionOptions struct {
 	// The description of the collection.
 	Description *string `json:"description,omitempty"`
 
-	// Training status information for the collection.
-	TrainingStatus *TrainingStatus `json:"training_status,omitempty"`
-
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -3177,12 +3159,6 @@ func (_options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionO
 // SetDescription : Allow user to set Description
 func (_options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
 	_options.Description = core.StringPtr(description)
-	return _options
-}
-
-// SetTrainingStatus : Allow user to set TrainingStatus
-func (_options *UpdateCollectionOptions) SetTrainingStatus(trainingStatus *TrainingStatus) *UpdateCollectionOptions {
-	_options.TrainingStatus = trainingStatus
 	return _options
 }
 
