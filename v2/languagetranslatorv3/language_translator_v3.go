@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package languagetranslatorv3 : Operations and models for the LanguageTranslatorV3 service
@@ -40,7 +40,7 @@ import (
 // language. Use Language Translator to take news from across the globe and present it in your language, communicate
 // with your customers in their own language, and more.
 //
-// Version: 3.0.0
+// API Version: 3.0.0
 // See: https://cloud.ibm.com/docs/language-translator
 type LanguageTranslatorV3 struct {
 	Service *core.BaseService
@@ -1052,7 +1052,7 @@ type CreateModelOptions struct {
 	// The ID of the translation model to use as the base for customization. To see available models and IDs, use the `List
 	// models` method. Most models that are provided with the service are customizable. In addition, all models that you
 	// create with parallel corpora customization can be further customized with a forced glossary.
-	BaseModelID *string `validate:"required"`
+	BaseModelID *string `json:"-" validate:"required"`
 
 	// A file with forced glossary terms for the source and target languages. The customizations in the file completely
 	// overwrite the domain translation data, including high frequency or high confidence phrase translations.
@@ -1062,7 +1062,7 @@ type CreateModelOptions struct {
 	// the method description.
 	//
 	// *With `curl`, use `--form forced_glossary=@{filename}`.*.
-	ForcedGlossary io.ReadCloser
+	ForcedGlossary io.ReadCloser `json:"-"`
 
 	// A file with parallel sentences for the source and target languages. You can upload multiple parallel corpus files in
 	// one request by repeating the parameter. All uploaded parallel corpus files combined must contain at least 5000
@@ -1073,11 +1073,11 @@ type CreateModelOptions struct {
 	// cumulative maximum size of 250 MB. For more information, see **Supported file formats** in the method description.
 	//
 	// *With `curl`, use `--form parallel_corpus=@{filename}`.*.
-	ParallelCorpus io.ReadCloser
+	ParallelCorpus io.ReadCloser `json:"-"`
 
 	// An optional model name that you can use to identify the model. Valid characters are letters, numbers, dashes,
 	// underscores, spaces, and apostrophes. The maximum length of the name is 32 characters.
-	Name *string
+	Name *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1091,27 +1091,27 @@ func (*LanguageTranslatorV3) NewCreateModelOptions(baseModelID string) *CreateMo
 }
 
 // SetBaseModelID : Allow user to set BaseModelID
-func (options *CreateModelOptions) SetBaseModelID(baseModelID string) *CreateModelOptions {
-	options.BaseModelID = core.StringPtr(baseModelID)
-	return options
+func (_options *CreateModelOptions) SetBaseModelID(baseModelID string) *CreateModelOptions {
+	_options.BaseModelID = core.StringPtr(baseModelID)
+	return _options
 }
 
 // SetForcedGlossary : Allow user to set ForcedGlossary
-func (options *CreateModelOptions) SetForcedGlossary(forcedGlossary io.ReadCloser) *CreateModelOptions {
-	options.ForcedGlossary = forcedGlossary
-	return options
+func (_options *CreateModelOptions) SetForcedGlossary(forcedGlossary io.ReadCloser) *CreateModelOptions {
+	_options.ForcedGlossary = forcedGlossary
+	return _options
 }
 
 // SetParallelCorpus : Allow user to set ParallelCorpus
-func (options *CreateModelOptions) SetParallelCorpus(parallelCorpus io.ReadCloser) *CreateModelOptions {
-	options.ParallelCorpus = parallelCorpus
-	return options
+func (_options *CreateModelOptions) SetParallelCorpus(parallelCorpus io.ReadCloser) *CreateModelOptions {
+	_options.ParallelCorpus = parallelCorpus
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateModelOptions) SetName(name string) *CreateModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateModelOptions) SetName(name string) *CreateModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1123,7 +1123,7 @@ func (options *CreateModelOptions) SetHeaders(param map[string]string) *CreateMo
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
 	// Document ID of the document to delete.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1137,9 +1137,9 @@ func (*LanguageTranslatorV3) NewDeleteDocumentOptions(documentID string) *Delete
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1151,7 +1151,7 @@ func (options *DeleteDocumentOptions) SetHeaders(param map[string]string) *Delet
 // DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 	// Model ID of the model to delete.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1165,9 +1165,9 @@ func (*LanguageTranslatorV3) NewDeleteModelOptions(modelID string) *DeleteModelO
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1317,7 +1317,7 @@ func UnmarshalDocumentStatus(m map[string]json.RawMessage, result interface{}) (
 // GetDocumentStatusOptions : The GetDocumentStatus options.
 type GetDocumentStatusOptions struct {
 	// The document ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1331,9 +1331,9 @@ func (*LanguageTranslatorV3) NewGetDocumentStatusOptions(documentID string) *Get
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *GetDocumentStatusOptions) SetDocumentID(documentID string) *GetDocumentStatusOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *GetDocumentStatusOptions) SetDocumentID(documentID string) *GetDocumentStatusOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1345,7 +1345,7 @@ func (options *GetDocumentStatusOptions) SetHeaders(param map[string]string) *Ge
 // GetModelOptions : The GetModel options.
 type GetModelOptions struct {
 	// Model ID of the model to get.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1359,9 +1359,9 @@ func (*LanguageTranslatorV3) NewGetModelOptions(modelID string) *GetModelOptions
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetModelOptions) SetModelID(modelID string) *GetModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *GetModelOptions) SetModelID(modelID string) *GetModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1373,7 +1373,7 @@ func (options *GetModelOptions) SetHeaders(param map[string]string) *GetModelOpt
 // GetTranslatedDocumentOptions : The GetTranslatedDocument options.
 type GetTranslatedDocumentOptions struct {
 	// The document ID of the document that was submitted for translation.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// The type of the response: application/powerpoint, application/mspowerpoint, application/x-rtf, application/json,
 	// application/xml, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
@@ -1383,7 +1383,7 @@ type GetTranslatedDocumentOptions struct {
 	// application/vnd.oasis.opendocument.text, application/pdf, application/rtf, text/html, text/json, text/plain,
 	// text/richtext, text/rtf, or text/xml. A character encoding can be specified by including a `charset` parameter. For
 	// example, 'text/html;charset=utf-8'.
-	Accept *string
+	Accept *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1397,15 +1397,15 @@ func (*LanguageTranslatorV3) NewGetTranslatedDocumentOptions(documentID string) 
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *GetTranslatedDocumentOptions) SetDocumentID(documentID string) *GetTranslatedDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *GetTranslatedDocumentOptions) SetDocumentID(documentID string) *GetTranslatedDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetAccept : Allow user to set Accept
-func (options *GetTranslatedDocumentOptions) SetAccept(accept string) *GetTranslatedDocumentOptions {
-	options.Accept = core.StringPtr(accept)
-	return options
+func (_options *GetTranslatedDocumentOptions) SetAccept(accept string) *GetTranslatedDocumentOptions {
+	_options.Accept = core.StringPtr(accept)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1499,7 +1499,7 @@ func UnmarshalIdentifiedLanguages(m map[string]json.RawMessage, result interface
 // IdentifyOptions : The Identify options.
 type IdentifyOptions struct {
 	// Input text in UTF-8 format.
-	Text *string `validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1513,9 +1513,9 @@ func (*LanguageTranslatorV3) NewIdentifyOptions(text string) *IdentifyOptions {
 }
 
 // SetText : Allow user to set Text
-func (options *IdentifyOptions) SetText(text string) *IdentifyOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *IdentifyOptions) SetText(text string) *IdentifyOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1675,15 +1675,15 @@ func (options *ListLanguagesOptions) SetHeaders(param map[string]string) *ListLa
 // ListModelsOptions : The ListModels options.
 type ListModelsOptions struct {
 	// Specify a language code to filter results by source language.
-	Source *string
+	Source *string `json:"-"`
 
 	// Specify a language code to filter results by target language.
-	Target *string
+	Target *string `json:"-"`
 
 	// If the `default` parameter isn't specified, the service returns all models (default and non-default) for each
 	// language pair. To return only default models, set this parameter to `true`. To return only non-default models, set
 	// this parameter to `false`. There is exactly one default model, the IBM-provided base model, per language pair.
-	Default *bool
+	Default *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1695,21 +1695,21 @@ func (*LanguageTranslatorV3) NewListModelsOptions() *ListModelsOptions {
 }
 
 // SetSource : Allow user to set Source
-func (options *ListModelsOptions) SetSource(source string) *ListModelsOptions {
-	options.Source = core.StringPtr(source)
-	return options
+func (_options *ListModelsOptions) SetSource(source string) *ListModelsOptions {
+	_options.Source = core.StringPtr(source)
+	return _options
 }
 
 // SetTarget : Allow user to set Target
-func (options *ListModelsOptions) SetTarget(target string) *ListModelsOptions {
-	options.Target = core.StringPtr(target)
-	return options
+func (_options *ListModelsOptions) SetTarget(target string) *ListModelsOptions {
+	_options.Target = core.StringPtr(target)
+	return _options
 }
 
 // SetDefault : Allow user to set Default
-func (options *ListModelsOptions) SetDefault(defaultVar bool) *ListModelsOptions {
-	options.Default = core.BoolPtr(defaultVar)
-	return options
+func (_options *ListModelsOptions) SetDefault(defaultVar bool) *ListModelsOptions {
+	_options.Default = core.BoolPtr(defaultVar)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1724,29 +1724,29 @@ type TranslateDocumentOptions struct {
 	// instances on the Standard, Advanced, and Premium plans, and 2 MB for service instances on the Lite plan. For more
 	// information, see [Supported file formats
 	// (Beta)](https://cloud.ibm.com/docs/language-translator?topic=language-translator-document-translator-tutorial#supported-file-formats).
-	File io.ReadCloser `validate:"required"`
+	File io.ReadCloser `json:"-" validate:"required"`
 
 	// The filename for file.
-	Filename *string `validate:"required"`
+	Filename *string `json:"-" validate:"required"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
 	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
 	// no model ID is specified, you must specify at least a target language.
-	ModelID *string
+	ModelID *string `json:"-"`
 
 	// Language code that specifies the language of the source document. If omitted, the service derives the source
 	// language from the input text. The input must contain sufficient text for the service to identify the language
 	// reliably.
-	Source *string
+	Source *string `json:"-"`
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
-	Target *string
+	Target *string `json:"-"`
 
 	// To use a previously submitted document as the source for a new translation, enter the `document_id` of the document.
-	DocumentID *string
+	DocumentID *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1761,45 +1761,45 @@ func (*LanguageTranslatorV3) NewTranslateDocumentOptions(file io.ReadCloser, fil
 }
 
 // SetFile : Allow user to set File
-func (options *TranslateDocumentOptions) SetFile(file io.ReadCloser) *TranslateDocumentOptions {
-	options.File = file
-	return options
+func (_options *TranslateDocumentOptions) SetFile(file io.ReadCloser) *TranslateDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *TranslateDocumentOptions) SetFilename(filename string) *TranslateDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *TranslateDocumentOptions) SetFilename(filename string) *TranslateDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *TranslateDocumentOptions) SetFileContentType(fileContentType string) *TranslateDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *TranslateDocumentOptions) SetFileContentType(fileContentType string) *TranslateDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *TranslateDocumentOptions) SetModelID(modelID string) *TranslateDocumentOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *TranslateDocumentOptions) SetModelID(modelID string) *TranslateDocumentOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetSource : Allow user to set Source
-func (options *TranslateDocumentOptions) SetSource(source string) *TranslateDocumentOptions {
-	options.Source = core.StringPtr(source)
-	return options
+func (_options *TranslateDocumentOptions) SetSource(source string) *TranslateDocumentOptions {
+	_options.Source = core.StringPtr(source)
+	return _options
 }
 
 // SetTarget : Allow user to set Target
-func (options *TranslateDocumentOptions) SetTarget(target string) *TranslateDocumentOptions {
-	options.Target = core.StringPtr(target)
-	return options
+func (_options *TranslateDocumentOptions) SetTarget(target string) *TranslateDocumentOptions {
+	_options.Target = core.StringPtr(target)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *TranslateDocumentOptions) SetDocumentID(documentID string) *TranslateDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *TranslateDocumentOptions) SetDocumentID(documentID string) *TranslateDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1812,19 +1812,19 @@ func (options *TranslateDocumentOptions) SetHeaders(param map[string]string) *Tr
 type TranslateOptions struct {
 	// Input text in UTF-8 encoding. Submit a maximum of 50 KB (51,200 bytes) of text with a single request. Multiple
 	// elements result in multiple translations in the response.
-	Text []string `validate:"required"`
+	Text []string `json:"text" validate:"required"`
 
 	// The model to use for translation. For example, `en-de` selects the IBM-provided base model for English-to-German
 	// translation. A model ID overrides the `source` and `target` parameters and is required if you use a custom model. If
 	// no model ID is specified, you must specify at least a target language.
-	ModelID *string
+	ModelID *string `json:"model_id,omitempty"`
 
 	// Language code that specifies the language of the input text. If omitted, the service derives the source language
 	// from the input text. The input must contain sufficient text for the service to identify the language reliably.
-	Source *string
+	Source *string `json:"source,omitempty"`
 
 	// Language code that specifies the target language for translation. Required if model ID is not specified.
-	Target *string
+	Target *string `json:"target,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1838,27 +1838,27 @@ func (*LanguageTranslatorV3) NewTranslateOptions(text []string) *TranslateOption
 }
 
 // SetText : Allow user to set Text
-func (options *TranslateOptions) SetText(text []string) *TranslateOptions {
-	options.Text = text
-	return options
+func (_options *TranslateOptions) SetText(text []string) *TranslateOptions {
+	_options.Text = text
+	return _options
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *TranslateOptions) SetModelID(modelID string) *TranslateOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *TranslateOptions) SetModelID(modelID string) *TranslateOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetSource : Allow user to set Source
-func (options *TranslateOptions) SetSource(source string) *TranslateOptions {
-	options.Source = core.StringPtr(source)
-	return options
+func (_options *TranslateOptions) SetSource(source string) *TranslateOptions {
+	_options.Source = core.StringPtr(source)
+	return _options
 }
 
 // SetTarget : Allow user to set Target
-func (options *TranslateOptions) SetTarget(target string) *TranslateOptions {
-	options.Target = core.StringPtr(target)
-	return options
+func (_options *TranslateOptions) SetTarget(target string) *TranslateOptions {
+	_options.Target = core.StringPtr(target)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

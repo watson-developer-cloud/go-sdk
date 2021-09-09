@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/watson-developer-cloud/go-sdk/compare/v2.1.0...v2.1.1) (2021-08-24)
+
+
+### Bug Fixes
+
+* **nlc:** add a deprecation message for natural language classifier ([96bfe48](https://github.com/watson-developer-cloud/go-sdk/commit/96bfe48118e83472f993778d87ec5202e3a89b79))
+* **nlc:** add a missing space on the deprecation message ([05339fa](https://github.com/watson-developer-cloud/go-sdk/commit/05339fab95d8bd83e44ad911149473876030d0d3))
+
 # [2.1.0](https://github.com/watson-developer-cloud/go-sdk/compare/v2.0.3...v2.1.0) (2021-06-08)
 
 

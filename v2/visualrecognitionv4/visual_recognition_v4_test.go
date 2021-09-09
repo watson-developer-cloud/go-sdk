@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2019, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -467,6 +467,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := new(visualrecognitionv4.CreateCollectionOptions)
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := visualRecognitionService.CreateCollection(createCollectionOptionsModel)
@@ -551,6 +552,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := new(visualrecognitionv4.CreateCollectionOptions)
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -642,6 +644,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := new(visualrecognitionv4.CreateCollectionOptions)
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -677,6 +680,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := new(visualrecognitionv4.CreateCollectionOptions)
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := visualRecognitionService.SetServiceURL("")
@@ -726,6 +730,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := new(visualrecognitionv4.CreateCollectionOptions)
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
+				createCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -1217,6 +1222,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
 				updateCollectionOptionsModel.Name = core.StringPtr("testString")
 				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := visualRecognitionService.UpdateCollection(updateCollectionOptionsModel)
@@ -1302,6 +1308,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
 				updateCollectionOptionsModel.Name = core.StringPtr("testString")
 				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -1394,6 +1401,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
 				updateCollectionOptionsModel.Name = core.StringPtr("testString")
 				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -1430,6 +1438,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
 				updateCollectionOptionsModel.Name = core.StringPtr("testString")
 				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := visualRecognitionService.SetServiceURL("")
@@ -1487,6 +1496,7 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.CollectionID = core.StringPtr("testString")
 				updateCollectionOptionsModel.Name = core.StringPtr("testString")
 				updateCollectionOptionsModel.Description = core.StringPtr("testString")
+				updateCollectionOptionsModel.TrainingStatus = trainingStatusModel
 				updateCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -4486,10 +4496,12 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				createCollectionOptionsModel := visualRecognitionService.NewCreateCollectionOptions()
 				createCollectionOptionsModel.SetName("testString")
 				createCollectionOptionsModel.SetDescription("testString")
+				createCollectionOptionsModel.SetTrainingStatus(trainingStatusModel)
 				createCollectionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCollectionOptionsModel).ToNot(BeNil())
 				Expect(createCollectionOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(createCollectionOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(createCollectionOptionsModel.TrainingStatus).To(Equal(trainingStatusModel))
 				Expect(createCollectionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeleteCollectionOptions successfully`, func() {
@@ -4540,8 +4552,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 			It(`Invoke NewFileWithMetadata successfully`, func() {
 				data := CreateMockReader("This is a mock file.")
-				model, err := visualRecognitionService.NewFileWithMetadata(data)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewFileWithMetadata(data)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewGetCollectionOptions successfully`, func() {
@@ -4654,8 +4666,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				left := int64(38)
 				width := int64(38)
 				height := int64(38)
-				model, err := visualRecognitionService.NewLocation(top, left, width, height)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewLocation(top, left, width, height)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewObjectTrainingStatus successfully`, func() {
@@ -4665,8 +4677,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				latestFailed := true
 				rscnnReady := true
 				description := "testString"
-				model, err := visualRecognitionService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rscnnReady, description)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rscnnReady, description)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewTrainOptions successfully`, func() {
@@ -4713,17 +4725,19 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				updateCollectionOptionsModel.SetCollectionID("testString")
 				updateCollectionOptionsModel.SetName("testString")
 				updateCollectionOptionsModel.SetDescription("testString")
+				updateCollectionOptionsModel.SetTrainingStatus(trainingStatusModel)
 				updateCollectionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateCollectionOptionsModel).ToNot(BeNil())
 				Expect(updateCollectionOptionsModel.CollectionID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCollectionOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(updateCollectionOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(updateCollectionOptionsModel.TrainingStatus).To(Equal(trainingStatusModel))
 				Expect(updateCollectionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateObjectMetadata successfully`, func() {
 				object := "testString"
-				model, err := visualRecognitionService.NewUpdateObjectMetadata(object)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewUpdateObjectMetadata(object)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateObjectMetadataOptions successfully`, func() {

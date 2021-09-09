@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package naturallanguageunderstandingv1 : Operations and models for the NaturalLanguageUnderstandingV1 service
@@ -44,13 +44,13 @@ import (
 // models](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 // with Watson Knowledge Studio to detect custom entities and relations in Natural Language Understanding.
 //
-// Version: 1.0
+// API Version: 1.0
 // See: https://cloud.ibm.com/docs/natural-language-understanding
 type NaturalLanguageUnderstandingV1 struct {
 	Service *core.BaseService
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2021-03-25`.
+	// `2021-08-01`.
 	Version *string
 }
 
@@ -67,7 +67,7 @@ type NaturalLanguageUnderstandingV1Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2021-03-25`.
+	// `2021-08-01`.
 	Version *string `validate:"required"`
 }
 
@@ -1083,8 +1083,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteCatego
 }
 
 // CreateClassificationsModel : Create classifications model
-// (Beta) Creates a custom classifications model by uploading training data and associated metadata. The model begins
-// the training and deploying process and is ready to use when the `status` is `available`.
+// Creates a custom classifications model by uploading training data and associated metadata. The model begins the
+// training and deploying process and is ready to use when the `status` is `available`.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateClassificationsModel(createClassificationsModelOptions *CreateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
 	return naturalLanguageUnderstanding.CreateClassificationsModelWithContext(context.Background(), createClassificationsModelOptions)
 }
@@ -1161,13 +1161,13 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) CreateClassi
 }
 
 // ListClassificationsModels : List classifications models
-// (Beta) Returns all custom classifications models associated with this service instance.
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModels(listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ListClassificationsModelsResponse, response *core.DetailedResponse, err error) {
+// Returns all custom classifications models associated with this service instance.
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModels(listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ClassificationsModelList, response *core.DetailedResponse, err error) {
 	return naturalLanguageUnderstanding.ListClassificationsModelsWithContext(context.Background(), listClassificationsModelsOptions)
 }
 
 // ListClassificationsModelsWithContext is an alternate form of the ListClassificationsModels method which supports a Context parameter
-func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModelsWithContext(ctx context.Context, listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ListClassificationsModelsResponse, response *core.DetailedResponse, err error) {
+func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassificationsModelsWithContext(ctx context.Context, listClassificationsModelsOptions *ListClassificationsModelsOptions) (result *ClassificationsModelList, response *core.DetailedResponse, err error) {
 	err = core.ValidateStruct(listClassificationsModelsOptions, "listClassificationsModelsOptions")
 	if err != nil {
 		return
@@ -1204,7 +1204,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassifi
 		return
 	}
 	if rawResponse != nil {
-		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalListClassificationsModelsResponse)
+		err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalClassificationsModelList)
 		if err != nil {
 			return
 		}
@@ -1215,7 +1215,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) ListClassifi
 }
 
 // GetClassificationsModel : Get classifications model details
-// (Beta) Returns the status of the classifications model with the given model ID.
+// Returns the status of the classifications model with the given model ID.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetClassificationsModel(getClassificationsModelOptions *GetClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
 	return naturalLanguageUnderstanding.GetClassificationsModelWithContext(context.Background(), getClassificationsModelOptions)
 }
@@ -1277,8 +1277,8 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) GetClassific
 }
 
 // UpdateClassificationsModel : Update classifications model
-// (Beta) Overwrites the training data associated with this custom classifications model and retrains the model. The new
-// model replaces the current deployment.
+// Overwrites the training data associated with this custom classifications model and retrains the model. The new model
+// replaces the current deployment.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateClassificationsModel(updateClassificationsModelOptions *UpdateClassificationsModelOptions) (result *ClassificationsModel, response *core.DetailedResponse, err error) {
 	return naturalLanguageUnderstanding.UpdateClassificationsModelWithContext(context.Background(), updateClassificationsModelOptions)
 }
@@ -1359,7 +1359,7 @@ func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) UpdateClassi
 }
 
 // DeleteClassificationsModel : Delete classifications model
-// (Beta) Un-deploys the custom classifications model with the given model ID and deletes all associated customer data,
+// Un-deploys the custom classifications model with the given model ID and deletes all associated customer data,
 // including any training data or binary artifacts.
 func (naturalLanguageUnderstanding *NaturalLanguageUnderstandingV1) DeleteClassificationsModel(deleteClassificationsModelOptions *DeleteClassificationsModelOptions) (result *DeleteModelResults, response *core.DetailedResponse, err error) {
 	return naturalLanguageUnderstanding.DeleteClassificationsModelWithContext(context.Background(), deleteClassificationsModelOptions)
@@ -1570,40 +1570,40 @@ func UnmarshalAnalysisResultsUsage(m map[string]json.RawMessage, result interfac
 // AnalyzeOptions : The Analyze options.
 type AnalyzeOptions struct {
 	// Specific features to analyze the document for.
-	Features *Features `validate:"required"`
+	Features *Features `json:"features" validate:"required"`
 
 	// The plain text to analyze. One of the `text`, `html`, or `url` parameters is required.
-	Text *string
+	Text *string `json:"text,omitempty"`
 
 	// The HTML file to analyze. One of the `text`, `html`, or `url` parameters is required.
-	HTML *string
+	HTML *string `json:"html,omitempty"`
 
 	// The webpage to analyze. One of the `text`, `html`, or `url` parameters is required.
-	URL *string
+	URL *string `json:"url,omitempty"`
 
 	// Set this to `false` to disable webpage cleaning. For more information about webpage cleaning, see [Analyzing
 	// webpages](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages).
-	Clean *bool
+	Clean *bool `json:"clean,omitempty"`
 
 	// An [XPath
 	// query](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-analyzing-webpages#xpath)
 	// to perform on `html` or `url` input. Results of the query will be appended to the cleaned webpage text before it is
 	// analyzed. To analyze only the results of the XPath query, set the `clean` parameter to `false`.
-	Xpath *string
+	Xpath *string `json:"xpath,omitempty"`
 
 	// Whether to use raw HTML content if text cleaning fails.
-	FallbackToRaw *bool
+	FallbackToRaw *bool `json:"fallback_to_raw,omitempty"`
 
 	// Whether or not to return the analyzed text.
-	ReturnAnalyzedText *bool
+	ReturnAnalyzedText *bool `json:"return_analyzed_text,omitempty"`
 
 	// ISO 639-1 code that specifies the language of your text. This overrides automatic language detection. Language
 	// support differs depending on the features you include in your analysis. For more information, see [Language
 	// support](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-language-support).
-	Language *string
+	Language *string `json:"language,omitempty"`
 
 	// Sets the maximum number of characters that are processed by the service.
-	LimitTextCharacters *int64
+	LimitTextCharacters *int64 `json:"limit_text_characters,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1617,63 +1617,63 @@ func (*NaturalLanguageUnderstandingV1) NewAnalyzeOptions(features *Features) *An
 }
 
 // SetFeatures : Allow user to set Features
-func (options *AnalyzeOptions) SetFeatures(features *Features) *AnalyzeOptions {
-	options.Features = features
-	return options
+func (_options *AnalyzeOptions) SetFeatures(features *Features) *AnalyzeOptions {
+	_options.Features = features
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *AnalyzeOptions) SetText(text string) *AnalyzeOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *AnalyzeOptions) SetText(text string) *AnalyzeOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetHTML : Allow user to set HTML
-func (options *AnalyzeOptions) SetHTML(html string) *AnalyzeOptions {
-	options.HTML = core.StringPtr(html)
-	return options
+func (_options *AnalyzeOptions) SetHTML(html string) *AnalyzeOptions {
+	_options.HTML = core.StringPtr(html)
+	return _options
 }
 
 // SetURL : Allow user to set URL
-func (options *AnalyzeOptions) SetURL(url string) *AnalyzeOptions {
-	options.URL = core.StringPtr(url)
-	return options
+func (_options *AnalyzeOptions) SetURL(url string) *AnalyzeOptions {
+	_options.URL = core.StringPtr(url)
+	return _options
 }
 
 // SetClean : Allow user to set Clean
-func (options *AnalyzeOptions) SetClean(clean bool) *AnalyzeOptions {
-	options.Clean = core.BoolPtr(clean)
-	return options
+func (_options *AnalyzeOptions) SetClean(clean bool) *AnalyzeOptions {
+	_options.Clean = core.BoolPtr(clean)
+	return _options
 }
 
 // SetXpath : Allow user to set Xpath
-func (options *AnalyzeOptions) SetXpath(xpath string) *AnalyzeOptions {
-	options.Xpath = core.StringPtr(xpath)
-	return options
+func (_options *AnalyzeOptions) SetXpath(xpath string) *AnalyzeOptions {
+	_options.Xpath = core.StringPtr(xpath)
+	return _options
 }
 
 // SetFallbackToRaw : Allow user to set FallbackToRaw
-func (options *AnalyzeOptions) SetFallbackToRaw(fallbackToRaw bool) *AnalyzeOptions {
-	options.FallbackToRaw = core.BoolPtr(fallbackToRaw)
-	return options
+func (_options *AnalyzeOptions) SetFallbackToRaw(fallbackToRaw bool) *AnalyzeOptions {
+	_options.FallbackToRaw = core.BoolPtr(fallbackToRaw)
+	return _options
 }
 
 // SetReturnAnalyzedText : Allow user to set ReturnAnalyzedText
-func (options *AnalyzeOptions) SetReturnAnalyzedText(returnAnalyzedText bool) *AnalyzeOptions {
-	options.ReturnAnalyzedText = core.BoolPtr(returnAnalyzedText)
-	return options
+func (_options *AnalyzeOptions) SetReturnAnalyzedText(returnAnalyzedText bool) *AnalyzeOptions {
+	_options.ReturnAnalyzedText = core.BoolPtr(returnAnalyzedText)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *AnalyzeOptions) SetLanguage(language string) *AnalyzeOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *AnalyzeOptions) SetLanguage(language string) *AnalyzeOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetLimitTextCharacters : Allow user to set LimitTextCharacters
-func (options *AnalyzeOptions) SetLimitTextCharacters(limitTextCharacters int64) *AnalyzeOptions {
-	options.LimitTextCharacters = core.Int64Ptr(limitTextCharacters)
-	return options
+func (_options *AnalyzeOptions) SetLimitTextCharacters(limitTextCharacters int64) *AnalyzeOptions {
+	_options.LimitTextCharacters = core.Int64Ptr(limitTextCharacters)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1834,7 +1834,7 @@ func UnmarshalCategoriesModelList(m map[string]json.RawMessage, result interface
 	return
 }
 
-// CategoriesOptions : Returns a five-level taxonomy of the content. The top three categories are returned.
+// CategoriesOptions : Returns a hierarchical taxonomy of the content. The top three categories are returned by default.
 //
 // Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 type CategoriesOptions struct {
@@ -1889,7 +1889,7 @@ func UnmarshalCategoriesRelevantText(m map[string]json.RawMessage, result interf
 
 // CategoriesResult : A categorization of the analyzed text.
 type CategoriesResult struct {
-	// The path to the category through the 5-level taxonomy hierarchy. For more information about the categories, see
+	// The path to the category through the multi-level taxonomy hierarchy. For more information about the categories, see
 	// [Categories
 	// hierarchy](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories#categories-hierarchy).
 	Label *string `json:"label,omitempty"`
@@ -2077,7 +2077,7 @@ func UnmarshalClassificationsModelList(m map[string]json.RawMessage, result inte
 //
 // Supported languages: English only.
 type ClassificationsOptions struct {
-	// (Beta) Enter a [custom
+	// Enter a [custom
 	// model](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-customizing)
 	// ID of the classification model to be used.
 	Model *string `json:"model,omitempty"`
@@ -2172,32 +2172,32 @@ func UnmarshalConceptsResult(m map[string]json.RawMessage, result interface{}) (
 // CreateCategoriesModelOptions : The CreateCategoriesModel options.
 type CreateCategoriesModelOptions struct {
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in JSON format. For more information, see [Categories training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories##categories-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of trainingData.
-	TrainingDataContentType *string
+	TrainingDataContentType *string `json:"-"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2212,57 +2212,57 @@ func (*NaturalLanguageUnderstandingV1) NewCreateCategoriesModelOptions(language 
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateCategoriesModelOptions) SetLanguage(language string) *CreateCategoriesModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateCategoriesModelOptions) SetLanguage(language string) *CreateCategoriesModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateCategoriesModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *CreateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateCategoriesModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetTrainingDataContentType : Allow user to set TrainingDataContentType
-func (options *CreateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateCategoriesModelOptions {
-	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
-	return options
+func (_options *CreateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateCategoriesModelOptions {
+	_options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateCategoriesModelOptions) SetName(name string) *CreateCategoriesModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateCategoriesModelOptions) SetName(name string) *CreateCategoriesModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *CreateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateCategoriesModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *CreateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateCategoriesModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateCategoriesModelOptions) SetDescription(description string) *CreateCategoriesModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateCategoriesModelOptions) SetDescription(description string) *CreateCategoriesModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *CreateCategoriesModelOptions) SetModelVersion(modelVersion string) *CreateCategoriesModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *CreateCategoriesModelOptions) SetModelVersion(modelVersion string) *CreateCategoriesModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *CreateCategoriesModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *CreateCategoriesModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *CreateCategoriesModelOptions) SetVersionDescription(versionDescription string) *CreateCategoriesModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *CreateCategoriesModelOptions) SetVersionDescription(versionDescription string) *CreateCategoriesModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2274,32 +2274,32 @@ func (options *CreateCategoriesModelOptions) SetHeaders(param map[string]string)
 // CreateClassificationsModelOptions : The CreateClassificationsModel options.
 type CreateClassificationsModelOptions struct {
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in JSON format. For more information, see [Classifications training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-classifications#classification-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of trainingData.
-	TrainingDataContentType *string
+	TrainingDataContentType *string `json:"-"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2314,57 +2314,57 @@ func (*NaturalLanguageUnderstandingV1) NewCreateClassificationsModelOptions(lang
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateClassificationsModelOptions) SetLanguage(language string) *CreateClassificationsModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateClassificationsModelOptions) SetLanguage(language string) *CreateClassificationsModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassificationsModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *CreateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassificationsModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetTrainingDataContentType : Allow user to set TrainingDataContentType
-func (options *CreateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateClassificationsModelOptions {
-	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
-	return options
+func (_options *CreateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *CreateClassificationsModelOptions {
+	_options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateClassificationsModelOptions) SetName(name string) *CreateClassificationsModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateClassificationsModelOptions) SetName(name string) *CreateClassificationsModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *CreateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateClassificationsModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *CreateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateClassificationsModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateClassificationsModelOptions) SetDescription(description string) *CreateClassificationsModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateClassificationsModelOptions) SetDescription(description string) *CreateClassificationsModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *CreateClassificationsModelOptions) SetModelVersion(modelVersion string) *CreateClassificationsModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *CreateClassificationsModelOptions) SetModelVersion(modelVersion string) *CreateClassificationsModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *CreateClassificationsModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *CreateClassificationsModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *CreateClassificationsModelOptions) SetVersionDescription(versionDescription string) *CreateClassificationsModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *CreateClassificationsModelOptions) SetVersionDescription(versionDescription string) *CreateClassificationsModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2376,29 +2376,29 @@ func (options *CreateClassificationsModelOptions) SetHeaders(param map[string]st
 // CreateSentimentModelOptions : The CreateSentimentModel options.
 type CreateSentimentModelOptions struct {
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in CSV format. For more information, see [Sentiment training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-custom-sentiment#sentiment-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2413,51 +2413,51 @@ func (*NaturalLanguageUnderstandingV1) NewCreateSentimentModelOptions(language s
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateSentimentModelOptions) SetLanguage(language string) *CreateSentimentModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateSentimentModelOptions) SetLanguage(language string) *CreateSentimentModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateSentimentModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *CreateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *CreateSentimentModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateSentimentModelOptions) SetName(name string) *CreateSentimentModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateSentimentModelOptions) SetName(name string) *CreateSentimentModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *CreateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateSentimentModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *CreateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *CreateSentimentModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateSentimentModelOptions) SetDescription(description string) *CreateSentimentModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateSentimentModelOptions) SetDescription(description string) *CreateSentimentModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *CreateSentimentModelOptions) SetModelVersion(modelVersion string) *CreateSentimentModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *CreateSentimentModelOptions) SetModelVersion(modelVersion string) *CreateSentimentModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateSentimentModelOptions) SetWorkspaceID(workspaceID string) *CreateSentimentModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateSentimentModelOptions) SetWorkspaceID(workspaceID string) *CreateSentimentModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *CreateSentimentModelOptions) SetVersionDescription(versionDescription string) *CreateSentimentModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *CreateSentimentModelOptions) SetVersionDescription(versionDescription string) *CreateSentimentModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2469,7 +2469,7 @@ func (options *CreateSentimentModelOptions) SetHeaders(param map[string]string) 
 // DeleteCategoriesModelOptions : The DeleteCategoriesModel options.
 type DeleteCategoriesModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2483,9 +2483,9 @@ func (*NaturalLanguageUnderstandingV1) NewDeleteCategoriesModelOptions(modelID s
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteCategoriesModelOptions) SetModelID(modelID string) *DeleteCategoriesModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *DeleteCategoriesModelOptions) SetModelID(modelID string) *DeleteCategoriesModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2497,7 +2497,7 @@ func (options *DeleteCategoriesModelOptions) SetHeaders(param map[string]string)
 // DeleteClassificationsModelOptions : The DeleteClassificationsModel options.
 type DeleteClassificationsModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2511,9 +2511,9 @@ func (*NaturalLanguageUnderstandingV1) NewDeleteClassificationsModelOptions(mode
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteClassificationsModelOptions) SetModelID(modelID string) *DeleteClassificationsModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *DeleteClassificationsModelOptions) SetModelID(modelID string) *DeleteClassificationsModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2525,7 +2525,7 @@ func (options *DeleteClassificationsModelOptions) SetHeaders(param map[string]st
 // DeleteModelOptions : The DeleteModel options.
 type DeleteModelOptions struct {
 	// Model ID of the model to delete.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2539,9 +2539,9 @@ func (*NaturalLanguageUnderstandingV1) NewDeleteModelOptions(modelID string) *De
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *DeleteModelOptions) SetModelID(modelID string) *DeleteModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2570,7 +2570,7 @@ func UnmarshalDeleteModelResults(m map[string]json.RawMessage, result interface{
 // DeleteSentimentModelOptions : The DeleteSentimentModel options.
 type DeleteSentimentModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2584,9 +2584,9 @@ func (*NaturalLanguageUnderstandingV1) NewDeleteSentimentModelOptions(modelID st
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *DeleteSentimentModelOptions) SetModelID(modelID string) *DeleteSentimentModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *DeleteSentimentModelOptions) SetModelID(modelID string) *DeleteSentimentModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2977,7 +2977,7 @@ type Features struct {
 
 	// Returns information from the document, including author name, title, RSS/ATOM feeds, prominent page image, and
 	// publication date. Supports URL and HTML input types only.
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata *MetadataOptions `json:"metadata,omitempty"`
 
 	// Recognizes when two entities are related and identifies the type of relation. For example, an `awardedTo` relation
 	// might connect the entities "Nobel Prize" and "Albert Einstein". For more information, see [Relation
@@ -3003,7 +3003,7 @@ type Features struct {
 	// Supported languages: English only.
 	Summarization *SummarizationOptions `json:"summarization,omitempty"`
 
-	// Returns a five-level taxonomy of the content. The top three categories are returned.
+	// Returns a hierarchical taxonomy of the content. The top three categories are returned by default.
 	//
 	// Supported languages: Arabic, English, French, German, Italian, Japanese, Korean, Portuguese, Spanish.
 	Categories *CategoriesOptions `json:"categories,omitempty"`
@@ -3132,7 +3132,7 @@ func UnmarshalFeed(m map[string]json.RawMessage, result interface{}) (err error)
 // GetCategoriesModelOptions : The GetCategoriesModel options.
 type GetCategoriesModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3146,9 +3146,9 @@ func (*NaturalLanguageUnderstandingV1) NewGetCategoriesModelOptions(modelID stri
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetCategoriesModelOptions) SetModelID(modelID string) *GetCategoriesModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *GetCategoriesModelOptions) SetModelID(modelID string) *GetCategoriesModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3160,7 +3160,7 @@ func (options *GetCategoriesModelOptions) SetHeaders(param map[string]string) *G
 // GetClassificationsModelOptions : The GetClassificationsModel options.
 type GetClassificationsModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3174,9 +3174,9 @@ func (*NaturalLanguageUnderstandingV1) NewGetClassificationsModelOptions(modelID
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetClassificationsModelOptions) SetModelID(modelID string) *GetClassificationsModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *GetClassificationsModelOptions) SetModelID(modelID string) *GetClassificationsModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3188,7 +3188,7 @@ func (options *GetClassificationsModelOptions) SetHeaders(param map[string]strin
 // GetSentimentModelOptions : The GetSentimentModel options.
 type GetSentimentModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3202,9 +3202,9 @@ func (*NaturalLanguageUnderstandingV1) NewGetSentimentModelOptions(modelID strin
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *GetSentimentModelOptions) SetModelID(modelID string) *GetSentimentModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *GetSentimentModelOptions) SetModelID(modelID string) *GetSentimentModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3325,22 +3325,6 @@ func (*NaturalLanguageUnderstandingV1) NewListClassificationsModelsOptions() *Li
 func (options *ListClassificationsModelsOptions) SetHeaders(param map[string]string) *ListClassificationsModelsOptions {
 	options.Headers = param
 	return options
-}
-
-// ListClassificationsModelsResponse : ListClassificationsModelsResponse struct
-type ListClassificationsModelsResponse struct {
-	Models []ClassificationsModelList `json:"models,omitempty"`
-}
-
-// UnmarshalListClassificationsModelsResponse unmarshals an instance of ListClassificationsModelsResponse from the specified map of raw messages.
-func UnmarshalListClassificationsModelsResponse(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(ListClassificationsModelsResponse)
-	err = core.UnmarshalModel(m, "models", &obj.Models, UnmarshalClassificationsModelList)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
 }
 
 // ListModelsOptions : The ListModels options.
@@ -4268,35 +4252,35 @@ func UnmarshalTokenResult(m map[string]json.RawMessage, result interface{}) (err
 // UpdateCategoriesModelOptions : The UpdateCategoriesModel options.
 type UpdateCategoriesModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in JSON format. For more information, see [Categories training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-categories##categories-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of trainingData.
-	TrainingDataContentType *string
+	TrainingDataContentType *string `json:"-"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4312,63 +4296,63 @@ func (*NaturalLanguageUnderstandingV1) NewUpdateCategoriesModelOptions(modelID s
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *UpdateCategoriesModelOptions) SetModelID(modelID string) *UpdateCategoriesModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetModelID(modelID string) *UpdateCategoriesModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *UpdateCategoriesModelOptions) SetLanguage(language string) *UpdateCategoriesModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetLanguage(language string) *UpdateCategoriesModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *UpdateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateCategoriesModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *UpdateCategoriesModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateCategoriesModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetTrainingDataContentType : Allow user to set TrainingDataContentType
-func (options *UpdateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateCategoriesModelOptions {
-	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateCategoriesModelOptions {
+	_options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateCategoriesModelOptions) SetName(name string) *UpdateCategoriesModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetName(name string) *UpdateCategoriesModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *UpdateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateCategoriesModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *UpdateCategoriesModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateCategoriesModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateCategoriesModelOptions) SetDescription(description string) *UpdateCategoriesModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetDescription(description string) *UpdateCategoriesModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *UpdateCategoriesModelOptions) SetModelVersion(modelVersion string) *UpdateCategoriesModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetModelVersion(modelVersion string) *UpdateCategoriesModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *UpdateCategoriesModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetWorkspaceID(workspaceID string) *UpdateCategoriesModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *UpdateCategoriesModelOptions) SetVersionDescription(versionDescription string) *UpdateCategoriesModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *UpdateCategoriesModelOptions) SetVersionDescription(versionDescription string) *UpdateCategoriesModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4380,35 +4364,35 @@ func (options *UpdateCategoriesModelOptions) SetHeaders(param map[string]string)
 // UpdateClassificationsModelOptions : The UpdateClassificationsModel options.
 type UpdateClassificationsModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in JSON format. For more information, see [Classifications training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-classifications#classification-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// The content type of trainingData.
-	TrainingDataContentType *string
+	TrainingDataContentType *string `json:"-"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4424,63 +4408,63 @@ func (*NaturalLanguageUnderstandingV1) NewUpdateClassificationsModelOptions(mode
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *UpdateClassificationsModelOptions) SetModelID(modelID string) *UpdateClassificationsModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetModelID(modelID string) *UpdateClassificationsModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *UpdateClassificationsModelOptions) SetLanguage(language string) *UpdateClassificationsModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetLanguage(language string) *UpdateClassificationsModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *UpdateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateClassificationsModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *UpdateClassificationsModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateClassificationsModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetTrainingDataContentType : Allow user to set TrainingDataContentType
-func (options *UpdateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateClassificationsModelOptions {
-	options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetTrainingDataContentType(trainingDataContentType string) *UpdateClassificationsModelOptions {
+	_options.TrainingDataContentType = core.StringPtr(trainingDataContentType)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateClassificationsModelOptions) SetName(name string) *UpdateClassificationsModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetName(name string) *UpdateClassificationsModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *UpdateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateClassificationsModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *UpdateClassificationsModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateClassificationsModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateClassificationsModelOptions) SetDescription(description string) *UpdateClassificationsModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetDescription(description string) *UpdateClassificationsModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *UpdateClassificationsModelOptions) SetModelVersion(modelVersion string) *UpdateClassificationsModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetModelVersion(modelVersion string) *UpdateClassificationsModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *UpdateClassificationsModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetWorkspaceID(workspaceID string) *UpdateClassificationsModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *UpdateClassificationsModelOptions) SetVersionDescription(versionDescription string) *UpdateClassificationsModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *UpdateClassificationsModelOptions) SetVersionDescription(versionDescription string) *UpdateClassificationsModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4492,32 +4476,32 @@ func (options *UpdateClassificationsModelOptions) SetHeaders(param map[string]st
 // UpdateSentimentModelOptions : The UpdateSentimentModel options.
 type UpdateSentimentModelOptions struct {
 	// ID of the model.
-	ModelID *string `validate:"required,ne="`
+	ModelID *string `json:"-" validate:"required,ne="`
 
 	// The 2-letter language code of this model.
-	Language *string `validate:"required"`
+	Language *string `json:"-" validate:"required"`
 
 	// Training data in CSV format. For more information, see [Sentiment training data
 	// requirements](https://cloud.ibm.com/docs/natural-language-understanding?topic=natural-language-understanding-custom-sentiment#sentiment-training-data-requirements).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// An optional name for the model.
-	Name *string
+	Name *string `json:"-"`
 
 	// An optional map of metadata key-value pairs to store with this model.
-	UserMetadata map[string]interface{}
+	UserMetadata map[string]interface{} `json:"-"`
 
 	// An optional description of the model.
-	Description *string
+	Description *string `json:"-"`
 
 	// An optional version string.
-	ModelVersion *string
+	ModelVersion *string `json:"-"`
 
 	// ID of the Watson Knowledge Studio workspace that deployed this model to Natural Language Understanding.
-	WorkspaceID *string
+	WorkspaceID *string `json:"-"`
 
 	// The description of the version.
-	VersionDescription *string
+	VersionDescription *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4533,57 +4517,57 @@ func (*NaturalLanguageUnderstandingV1) NewUpdateSentimentModelOptions(modelID st
 }
 
 // SetModelID : Allow user to set ModelID
-func (options *UpdateSentimentModelOptions) SetModelID(modelID string) *UpdateSentimentModelOptions {
-	options.ModelID = core.StringPtr(modelID)
-	return options
+func (_options *UpdateSentimentModelOptions) SetModelID(modelID string) *UpdateSentimentModelOptions {
+	_options.ModelID = core.StringPtr(modelID)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *UpdateSentimentModelOptions) SetLanguage(language string) *UpdateSentimentModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *UpdateSentimentModelOptions) SetLanguage(language string) *UpdateSentimentModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *UpdateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateSentimentModelOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *UpdateSentimentModelOptions) SetTrainingData(trainingData io.ReadCloser) *UpdateSentimentModelOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateSentimentModelOptions) SetName(name string) *UpdateSentimentModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateSentimentModelOptions) SetName(name string) *UpdateSentimentModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetUserMetadata : Allow user to set UserMetadata
-func (options *UpdateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateSentimentModelOptions {
-	options.UserMetadata = userMetadata
-	return options
+func (_options *UpdateSentimentModelOptions) SetUserMetadata(userMetadata map[string]interface{}) *UpdateSentimentModelOptions {
+	_options.UserMetadata = userMetadata
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateSentimentModelOptions) SetDescription(description string) *UpdateSentimentModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateSentimentModelOptions) SetDescription(description string) *UpdateSentimentModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetModelVersion : Allow user to set ModelVersion
-func (options *UpdateSentimentModelOptions) SetModelVersion(modelVersion string) *UpdateSentimentModelOptions {
-	options.ModelVersion = core.StringPtr(modelVersion)
-	return options
+func (_options *UpdateSentimentModelOptions) SetModelVersion(modelVersion string) *UpdateSentimentModelOptions {
+	_options.ModelVersion = core.StringPtr(modelVersion)
+	return _options
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateSentimentModelOptions) SetWorkspaceID(workspaceID string) *UpdateSentimentModelOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateSentimentModelOptions) SetWorkspaceID(workspaceID string) *UpdateSentimentModelOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetVersionDescription : Allow user to set VersionDescription
-func (options *UpdateSentimentModelOptions) SetVersionDescription(versionDescription string) *UpdateSentimentModelOptions {
-	options.VersionDescription = core.StringPtr(versionDescription)
-	return options
+func (_options *UpdateSentimentModelOptions) SetVersionDescription(versionDescription string) *UpdateSentimentModelOptions {
+	_options.VersionDescription = core.StringPtr(versionDescription)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

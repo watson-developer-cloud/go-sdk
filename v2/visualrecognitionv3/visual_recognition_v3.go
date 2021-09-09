@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package visualrecognitionv3 : Operations and models for the VisualRecognitionV3 service
@@ -43,7 +43,7 @@ import (
 // The IBM Watson Visual Recognition service uses deep learning algorithms to identify scenes and objects in images that
 // you upload to the service. You can create and train a custom classifier to identify subjects that suit your needs.
 //
-// Version: 3.0
+// API Version: 3.0
 // See: https://cloud.ibm.com/docs/visual-recognition
 type VisualRecognitionV3 struct {
 	Service *core.BaseService
@@ -72,9 +72,6 @@ type VisualRecognitionV3Options struct {
 
 // NewVisualRecognitionV3 : constructs an instance of VisualRecognitionV3 with passed in options.
 func NewVisualRecognitionV3(options *VisualRecognitionV3Options) (service *VisualRecognitionV3, err error) {
-	// Log deprecation warning
-	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Visual Recognition will no longer be available. For more information, see Visual Recognition Deprecation at https://github.com/watson-developer-cloud/go-sdk/tree/master#visual-recognition-deprecation.")
-
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -992,23 +989,23 @@ type ClassifyOptions struct {
 	// characters. The service assumes UTF-8 encoding if it encounters non-ASCII characters.
 	//
 	// You can also include an image with the **url** parameter.
-	ImagesFile io.ReadCloser
+	ImagesFile io.ReadCloser `json:"-"`
 
 	// The filename for imagesFile.
-	ImagesFilename *string
+	ImagesFilename *string `json:"-"`
 
 	// The content type of imagesFile.
-	ImagesFileContentType *string
+	ImagesFileContentType *string `json:"-"`
 
 	// The URL of an image (.gif, .jpg, .png, .tif) to analyze. The minimum recommended pixel density is 32X32 pixels, but
 	// the service tends to perform better with images that are at least 224 x 224 pixels. The maximum image size is 10 MB.
 	//
 	// You can also include images with the **images_file** parameter.
-	URL *string
+	URL *string `json:"-"`
 
 	// The minimum score a class must have to be displayed in the response. Set the threshold to `0.0` to return all
 	// identified classes.
-	Threshold *float32
+	Threshold *float32 `json:"-"`
 
 	// The categories of classifiers to apply. The **classifier_ids** parameter overrides **owners**, so make sure that
 	// **classifier_ids** is empty.
@@ -1017,7 +1014,7 @@ type ClassifyOptions struct {
 	// - Use `me` to classify against all your custom classifiers. However, for better performance use **classifier_ids**
 	// to specify the specific custom classifiers to apply.
 	// - Use both `IBM` and `me` to analyze the image against both classifier categories.
-	Owners []string
+	Owners []string `json:"-"`
 
 	// Which classifiers to apply. Overrides the **owners** parameter. You can specify both custom and built-in classifier
 	// IDs. The built-in `default` classifier is used if both **classifier_ids** and **owners** parameters are empty.
@@ -1026,10 +1023,10 @@ type ClassifyOptions struct {
 	// - `default`: Returns classes from thousands of general tags.
 	// - `food`: Enhances specificity and accuracy for images of food items.
 	// - `explicit`: Evaluates whether the image might be pornographic.
-	ClassifierIds []string
+	ClassifierIds []string `json:"-"`
 
 	// The desired language of parts of the response. See the response for details.
-	AcceptLanguage *string
+	AcceptLanguage *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1057,51 +1054,51 @@ func (*VisualRecognitionV3) NewClassifyOptions() *ClassifyOptions {
 }
 
 // SetImagesFile : Allow user to set ImagesFile
-func (options *ClassifyOptions) SetImagesFile(imagesFile io.ReadCloser) *ClassifyOptions {
-	options.ImagesFile = imagesFile
-	return options
+func (_options *ClassifyOptions) SetImagesFile(imagesFile io.ReadCloser) *ClassifyOptions {
+	_options.ImagesFile = imagesFile
+	return _options
 }
 
 // SetImagesFilename : Allow user to set ImagesFilename
-func (options *ClassifyOptions) SetImagesFilename(imagesFilename string) *ClassifyOptions {
-	options.ImagesFilename = core.StringPtr(imagesFilename)
-	return options
+func (_options *ClassifyOptions) SetImagesFilename(imagesFilename string) *ClassifyOptions {
+	_options.ImagesFilename = core.StringPtr(imagesFilename)
+	return _options
 }
 
 // SetImagesFileContentType : Allow user to set ImagesFileContentType
-func (options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType string) *ClassifyOptions {
-	options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
-	return options
+func (_options *ClassifyOptions) SetImagesFileContentType(imagesFileContentType string) *ClassifyOptions {
+	_options.ImagesFileContentType = core.StringPtr(imagesFileContentType)
+	return _options
 }
 
 // SetURL : Allow user to set URL
-func (options *ClassifyOptions) SetURL(url string) *ClassifyOptions {
-	options.URL = core.StringPtr(url)
-	return options
+func (_options *ClassifyOptions) SetURL(url string) *ClassifyOptions {
+	_options.URL = core.StringPtr(url)
+	return _options
 }
 
 // SetThreshold : Allow user to set Threshold
-func (options *ClassifyOptions) SetThreshold(threshold float32) *ClassifyOptions {
-	options.Threshold = core.Float32Ptr(threshold)
-	return options
+func (_options *ClassifyOptions) SetThreshold(threshold float32) *ClassifyOptions {
+	_options.Threshold = core.Float32Ptr(threshold)
+	return _options
 }
 
 // SetOwners : Allow user to set Owners
-func (options *ClassifyOptions) SetOwners(owners []string) *ClassifyOptions {
-	options.Owners = owners
-	return options
+func (_options *ClassifyOptions) SetOwners(owners []string) *ClassifyOptions {
+	_options.Owners = owners
+	return _options
 }
 
 // SetClassifierIds : Allow user to set ClassifierIds
-func (options *ClassifyOptions) SetClassifierIds(classifierIds []string) *ClassifyOptions {
-	options.ClassifierIds = classifierIds
-	return options
+func (_options *ClassifyOptions) SetClassifierIds(classifierIds []string) *ClassifyOptions {
+	_options.ClassifierIds = classifierIds
+	return _options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ClassifyOptions) SetAcceptLanguage(acceptLanguage string) *ClassifyOptions {
-	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
+func (_options *ClassifyOptions) SetAcceptLanguage(acceptLanguage string) *ClassifyOptions {
+	_options.AcceptLanguage = core.StringPtr(acceptLanguage)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1113,7 +1110,7 @@ func (options *ClassifyOptions) SetHeaders(param map[string]string) *ClassifyOpt
 // CreateClassifierOptions : The CreateClassifier options.
 type CreateClassifierOptions struct {
 	// The name of the new classifier. Encode special characters in UTF-8.
-	Name *string `validate:"required"`
+	Name *string `json:"-" validate:"required"`
 
 	// A .zip file of images that depict the visual subject of a class in the new classifier. You can include more than one
 	// positive example file in a call.
@@ -1126,16 +1123,16 @@ type CreateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]io.ReadCloser `validate:"required"`
+	PositiveExamples map[string]io.ReadCloser `json:"-" validate:"required"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples io.ReadCloser
+	NegativeExamples io.ReadCloser `json:"-"`
 
 	// The filename for negativeExamples.
-	NegativeExamplesFilename *string
+	NegativeExamplesFilename *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1149,30 +1146,30 @@ func (*VisualRecognitionV3) NewCreateClassifierOptions(name string) *CreateClass
 }
 
 // SetName : Allow user to set Name
-func (options *CreateClassifierOptions) SetName(name string) *CreateClassifierOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateClassifierOptions) SetName(name string) *CreateClassifierOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
-func (options *CreateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *CreateClassifierOptions {
-	if options.PositiveExamples == nil {
-		options.PositiveExamples = make(map[string]io.ReadCloser)
+func (_options *CreateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *CreateClassifierOptions {
+	if _options.PositiveExamples == nil {
+		_options.PositiveExamples = make(map[string]io.ReadCloser)
 	}
-	options.PositiveExamples[classname] = positiveExamples
-	return options
+	_options.PositiveExamples[classname] = positiveExamples
+	return _options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *CreateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *CreateClassifierOptions {
-	options.NegativeExamples = negativeExamples
-	return options
+func (_options *CreateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *CreateClassifierOptions {
+	_options.NegativeExamples = negativeExamples
+	return _options
 }
 
 // SetNegativeExamplesFilename : Allow user to set NegativeExamplesFilename
-func (options *CreateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *CreateClassifierOptions {
-	options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
-	return options
+func (_options *CreateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *CreateClassifierOptions {
+	_options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1184,7 +1181,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 // DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1198,9 +1195,9 @@ func (*VisualRecognitionV3) NewDeleteClassifierOptions(classifierID string) *Del
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1212,7 +1209,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1226,9 +1223,9 @@ func (*VisualRecognitionV3) NewDeleteUserDataOptions(customerID string) *DeleteU
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1272,7 +1269,7 @@ func UnmarshalErrorInfo(m map[string]json.RawMessage, result interface{}) (err e
 // GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1286,9 +1283,9 @@ func (*VisualRecognitionV3) NewGetClassifierOptions(classifierID string) *GetCla
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1300,7 +1297,7 @@ func (options *GetClassifierOptions) SetHeaders(param map[string]string) *GetCla
 // GetCoreMlModelOptions : The GetCoreMlModel options.
 type GetCoreMlModelOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1314,9 +1311,9 @@ func (*VisualRecognitionV3) NewGetCoreMlModelOptions(classifierID string) *GetCo
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetCoreMlModelOptions) SetClassifierID(classifierID string) *GetCoreMlModelOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *GetCoreMlModelOptions) SetClassifierID(classifierID string) *GetCoreMlModelOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1328,7 +1325,7 @@ func (options *GetCoreMlModelOptions) SetHeaders(param map[string]string) *GetCo
 // ListClassifiersOptions : The ListClassifiers options.
 type ListClassifiersOptions struct {
 	// Specify `true` to return details about the classifiers. Omit this parameter to return a brief list of classifiers.
-	Verbose *bool
+	Verbose *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1340,9 +1337,9 @@ func (*VisualRecognitionV3) NewListClassifiersOptions() *ListClassifiersOptions 
 }
 
 // SetVerbose : Allow user to set Verbose
-func (options *ListClassifiersOptions) SetVerbose(verbose bool) *ListClassifiersOptions {
-	options.Verbose = core.BoolPtr(verbose)
-	return options
+func (_options *ListClassifiersOptions) SetVerbose(verbose bool) *ListClassifiersOptions {
+	_options.Verbose = core.BoolPtr(verbose)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1354,7 +1351,7 @@ func (options *ListClassifiersOptions) SetHeaders(param map[string]string) *List
 // UpdateClassifierOptions : The UpdateClassifier options.
 type UpdateClassifierOptions struct {
 	// The ID of the classifier.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// A .zip file of images that depict the visual subject of a class in the classifier. The positive examples create or
 	// update classes in the classifier. You can include more than one positive example file in a call.
@@ -1367,16 +1364,16 @@ type UpdateClassifierOptions struct {
 	// maximum number of images is 10,000 images or 100 MB per .zip file.
 	//
 	// Encode special characters in the file name in UTF-8.
-	PositiveExamples map[string]io.ReadCloser
+	PositiveExamples map[string]io.ReadCloser `json:"-"`
 
 	// A .zip file of images that do not depict the visual subject of any of the classes of the new classifier. Must
 	// contain a minimum of 10 images.
 	//
 	// Encode special characters in the file name in UTF-8.
-	NegativeExamples io.ReadCloser
+	NegativeExamples io.ReadCloser `json:"-"`
 
 	// The filename for negativeExamples.
-	NegativeExamplesFilename *string
+	NegativeExamplesFilename *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1390,30 +1387,30 @@ func (*VisualRecognitionV3) NewUpdateClassifierOptions(classifierID string) *Upd
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *UpdateClassifierOptions) SetClassifierID(classifierID string) *UpdateClassifierOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *UpdateClassifierOptions) SetClassifierID(classifierID string) *UpdateClassifierOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // AddPositiveExamples : Allow user to add a new entry to the PositiveExamples map
-func (options *UpdateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *UpdateClassifierOptions {
-	if options.PositiveExamples == nil {
-		options.PositiveExamples = make(map[string]io.ReadCloser)
+func (_options *UpdateClassifierOptions) AddPositiveExamples(classname string, positiveExamples io.ReadCloser) *UpdateClassifierOptions {
+	if _options.PositiveExamples == nil {
+		_options.PositiveExamples = make(map[string]io.ReadCloser)
 	}
-	options.PositiveExamples[classname] = positiveExamples
-	return options
+	_options.PositiveExamples[classname] = positiveExamples
+	return _options
 }
 
 // SetNegativeExamples : Allow user to set NegativeExamples
-func (options *UpdateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *UpdateClassifierOptions {
-	options.NegativeExamples = negativeExamples
-	return options
+func (_options *UpdateClassifierOptions) SetNegativeExamples(negativeExamples io.ReadCloser) *UpdateClassifierOptions {
+	_options.NegativeExamples = negativeExamples
+	return _options
 }
 
 // SetNegativeExamplesFilename : Allow user to set NegativeExamplesFilename
-func (options *UpdateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *UpdateClassifierOptions {
-	options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
-	return options
+func (_options *UpdateClassifierOptions) SetNegativeExamplesFilename(negativeExamplesFilename string) *UpdateClassifierOptions {
+	_options.NegativeExamplesFilename = core.StringPtr(negativeExamplesFilename)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

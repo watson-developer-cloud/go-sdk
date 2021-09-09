@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -571,12 +571,12 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -594,6 +594,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -676,7 +678,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully with retries`, func() {
@@ -756,12 +758,12 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -779,6 +781,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -863,7 +867,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully`, func() {
@@ -948,12 +952,12 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -971,6 +975,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -1084,12 +1090,12 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -1107,6 +1113,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -1241,12 +1249,12 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -1264,6 +1272,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -1400,10 +1410,10 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -1421,6 +1431,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -1503,7 +1515,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke MessageStateless successfully with retries`, func() {
@@ -1583,10 +1595,10 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -1604,6 +1616,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -1688,7 +1702,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke MessageStateless successfully`, func() {
@@ -1773,10 +1787,10 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -1794,6 +1808,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -1907,10 +1923,10 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -1928,6 +1944,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -2062,10 +2080,10 @@ var _ = Describe(`AssistantV2`, func() {
 
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -2083,6 +2101,8 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -2484,7 +2504,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully with retries`, func() {
@@ -2548,7 +2568,7 @@ var _ = Describe(`AssistantV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": true, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": true}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"log_id": "LogID", "request": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "response": {"output": {"generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"message_type": "text", "text": "Text", "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "suggestion_id": "SuggestionID", "options": {"restart": false, "alternate_intents": false, "spelling": {"suggestions": false, "auto_correct": false}, "debug": false, "return_context": false, "export": false}}}}], "channels": [{"channel": "Channel"}]}], "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "debug": {"nodes_visited": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "message": "Message", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "branch_exited": true, "branch_exited_reason": "completed"}, "user_defined": {"mapKey": "anyValue"}, "spelling": {"text": "Text", "original_text": "OriginalText", "suggested_text": "SuggestedText"}}, "context": {"global": {"system": {"timezone": "Timezone", "user_id": "UserID", "turn_count": 9, "locale": "en-us", "reference_time": "ReferenceTime", "session_start_time": "SessionStartTime", "state": "State"}, "session_id": "SessionID"}, "skills": {"mapKey": {"user_defined": {"mapKey": {"anyKey": "anyValue"}}, "system": {"state": "State"}}}}, "user_id": "UserID"}, "assistant_id": "AssistantID", "session_id": "SessionID", "skill_id": "SkillID", "snapshot": "Snapshot", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "language": "Language", "customer_id": "CustomerID"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully`, func() {
@@ -2760,14 +2780,14 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 			It(`Invoke NewBulkClassifyUtterance successfully`, func() {
 				text := "testString"
-				model, err := assistantService.NewBulkClassifyUtterance(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewBulkClassifyUtterance(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCaptureGroup successfully`, func() {
 				group := "testString"
-				model, err := assistantService.NewCaptureGroup(group)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCaptureGroup(group)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateSessionOptions successfully`, func() {
@@ -2941,18 +2961,18 @@ var _ = Describe(`AssistantV2`, func() {
 				// Construct an instance of the MessageInputOptions model
 				messageInputOptionsModel := new(assistantv2.MessageInputOptions)
 				Expect(messageInputOptionsModel).ToNot(BeNil())
-				messageInputOptionsModel.Restart = core.BoolPtr(true)
-				messageInputOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsModel.Restart = core.BoolPtr(false)
+				messageInputOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsModel.Debug = core.BoolPtr(true)
-				messageInputOptionsModel.ReturnContext = core.BoolPtr(true)
-				messageInputOptionsModel.Export = core.BoolPtr(true)
-				Expect(messageInputOptionsModel.Restart).To(Equal(core.BoolPtr(true)))
-				Expect(messageInputOptionsModel.AlternateIntents).To(Equal(core.BoolPtr(true)))
+				messageInputOptionsModel.Debug = core.BoolPtr(false)
+				messageInputOptionsModel.ReturnContext = core.BoolPtr(false)
+				messageInputOptionsModel.Export = core.BoolPtr(false)
+				Expect(messageInputOptionsModel.Restart).To(Equal(core.BoolPtr(false)))
+				Expect(messageInputOptionsModel.AlternateIntents).To(Equal(core.BoolPtr(false)))
 				Expect(messageInputOptionsModel.Spelling).To(Equal(messageInputOptionsSpellingModel))
-				Expect(messageInputOptionsModel.Debug).To(Equal(core.BoolPtr(true)))
-				Expect(messageInputOptionsModel.ReturnContext).To(Equal(core.BoolPtr(true)))
-				Expect(messageInputOptionsModel.Export).To(Equal(core.BoolPtr(true)))
+				Expect(messageInputOptionsModel.Debug).To(Equal(core.BoolPtr(false)))
+				Expect(messageInputOptionsModel.ReturnContext).To(Equal(core.BoolPtr(false)))
+				Expect(messageInputOptionsModel.Export).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv2.MessageInput)
@@ -2978,11 +2998,15 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 				Expect(messageContextGlobalSystemModel.Timezone).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextGlobalSystemModel.UserID).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextGlobalSystemModel.TurnCount).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(messageContextGlobalSystemModel.Locale).To(Equal(core.StringPtr("en-us")))
 				Expect(messageContextGlobalSystemModel.ReferenceTime).To(Equal(core.StringPtr("testString")))
+				Expect(messageContextGlobalSystemModel.SessionStartTime).To(Equal(core.StringPtr("testString")))
+				Expect(messageContextGlobalSystemModel.State).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the MessageContextGlobal model
 				messageContextGlobalModel := new(assistantv2.MessageContextGlobal)
@@ -2998,6 +3022,15 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(messageContextSkillSystemModel.State).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextSkillSystemModel.GetProperties()).ToNot(BeEmpty())
 				Expect(messageContextSkillSystemModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				messageContextSkillSystemModel.SetProperties(nil)
+				Expect(messageContextSkillSystemModel.GetProperties()).To(BeEmpty())
+
+				messageContextSkillSystemModelExpectedMap := make(map[string]interface{})
+				messageContextSkillSystemModelExpectedMap["foo"] = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperties(messageContextSkillSystemModelExpectedMap)
+				messageContextSkillSystemModelActualMap := messageContextSkillSystemModel.GetProperties()
+				Expect(messageContextSkillSystemModelActualMap).To(Equal(messageContextSkillSystemModelExpectedMap))
 
 				// Construct an instance of the MessageContextSkill model
 				messageContextSkillModel := new(assistantv2.MessageContextSkill)
@@ -3154,14 +3187,14 @@ var _ = Describe(`AssistantV2`, func() {
 				// Construct an instance of the MessageInputOptionsStateless model
 				messageInputOptionsStatelessModel := new(assistantv2.MessageInputOptionsStateless)
 				Expect(messageInputOptionsStatelessModel).ToNot(BeNil())
-				messageInputOptionsStatelessModel.Restart = core.BoolPtr(true)
-				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(true)
+				messageInputOptionsStatelessModel.Restart = core.BoolPtr(false)
+				messageInputOptionsStatelessModel.AlternateIntents = core.BoolPtr(false)
 				messageInputOptionsStatelessModel.Spelling = messageInputOptionsSpellingModel
-				messageInputOptionsStatelessModel.Debug = core.BoolPtr(true)
-				Expect(messageInputOptionsStatelessModel.Restart).To(Equal(core.BoolPtr(true)))
-				Expect(messageInputOptionsStatelessModel.AlternateIntents).To(Equal(core.BoolPtr(true)))
+				messageInputOptionsStatelessModel.Debug = core.BoolPtr(false)
+				Expect(messageInputOptionsStatelessModel.Restart).To(Equal(core.BoolPtr(false)))
+				Expect(messageInputOptionsStatelessModel.AlternateIntents).To(Equal(core.BoolPtr(false)))
 				Expect(messageInputOptionsStatelessModel.Spelling).To(Equal(messageInputOptionsSpellingModel))
-				Expect(messageInputOptionsStatelessModel.Debug).To(Equal(core.BoolPtr(true)))
+				Expect(messageInputOptionsStatelessModel.Debug).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the MessageInputStateless model
 				messageInputStatelessModel := new(assistantv2.MessageInputStateless)
@@ -3187,11 +3220,15 @@ var _ = Describe(`AssistantV2`, func() {
 				messageContextGlobalSystemModel.TurnCount = core.Int64Ptr(int64(38))
 				messageContextGlobalSystemModel.Locale = core.StringPtr("en-us")
 				messageContextGlobalSystemModel.ReferenceTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.SessionStartTime = core.StringPtr("testString")
+				messageContextGlobalSystemModel.State = core.StringPtr("testString")
 				Expect(messageContextGlobalSystemModel.Timezone).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextGlobalSystemModel.UserID).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextGlobalSystemModel.TurnCount).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(messageContextGlobalSystemModel.Locale).To(Equal(core.StringPtr("en-us")))
 				Expect(messageContextGlobalSystemModel.ReferenceTime).To(Equal(core.StringPtr("testString")))
+				Expect(messageContextGlobalSystemModel.SessionStartTime).To(Equal(core.StringPtr("testString")))
+				Expect(messageContextGlobalSystemModel.State).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the MessageContextGlobalStateless model
 				messageContextGlobalStatelessModel := new(assistantv2.MessageContextGlobalStateless)
@@ -3209,6 +3246,15 @@ var _ = Describe(`AssistantV2`, func() {
 				Expect(messageContextSkillSystemModel.State).To(Equal(core.StringPtr("testString")))
 				Expect(messageContextSkillSystemModel.GetProperties()).ToNot(BeEmpty())
 				Expect(messageContextSkillSystemModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				messageContextSkillSystemModel.SetProperties(nil)
+				Expect(messageContextSkillSystemModel.GetProperties()).To(BeEmpty())
+
+				messageContextSkillSystemModelExpectedMap := make(map[string]interface{})
+				messageContextSkillSystemModelExpectedMap["foo"] = core.StringPtr("testString")
+				messageContextSkillSystemModel.SetProperties(messageContextSkillSystemModelExpectedMap)
+				messageContextSkillSystemModelActualMap := messageContextSkillSystemModel.GetProperties()
+				Expect(messageContextSkillSystemModelActualMap).To(Equal(messageContextSkillSystemModelExpectedMap))
 
 				// Construct an instance of the MessageContextSkill model
 				messageContextSkillModel := new(assistantv2.MessageContextSkill)
@@ -3244,17 +3290,16 @@ var _ = Describe(`AssistantV2`, func() {
 			})
 			It(`Invoke NewRuntimeEntity successfully`, func() {
 				entity := "testString"
-				location := []int64{int64(38)}
 				value := "testString"
-				model, err := assistantService.NewRuntimeEntity(entity, location, value)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeEntity(entity, value)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeIntent successfully`, func() {
 				intent := "testString"
 				confidence := float64(72.5)
-				model, err := assistantService.NewRuntimeIntent(intent, confidence)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeIntent(intent, confidence)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 		})

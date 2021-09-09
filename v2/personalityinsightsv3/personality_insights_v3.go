@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package personalityinsightsv3 : Operations and models for the PersonalityInsightsV3 service
@@ -61,7 +61,7 @@ import (
 // **Note:** Request logging is disabled for the Personality Insights service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
-// Version: 3.4.4
+// API Version: 3.4.4
 // See: https://cloud.ibm.com/docs/personality-insights
 type PersonalityInsightsV3 struct {
 	Service *core.BaseService
@@ -90,9 +90,6 @@ type PersonalityInsightsV3Options struct {
 
 // NewPersonalityInsightsV3 : constructs an instance of PersonalityInsightsV3 with passed in options.
 func NewPersonalityInsightsV3(options *PersonalityInsightsV3Options) (service *PersonalityInsightsV3, err error) {
-	// Log deprecation warning
-	core.GetLogger().Log(core.LevelWarn, "", "On 1 December 2021, Personality Insights will no longer be available. Consider migrating to Watson Natural Language Understanding. For more information, see Personality Insights Deprecation.")
-
 	if options.ServiceName == "" {
 		options.ServiceName = DefaultServiceName
 	}
@@ -537,11 +534,11 @@ type Content struct {
 }
 
 // NewContent : Instantiate Content (Generic Model Constructor)
-func (*PersonalityInsightsV3) NewContent(contentItems []ContentItem) (model *Content, err error) {
-	model = &Content{
+func (*PersonalityInsightsV3) NewContent(contentItems []ContentItem) (_model *Content, err error) {
+	_model = &Content{
 		ContentItems: contentItems,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -620,11 +617,11 @@ const (
 )
 
 // NewContentItem : Instantiate ContentItem (Generic Model Constructor)
-func (*PersonalityInsightsV3) NewContentItem(content string) (model *ContentItem, err error) {
-	model = &ContentItem{
+func (*PersonalityInsightsV3) NewContentItem(content string) (_model *ContentItem, err error) {
+	_model = &ContentItem{
 		Content: core.StringPtr(content),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -767,16 +764,16 @@ type ProfileOptions struct {
 	// [Providing sufficient
 	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
 	// provide an object of type `Content`.
-	Content *Content
+	Content *Content `json:"content,omitempty"`
 
 	// A maximum of 20 MB of content to analyze, though the service requires much less text; for more information, see
 	// [Providing sufficient
 	// input](https://cloud.ibm.com/docs/personality-insights?topic=personality-insights-input#sufficient). For JSON input,
 	// provide an object of type `Content`.
-	Body *string
+	Body *string `json:"body,omitempty"`
 
 	// The type of the input. For more information, see **Content types** in the method description.
-	ContentType *string
+	ContentType *string `json:"-"`
 
 	// The language of the input text for the request: Arabic, English, Japanese, Korean, or Spanish. Regional variants are
 	// treated as their parent language; for example, `en-US` is interpreted as `en`.
@@ -787,24 +784,24 @@ type ProfileOptions struct {
 	// `ContentItem` object, and content items that specify a different language are ignored; omit this parameter to base
 	// the language on the specification of the content items. You can specify any combination of languages for
 	// **Content-Language** and **Accept-Language**.
-	ContentLanguage *string
+	ContentLanguage *string `json:"-"`
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can specify any combination of languages for the input
 	// and response content.
-	AcceptLanguage *string
+	AcceptLanguage *string `json:"-"`
 
 	// Indicates whether a raw score in addition to a normalized percentile is returned for each characteristic; raw scores
 	// are not compared with a sample population. By default, only normalized percentiles are returned.
-	RawScores *bool
+	RawScores *bool `json:"-"`
 
 	// Indicates whether column labels are returned with a CSV response. By default, no column labels are returned. Applies
 	// only when the response type is CSV (`text/csv`).
-	CSVHeaders *bool
+	CSVHeaders *bool `json:"-"`
 
 	// Indicates whether consumption preferences are returned with the results. By default, no consumption preferences are
 	// returned.
-	ConsumptionPreferences *bool
+	ConsumptionPreferences *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -852,51 +849,51 @@ func (*PersonalityInsightsV3) NewProfileOptions() *ProfileOptions {
 }
 
 // SetContent : Allow user to set Content
-func (options *ProfileOptions) SetContent(content *Content) *ProfileOptions {
-	options.Content = content
-	return options
+func (_options *ProfileOptions) SetContent(content *Content) *ProfileOptions {
+	_options.Content = content
+	return _options
 }
 
 // SetBody : Allow user to set Body
-func (options *ProfileOptions) SetBody(body string) *ProfileOptions {
-	options.Body = core.StringPtr(body)
-	return options
+func (_options *ProfileOptions) SetBody(body string) *ProfileOptions {
+	_options.Body = core.StringPtr(body)
+	return _options
 }
 
 // SetContentType : Allow user to set ContentType
-func (options *ProfileOptions) SetContentType(contentType string) *ProfileOptions {
-	options.ContentType = core.StringPtr(contentType)
-	return options
+func (_options *ProfileOptions) SetContentType(contentType string) *ProfileOptions {
+	_options.ContentType = core.StringPtr(contentType)
+	return _options
 }
 
 // SetContentLanguage : Allow user to set ContentLanguage
-func (options *ProfileOptions) SetContentLanguage(contentLanguage string) *ProfileOptions {
-	options.ContentLanguage = core.StringPtr(contentLanguage)
-	return options
+func (_options *ProfileOptions) SetContentLanguage(contentLanguage string) *ProfileOptions {
+	_options.ContentLanguage = core.StringPtr(contentLanguage)
+	return _options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ProfileOptions) SetAcceptLanguage(acceptLanguage string) *ProfileOptions {
-	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
+func (_options *ProfileOptions) SetAcceptLanguage(acceptLanguage string) *ProfileOptions {
+	_options.AcceptLanguage = core.StringPtr(acceptLanguage)
+	return _options
 }
 
 // SetRawScores : Allow user to set RawScores
-func (options *ProfileOptions) SetRawScores(rawScores bool) *ProfileOptions {
-	options.RawScores = core.BoolPtr(rawScores)
-	return options
+func (_options *ProfileOptions) SetRawScores(rawScores bool) *ProfileOptions {
+	_options.RawScores = core.BoolPtr(rawScores)
+	return _options
 }
 
 // SetCSVHeaders : Allow user to set CSVHeaders
-func (options *ProfileOptions) SetCSVHeaders(csvHeaders bool) *ProfileOptions {
-	options.CSVHeaders = core.BoolPtr(csvHeaders)
-	return options
+func (_options *ProfileOptions) SetCSVHeaders(csvHeaders bool) *ProfileOptions {
+	_options.CSVHeaders = core.BoolPtr(csvHeaders)
+	return _options
 }
 
 // SetConsumptionPreferences : Allow user to set ConsumptionPreferences
-func (options *ProfileOptions) SetConsumptionPreferences(consumptionPreferences bool) *ProfileOptions {
-	options.ConsumptionPreferences = core.BoolPtr(consumptionPreferences)
-	return options
+func (_options *ProfileOptions) SetConsumptionPreferences(consumptionPreferences bool) *ProfileOptions {
+	_options.ConsumptionPreferences = core.BoolPtr(consumptionPreferences)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

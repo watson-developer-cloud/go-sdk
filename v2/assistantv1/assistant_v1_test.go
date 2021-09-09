@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -212,8 +212,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv1.MessageInput)
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
 				// Construct an instance of the RuntimeIntent model
@@ -345,11 +345,11 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
 				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
-				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
 				messageOptionsModel.UserID = core.StringPtr("testString")
-				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(false)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.Message(messageOptionsModel)
@@ -405,7 +405,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully with retries`, func() {
@@ -421,8 +421,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv1.MessageInput)
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
 				// Construct an instance of the RuntimeIntent model
@@ -554,11 +554,11 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
 				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
-				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
 				messageOptionsModel.UserID = core.StringPtr("testString")
-				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(false)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -616,7 +616,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
+					fmt.Fprintf(res, "%s", `{"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}`)
 				}))
 			})
 			It(`Invoke Message successfully`, func() {
@@ -637,8 +637,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv1.MessageInput)
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
 				// Construct an instance of the RuntimeIntent model
@@ -770,11 +770,11 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
 				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
-				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
 				messageOptionsModel.UserID = core.StringPtr("testString")
-				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(false)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -796,8 +796,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv1.MessageInput)
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
 				// Construct an instance of the RuntimeIntent model
@@ -929,11 +929,11 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
 				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
-				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
 				messageOptionsModel.UserID = core.StringPtr("testString")
-				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(false)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -976,8 +976,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the MessageInput model
 				messageInputModel := new(assistantv1.MessageInput)
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 
 				// Construct an instance of the RuntimeIntent model
@@ -1109,11 +1109,11 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.Input = messageInputModel
 				messageOptionsModel.Intents = []assistantv1.RuntimeIntent{*runtimeIntentModel}
 				messageOptionsModel.Entities = []assistantv1.RuntimeEntity{*runtimeEntityModel}
-				messageOptionsModel.AlternateIntents = core.BoolPtr(true)
+				messageOptionsModel.AlternateIntents = core.BoolPtr(false)
 				messageOptionsModel.Context = contextModel
 				messageOptionsModel.Output = outputDataModel
 				messageOptionsModel.UserID = core.StringPtr("testString")
-				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(true)
+				messageOptionsModel.NodesVisitedDetails = core.BoolPtr(false)
 				messageOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -1442,10 +1442,10 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
 				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
 				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
-				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListWorkspaces(listWorkspacesOptionsModel)
@@ -1489,7 +1489,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListWorkspaces successfully with retries`, func() {
@@ -1505,10 +1505,10 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
 				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
 				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
-				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -1554,7 +1554,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"workspaces": [{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListWorkspaces successfully`, func() {
@@ -1575,10 +1575,10 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
 				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
 				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
-				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -1600,10 +1600,10 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
 				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
 				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
-				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -1639,10 +1639,10 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := new(assistantv1.ListWorkspacesOptions)
 				listWorkspacesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Sort = core.StringPtr("name")
 				listWorkspacesOptionsModel.Cursor = core.StringPtr("testString")
-				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listWorkspacesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listWorkspacesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -1695,7 +1695,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -1748,7 +1748,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -1762,7 +1762,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -1770,19 +1770,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -1837,12 +1837,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateWorkspace(createWorkspaceOptionsModel)
@@ -1898,7 +1898,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke CreateWorkspace successfully with retries`, func() {
@@ -1921,7 +1921,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -1974,7 +1974,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -1988,7 +1988,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -1996,19 +1996,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -2063,12 +2063,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -2126,7 +2126,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke CreateWorkspace successfully`, func() {
@@ -2154,7 +2154,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -2207,7 +2207,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -2221,7 +2221,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -2229,19 +2229,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -2296,12 +2296,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -2330,7 +2330,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -2383,7 +2383,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -2397,7 +2397,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -2405,19 +2405,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -2472,12 +2472,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -2520,7 +2520,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -2573,7 +2573,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -2587,7 +2587,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -2595,19 +2595,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -2662,12 +2662,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				createWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				createWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				createWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				createWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				createWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				createWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				createWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -2715,8 +2715,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the GetWorkspaceOptions model
 				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
 				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
-				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
-				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Export = core.BoolPtr(false)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
 				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -2759,7 +2759,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke GetWorkspace successfully with retries`, func() {
@@ -2775,8 +2775,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the GetWorkspaceOptions model
 				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
 				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
-				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
-				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Export = core.BoolPtr(false)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
 				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -2821,7 +2821,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke GetWorkspace successfully`, func() {
@@ -2842,8 +2842,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the GetWorkspaceOptions model
 				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
 				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
-				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
-				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Export = core.BoolPtr(false)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
 				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -2866,8 +2866,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the GetWorkspaceOptions model
 				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
 				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
-				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
-				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Export = core.BoolPtr(false)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
 				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -2911,8 +2911,8 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the GetWorkspaceOptions model
 				getWorkspaceOptionsModel := new(assistantv1.GetWorkspaceOptions)
 				getWorkspaceOptionsModel.WorkspaceID = core.StringPtr("testString")
-				getWorkspaceOptionsModel.Export = core.BoolPtr(true)
-				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getWorkspaceOptionsModel.Export = core.BoolPtr(false)
+				getWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getWorkspaceOptionsModel.Sort = core.StringPtr("stable")
 				getWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -2967,7 +2967,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -3020,7 +3020,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -3034,7 +3034,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -3042,19 +3042,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -3110,13 +3110,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
-				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(false)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateWorkspace(updateWorkspaceOptionsModel)
@@ -3173,7 +3173,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke UpdateWorkspace successfully with retries`, func() {
@@ -3196,7 +3196,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -3249,7 +3249,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -3263,7 +3263,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -3271,19 +3271,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -3339,13 +3339,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
-				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(false)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -3404,7 +3404,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": true, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "description": "Description", "language": "Language", "workspace_id": "WorkspaceID", "dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "counterexamples": [{"text": "Text", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "metadata": {"mapKey": "anyValue"}, "learning_opt_out": false, "system_settings": {"tooling": {"store_generic_responses": false}, "disambiguation": {"prompt": "Prompt", "none_of_the_above_prompt": "NoneOfTheAbovePrompt", "enabled": false, "sensitivity": "auto", "randomize": false, "max_suggestions": 1, "suggestion_text_policy": "SuggestionTextPolicy"}, "human_agent_assist": {"mapKey": "anyValue"}, "spelling_suggestions": false, "spelling_auto_correct": false, "system_entities": {"enabled": false}, "off_topic": {"enabled": false}}, "status": "Non Existent", "webhooks": [{"url": "URL", "name": "Name", "headers": [{"name": "Name", "value": "Value"}]}], "intents": [{"intent": "Intent", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "examples": [{"text": "Text", "mentions": [{"entity": "Entity", "location": [8]}], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}], "entities": [{"entity": "Entity", "description": "Description", "metadata": {"mapKey": "anyValue"}, "fuzzy_match": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "values": [{"value": "Value", "metadata": {"mapKey": "anyValue"}, "type": "synonyms", "synonyms": ["Synonym"], "patterns": ["Pattern"], "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}]}]}`)
 				}))
 			})
 			It(`Invoke UpdateWorkspace successfully`, func() {
@@ -3432,7 +3432,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -3485,7 +3485,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -3499,7 +3499,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -3507,19 +3507,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -3575,13 +3575,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
-				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(false)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -3610,7 +3610,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -3663,7 +3663,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -3677,7 +3677,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -3685,19 +3685,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -3753,13 +3753,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
-				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(false)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -3809,7 +3809,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -3862,7 +3862,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -3876,7 +3876,7 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsDisambiguationModel := new(assistantv1.WorkspaceSystemSettingsDisambiguation)
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
@@ -3884,19 +3884,19 @@ var _ = Describe(`AssistantV1`, func() {
 
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 
@@ -3952,13 +3952,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.DialogNodes = []assistantv1.DialogNode{*dialogNodeModel}
 				updateWorkspaceOptionsModel.Counterexamples = []assistantv1.Counterexample{*counterexampleModel}
 				updateWorkspaceOptionsModel.Metadata = make(map[string]interface{})
-				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.LearningOptOut = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.SystemSettings = workspaceSystemSettingsModel
 				updateWorkspaceOptionsModel.Webhooks = []assistantv1.Webhook{*webhookModel}
 				updateWorkspaceOptionsModel.Intents = []assistantv1.CreateIntent{*createIntentModel}
 				updateWorkspaceOptionsModel.Entities = []assistantv1.CreateEntity{*createEntityModel}
-				updateWorkspaceOptionsModel.Append = core.BoolPtr(true)
-				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateWorkspaceOptionsModel.Append = core.BoolPtr(false)
+				updateWorkspaceOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateWorkspaceOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -4081,12 +4081,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListIntentsOptions model
 				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
 				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.Export = core.BoolPtr(false)
 				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listIntentsOptionsModel.Sort = core.StringPtr("intent")
 				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
-				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListIntents(listIntentsOptionsModel)
@@ -4147,12 +4147,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListIntentsOptions model
 				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
 				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.Export = core.BoolPtr(false)
 				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listIntentsOptionsModel.Sort = core.StringPtr("intent")
 				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
-				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -4220,12 +4220,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListIntentsOptions model
 				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
 				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.Export = core.BoolPtr(false)
 				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listIntentsOptionsModel.Sort = core.StringPtr("intent")
 				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
-				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -4247,12 +4247,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListIntentsOptions model
 				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
 				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.Export = core.BoolPtr(false)
 				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listIntentsOptionsModel.Sort = core.StringPtr("intent")
 				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
-				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -4295,12 +4295,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListIntentsOptions model
 				listIntentsOptionsModel := new(assistantv1.ListIntentsOptions)
 				listIntentsOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listIntentsOptionsModel.Export = core.BoolPtr(true)
+				listIntentsOptionsModel.Export = core.BoolPtr(false)
 				listIntentsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listIntentsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listIntentsOptionsModel.Sort = core.StringPtr("intent")
 				listIntentsOptionsModel.Cursor = core.StringPtr("testString")
-				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listIntentsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listIntentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -4359,7 +4359,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.Intent = core.StringPtr("testString")
 				createIntentOptionsModel.Description = core.StringPtr("testString")
 				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
-				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateIntent(createIntentOptionsModel)
@@ -4444,7 +4444,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.Intent = core.StringPtr("testString")
 				createIntentOptionsModel.Description = core.StringPtr("testString")
 				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
-				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -4536,7 +4536,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.Intent = core.StringPtr("testString")
 				createIntentOptionsModel.Description = core.StringPtr("testString")
 				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
-				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -4571,7 +4571,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.Intent = core.StringPtr("testString")
 				createIntentOptionsModel.Description = core.StringPtr("testString")
 				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
-				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -4627,7 +4627,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.Intent = core.StringPtr("testString")
 				createIntentOptionsModel.Description = core.StringPtr("testString")
 				createIntentOptionsModel.Examples = []assistantv1.Example{*exampleModel}
-				createIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -4675,8 +4675,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
 				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getIntentOptionsModel.Intent = core.StringPtr("testString")
-				getIntentOptionsModel.Export = core.BoolPtr(true)
-				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Export = core.BoolPtr(false)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetIntent(getIntentOptionsModel)
@@ -4734,8 +4734,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
 				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getIntentOptionsModel.Intent = core.StringPtr("testString")
-				getIntentOptionsModel.Export = core.BoolPtr(true)
-				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Export = core.BoolPtr(false)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -4800,8 +4800,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
 				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getIntentOptionsModel.Intent = core.StringPtr("testString")
-				getIntentOptionsModel.Export = core.BoolPtr(true)
-				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Export = core.BoolPtr(false)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -4824,8 +4824,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
 				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getIntentOptionsModel.Intent = core.StringPtr("testString")
-				getIntentOptionsModel.Export = core.BoolPtr(true)
-				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Export = core.BoolPtr(false)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -4869,8 +4869,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := new(assistantv1.GetIntentOptions)
 				getIntentOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getIntentOptionsModel.Intent = core.StringPtr("testString")
-				getIntentOptionsModel.Export = core.BoolPtr(true)
-				getIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getIntentOptionsModel.Export = core.BoolPtr(false)
+				getIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -4931,8 +4931,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
 				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
 				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
-				updateIntentOptionsModel.Append = core.BoolPtr(true)
-				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Append = core.BoolPtr(false)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateIntent(updateIntentOptionsModel)
@@ -5019,8 +5019,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
 				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
 				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
-				updateIntentOptionsModel.Append = core.BoolPtr(true)
-				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Append = core.BoolPtr(false)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -5114,8 +5114,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
 				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
 				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
-				updateIntentOptionsModel.Append = core.BoolPtr(true)
-				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Append = core.BoolPtr(false)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -5151,8 +5151,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
 				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
 				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
-				updateIntentOptionsModel.Append = core.BoolPtr(true)
-				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Append = core.BoolPtr(false)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -5209,8 +5209,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.NewIntent = core.StringPtr("testString")
 				updateIntentOptionsModel.NewDescription = core.StringPtr("testString")
 				updateIntentOptionsModel.NewExamples = []assistantv1.Example{*exampleModel}
-				updateIntentOptionsModel.Append = core.BoolPtr(true)
-				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateIntentOptionsModel.Append = core.BoolPtr(false)
+				updateIntentOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateIntentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -5336,10 +5336,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listExamplesOptionsModel.Intent = core.StringPtr("testString")
 				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listExamplesOptionsModel.Sort = core.StringPtr("text")
 				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListExamples(listExamplesOptionsModel)
@@ -5401,10 +5401,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listExamplesOptionsModel.Intent = core.StringPtr("testString")
 				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listExamplesOptionsModel.Sort = core.StringPtr("text")
 				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -5473,10 +5473,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listExamplesOptionsModel.Intent = core.StringPtr("testString")
 				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listExamplesOptionsModel.Sort = core.StringPtr("text")
 				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -5500,10 +5500,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listExamplesOptionsModel.Intent = core.StringPtr("testString")
 				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listExamplesOptionsModel.Sort = core.StringPtr("text")
 				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -5548,10 +5548,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listExamplesOptionsModel.Intent = core.StringPtr("testString")
 				listExamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listExamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listExamplesOptionsModel.Sort = core.StringPtr("text")
 				listExamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listExamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listExamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -5605,7 +5605,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.Intent = core.StringPtr("testString")
 				createExampleOptionsModel.Text = core.StringPtr("testString")
 				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
-				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateExample(createExampleOptionsModel)
@@ -5685,7 +5685,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.Intent = core.StringPtr("testString")
 				createExampleOptionsModel.Text = core.StringPtr("testString")
 				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
-				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -5772,7 +5772,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.Intent = core.StringPtr("testString")
 				createExampleOptionsModel.Text = core.StringPtr("testString")
 				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
-				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -5802,7 +5802,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.Intent = core.StringPtr("testString")
 				createExampleOptionsModel.Text = core.StringPtr("testString")
 				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
-				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -5853,7 +5853,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.Intent = core.StringPtr("testString")
 				createExampleOptionsModel.Text = core.StringPtr("testString")
 				createExampleOptionsModel.Mentions = []assistantv1.Mention{*mentionModel}
-				createExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -5901,7 +5901,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getExampleOptionsModel.Intent = core.StringPtr("testString")
 				getExampleOptionsModel.Text = core.StringPtr("testString")
-				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetExample(getExampleOptionsModel)
@@ -5959,7 +5959,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getExampleOptionsModel.Intent = core.StringPtr("testString")
 				getExampleOptionsModel.Text = core.StringPtr("testString")
-				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -6024,7 +6024,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getExampleOptionsModel.Intent = core.StringPtr("testString")
 				getExampleOptionsModel.Text = core.StringPtr("testString")
-				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -6048,7 +6048,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getExampleOptionsModel.Intent = core.StringPtr("testString")
 				getExampleOptionsModel.Text = core.StringPtr("testString")
-				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -6093,7 +6093,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getExampleOptionsModel.Intent = core.StringPtr("testString")
 				getExampleOptionsModel.Text = core.StringPtr("testString")
-				getExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -6148,7 +6148,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.Text = core.StringPtr("testString")
 				updateExampleOptionsModel.NewText = core.StringPtr("testString")
 				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
-				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateExample(updateExampleOptionsModel)
@@ -6229,7 +6229,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.Text = core.StringPtr("testString")
 				updateExampleOptionsModel.NewText = core.StringPtr("testString")
 				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
-				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -6317,7 +6317,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.Text = core.StringPtr("testString")
 				updateExampleOptionsModel.NewText = core.StringPtr("testString")
 				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
-				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -6348,7 +6348,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.Text = core.StringPtr("testString")
 				updateExampleOptionsModel.NewText = core.StringPtr("testString")
 				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
-				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -6400,7 +6400,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.Text = core.StringPtr("testString")
 				updateExampleOptionsModel.NewText = core.StringPtr("testString")
 				updateExampleOptionsModel.NewMentions = []assistantv1.Mention{*mentionModel}
-				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateExampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateExampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -6527,10 +6527,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
 				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
 				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListCounterexamples(listCounterexamplesOptionsModel)
@@ -6591,10 +6591,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
 				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
 				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -6662,10 +6662,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
 				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
 				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -6688,10 +6688,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
 				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
 				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -6735,10 +6735,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := new(assistantv1.ListCounterexamplesOptions)
 				listCounterexamplesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listCounterexamplesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Sort = core.StringPtr("text")
 				listCounterexamplesOptionsModel.Cursor = core.StringPtr("testString")
-				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listCounterexamplesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listCounterexamplesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -6785,7 +6785,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
 				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateCounterexample(createCounterexampleOptionsModel)
@@ -6858,7 +6858,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
 				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -6938,7 +6938,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
 				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -6961,7 +6961,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
 				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -7005,7 +7005,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := new(assistantv1.CreateCounterexampleOptions)
 				createCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				createCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -7052,7 +7052,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
 				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetCounterexample(getCounterexampleOptionsModel)
@@ -7109,7 +7109,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
 				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -7173,7 +7173,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
 				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -7196,7 +7196,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
 				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -7240,7 +7240,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := new(assistantv1.GetCounterexampleOptions)
 				getCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getCounterexampleOptionsModel.Text = core.StringPtr("testString")
-				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -7288,7 +7288,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
-				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateCounterexample(updateCounterexampleOptionsModel)
@@ -7362,7 +7362,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
-				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -7443,7 +7443,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
-				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -7467,7 +7467,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
-				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -7512,7 +7512,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.WorkspaceID = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.Text = core.StringPtr("testString")
 				updateCounterexampleOptionsModel.NewText = core.StringPtr("testString")
-				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateCounterexampleOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateCounterexampleOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -7637,12 +7637,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListEntitiesOptions model
 				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
 				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.Export = core.BoolPtr(false)
 				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
 				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
-				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListEntities(listEntitiesOptionsModel)
@@ -7703,12 +7703,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListEntitiesOptions model
 				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
 				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.Export = core.BoolPtr(false)
 				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
 				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
-				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -7776,12 +7776,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListEntitiesOptions model
 				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
 				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.Export = core.BoolPtr(false)
 				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
 				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
-				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -7803,12 +7803,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListEntitiesOptions model
 				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
 				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.Export = core.BoolPtr(false)
 				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
 				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
-				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -7851,12 +7851,12 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the ListEntitiesOptions model
 				listEntitiesOptionsModel := new(assistantv1.ListEntitiesOptions)
 				listEntitiesOptionsModel.WorkspaceID = core.StringPtr("testString")
-				listEntitiesOptionsModel.Export = core.BoolPtr(true)
+				listEntitiesOptionsModel.Export = core.BoolPtr(false)
 				listEntitiesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listEntitiesOptionsModel.Sort = core.StringPtr("entity")
 				listEntitiesOptionsModel.Cursor = core.StringPtr("testString")
-				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listEntitiesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listEntitiesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -7915,7 +7915,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.Metadata = make(map[string]interface{})
 				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
 				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
-				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateEntity(createEntityOptionsModel)
@@ -8000,7 +8000,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.Metadata = make(map[string]interface{})
 				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
 				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
-				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -8092,7 +8092,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.Metadata = make(map[string]interface{})
 				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
 				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
-				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -8127,7 +8127,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.Metadata = make(map[string]interface{})
 				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
 				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
-				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -8183,7 +8183,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.Metadata = make(map[string]interface{})
 				createEntityOptionsModel.FuzzyMatch = core.BoolPtr(true)
 				createEntityOptionsModel.Values = []assistantv1.CreateValue{*createValueModel}
-				createEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -8231,8 +8231,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
 				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getEntityOptionsModel.Entity = core.StringPtr("testString")
-				getEntityOptionsModel.Export = core.BoolPtr(true)
-				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Export = core.BoolPtr(false)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetEntity(getEntityOptionsModel)
@@ -8290,8 +8290,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
 				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getEntityOptionsModel.Entity = core.StringPtr("testString")
-				getEntityOptionsModel.Export = core.BoolPtr(true)
-				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Export = core.BoolPtr(false)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -8356,8 +8356,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
 				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getEntityOptionsModel.Entity = core.StringPtr("testString")
-				getEntityOptionsModel.Export = core.BoolPtr(true)
-				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Export = core.BoolPtr(false)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -8380,8 +8380,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
 				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getEntityOptionsModel.Entity = core.StringPtr("testString")
-				getEntityOptionsModel.Export = core.BoolPtr(true)
-				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Export = core.BoolPtr(false)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -8425,8 +8425,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := new(assistantv1.GetEntityOptions)
 				getEntityOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getEntityOptionsModel.Entity = core.StringPtr("testString")
-				getEntityOptionsModel.Export = core.BoolPtr(true)
-				getEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getEntityOptionsModel.Export = core.BoolPtr(false)
+				getEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -8487,8 +8487,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
 				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
 				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
-				updateEntityOptionsModel.Append = core.BoolPtr(true)
-				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Append = core.BoolPtr(false)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateEntity(updateEntityOptionsModel)
@@ -8575,8 +8575,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
 				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
 				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
-				updateEntityOptionsModel.Append = core.BoolPtr(true)
-				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Append = core.BoolPtr(false)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -8670,8 +8670,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
 				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
 				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
-				updateEntityOptionsModel.Append = core.BoolPtr(true)
-				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Append = core.BoolPtr(false)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -8707,8 +8707,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
 				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
 				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
-				updateEntityOptionsModel.Append = core.BoolPtr(true)
-				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Append = core.BoolPtr(false)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -8765,8 +8765,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.NewMetadata = make(map[string]interface{})
 				updateEntityOptionsModel.NewFuzzyMatch = core.BoolPtr(true)
 				updateEntityOptionsModel.NewValues = []assistantv1.CreateValue{*createValueModel}
-				updateEntityOptionsModel.Append = core.BoolPtr(true)
-				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateEntityOptionsModel.Append = core.BoolPtr(false)
+				updateEntityOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateEntityOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -8888,8 +8888,8 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
 				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listMentionsOptionsModel.Entity = core.StringPtr("testString")
-				listMentionsOptionsModel.Export = core.BoolPtr(true)
-				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Export = core.BoolPtr(false)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListMentions(listMentionsOptionsModel)
@@ -8947,8 +8947,8 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
 				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listMentionsOptionsModel.Entity = core.StringPtr("testString")
-				listMentionsOptionsModel.Export = core.BoolPtr(true)
-				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Export = core.BoolPtr(false)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9013,8 +9013,8 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
 				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listMentionsOptionsModel.Entity = core.StringPtr("testString")
-				listMentionsOptionsModel.Export = core.BoolPtr(true)
-				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Export = core.BoolPtr(false)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9037,8 +9037,8 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
 				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listMentionsOptionsModel.Entity = core.StringPtr("testString")
-				listMentionsOptionsModel.Export = core.BoolPtr(true)
-				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Export = core.BoolPtr(false)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -9082,8 +9082,8 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := new(assistantv1.ListMentionsOptions)
 				listMentionsOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listMentionsOptionsModel.Entity = core.StringPtr("testString")
-				listMentionsOptionsModel.Export = core.BoolPtr(true)
-				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listMentionsOptionsModel.Export = core.BoolPtr(false)
+				listMentionsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listMentionsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -9135,12 +9135,12 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
 				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listValuesOptionsModel.Entity = core.StringPtr("testString")
-				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.Export = core.BoolPtr(false)
 				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listValuesOptionsModel.Sort = core.StringPtr("value")
 				listValuesOptionsModel.Cursor = core.StringPtr("testString")
-				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListValues(listValuesOptionsModel)
@@ -9202,12 +9202,12 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
 				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listValuesOptionsModel.Entity = core.StringPtr("testString")
-				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.Export = core.BoolPtr(false)
 				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listValuesOptionsModel.Sort = core.StringPtr("value")
 				listValuesOptionsModel.Cursor = core.StringPtr("testString")
-				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9276,12 +9276,12 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
 				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listValuesOptionsModel.Entity = core.StringPtr("testString")
-				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.Export = core.BoolPtr(false)
 				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listValuesOptionsModel.Sort = core.StringPtr("value")
 				listValuesOptionsModel.Cursor = core.StringPtr("testString")
-				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9304,12 +9304,12 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
 				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listValuesOptionsModel.Entity = core.StringPtr("testString")
-				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.Export = core.BoolPtr(false)
 				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listValuesOptionsModel.Sort = core.StringPtr("value")
 				listValuesOptionsModel.Cursor = core.StringPtr("testString")
-				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -9353,12 +9353,12 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := new(assistantv1.ListValuesOptions)
 				listValuesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listValuesOptionsModel.Entity = core.StringPtr("testString")
-				listValuesOptionsModel.Export = core.BoolPtr(true)
+				listValuesOptionsModel.Export = core.BoolPtr(false)
 				listValuesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listValuesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listValuesOptionsModel.Sort = core.StringPtr("value")
 				listValuesOptionsModel.Cursor = core.StringPtr("testString")
-				listValuesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listValuesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -9410,7 +9410,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.Type = core.StringPtr("synonyms")
 				createValueOptionsModel.Synonyms = []string{"testString"}
 				createValueOptionsModel.Patterns = []string{"testString"}
-				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateValue(createValueOptionsModel)
@@ -9488,7 +9488,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.Type = core.StringPtr("synonyms")
 				createValueOptionsModel.Synonyms = []string{"testString"}
 				createValueOptionsModel.Patterns = []string{"testString"}
-				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9573,7 +9573,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.Type = core.StringPtr("synonyms")
 				createValueOptionsModel.Synonyms = []string{"testString"}
 				createValueOptionsModel.Patterns = []string{"testString"}
-				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9601,7 +9601,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.Type = core.StringPtr("synonyms")
 				createValueOptionsModel.Synonyms = []string{"testString"}
 				createValueOptionsModel.Patterns = []string{"testString"}
-				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -9650,7 +9650,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.Type = core.StringPtr("synonyms")
 				createValueOptionsModel.Synonyms = []string{"testString"}
 				createValueOptionsModel.Patterns = []string{"testString"}
-				createValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -9699,8 +9699,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getValueOptionsModel.Entity = core.StringPtr("testString")
 				getValueOptionsModel.Value = core.StringPtr("testString")
-				getValueOptionsModel.Export = core.BoolPtr(true)
-				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Export = core.BoolPtr(false)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetValue(getValueOptionsModel)
@@ -9759,8 +9759,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getValueOptionsModel.Entity = core.StringPtr("testString")
 				getValueOptionsModel.Value = core.StringPtr("testString")
-				getValueOptionsModel.Export = core.BoolPtr(true)
-				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Export = core.BoolPtr(false)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9826,8 +9826,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getValueOptionsModel.Entity = core.StringPtr("testString")
 				getValueOptionsModel.Value = core.StringPtr("testString")
-				getValueOptionsModel.Export = core.BoolPtr(true)
-				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Export = core.BoolPtr(false)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9851,8 +9851,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getValueOptionsModel.Entity = core.StringPtr("testString")
 				getValueOptionsModel.Value = core.StringPtr("testString")
-				getValueOptionsModel.Export = core.BoolPtr(true)
-				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Export = core.BoolPtr(false)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -9897,8 +9897,8 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getValueOptionsModel.Entity = core.StringPtr("testString")
 				getValueOptionsModel.Value = core.StringPtr("testString")
-				getValueOptionsModel.Export = core.BoolPtr(true)
-				getValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getValueOptionsModel.Export = core.BoolPtr(false)
+				getValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -9952,8 +9952,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
 				updateValueOptionsModel.NewSynonyms = []string{"testString"}
 				updateValueOptionsModel.NewPatterns = []string{"testString"}
-				updateValueOptionsModel.Append = core.BoolPtr(true)
-				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Append = core.BoolPtr(false)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateValue(updateValueOptionsModel)
@@ -10033,8 +10033,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
 				updateValueOptionsModel.NewSynonyms = []string{"testString"}
 				updateValueOptionsModel.NewPatterns = []string{"testString"}
-				updateValueOptionsModel.Append = core.BoolPtr(true)
-				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Append = core.BoolPtr(false)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -10121,8 +10121,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
 				updateValueOptionsModel.NewSynonyms = []string{"testString"}
 				updateValueOptionsModel.NewPatterns = []string{"testString"}
-				updateValueOptionsModel.Append = core.BoolPtr(true)
-				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Append = core.BoolPtr(false)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -10151,8 +10151,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
 				updateValueOptionsModel.NewSynonyms = []string{"testString"}
 				updateValueOptionsModel.NewPatterns = []string{"testString"}
-				updateValueOptionsModel.Append = core.BoolPtr(true)
-				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Append = core.BoolPtr(false)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -10202,8 +10202,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.NewType = core.StringPtr("synonyms")
 				updateValueOptionsModel.NewSynonyms = []string{"testString"}
 				updateValueOptionsModel.NewPatterns = []string{"testString"}
-				updateValueOptionsModel.Append = core.BoolPtr(true)
-				updateValueOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateValueOptionsModel.Append = core.BoolPtr(false)
+				updateValueOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -10332,10 +10332,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
 				listSynonymsOptionsModel.Value = core.StringPtr("testString")
 				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
 				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
-				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListSynonyms(listSynonymsOptionsModel)
@@ -10398,10 +10398,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
 				listSynonymsOptionsModel.Value = core.StringPtr("testString")
 				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
 				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
-				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -10471,10 +10471,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
 				listSynonymsOptionsModel.Value = core.StringPtr("testString")
 				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
 				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
-				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -10499,10 +10499,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
 				listSynonymsOptionsModel.Value = core.StringPtr("testString")
 				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
 				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
-				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -10548,10 +10548,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.Entity = core.StringPtr("testString")
 				listSynonymsOptionsModel.Value = core.StringPtr("testString")
 				listSynonymsOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeCount = core.BoolPtr(false)
 				listSynonymsOptionsModel.Sort = core.StringPtr("synonym")
 				listSynonymsOptionsModel.Cursor = core.StringPtr("testString")
-				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listSynonymsOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listSynonymsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -10600,7 +10600,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.Entity = core.StringPtr("testString")
 				createSynonymOptionsModel.Value = core.StringPtr("testString")
 				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateSynonym(createSynonymOptionsModel)
@@ -10675,7 +10675,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.Entity = core.StringPtr("testString")
 				createSynonymOptionsModel.Value = core.StringPtr("testString")
 				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -10757,7 +10757,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.Entity = core.StringPtr("testString")
 				createSynonymOptionsModel.Value = core.StringPtr("testString")
 				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -10782,7 +10782,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.Entity = core.StringPtr("testString")
 				createSynonymOptionsModel.Value = core.StringPtr("testString")
 				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -10828,7 +10828,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.Entity = core.StringPtr("testString")
 				createSynonymOptionsModel.Value = core.StringPtr("testString")
 				createSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -10877,7 +10877,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.Entity = core.StringPtr("testString")
 				getSynonymOptionsModel.Value = core.StringPtr("testString")
 				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetSynonym(getSynonymOptionsModel)
@@ -10936,7 +10936,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.Entity = core.StringPtr("testString")
 				getSynonymOptionsModel.Value = core.StringPtr("testString")
 				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -11002,7 +11002,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.Entity = core.StringPtr("testString")
 				getSynonymOptionsModel.Value = core.StringPtr("testString")
 				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -11027,7 +11027,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.Entity = core.StringPtr("testString")
 				getSynonymOptionsModel.Value = core.StringPtr("testString")
 				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -11073,7 +11073,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.Entity = core.StringPtr("testString")
 				getSynonymOptionsModel.Value = core.StringPtr("testString")
 				getSynonymOptionsModel.Synonym = core.StringPtr("testString")
-				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -11123,7 +11123,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.Value = core.StringPtr("testString")
 				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
 				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
-				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateSynonym(updateSynonymOptionsModel)
@@ -11199,7 +11199,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.Value = core.StringPtr("testString")
 				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
 				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
-				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -11282,7 +11282,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.Value = core.StringPtr("testString")
 				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
 				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
-				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -11308,7 +11308,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.Value = core.StringPtr("testString")
 				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
 				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
-				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -11355,7 +11355,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.Value = core.StringPtr("testString")
 				updateSynonymOptionsModel.Synonym = core.StringPtr("testString")
 				updateSynonymOptionsModel.NewSynonym = core.StringPtr("testString")
-				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateSynonymOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateSynonymOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -11484,10 +11484,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
 				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
 				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
-				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.ListDialogNodes(listDialogNodesOptionsModel)
@@ -11531,7 +11531,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListDialogNodes successfully with retries`, func() {
@@ -11548,10 +11548,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
 				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
 				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
-				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -11597,7 +11597,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"dialog_nodes": [{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}], "pagination": {"refresh_url": "RefreshURL", "next_url": "NextURL", "total": 5, "matched": 7, "refresh_cursor": "RefreshCursor", "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListDialogNodes successfully`, func() {
@@ -11619,10 +11619,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
 				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
 				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
-				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -11645,10 +11645,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
 				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
 				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
-				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -11692,10 +11692,10 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := new(assistantv1.ListDialogNodesOptions)
 				listDialogNodesOptionsModel.WorkspaceID = core.StringPtr("testString")
 				listDialogNodesOptionsModel.PageLimit = core.Int64Ptr(int64(38))
-				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeCount = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Sort = core.StringPtr("dialog_node")
 				listDialogNodesOptionsModel.Cursor = core.StringPtr("testString")
-				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(true)
+				listDialogNodesOptionsModel.IncludeAudit = core.BoolPtr(false)
 				listDialogNodesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -11748,7 +11748,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -11802,8 +11802,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
 				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
 				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
-				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
-				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(false)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.CreateDialogNode(createDialogNodeOptionsModel)
@@ -11859,7 +11859,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateDialogNode successfully with retries`, func() {
@@ -11882,7 +11882,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -11936,8 +11936,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
 				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
 				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
-				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
-				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(false)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -11995,7 +11995,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke CreateDialogNode successfully`, func() {
@@ -12023,7 +12023,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12077,8 +12077,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
 				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
 				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
-				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
-				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(false)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -12107,7 +12107,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12161,8 +12161,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
 				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
 				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
-				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
-				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(false)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -12212,7 +12212,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12266,8 +12266,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.DigressOut = core.StringPtr("allow_returning")
 				createDialogNodeOptionsModel.DigressOutSlots = core.StringPtr("not_allowed")
 				createDialogNodeOptionsModel.UserLabel = core.StringPtr("testString")
-				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(true)
-				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				createDialogNodeOptionsModel.DisambiguationOptOut = core.BoolPtr(false)
+				createDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				createDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -12314,7 +12314,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
 				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
-				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.GetDialogNode(getDialogNodeOptionsModel)
@@ -12354,7 +12354,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetDialogNode successfully with retries`, func() {
@@ -12371,7 +12371,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
 				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
-				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -12413,7 +12413,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke GetDialogNode successfully`, func() {
@@ -12435,7 +12435,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
 				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
-				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -12458,7 +12458,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
 				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
-				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -12502,7 +12502,7 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := new(assistantv1.GetDialogNodeOptions)
 				getDialogNodeOptionsModel.WorkspaceID = core.StringPtr("testString")
 				getDialogNodeOptionsModel.DialogNode = core.StringPtr("testString")
-				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				getDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				getDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -12555,7 +12555,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12610,8 +12610,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
 				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
 				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
-				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
-				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(false)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := assistantService.UpdateDialogNode(updateDialogNodeOptionsModel)
@@ -12667,7 +12667,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateDialogNode successfully with retries`, func() {
@@ -12690,7 +12690,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12745,8 +12745,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
 				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
 				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
-				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
-				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(false)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -12804,7 +12804,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "DiscoveryVersion", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": false}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": true, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
+					fmt.Fprintf(res, "%s", `{"dialog_node": "DialogNode", "description": "Description", "conditions": "Conditions", "parent": "Parent", "previous_sibling": "PreviousSibling", "output": {"generic": [{"response_type": "search_skill", "query": "Query", "query_type": "natural_language", "filter": "Filter", "discovery_version": "2018-12-03", "channels": [{"channel": "chat"}]}], "integrations": {"mapKey": {"mapKey": "anyValue"}}, "modifiers": {"overwrite": true}}, "context": {"integrations": {"mapKey": {"mapKey": "anyValue"}}}, "metadata": {"mapKey": "anyValue"}, "next_step": {"behavior": "get_user_input", "dialog_node": "DialogNode", "selector": "condition"}, "title": "Title", "type": "standard", "event_name": "focus", "variable": "Variable", "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "digress_in": "not_available", "digress_out": "allow_returning", "digress_out_slots": "not_allowed", "user_label": "UserLabel", "disambiguation_opt_out": false, "disabled": true, "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z"}`)
 				}))
 			})
 			It(`Invoke UpdateDialogNode successfully`, func() {
@@ -12832,7 +12832,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12887,8 +12887,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
 				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
 				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
-				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
-				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(false)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -12917,7 +12917,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -12972,8 +12972,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
 				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
 				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
-				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
-				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(false)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := assistantService.SetServiceURL("")
@@ -13023,7 +13023,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -13078,8 +13078,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.NewDigressOut = core.StringPtr("allow_returning")
 				updateDialogNodeOptionsModel.NewDigressOutSlots = core.StringPtr("not_allowed")
 				updateDialogNodeOptionsModel.NewUserLabel = core.StringPtr("testString")
-				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(true)
-				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(true)
+				updateDialogNodeOptionsModel.NewDisambiguationOptOut = core.BoolPtr(false)
+				updateDialogNodeOptionsModel.IncludeAudit = core.BoolPtr(false)
 				updateDialogNodeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -13248,7 +13248,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully with retries`, func() {
@@ -13312,7 +13312,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListLogs successfully`, func() {
@@ -13501,7 +13501,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListAllLogs successfully with retries`, func() {
@@ -13564,7 +13564,7 @@ var _ = Describe(`AssistantV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": true, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
+					fmt.Fprintf(res, "%s", `{"logs": [{"request": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "response": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}], "alternate_intents": false, "context": {"conversation_id": "ConversationID", "system": {"mapKey": "anyValue"}, "metadata": {"deployment": "Deployment", "user_id": "UserID"}}, "output": {"nodes_visited": ["NodesVisited"], "nodes_visited_details": [{"dialog_node": "DialogNode", "title": "Title", "conditions": "Conditions"}], "log_messages": [{"level": "info", "msg": "Msg", "code": "Code", "source": {"type": "dialog_node", "dialog_node": "DialogNode"}}], "text": ["Text"], "generic": [{"response_type": "option", "title": "Title", "description": "Description", "preference": "dropdown", "options": [{"label": "Label", "value": {"input": {"text": "Text", "spelling_suggestions": false, "spelling_auto_correct": false, "suggested_text": "SuggestedText", "original_text": "OriginalText"}, "intents": [{"intent": "Intent", "confidence": 10}], "entities": [{"entity": "Entity", "location": [8], "value": "Value", "confidence": 10, "metadata": {"mapKey": "anyValue"}, "groups": [{"group": "Group", "location": [8]}], "interpretation": {"calendar_type": "CalendarType", "datetime_link": "DatetimeLink", "festival": "Festival", "granularity": "day", "range_link": "RangeLink", "range_modifier": "RangeModifier", "relative_day": 11, "relative_month": 13, "relative_week": 12, "relative_weekend": 15, "relative_year": 12, "specific_day": 11, "specific_day_of_week": "SpecificDayOfWeek", "specific_month": 13, "specific_quarter": 15, "specific_year": 12, "numeric_value": 12, "subtype": "Subtype", "part_of_day": "PartOfDay", "relative_hour": 12, "relative_minute": 14, "relative_second": 14, "specific_hour": 12, "specific_minute": 14, "specific_second": 14, "timezone": "Timezone"}, "alternatives": [{"value": "Value", "confidence": 10}], "role": {"type": "date_from"}}]}}], "channels": [{"channel": "chat"}]}]}, "actions": [{"name": "Name", "type": "client", "parameters": {"mapKey": "anyValue"}, "result_variable": "ResultVariable", "credentials": "Credentials"}], "user_id": "UserID"}, "log_id": "LogID", "request_timestamp": "RequestTimestamp", "response_timestamp": "ResponseTimestamp", "workspace_id": "WorkspaceID", "language": "Language"}], "pagination": {"next_url": "NextURL", "matched": 7, "next_cursor": "NextCursor"}}`)
 				}))
 			})
 			It(`Invoke ListAllLogs successfully`, func() {
@@ -13773,14 +13773,14 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewBulkClassifyUtterance successfully`, func() {
 				text := "testString"
-				model, err := assistantService.NewBulkClassifyUtterance(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewBulkClassifyUtterance(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCaptureGroup successfully`, func() {
 				group := "testString"
-				model, err := assistantService.NewCaptureGroup(group)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCaptureGroup(group)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewChannelTransferInfo successfully`, func() {
@@ -13790,8 +13790,8 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewCounterexample successfully`, func() {
 				text := "testString"
-				model, err := assistantService.NewCounterexample(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCounterexample(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateCounterexampleOptions successfully`, func() {
@@ -13801,12 +13801,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createCounterexampleOptionsModel := assistantService.NewCreateCounterexampleOptions(workspaceID, createCounterexampleOptionsText)
 				createCounterexampleOptionsModel.SetWorkspaceID("testString")
 				createCounterexampleOptionsModel.SetText("testString")
-				createCounterexampleOptionsModel.SetIncludeAudit(true)
+				createCounterexampleOptionsModel.SetIncludeAudit(false)
 				createCounterexampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCounterexampleOptionsModel).ToNot(BeNil())
 				Expect(createCounterexampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(createCounterexampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(createCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createCounterexampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateDialogNodeOptions successfully`, func() {
@@ -13823,13 +13823,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("2018-12-03")))
 				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -13851,6 +13851,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeOutputModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeOutputModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				dialogNodeOutputModel.SetProperties(nil)
+				Expect(dialogNodeOutputModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeOutputModelExpectedMap := make(map[string]interface{})
+				dialogNodeOutputModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeOutputModel.SetProperties(dialogNodeOutputModelExpectedMap)
+				dialogNodeOutputModelActualMap := dialogNodeOutputModel.GetProperties()
+				Expect(dialogNodeOutputModelActualMap).To(Equal(dialogNodeOutputModelExpectedMap))
+
 				// Construct an instance of the DialogNodeContext model
 				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
 				Expect(dialogNodeContextModel).ToNot(BeNil())
@@ -13859,6 +13868,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeContextModel.Integrations).To(Equal(make(map[string]map[string]interface{})))
 				Expect(dialogNodeContextModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeContextModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				dialogNodeContextModel.SetProperties(nil)
+				Expect(dialogNodeContextModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeContextModelExpectedMap := make(map[string]interface{})
+				dialogNodeContextModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeContextModel.SetProperties(dialogNodeContextModelExpectedMap)
+				dialogNodeContextModelActualMap := dialogNodeContextModel.GetProperties()
+				Expect(dialogNodeContextModelActualMap).To(Equal(dialogNodeContextModelExpectedMap))
 
 				// Construct an instance of the DialogNodeNextStep model
 				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
@@ -13907,8 +13925,8 @@ var _ = Describe(`AssistantV1`, func() {
 				createDialogNodeOptionsModel.SetDigressOut("allow_returning")
 				createDialogNodeOptionsModel.SetDigressOutSlots("not_allowed")
 				createDialogNodeOptionsModel.SetUserLabel("testString")
-				createDialogNodeOptionsModel.SetDisambiguationOptOut(true)
-				createDialogNodeOptionsModel.SetIncludeAudit(true)
+				createDialogNodeOptionsModel.SetDisambiguationOptOut(false)
+				createDialogNodeOptionsModel.SetIncludeAudit(false)
 				createDialogNodeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createDialogNodeOptionsModel).ToNot(BeNil())
 				Expect(createDialogNodeOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -13930,14 +13948,14 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createDialogNodeOptionsModel.DigressOut).To(Equal(core.StringPtr("allow_returning")))
 				Expect(createDialogNodeOptionsModel.DigressOutSlots).To(Equal(core.StringPtr("not_allowed")))
 				Expect(createDialogNodeOptionsModel.UserLabel).To(Equal(core.StringPtr("testString")))
-				Expect(createDialogNodeOptionsModel.DisambiguationOptOut).To(Equal(core.BoolPtr(true)))
-				Expect(createDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createDialogNodeOptionsModel.DisambiguationOptOut).To(Equal(core.BoolPtr(false)))
+				Expect(createDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createDialogNodeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateEntity successfully`, func() {
 				entity := "testString"
-				model, err := assistantService.NewCreateEntity(entity)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCreateEntity(entity)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateEntityOptions successfully`, func() {
@@ -13965,7 +13983,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createEntityOptionsModel.SetMetadata(make(map[string]interface{}))
 				createEntityOptionsModel.SetFuzzyMatch(true)
 				createEntityOptionsModel.SetValues([]assistantv1.CreateValue{*createValueModel})
-				createEntityOptionsModel.SetIncludeAudit(true)
+				createEntityOptionsModel.SetIncludeAudit(false)
 				createEntityOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createEntityOptionsModel).ToNot(BeNil())
 				Expect(createEntityOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -13974,7 +13992,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createEntityOptionsModel.Metadata).To(Equal(make(map[string]interface{})))
 				Expect(createEntityOptionsModel.FuzzyMatch).To(Equal(core.BoolPtr(true)))
 				Expect(createEntityOptionsModel.Values).To(Equal([]assistantv1.CreateValue{*createValueModel}))
-				Expect(createEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createEntityOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateExampleOptions successfully`, func() {
@@ -13995,20 +14013,20 @@ var _ = Describe(`AssistantV1`, func() {
 				createExampleOptionsModel.SetIntent("testString")
 				createExampleOptionsModel.SetText("testString")
 				createExampleOptionsModel.SetMentions([]assistantv1.Mention{*mentionModel})
-				createExampleOptionsModel.SetIncludeAudit(true)
+				createExampleOptionsModel.SetIncludeAudit(false)
 				createExampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createExampleOptionsModel).ToNot(BeNil())
 				Expect(createExampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(createExampleOptionsModel.Intent).To(Equal(core.StringPtr("testString")))
 				Expect(createExampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
 				Expect(createExampleOptionsModel.Mentions).To(Equal([]assistantv1.Mention{*mentionModel}))
-				Expect(createExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createExampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateIntent successfully`, func() {
 				intent := "testString"
-				model, err := assistantService.NewCreateIntent(intent)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCreateIntent(intent)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateIntentOptions successfully`, func() {
@@ -14036,14 +14054,14 @@ var _ = Describe(`AssistantV1`, func() {
 				createIntentOptionsModel.SetIntent("testString")
 				createIntentOptionsModel.SetDescription("testString")
 				createIntentOptionsModel.SetExamples([]assistantv1.Example{*exampleModel})
-				createIntentOptionsModel.SetIncludeAudit(true)
+				createIntentOptionsModel.SetIncludeAudit(false)
 				createIntentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createIntentOptionsModel).ToNot(BeNil())
 				Expect(createIntentOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(createIntentOptionsModel.Intent).To(Equal(core.StringPtr("testString")))
 				Expect(createIntentOptionsModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(createIntentOptionsModel.Examples).To(Equal([]assistantv1.Example{*exampleModel}))
-				Expect(createIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createIntentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateSynonymOptions successfully`, func() {
@@ -14057,20 +14075,20 @@ var _ = Describe(`AssistantV1`, func() {
 				createSynonymOptionsModel.SetEntity("testString")
 				createSynonymOptionsModel.SetValue("testString")
 				createSynonymOptionsModel.SetSynonym("testString")
-				createSynonymOptionsModel.SetIncludeAudit(true)
+				createSynonymOptionsModel.SetIncludeAudit(false)
 				createSynonymOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createSynonymOptionsModel).ToNot(BeNil())
 				Expect(createSynonymOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(createSynonymOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
 				Expect(createSynonymOptionsModel.Value).To(Equal(core.StringPtr("testString")))
 				Expect(createSynonymOptionsModel.Synonym).To(Equal(core.StringPtr("testString")))
-				Expect(createSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createSynonymOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateValue successfully`, func() {
 				value := "testString"
-				model, err := assistantService.NewCreateValue(value)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewCreateValue(value)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateValueOptions successfully`, func() {
@@ -14086,7 +14104,7 @@ var _ = Describe(`AssistantV1`, func() {
 				createValueOptionsModel.SetType("synonyms")
 				createValueOptionsModel.SetSynonyms([]string{"testString"})
 				createValueOptionsModel.SetPatterns([]string{"testString"})
-				createValueOptionsModel.SetIncludeAudit(true)
+				createValueOptionsModel.SetIncludeAudit(false)
 				createValueOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createValueOptionsModel).ToNot(BeNil())
 				Expect(createValueOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -14096,7 +14114,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createValueOptionsModel.Type).To(Equal(core.StringPtr("synonyms")))
 				Expect(createValueOptionsModel.Synonyms).To(Equal([]string{"testString"}))
 				Expect(createValueOptionsModel.Patterns).To(Equal([]string{"testString"}))
-				Expect(createValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateWorkspaceOptions successfully`, func() {
@@ -14113,13 +14131,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("2018-12-03")))
 				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -14141,6 +14159,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeOutputModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeOutputModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				dialogNodeOutputModel.SetProperties(nil)
+				Expect(dialogNodeOutputModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeOutputModelExpectedMap := make(map[string]interface{})
+				dialogNodeOutputModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeOutputModel.SetProperties(dialogNodeOutputModelExpectedMap)
+				dialogNodeOutputModelActualMap := dialogNodeOutputModel.GetProperties()
+				Expect(dialogNodeOutputModelActualMap).To(Equal(dialogNodeOutputModelExpectedMap))
+
 				// Construct an instance of the DialogNodeContext model
 				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
 				Expect(dialogNodeContextModel).ToNot(BeNil())
@@ -14149,6 +14176,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeContextModel.Integrations).To(Equal(make(map[string]map[string]interface{})))
 				Expect(dialogNodeContextModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeContextModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				dialogNodeContextModel.SetProperties(nil)
+				Expect(dialogNodeContextModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeContextModelExpectedMap := make(map[string]interface{})
+				dialogNodeContextModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeContextModel.SetProperties(dialogNodeContextModelExpectedMap)
+				dialogNodeContextModelActualMap := dialogNodeContextModel.GetProperties()
+				Expect(dialogNodeContextModelActualMap).To(Equal(dialogNodeContextModelExpectedMap))
 
 				// Construct an instance of the DialogNodeNextStep model
 				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
@@ -14195,7 +14231,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 				Expect(dialogNodeModel.DialogNode).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeModel.Conditions).To(Equal(core.StringPtr("testString")))
@@ -14214,7 +14250,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeModel.DigressOut).To(Equal(core.StringPtr("allow_returning")))
 				Expect(dialogNodeModel.DigressOutSlots).To(Equal(core.StringPtr("not_allowed")))
 				Expect(dialogNodeModel.UserLabel).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeModel.DisambiguationOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(dialogNodeModel.DisambiguationOptOut).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -14233,14 +14269,14 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(workspaceSystemSettingsDisambiguationModel).ToNot(BeNil())
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
 				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
 				Expect(workspaceSystemSettingsDisambiguationModel.Prompt).To(Equal(core.StringPtr("testString")))
 				Expect(workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt).To(Equal(core.StringPtr("testString")))
-				Expect(workspaceSystemSettingsDisambiguationModel.Enabled).To(Equal(core.BoolPtr(true)))
+				Expect(workspaceSystemSettingsDisambiguationModel.Enabled).To(Equal(core.BoolPtr(false)))
 				Expect(workspaceSystemSettingsDisambiguationModel.Sensitivity).To(Equal(core.StringPtr("auto")))
 				Expect(workspaceSystemSettingsDisambiguationModel.Randomize).To(Equal(core.BoolPtr(true)))
 				Expect(workspaceSystemSettingsDisambiguationModel.MaxSuggestions).To(Equal(core.Int64Ptr(int64(1))))
@@ -14249,14 +14285,14 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
 				Expect(workspaceSystemSettingsSystemEntitiesModel).ToNot(BeNil())
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
-				Expect(workspaceSystemSettingsSystemEntitiesModel.Enabled).To(Equal(core.BoolPtr(true)))
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
+				Expect(workspaceSystemSettingsSystemEntitiesModel.Enabled).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
 				Expect(workspaceSystemSettingsOffTopicModel).ToNot(BeNil())
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
-				Expect(workspaceSystemSettingsOffTopicModel.Enabled).To(Equal(core.BoolPtr(true)))
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
+				Expect(workspaceSystemSettingsOffTopicModel.Enabled).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
@@ -14264,15 +14300,15 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 				Expect(workspaceSystemSettingsModel.Tooling).To(Equal(workspaceSystemSettingsToolingModel))
 				Expect(workspaceSystemSettingsModel.Disambiguation).To(Equal(workspaceSystemSettingsDisambiguationModel))
 				Expect(workspaceSystemSettingsModel.HumanAgentAssist).To(Equal(make(map[string]interface{})))
-				Expect(workspaceSystemSettingsModel.SpellingSuggestions).To(Equal(core.BoolPtr(true)))
-				Expect(workspaceSystemSettingsModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(true)))
+				Expect(workspaceSystemSettingsModel.SpellingSuggestions).To(Equal(core.BoolPtr(false)))
+				Expect(workspaceSystemSettingsModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(false)))
 				Expect(workspaceSystemSettingsModel.SystemEntities).To(Equal(workspaceSystemSettingsSystemEntitiesModel))
 				Expect(workspaceSystemSettingsModel.OffTopic).To(Equal(workspaceSystemSettingsOffTopicModel))
 
@@ -14356,12 +14392,12 @@ var _ = Describe(`AssistantV1`, func() {
 				createWorkspaceOptionsModel.SetDialogNodes([]assistantv1.DialogNode{*dialogNodeModel})
 				createWorkspaceOptionsModel.SetCounterexamples([]assistantv1.Counterexample{*counterexampleModel})
 				createWorkspaceOptionsModel.SetMetadata(make(map[string]interface{}))
-				createWorkspaceOptionsModel.SetLearningOptOut(true)
+				createWorkspaceOptionsModel.SetLearningOptOut(false)
 				createWorkspaceOptionsModel.SetSystemSettings(workspaceSystemSettingsModel)
 				createWorkspaceOptionsModel.SetWebhooks([]assistantv1.Webhook{*webhookModel})
 				createWorkspaceOptionsModel.SetIntents([]assistantv1.CreateIntent{*createIntentModel})
 				createWorkspaceOptionsModel.SetEntities([]assistantv1.CreateEntity{*createEntityModel})
-				createWorkspaceOptionsModel.SetIncludeAudit(true)
+				createWorkspaceOptionsModel.SetIncludeAudit(false)
 				createWorkspaceOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createWorkspaceOptionsModel).ToNot(BeNil())
 				Expect(createWorkspaceOptionsModel.Name).To(Equal(core.StringPtr("testString")))
@@ -14370,12 +14406,12 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(createWorkspaceOptionsModel.DialogNodes).To(Equal([]assistantv1.DialogNode{*dialogNodeModel}))
 				Expect(createWorkspaceOptionsModel.Counterexamples).To(Equal([]assistantv1.Counterexample{*counterexampleModel}))
 				Expect(createWorkspaceOptionsModel.Metadata).To(Equal(make(map[string]interface{})))
-				Expect(createWorkspaceOptionsModel.LearningOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(createWorkspaceOptionsModel.LearningOptOut).To(Equal(core.BoolPtr(false)))
 				Expect(createWorkspaceOptionsModel.SystemSettings).To(Equal(workspaceSystemSettingsModel))
 				Expect(createWorkspaceOptionsModel.Webhooks).To(Equal([]assistantv1.Webhook{*webhookModel}))
 				Expect(createWorkspaceOptionsModel.Intents).To(Equal([]assistantv1.CreateIntent{*createIntentModel}))
 				Expect(createWorkspaceOptionsModel.Entities).To(Equal([]assistantv1.CreateEntity{*createEntityModel}))
-				Expect(createWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(createWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(createWorkspaceOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeleteCounterexampleOptions successfully`, func() {
@@ -14503,21 +14539,21 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewDialogNode successfully`, func() {
 				dialogNode := "testString"
-				model, err := assistantService.NewDialogNode(dialogNode)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNode(dialogNode)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeAction successfully`, func() {
 				name := "testString"
 				resultVariable := "testString"
-				model, err := assistantService.NewDialogNodeAction(name, resultVariable)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeAction(name, resultVariable)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeNextStep successfully`, func() {
 				behavior := "get_user_input"
-				model, err := assistantService.NewDialogNodeNextStep(behavior)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeNextStep(behavior)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputOptionsElement successfully`, func() {
@@ -14534,8 +14570,8 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewExample successfully`, func() {
 				text := "testString"
-				model, err := assistantService.NewExample(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewExample(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewGetCounterexampleOptions successfully`, func() {
@@ -14545,12 +14581,12 @@ var _ = Describe(`AssistantV1`, func() {
 				getCounterexampleOptionsModel := assistantService.NewGetCounterexampleOptions(workspaceID, text)
 				getCounterexampleOptionsModel.SetWorkspaceID("testString")
 				getCounterexampleOptionsModel.SetText("testString")
-				getCounterexampleOptionsModel.SetIncludeAudit(true)
+				getCounterexampleOptionsModel.SetIncludeAudit(false)
 				getCounterexampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getCounterexampleOptionsModel).ToNot(BeNil())
 				Expect(getCounterexampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getCounterexampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(getCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getCounterexampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetDialogNodeOptions successfully`, func() {
@@ -14560,12 +14596,12 @@ var _ = Describe(`AssistantV1`, func() {
 				getDialogNodeOptionsModel := assistantService.NewGetDialogNodeOptions(workspaceID, dialogNode)
 				getDialogNodeOptionsModel.SetWorkspaceID("testString")
 				getDialogNodeOptionsModel.SetDialogNode("testString")
-				getDialogNodeOptionsModel.SetIncludeAudit(true)
+				getDialogNodeOptionsModel.SetIncludeAudit(false)
 				getDialogNodeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getDialogNodeOptionsModel).ToNot(BeNil())
 				Expect(getDialogNodeOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getDialogNodeOptionsModel.DialogNode).To(Equal(core.StringPtr("testString")))
-				Expect(getDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getDialogNodeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetEntityOptions successfully`, func() {
@@ -14575,14 +14611,14 @@ var _ = Describe(`AssistantV1`, func() {
 				getEntityOptionsModel := assistantService.NewGetEntityOptions(workspaceID, entity)
 				getEntityOptionsModel.SetWorkspaceID("testString")
 				getEntityOptionsModel.SetEntity("testString")
-				getEntityOptionsModel.SetExport(true)
-				getEntityOptionsModel.SetIncludeAudit(true)
+				getEntityOptionsModel.SetExport(false)
+				getEntityOptionsModel.SetIncludeAudit(false)
 				getEntityOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getEntityOptionsModel).ToNot(BeNil())
 				Expect(getEntityOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getEntityOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
-				Expect(getEntityOptionsModel.Export).To(Equal(core.BoolPtr(true)))
-				Expect(getEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getEntityOptionsModel.Export).To(Equal(core.BoolPtr(false)))
+				Expect(getEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getEntityOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetExampleOptions successfully`, func() {
@@ -14594,13 +14630,13 @@ var _ = Describe(`AssistantV1`, func() {
 				getExampleOptionsModel.SetWorkspaceID("testString")
 				getExampleOptionsModel.SetIntent("testString")
 				getExampleOptionsModel.SetText("testString")
-				getExampleOptionsModel.SetIncludeAudit(true)
+				getExampleOptionsModel.SetIncludeAudit(false)
 				getExampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getExampleOptionsModel).ToNot(BeNil())
 				Expect(getExampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getExampleOptionsModel.Intent).To(Equal(core.StringPtr("testString")))
 				Expect(getExampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(getExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getExampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetIntentOptions successfully`, func() {
@@ -14610,14 +14646,14 @@ var _ = Describe(`AssistantV1`, func() {
 				getIntentOptionsModel := assistantService.NewGetIntentOptions(workspaceID, intent)
 				getIntentOptionsModel.SetWorkspaceID("testString")
 				getIntentOptionsModel.SetIntent("testString")
-				getIntentOptionsModel.SetExport(true)
-				getIntentOptionsModel.SetIncludeAudit(true)
+				getIntentOptionsModel.SetExport(false)
+				getIntentOptionsModel.SetIncludeAudit(false)
 				getIntentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getIntentOptionsModel).ToNot(BeNil())
 				Expect(getIntentOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getIntentOptionsModel.Intent).To(Equal(core.StringPtr("testString")))
-				Expect(getIntentOptionsModel.Export).To(Equal(core.BoolPtr(true)))
-				Expect(getIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getIntentOptionsModel.Export).To(Equal(core.BoolPtr(false)))
+				Expect(getIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getIntentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetSynonymOptions successfully`, func() {
@@ -14631,14 +14667,14 @@ var _ = Describe(`AssistantV1`, func() {
 				getSynonymOptionsModel.SetEntity("testString")
 				getSynonymOptionsModel.SetValue("testString")
 				getSynonymOptionsModel.SetSynonym("testString")
-				getSynonymOptionsModel.SetIncludeAudit(true)
+				getSynonymOptionsModel.SetIncludeAudit(false)
 				getSynonymOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getSynonymOptionsModel).ToNot(BeNil())
 				Expect(getSynonymOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getSynonymOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
 				Expect(getSynonymOptionsModel.Value).To(Equal(core.StringPtr("testString")))
 				Expect(getSynonymOptionsModel.Synonym).To(Equal(core.StringPtr("testString")))
-				Expect(getSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getSynonymOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetValueOptions successfully`, func() {
@@ -14650,15 +14686,15 @@ var _ = Describe(`AssistantV1`, func() {
 				getValueOptionsModel.SetWorkspaceID("testString")
 				getValueOptionsModel.SetEntity("testString")
 				getValueOptionsModel.SetValue("testString")
-				getValueOptionsModel.SetExport(true)
-				getValueOptionsModel.SetIncludeAudit(true)
+				getValueOptionsModel.SetExport(false)
+				getValueOptionsModel.SetIncludeAudit(false)
 				getValueOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getValueOptionsModel).ToNot(BeNil())
 				Expect(getValueOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(getValueOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
 				Expect(getValueOptionsModel.Value).To(Equal(core.StringPtr("testString")))
-				Expect(getValueOptionsModel.Export).To(Equal(core.BoolPtr(true)))
-				Expect(getValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getValueOptionsModel.Export).To(Equal(core.BoolPtr(false)))
+				Expect(getValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetWorkspaceOptions successfully`, func() {
@@ -14666,14 +14702,14 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceID := "testString"
 				getWorkspaceOptionsModel := assistantService.NewGetWorkspaceOptions(workspaceID)
 				getWorkspaceOptionsModel.SetWorkspaceID("testString")
-				getWorkspaceOptionsModel.SetExport(true)
-				getWorkspaceOptionsModel.SetIncludeAudit(true)
+				getWorkspaceOptionsModel.SetExport(false)
+				getWorkspaceOptionsModel.SetIncludeAudit(false)
 				getWorkspaceOptionsModel.SetSort("stable")
 				getWorkspaceOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getWorkspaceOptionsModel).ToNot(BeNil())
 				Expect(getWorkspaceOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
-				Expect(getWorkspaceOptionsModel.Export).To(Equal(core.BoolPtr(true)))
-				Expect(getWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(getWorkspaceOptionsModel.Export).To(Equal(core.BoolPtr(false)))
+				Expect(getWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(getWorkspaceOptionsModel.Sort).To(Equal(core.StringPtr("stable")))
 				Expect(getWorkspaceOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -14699,18 +14735,18 @@ var _ = Describe(`AssistantV1`, func() {
 				listCounterexamplesOptionsModel := assistantService.NewListCounterexamplesOptions(workspaceID)
 				listCounterexamplesOptionsModel.SetWorkspaceID("testString")
 				listCounterexamplesOptionsModel.SetPageLimit(int64(38))
-				listCounterexamplesOptionsModel.SetIncludeCount(true)
+				listCounterexamplesOptionsModel.SetIncludeCount(false)
 				listCounterexamplesOptionsModel.SetSort("text")
 				listCounterexamplesOptionsModel.SetCursor("testString")
-				listCounterexamplesOptionsModel.SetIncludeAudit(true)
+				listCounterexamplesOptionsModel.SetIncludeAudit(false)
 				listCounterexamplesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listCounterexamplesOptionsModel).ToNot(BeNil())
 				Expect(listCounterexamplesOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listCounterexamplesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listCounterexamplesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listCounterexamplesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listCounterexamplesOptionsModel.Sort).To(Equal(core.StringPtr("text")))
 				Expect(listCounterexamplesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listCounterexamplesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listCounterexamplesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listCounterexamplesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListDialogNodesOptions successfully`, func() {
@@ -14719,18 +14755,18 @@ var _ = Describe(`AssistantV1`, func() {
 				listDialogNodesOptionsModel := assistantService.NewListDialogNodesOptions(workspaceID)
 				listDialogNodesOptionsModel.SetWorkspaceID("testString")
 				listDialogNodesOptionsModel.SetPageLimit(int64(38))
-				listDialogNodesOptionsModel.SetIncludeCount(true)
+				listDialogNodesOptionsModel.SetIncludeCount(false)
 				listDialogNodesOptionsModel.SetSort("dialog_node")
 				listDialogNodesOptionsModel.SetCursor("testString")
-				listDialogNodesOptionsModel.SetIncludeAudit(true)
+				listDialogNodesOptionsModel.SetIncludeAudit(false)
 				listDialogNodesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listDialogNodesOptionsModel).ToNot(BeNil())
 				Expect(listDialogNodesOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listDialogNodesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listDialogNodesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listDialogNodesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listDialogNodesOptionsModel.Sort).To(Equal(core.StringPtr("dialog_node")))
 				Expect(listDialogNodesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listDialogNodesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listDialogNodesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listDialogNodesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListEntitiesOptions successfully`, func() {
@@ -14738,21 +14774,21 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceID := "testString"
 				listEntitiesOptionsModel := assistantService.NewListEntitiesOptions(workspaceID)
 				listEntitiesOptionsModel.SetWorkspaceID("testString")
-				listEntitiesOptionsModel.SetExport(true)
+				listEntitiesOptionsModel.SetExport(false)
 				listEntitiesOptionsModel.SetPageLimit(int64(38))
-				listEntitiesOptionsModel.SetIncludeCount(true)
+				listEntitiesOptionsModel.SetIncludeCount(false)
 				listEntitiesOptionsModel.SetSort("entity")
 				listEntitiesOptionsModel.SetCursor("testString")
-				listEntitiesOptionsModel.SetIncludeAudit(true)
+				listEntitiesOptionsModel.SetIncludeAudit(false)
 				listEntitiesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listEntitiesOptionsModel).ToNot(BeNil())
 				Expect(listEntitiesOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
-				Expect(listEntitiesOptionsModel.Export).To(Equal(core.BoolPtr(true)))
+				Expect(listEntitiesOptionsModel.Export).To(Equal(core.BoolPtr(false)))
 				Expect(listEntitiesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listEntitiesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listEntitiesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listEntitiesOptionsModel.Sort).To(Equal(core.StringPtr("entity")))
 				Expect(listEntitiesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listEntitiesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listEntitiesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listEntitiesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListExamplesOptions successfully`, func() {
@@ -14763,19 +14799,19 @@ var _ = Describe(`AssistantV1`, func() {
 				listExamplesOptionsModel.SetWorkspaceID("testString")
 				listExamplesOptionsModel.SetIntent("testString")
 				listExamplesOptionsModel.SetPageLimit(int64(38))
-				listExamplesOptionsModel.SetIncludeCount(true)
+				listExamplesOptionsModel.SetIncludeCount(false)
 				listExamplesOptionsModel.SetSort("text")
 				listExamplesOptionsModel.SetCursor("testString")
-				listExamplesOptionsModel.SetIncludeAudit(true)
+				listExamplesOptionsModel.SetIncludeAudit(false)
 				listExamplesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listExamplesOptionsModel).ToNot(BeNil())
 				Expect(listExamplesOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listExamplesOptionsModel.Intent).To(Equal(core.StringPtr("testString")))
 				Expect(listExamplesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listExamplesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listExamplesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listExamplesOptionsModel.Sort).To(Equal(core.StringPtr("text")))
 				Expect(listExamplesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listExamplesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listExamplesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listExamplesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListIntentsOptions successfully`, func() {
@@ -14783,21 +14819,21 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceID := "testString"
 				listIntentsOptionsModel := assistantService.NewListIntentsOptions(workspaceID)
 				listIntentsOptionsModel.SetWorkspaceID("testString")
-				listIntentsOptionsModel.SetExport(true)
+				listIntentsOptionsModel.SetExport(false)
 				listIntentsOptionsModel.SetPageLimit(int64(38))
-				listIntentsOptionsModel.SetIncludeCount(true)
+				listIntentsOptionsModel.SetIncludeCount(false)
 				listIntentsOptionsModel.SetSort("intent")
 				listIntentsOptionsModel.SetCursor("testString")
-				listIntentsOptionsModel.SetIncludeAudit(true)
+				listIntentsOptionsModel.SetIncludeAudit(false)
 				listIntentsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listIntentsOptionsModel).ToNot(BeNil())
 				Expect(listIntentsOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
-				Expect(listIntentsOptionsModel.Export).To(Equal(core.BoolPtr(true)))
+				Expect(listIntentsOptionsModel.Export).To(Equal(core.BoolPtr(false)))
 				Expect(listIntentsOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listIntentsOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listIntentsOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listIntentsOptionsModel.Sort).To(Equal(core.StringPtr("intent")))
 				Expect(listIntentsOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listIntentsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listIntentsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listIntentsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListLogsOptions successfully`, func() {
@@ -14825,14 +14861,14 @@ var _ = Describe(`AssistantV1`, func() {
 				listMentionsOptionsModel := assistantService.NewListMentionsOptions(workspaceID, entity)
 				listMentionsOptionsModel.SetWorkspaceID("testString")
 				listMentionsOptionsModel.SetEntity("testString")
-				listMentionsOptionsModel.SetExport(true)
-				listMentionsOptionsModel.SetIncludeAudit(true)
+				listMentionsOptionsModel.SetExport(false)
+				listMentionsOptionsModel.SetIncludeAudit(false)
 				listMentionsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listMentionsOptionsModel).ToNot(BeNil())
 				Expect(listMentionsOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listMentionsOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
-				Expect(listMentionsOptionsModel.Export).To(Equal(core.BoolPtr(true)))
-				Expect(listMentionsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listMentionsOptionsModel.Export).To(Equal(core.BoolPtr(false)))
+				Expect(listMentionsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listMentionsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListSynonymsOptions successfully`, func() {
@@ -14845,20 +14881,20 @@ var _ = Describe(`AssistantV1`, func() {
 				listSynonymsOptionsModel.SetEntity("testString")
 				listSynonymsOptionsModel.SetValue("testString")
 				listSynonymsOptionsModel.SetPageLimit(int64(38))
-				listSynonymsOptionsModel.SetIncludeCount(true)
+				listSynonymsOptionsModel.SetIncludeCount(false)
 				listSynonymsOptionsModel.SetSort("synonym")
 				listSynonymsOptionsModel.SetCursor("testString")
-				listSynonymsOptionsModel.SetIncludeAudit(true)
+				listSynonymsOptionsModel.SetIncludeAudit(false)
 				listSynonymsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listSynonymsOptionsModel).ToNot(BeNil())
 				Expect(listSynonymsOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listSynonymsOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
 				Expect(listSynonymsOptionsModel.Value).To(Equal(core.StringPtr("testString")))
 				Expect(listSynonymsOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listSynonymsOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listSynonymsOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listSynonymsOptionsModel.Sort).To(Equal(core.StringPtr("synonym")))
 				Expect(listSynonymsOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listSynonymsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listSynonymsOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listSynonymsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListValuesOptions successfully`, func() {
@@ -14868,54 +14904,54 @@ var _ = Describe(`AssistantV1`, func() {
 				listValuesOptionsModel := assistantService.NewListValuesOptions(workspaceID, entity)
 				listValuesOptionsModel.SetWorkspaceID("testString")
 				listValuesOptionsModel.SetEntity("testString")
-				listValuesOptionsModel.SetExport(true)
+				listValuesOptionsModel.SetExport(false)
 				listValuesOptionsModel.SetPageLimit(int64(38))
-				listValuesOptionsModel.SetIncludeCount(true)
+				listValuesOptionsModel.SetIncludeCount(false)
 				listValuesOptionsModel.SetSort("value")
 				listValuesOptionsModel.SetCursor("testString")
-				listValuesOptionsModel.SetIncludeAudit(true)
+				listValuesOptionsModel.SetIncludeAudit(false)
 				listValuesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listValuesOptionsModel).ToNot(BeNil())
 				Expect(listValuesOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(listValuesOptionsModel.Entity).To(Equal(core.StringPtr("testString")))
-				Expect(listValuesOptionsModel.Export).To(Equal(core.BoolPtr(true)))
+				Expect(listValuesOptionsModel.Export).To(Equal(core.BoolPtr(false)))
 				Expect(listValuesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listValuesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listValuesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listValuesOptionsModel.Sort).To(Equal(core.StringPtr("value")))
 				Expect(listValuesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listValuesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listValuesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listValuesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListWorkspacesOptions successfully`, func() {
 				// Construct an instance of the ListWorkspacesOptions model
 				listWorkspacesOptionsModel := assistantService.NewListWorkspacesOptions()
 				listWorkspacesOptionsModel.SetPageLimit(int64(38))
-				listWorkspacesOptionsModel.SetIncludeCount(true)
+				listWorkspacesOptionsModel.SetIncludeCount(false)
 				listWorkspacesOptionsModel.SetSort("name")
 				listWorkspacesOptionsModel.SetCursor("testString")
-				listWorkspacesOptionsModel.SetIncludeAudit(true)
+				listWorkspacesOptionsModel.SetIncludeAudit(false)
 				listWorkspacesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listWorkspacesOptionsModel).ToNot(BeNil())
 				Expect(listWorkspacesOptionsModel.PageLimit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(listWorkspacesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(true)))
+				Expect(listWorkspacesOptionsModel.IncludeCount).To(Equal(core.BoolPtr(false)))
 				Expect(listWorkspacesOptionsModel.Sort).To(Equal(core.StringPtr("name")))
 				Expect(listWorkspacesOptionsModel.Cursor).To(Equal(core.StringPtr("testString")))
-				Expect(listWorkspacesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(listWorkspacesOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(listWorkspacesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewLogMessage successfully`, func() {
 				level := "info"
 				msg := "testString"
 				code := "testString"
-				model, err := assistantService.NewLogMessage(level, msg, code)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewLogMessage(level, msg, code)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewMention successfully`, func() {
 				entity := "testString"
 				location := []int64{int64(38)}
-				model, err := assistantService.NewMention(entity, location)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewMention(entity, location)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewMessageOptions successfully`, func() {
@@ -14923,14 +14959,23 @@ var _ = Describe(`AssistantV1`, func() {
 				messageInputModel := new(assistantv1.MessageInput)
 				Expect(messageInputModel).ToNot(BeNil())
 				messageInputModel.Text = core.StringPtr("testString")
-				messageInputModel.SpellingSuggestions = core.BoolPtr(true)
-				messageInputModel.SpellingAutoCorrect = core.BoolPtr(true)
+				messageInputModel.SpellingSuggestions = core.BoolPtr(false)
+				messageInputModel.SpellingAutoCorrect = core.BoolPtr(false)
 				messageInputModel.SetProperty("foo", core.StringPtr("testString"))
 				Expect(messageInputModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(messageInputModel.SpellingSuggestions).To(Equal(core.BoolPtr(true)))
-				Expect(messageInputModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(true)))
+				Expect(messageInputModel.SpellingSuggestions).To(Equal(core.BoolPtr(false)))
+				Expect(messageInputModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(false)))
 				Expect(messageInputModel.GetProperties()).ToNot(BeEmpty())
 				Expect(messageInputModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				messageInputModel.SetProperties(nil)
+				Expect(messageInputModel.GetProperties()).To(BeEmpty())
+
+				messageInputModelExpectedMap := make(map[string]interface{})
+				messageInputModelExpectedMap["foo"] = core.StringPtr("testString")
+				messageInputModel.SetProperties(messageInputModelExpectedMap)
+				messageInputModelActualMap := messageInputModel.GetProperties()
+				Expect(messageInputModelActualMap).To(Equal(messageInputModelExpectedMap))
 
 				// Construct an instance of the RuntimeIntent model
 				runtimeIntentModel := new(assistantv1.RuntimeIntent)
@@ -15061,6 +15106,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(contextModel.GetProperties()).ToNot(BeEmpty())
 				Expect(contextModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				contextModel.SetProperties(nil)
+				Expect(contextModel.GetProperties()).To(BeEmpty())
+
+				contextModelExpectedMap := make(map[string]interface{})
+				contextModelExpectedMap["foo"] = core.StringPtr("testString")
+				contextModel.SetProperties(contextModelExpectedMap)
+				contextModelActualMap := contextModel.GetProperties()
+				Expect(contextModelActualMap).To(Equal(contextModelExpectedMap))
+
 				// Construct an instance of the DialogNodeVisitedDetails model
 				dialogNodeVisitedDetailsModel := new(assistantv1.DialogNodeVisitedDetails)
 				Expect(dialogNodeVisitedDetailsModel).ToNot(BeNil())
@@ -15148,6 +15202,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(outputDataModel.GetProperties()).ToNot(BeEmpty())
 				Expect(outputDataModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				outputDataModel.SetProperties(nil)
+				Expect(outputDataModel.GetProperties()).To(BeEmpty())
+
+				outputDataModelExpectedMap := make(map[string]interface{})
+				outputDataModelExpectedMap["foo"] = core.StringPtr("testString")
+				outputDataModel.SetProperties(outputDataModelExpectedMap)
+				outputDataModelActualMap := outputDataModel.GetProperties()
+				Expect(outputDataModelActualMap).To(Equal(outputDataModelExpectedMap))
+
 				// Construct an instance of the MessageOptions model
 				workspaceID := "testString"
 				messageOptionsModel := assistantService.NewMessageOptions(workspaceID)
@@ -15155,50 +15218,49 @@ var _ = Describe(`AssistantV1`, func() {
 				messageOptionsModel.SetInput(messageInputModel)
 				messageOptionsModel.SetIntents([]assistantv1.RuntimeIntent{*runtimeIntentModel})
 				messageOptionsModel.SetEntities([]assistantv1.RuntimeEntity{*runtimeEntityModel})
-				messageOptionsModel.SetAlternateIntents(true)
+				messageOptionsModel.SetAlternateIntents(false)
 				messageOptionsModel.SetContext(contextModel)
 				messageOptionsModel.SetOutput(outputDataModel)
 				messageOptionsModel.SetUserID("testString")
-				messageOptionsModel.SetNodesVisitedDetails(true)
+				messageOptionsModel.SetNodesVisitedDetails(false)
 				messageOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(messageOptionsModel).ToNot(BeNil())
 				Expect(messageOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(messageOptionsModel.Input).To(Equal(messageInputModel))
 				Expect(messageOptionsModel.Intents).To(Equal([]assistantv1.RuntimeIntent{*runtimeIntentModel}))
 				Expect(messageOptionsModel.Entities).To(Equal([]assistantv1.RuntimeEntity{*runtimeEntityModel}))
-				Expect(messageOptionsModel.AlternateIntents).To(Equal(core.BoolPtr(true)))
+				Expect(messageOptionsModel.AlternateIntents).To(Equal(core.BoolPtr(false)))
 				Expect(messageOptionsModel.Context).To(Equal(contextModel))
 				Expect(messageOptionsModel.Output).To(Equal(outputDataModel))
 				Expect(messageOptionsModel.UserID).To(Equal(core.StringPtr("testString")))
-				Expect(messageOptionsModel.NodesVisitedDetails).To(Equal(core.BoolPtr(true)))
+				Expect(messageOptionsModel.NodesVisitedDetails).To(Equal(core.BoolPtr(false)))
 				Expect(messageOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewOutputData successfully`, func() {
 				logMessages := []assistantv1.LogMessage{}
 				text := []string{"testString"}
-				model, err := assistantService.NewOutputData(logMessages, text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewOutputData(logMessages, text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeEntity successfully`, func() {
 				entity := "testString"
-				location := []int64{int64(38)}
 				value := "testString"
-				model, err := assistantService.NewRuntimeEntity(entity, location, value)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeEntity(entity, value)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeIntent successfully`, func() {
 				intent := "testString"
 				confidence := float64(72.5)
-				model, err := assistantService.NewRuntimeIntent(intent, confidence)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeIntent(intent, confidence)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSynonym successfully`, func() {
 				synonym := "testString"
-				model, err := assistantService.NewSynonym(synonym)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewSynonym(synonym)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateCounterexampleOptions successfully`, func() {
@@ -15209,13 +15271,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateCounterexampleOptionsModel.SetWorkspaceID("testString")
 				updateCounterexampleOptionsModel.SetText("testString")
 				updateCounterexampleOptionsModel.SetNewText("testString")
-				updateCounterexampleOptionsModel.SetIncludeAudit(true)
+				updateCounterexampleOptionsModel.SetIncludeAudit(false)
 				updateCounterexampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateCounterexampleOptionsModel).ToNot(BeNil())
 				Expect(updateCounterexampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCounterexampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
 				Expect(updateCounterexampleOptionsModel.NewText).To(Equal(core.StringPtr("testString")))
-				Expect(updateCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateCounterexampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateCounterexampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateDialogNodeOptions successfully`, func() {
@@ -15232,13 +15294,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("2018-12-03")))
 				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -15260,6 +15322,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeOutputModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeOutputModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				dialogNodeOutputModel.SetProperties(nil)
+				Expect(dialogNodeOutputModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeOutputModelExpectedMap := make(map[string]interface{})
+				dialogNodeOutputModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeOutputModel.SetProperties(dialogNodeOutputModelExpectedMap)
+				dialogNodeOutputModelActualMap := dialogNodeOutputModel.GetProperties()
+				Expect(dialogNodeOutputModelActualMap).To(Equal(dialogNodeOutputModelExpectedMap))
+
 				// Construct an instance of the DialogNodeContext model
 				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
 				Expect(dialogNodeContextModel).ToNot(BeNil())
@@ -15268,6 +15339,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeContextModel.Integrations).To(Equal(make(map[string]map[string]interface{})))
 				Expect(dialogNodeContextModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeContextModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				dialogNodeContextModel.SetProperties(nil)
+				Expect(dialogNodeContextModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeContextModelExpectedMap := make(map[string]interface{})
+				dialogNodeContextModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeContextModel.SetProperties(dialogNodeContextModelExpectedMap)
+				dialogNodeContextModelActualMap := dialogNodeContextModel.GetProperties()
+				Expect(dialogNodeContextModelActualMap).To(Equal(dialogNodeContextModelExpectedMap))
 
 				// Construct an instance of the DialogNodeNextStep model
 				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
@@ -15317,8 +15397,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateDialogNodeOptionsModel.SetNewDigressOut("allow_returning")
 				updateDialogNodeOptionsModel.SetNewDigressOutSlots("not_allowed")
 				updateDialogNodeOptionsModel.SetNewUserLabel("testString")
-				updateDialogNodeOptionsModel.SetNewDisambiguationOptOut(true)
-				updateDialogNodeOptionsModel.SetIncludeAudit(true)
+				updateDialogNodeOptionsModel.SetNewDisambiguationOptOut(false)
+				updateDialogNodeOptionsModel.SetIncludeAudit(false)
 				updateDialogNodeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateDialogNodeOptionsModel).ToNot(BeNil())
 				Expect(updateDialogNodeOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15341,8 +15421,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateDialogNodeOptionsModel.NewDigressOut).To(Equal(core.StringPtr("allow_returning")))
 				Expect(updateDialogNodeOptionsModel.NewDigressOutSlots).To(Equal(core.StringPtr("not_allowed")))
 				Expect(updateDialogNodeOptionsModel.NewUserLabel).To(Equal(core.StringPtr("testString")))
-				Expect(updateDialogNodeOptionsModel.NewDisambiguationOptOut).To(Equal(core.BoolPtr(true)))
-				Expect(updateDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateDialogNodeOptionsModel.NewDisambiguationOptOut).To(Equal(core.BoolPtr(false)))
+				Expect(updateDialogNodeOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateDialogNodeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateEntityOptions successfully`, func() {
@@ -15371,8 +15451,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateEntityOptionsModel.SetNewMetadata(make(map[string]interface{}))
 				updateEntityOptionsModel.SetNewFuzzyMatch(true)
 				updateEntityOptionsModel.SetNewValues([]assistantv1.CreateValue{*createValueModel})
-				updateEntityOptionsModel.SetAppend(true)
-				updateEntityOptionsModel.SetIncludeAudit(true)
+				updateEntityOptionsModel.SetAppend(false)
+				updateEntityOptionsModel.SetIncludeAudit(false)
 				updateEntityOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateEntityOptionsModel).ToNot(BeNil())
 				Expect(updateEntityOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15382,8 +15462,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateEntityOptionsModel.NewMetadata).To(Equal(make(map[string]interface{})))
 				Expect(updateEntityOptionsModel.NewFuzzyMatch).To(Equal(core.BoolPtr(true)))
 				Expect(updateEntityOptionsModel.NewValues).To(Equal([]assistantv1.CreateValue{*createValueModel}))
-				Expect(updateEntityOptionsModel.Append).To(Equal(core.BoolPtr(true)))
-				Expect(updateEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateEntityOptionsModel.Append).To(Equal(core.BoolPtr(false)))
+				Expect(updateEntityOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateEntityOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateExampleOptions successfully`, func() {
@@ -15405,7 +15485,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateExampleOptionsModel.SetText("testString")
 				updateExampleOptionsModel.SetNewText("testString")
 				updateExampleOptionsModel.SetNewMentions([]assistantv1.Mention{*mentionModel})
-				updateExampleOptionsModel.SetIncludeAudit(true)
+				updateExampleOptionsModel.SetIncludeAudit(false)
 				updateExampleOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateExampleOptionsModel).ToNot(BeNil())
 				Expect(updateExampleOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15413,7 +15493,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateExampleOptionsModel.Text).To(Equal(core.StringPtr("testString")))
 				Expect(updateExampleOptionsModel.NewText).To(Equal(core.StringPtr("testString")))
 				Expect(updateExampleOptionsModel.NewMentions).To(Equal([]assistantv1.Mention{*mentionModel}))
-				Expect(updateExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateExampleOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateExampleOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateIntentOptions successfully`, func() {
@@ -15442,8 +15522,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateIntentOptionsModel.SetNewIntent("testString")
 				updateIntentOptionsModel.SetNewDescription("testString")
 				updateIntentOptionsModel.SetNewExamples([]assistantv1.Example{*exampleModel})
-				updateIntentOptionsModel.SetAppend(true)
-				updateIntentOptionsModel.SetIncludeAudit(true)
+				updateIntentOptionsModel.SetAppend(false)
+				updateIntentOptionsModel.SetIncludeAudit(false)
 				updateIntentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateIntentOptionsModel).ToNot(BeNil())
 				Expect(updateIntentOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15451,8 +15531,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateIntentOptionsModel.NewIntent).To(Equal(core.StringPtr("testString")))
 				Expect(updateIntentOptionsModel.NewDescription).To(Equal(core.StringPtr("testString")))
 				Expect(updateIntentOptionsModel.NewExamples).To(Equal([]assistantv1.Example{*exampleModel}))
-				Expect(updateIntentOptionsModel.Append).To(Equal(core.BoolPtr(true)))
-				Expect(updateIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateIntentOptionsModel.Append).To(Equal(core.BoolPtr(false)))
+				Expect(updateIntentOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateIntentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateSynonymOptions successfully`, func() {
@@ -15467,7 +15547,7 @@ var _ = Describe(`AssistantV1`, func() {
 				updateSynonymOptionsModel.SetValue("testString")
 				updateSynonymOptionsModel.SetSynonym("testString")
 				updateSynonymOptionsModel.SetNewSynonym("testString")
-				updateSynonymOptionsModel.SetIncludeAudit(true)
+				updateSynonymOptionsModel.SetIncludeAudit(false)
 				updateSynonymOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateSynonymOptionsModel).ToNot(BeNil())
 				Expect(updateSynonymOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15475,7 +15555,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateSynonymOptionsModel.Value).To(Equal(core.StringPtr("testString")))
 				Expect(updateSynonymOptionsModel.Synonym).To(Equal(core.StringPtr("testString")))
 				Expect(updateSynonymOptionsModel.NewSynonym).To(Equal(core.StringPtr("testString")))
-				Expect(updateSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateSynonymOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateSynonymOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateValueOptions successfully`, func() {
@@ -15492,8 +15572,8 @@ var _ = Describe(`AssistantV1`, func() {
 				updateValueOptionsModel.SetNewType("synonyms")
 				updateValueOptionsModel.SetNewSynonyms([]string{"testString"})
 				updateValueOptionsModel.SetNewPatterns([]string{"testString"})
-				updateValueOptionsModel.SetAppend(true)
-				updateValueOptionsModel.SetIncludeAudit(true)
+				updateValueOptionsModel.SetAppend(false)
+				updateValueOptionsModel.SetIncludeAudit(false)
 				updateValueOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateValueOptionsModel).ToNot(BeNil())
 				Expect(updateValueOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15504,8 +15584,8 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateValueOptionsModel.NewType).To(Equal(core.StringPtr("synonyms")))
 				Expect(updateValueOptionsModel.NewSynonyms).To(Equal([]string{"testString"}))
 				Expect(updateValueOptionsModel.NewPatterns).To(Equal([]string{"testString"}))
-				Expect(updateValueOptionsModel.Append).To(Equal(core.BoolPtr(true)))
-				Expect(updateValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateValueOptionsModel.Append).To(Equal(core.BoolPtr(false)))
+				Expect(updateValueOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateWorkspaceOptions successfully`, func() {
@@ -15522,13 +15602,13 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeOutputGenericModel.Query = core.StringPtr("testString")
 				dialogNodeOutputGenericModel.QueryType = core.StringPtr("natural_language")
 				dialogNodeOutputGenericModel.Filter = core.StringPtr("testString")
-				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("testString")
+				dialogNodeOutputGenericModel.DiscoveryVersion = core.StringPtr("2018-12-03")
 				dialogNodeOutputGenericModel.Channels = []assistantv1.ResponseGenericChannel{*responseGenericChannelModel}
 				Expect(dialogNodeOutputGenericModel.ResponseType).To(Equal(core.StringPtr("search_skill")))
 				Expect(dialogNodeOutputGenericModel.Query).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeOutputGenericModel.QueryType).To(Equal(core.StringPtr("natural_language")))
 				Expect(dialogNodeOutputGenericModel.Filter).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("testString")))
+				Expect(dialogNodeOutputGenericModel.DiscoveryVersion).To(Equal(core.StringPtr("2018-12-03")))
 				Expect(dialogNodeOutputGenericModel.Channels).To(Equal([]assistantv1.ResponseGenericChannel{*responseGenericChannelModel}))
 
 				// Construct an instance of the DialogNodeOutputModifiers model
@@ -15550,6 +15630,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeOutputModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeOutputModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
 
+				dialogNodeOutputModel.SetProperties(nil)
+				Expect(dialogNodeOutputModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeOutputModelExpectedMap := make(map[string]interface{})
+				dialogNodeOutputModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeOutputModel.SetProperties(dialogNodeOutputModelExpectedMap)
+				dialogNodeOutputModelActualMap := dialogNodeOutputModel.GetProperties()
+				Expect(dialogNodeOutputModelActualMap).To(Equal(dialogNodeOutputModelExpectedMap))
+
 				// Construct an instance of the DialogNodeContext model
 				dialogNodeContextModel := new(assistantv1.DialogNodeContext)
 				Expect(dialogNodeContextModel).ToNot(BeNil())
@@ -15558,6 +15647,15 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeContextModel.Integrations).To(Equal(make(map[string]map[string]interface{})))
 				Expect(dialogNodeContextModel.GetProperties()).ToNot(BeEmpty())
 				Expect(dialogNodeContextModel.GetProperty("foo")).To(Equal(core.StringPtr("testString")))
+
+				dialogNodeContextModel.SetProperties(nil)
+				Expect(dialogNodeContextModel.GetProperties()).To(BeEmpty())
+
+				dialogNodeContextModelExpectedMap := make(map[string]interface{})
+				dialogNodeContextModelExpectedMap["foo"] = core.StringPtr("testString")
+				dialogNodeContextModel.SetProperties(dialogNodeContextModelExpectedMap)
+				dialogNodeContextModelActualMap := dialogNodeContextModel.GetProperties()
+				Expect(dialogNodeContextModelActualMap).To(Equal(dialogNodeContextModelExpectedMap))
 
 				// Construct an instance of the DialogNodeNextStep model
 				dialogNodeNextStepModel := new(assistantv1.DialogNodeNextStep)
@@ -15604,7 +15702,7 @@ var _ = Describe(`AssistantV1`, func() {
 				dialogNodeModel.DigressOut = core.StringPtr("allow_returning")
 				dialogNodeModel.DigressOutSlots = core.StringPtr("not_allowed")
 				dialogNodeModel.UserLabel = core.StringPtr("testString")
-				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(true)
+				dialogNodeModel.DisambiguationOptOut = core.BoolPtr(false)
 				Expect(dialogNodeModel.DialogNode).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(dialogNodeModel.Conditions).To(Equal(core.StringPtr("testString")))
@@ -15623,7 +15721,7 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(dialogNodeModel.DigressOut).To(Equal(core.StringPtr("allow_returning")))
 				Expect(dialogNodeModel.DigressOutSlots).To(Equal(core.StringPtr("not_allowed")))
 				Expect(dialogNodeModel.UserLabel).To(Equal(core.StringPtr("testString")))
-				Expect(dialogNodeModel.DisambiguationOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(dialogNodeModel.DisambiguationOptOut).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the Counterexample model
 				counterexampleModel := new(assistantv1.Counterexample)
@@ -15642,14 +15740,14 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(workspaceSystemSettingsDisambiguationModel).ToNot(BeNil())
 				workspaceSystemSettingsDisambiguationModel.Prompt = core.StringPtr("testString")
 				workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt = core.StringPtr("testString")
-				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(true)
+				workspaceSystemSettingsDisambiguationModel.Enabled = core.BoolPtr(false)
 				workspaceSystemSettingsDisambiguationModel.Sensitivity = core.StringPtr("auto")
 				workspaceSystemSettingsDisambiguationModel.Randomize = core.BoolPtr(true)
 				workspaceSystemSettingsDisambiguationModel.MaxSuggestions = core.Int64Ptr(int64(1))
 				workspaceSystemSettingsDisambiguationModel.SuggestionTextPolicy = core.StringPtr("testString")
 				Expect(workspaceSystemSettingsDisambiguationModel.Prompt).To(Equal(core.StringPtr("testString")))
 				Expect(workspaceSystemSettingsDisambiguationModel.NoneOfTheAbovePrompt).To(Equal(core.StringPtr("testString")))
-				Expect(workspaceSystemSettingsDisambiguationModel.Enabled).To(Equal(core.BoolPtr(true)))
+				Expect(workspaceSystemSettingsDisambiguationModel.Enabled).To(Equal(core.BoolPtr(false)))
 				Expect(workspaceSystemSettingsDisambiguationModel.Sensitivity).To(Equal(core.StringPtr("auto")))
 				Expect(workspaceSystemSettingsDisambiguationModel.Randomize).To(Equal(core.BoolPtr(true)))
 				Expect(workspaceSystemSettingsDisambiguationModel.MaxSuggestions).To(Equal(core.Int64Ptr(int64(1))))
@@ -15658,14 +15756,14 @@ var _ = Describe(`AssistantV1`, func() {
 				// Construct an instance of the WorkspaceSystemSettingsSystemEntities model
 				workspaceSystemSettingsSystemEntitiesModel := new(assistantv1.WorkspaceSystemSettingsSystemEntities)
 				Expect(workspaceSystemSettingsSystemEntitiesModel).ToNot(BeNil())
-				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(true)
-				Expect(workspaceSystemSettingsSystemEntitiesModel.Enabled).To(Equal(core.BoolPtr(true)))
+				workspaceSystemSettingsSystemEntitiesModel.Enabled = core.BoolPtr(false)
+				Expect(workspaceSystemSettingsSystemEntitiesModel.Enabled).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the WorkspaceSystemSettingsOffTopic model
 				workspaceSystemSettingsOffTopicModel := new(assistantv1.WorkspaceSystemSettingsOffTopic)
 				Expect(workspaceSystemSettingsOffTopicModel).ToNot(BeNil())
-				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(true)
-				Expect(workspaceSystemSettingsOffTopicModel.Enabled).To(Equal(core.BoolPtr(true)))
+				workspaceSystemSettingsOffTopicModel.Enabled = core.BoolPtr(false)
+				Expect(workspaceSystemSettingsOffTopicModel.Enabled).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the WorkspaceSystemSettings model
 				workspaceSystemSettingsModel := new(assistantv1.WorkspaceSystemSettings)
@@ -15673,15 +15771,15 @@ var _ = Describe(`AssistantV1`, func() {
 				workspaceSystemSettingsModel.Tooling = workspaceSystemSettingsToolingModel
 				workspaceSystemSettingsModel.Disambiguation = workspaceSystemSettingsDisambiguationModel
 				workspaceSystemSettingsModel.HumanAgentAssist = make(map[string]interface{})
-				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(true)
-				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(true)
+				workspaceSystemSettingsModel.SpellingSuggestions = core.BoolPtr(false)
+				workspaceSystemSettingsModel.SpellingAutoCorrect = core.BoolPtr(false)
 				workspaceSystemSettingsModel.SystemEntities = workspaceSystemSettingsSystemEntitiesModel
 				workspaceSystemSettingsModel.OffTopic = workspaceSystemSettingsOffTopicModel
 				Expect(workspaceSystemSettingsModel.Tooling).To(Equal(workspaceSystemSettingsToolingModel))
 				Expect(workspaceSystemSettingsModel.Disambiguation).To(Equal(workspaceSystemSettingsDisambiguationModel))
 				Expect(workspaceSystemSettingsModel.HumanAgentAssist).To(Equal(make(map[string]interface{})))
-				Expect(workspaceSystemSettingsModel.SpellingSuggestions).To(Equal(core.BoolPtr(true)))
-				Expect(workspaceSystemSettingsModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(true)))
+				Expect(workspaceSystemSettingsModel.SpellingSuggestions).To(Equal(core.BoolPtr(false)))
+				Expect(workspaceSystemSettingsModel.SpellingAutoCorrect).To(Equal(core.BoolPtr(false)))
 				Expect(workspaceSystemSettingsModel.SystemEntities).To(Equal(workspaceSystemSettingsSystemEntitiesModel))
 				Expect(workspaceSystemSettingsModel.OffTopic).To(Equal(workspaceSystemSettingsOffTopicModel))
 
@@ -15767,13 +15865,13 @@ var _ = Describe(`AssistantV1`, func() {
 				updateWorkspaceOptionsModel.SetDialogNodes([]assistantv1.DialogNode{*dialogNodeModel})
 				updateWorkspaceOptionsModel.SetCounterexamples([]assistantv1.Counterexample{*counterexampleModel})
 				updateWorkspaceOptionsModel.SetMetadata(make(map[string]interface{}))
-				updateWorkspaceOptionsModel.SetLearningOptOut(true)
+				updateWorkspaceOptionsModel.SetLearningOptOut(false)
 				updateWorkspaceOptionsModel.SetSystemSettings(workspaceSystemSettingsModel)
 				updateWorkspaceOptionsModel.SetWebhooks([]assistantv1.Webhook{*webhookModel})
 				updateWorkspaceOptionsModel.SetIntents([]assistantv1.CreateIntent{*createIntentModel})
 				updateWorkspaceOptionsModel.SetEntities([]assistantv1.CreateEntity{*createEntityModel})
-				updateWorkspaceOptionsModel.SetAppend(true)
-				updateWorkspaceOptionsModel.SetIncludeAudit(true)
+				updateWorkspaceOptionsModel.SetAppend(false)
+				updateWorkspaceOptionsModel.SetIncludeAudit(false)
 				updateWorkspaceOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateWorkspaceOptionsModel).ToNot(BeNil())
 				Expect(updateWorkspaceOptionsModel.WorkspaceID).To(Equal(core.StringPtr("testString")))
@@ -15783,27 +15881,27 @@ var _ = Describe(`AssistantV1`, func() {
 				Expect(updateWorkspaceOptionsModel.DialogNodes).To(Equal([]assistantv1.DialogNode{*dialogNodeModel}))
 				Expect(updateWorkspaceOptionsModel.Counterexamples).To(Equal([]assistantv1.Counterexample{*counterexampleModel}))
 				Expect(updateWorkspaceOptionsModel.Metadata).To(Equal(make(map[string]interface{})))
-				Expect(updateWorkspaceOptionsModel.LearningOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(updateWorkspaceOptionsModel.LearningOptOut).To(Equal(core.BoolPtr(false)))
 				Expect(updateWorkspaceOptionsModel.SystemSettings).To(Equal(workspaceSystemSettingsModel))
 				Expect(updateWorkspaceOptionsModel.Webhooks).To(Equal([]assistantv1.Webhook{*webhookModel}))
 				Expect(updateWorkspaceOptionsModel.Intents).To(Equal([]assistantv1.CreateIntent{*createIntentModel}))
 				Expect(updateWorkspaceOptionsModel.Entities).To(Equal([]assistantv1.CreateEntity{*createEntityModel}))
-				Expect(updateWorkspaceOptionsModel.Append).To(Equal(core.BoolPtr(true)))
-				Expect(updateWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(true)))
+				Expect(updateWorkspaceOptionsModel.Append).To(Equal(core.BoolPtr(false)))
+				Expect(updateWorkspaceOptionsModel.IncludeAudit).To(Equal(core.BoolPtr(false)))
 				Expect(updateWorkspaceOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewWebhook successfully`, func() {
 				url := "testString"
 				name := "testString"
-				model, err := assistantService.NewWebhook(url, name)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewWebhook(url, name)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewWebhookHeader successfully`, func() {
 				name := "testString"
 				value := "testString"
-				model, err := assistantService.NewWebhookHeader(name, value)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewWebhookHeader(name, value)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer successfully`, func() {
@@ -15815,52 +15913,52 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent successfully`, func() {
 				responseType := "connect_to_agent"
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage successfully`, func() {
 				responseType := "image"
 				source := "testString"
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType, source)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType, source)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption successfully`, func() {
 				responseType := "option"
 				title := "testString"
 				options := []assistantv1.DialogNodeOutputOptionsElement{}
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(responseType, title, options)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(responseType, title, options)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause successfully`, func() {
 				responseType := "pause"
 				time := int64(38)
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType, time)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType, time)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill successfully`, func() {
 				responseType := "search_skill"
 				query := "testString"
 				queryType := "natural_language"
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(responseType, query, queryType)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(responseType, query, queryType)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText successfully`, func() {
 				responseType := "text"
 				values := []assistantv1.DialogNodeOutputTextValuesElement{}
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType, values)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType, values)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined successfully`, func() {
 				responseType := "user_defined"
 				userDefined := make(map[string]interface{})
-				model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType, userDefined)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType, userDefined)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer successfully`, func() {
@@ -15872,52 +15970,52 @@ var _ = Describe(`AssistantV1`, func() {
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent successfully`, func() {
 				responseType := "connect_to_agent"
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeImage successfully`, func() {
 				responseType := "image"
 				source := "testString"
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType, source)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType, source)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeOption successfully`, func() {
 				responseType := "option"
 				title := "testString"
 				options := []assistantv1.DialogNodeOutputOptionsElement{}
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeOption(responseType, title, options)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeOption(responseType, title, options)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypePause successfully`, func() {
 				responseType := "pause"
 				time := int64(38)
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypePause(responseType, time)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypePause(responseType, time)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeSuggestion successfully`, func() {
 				responseType := "suggestion"
 				title := "testString"
 				suggestions := []assistantv1.DialogSuggestion{}
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType, title, suggestions)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType, title, suggestions)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeText successfully`, func() {
 				responseType := "text"
 				text := "testString"
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeText(responseType, text)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeText(responseType, text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewRuntimeResponseGenericRuntimeResponseTypeUserDefined successfully`, func() {
 				responseType := "user_defined"
 				userDefined := make(map[string]interface{})
-				model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType, userDefined)
-				Expect(model).ToNot(BeNil())
+				_model, err := assistantService.NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType, userDefined)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 		})
