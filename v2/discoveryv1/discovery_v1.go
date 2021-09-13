@@ -4722,7 +4722,10 @@ func UnmarshalAggregationResult(m map[string]json.RawMessage, result interface{}
 	obj := new(AggregationResult)
 	err = core.UnmarshalPrimitive(m, "key", &obj.Key)
 	if err != nil {
-		return
+		err = core.UnmarshalPrimitive(m, "key_as_string", &obj.Key)
+		if err != nil {
+			return
+		}
 	}
 	err = core.UnmarshalPrimitive(m, "matching_results", &obj.MatchingResults)
 	if err != nil {
