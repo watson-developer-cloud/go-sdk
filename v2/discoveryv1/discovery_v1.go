@@ -5245,10 +5245,8 @@ type CreateCredentialsOptions struct {
 	// Obtain credentials for your source from the administrator of the source.
 	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
-	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
-	// has expired) and must be corrected before they can be used with a collection.
-	Status *string `json:"status,omitempty"`
+	// Object that contains details about the status of the authentication process.
+	Status *StatusDetails `json:"status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5267,15 +5265,6 @@ const (
 	CreateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
 	CreateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
 	CreateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
-)
-
-// Constants associated with the CreateCredentialsOptions.Status property.
-// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
-// expired) and must be corrected before they can be used with a collection.
-const (
-	CreateCredentialsOptionsStatusConnectedConst = "connected"
-	CreateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewCreateCredentialsOptions : Instantiate CreateCredentialsOptions
@@ -5304,8 +5293,8 @@ func (_options *CreateCredentialsOptions) SetCredentialDetails(credentialDetails
 }
 
 // SetStatus : Allow user to set Status
-func (_options *CreateCredentialsOptions) SetStatus(status string) *CreateCredentialsOptions {
-	_options.Status = core.StringPtr(status)
+func (_options *CreateCredentialsOptions) SetStatus(status *StatusDetails) *CreateCredentialsOptions {
+	_options.Status = status
 	return _options
 }
 
@@ -5957,10 +5946,8 @@ type Credentials struct {
 	// Obtain credentials for your source from the administrator of the source.
 	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
-	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
-	// has expired) and must be corrected before they can be used with a collection.
-	Status *string `json:"status,omitempty"`
+	// Object that contains details about the status of the authentication process.
+	Status *StatusDetails `json:"status,omitempty"`
 }
 
 // Constants associated with the Credentials.SourceType property.
@@ -5978,15 +5965,6 @@ const (
 	CredentialsSourceTypeWebCrawlConst           = "web_crawl"
 )
 
-// Constants associated with the Credentials.Status property.
-// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
-// expired) and must be corrected before they can be used with a collection.
-const (
-	CredentialsStatusConnectedConst = "connected"
-	CredentialsStatusInvalidConst   = "invalid"
-)
-
 // UnmarshalCredentials unmarshals an instance of Credentials from the specified map of raw messages.
 func UnmarshalCredentials(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(Credentials)
@@ -6002,7 +5980,7 @@ func UnmarshalCredentials(m map[string]json.RawMessage, result interface{}) (err
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "status", &obj.Status)
+	err = core.UnmarshalModel(m, "status", &obj.Status, UnmarshalStatusDetails)
 	if err != nil {
 		return
 	}
@@ -11730,6 +11708,30 @@ func UnmarshalSourceStatus(m map[string]json.RawMessage, result interface{}) (er
 	return
 }
 
+// StatusDetails : Object that contains details about the status of the authentication process.
+type StatusDetails struct {
+	// Indicates whether the credential is accepted by the target data source.
+	Authenticated *bool `json:"authenticated,omitempty"`
+
+	// If `authenticated` is `false`, a message describes why the authentication was unsuccessful.
+	ErrorMessage *string `json:"error_message,omitempty"`
+}
+
+// UnmarshalStatusDetails unmarshals an instance of StatusDetails from the specified map of raw messages.
+func UnmarshalStatusDetails(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(StatusDetails)
+	err = core.UnmarshalPrimitive(m, "authenticated", &obj.Authenticated)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "error_message", &obj.ErrorMessage)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TokenDictRule : An object defining a single tokenizaion rule.
 type TokenDictRule struct {
 	// The string to tokenize.
@@ -12206,10 +12208,8 @@ type UpdateCredentialsOptions struct {
 	// Obtain credentials for your source from the administrator of the source.
 	CredentialDetails *CredentialDetails `json:"credential_details,omitempty"`
 
-	// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-	// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided
-	// has expired) and must be corrected before they can be used with a collection.
-	Status *string `json:"status,omitempty"`
+	// Object that contains details about the status of the authentication process.
+	Status *StatusDetails `json:"status,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -12228,15 +12228,6 @@ const (
 	UpdateCredentialsOptionsSourceTypeSalesforceConst         = "salesforce"
 	UpdateCredentialsOptionsSourceTypeSharepointConst         = "sharepoint"
 	UpdateCredentialsOptionsSourceTypeWebCrawlConst           = "web_crawl"
-)
-
-// Constants associated with the UpdateCredentialsOptions.Status property.
-// The current status of this set of credentials. `connected` indicates that the credentials are available to use with
-// the source configuration of a collection. `invalid` refers to the credentials (for example, the password provided has
-// expired) and must be corrected before they can be used with a collection.
-const (
-	UpdateCredentialsOptionsStatusConnectedConst = "connected"
-	UpdateCredentialsOptionsStatusInvalidConst   = "invalid"
 )
 
 // NewUpdateCredentialsOptions : Instantiate UpdateCredentialsOptions
@@ -12272,8 +12263,8 @@ func (_options *UpdateCredentialsOptions) SetCredentialDetails(credentialDetails
 }
 
 // SetStatus : Allow user to set Status
-func (_options *UpdateCredentialsOptions) SetStatus(status string) *UpdateCredentialsOptions {
-	_options.Status = core.StringPtr(status)
+func (_options *UpdateCredentialsOptions) SetStatus(status *StatusDetails) *UpdateCredentialsOptions {
+	_options.Status = status
 	return _options
 }
 

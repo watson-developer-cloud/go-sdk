@@ -87,6 +87,7 @@ func TestConstructService(t *testing.T) {
 		URL:     *serviceURL,
 		Authenticator: &core.IamAuthenticator{
 			ApiKey: *APIKey,
+			URL:    "https://iam.test.cloud.ibm.com",
 		},
 	})
 	assert.Nil(t, err)

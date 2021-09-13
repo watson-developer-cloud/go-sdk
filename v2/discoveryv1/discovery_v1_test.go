@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14421,7 +14421,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}]}`)
+					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}]}`)
 				}))
 			})
 			It(`Invoke ListCredentials successfully with retries`, func() {
@@ -14477,7 +14477,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}]}`)
+					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}]}`)
 				}))
 			})
 			It(`Invoke ListCredentials successfully`, func() {
@@ -14624,12 +14624,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.CreateCredentials(createCredentialsOptionsModel)
@@ -14684,7 +14689,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke CreateCredentials successfully with retries`, func() {
@@ -14719,12 +14724,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -14781,7 +14791,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke CreateCredentials successfully`, func() {
@@ -14821,12 +14831,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -14867,12 +14882,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -14934,12 +14954,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -15023,7 +15048,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke GetCredentials successfully with retries`, func() {
@@ -15080,7 +15105,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke GetCredentials successfully`, func() {
@@ -15230,13 +15255,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.UpdateCredentials(updateCredentialsOptionsModel)
@@ -15291,7 +15321,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke UpdateCredentials successfully with retries`, func() {
@@ -15326,13 +15356,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -15389,7 +15424,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke UpdateCredentials successfully`, func() {
@@ -15429,13 +15464,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -15476,13 +15516,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -15544,13 +15589,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -17191,19 +17241,27 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(credentialDetailsModel.AccessKeyID).To(Equal(core.StringPtr("testString")))
 				Expect(credentialDetailsModel.SecretAccessKey).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				Expect(statusDetailsModel).ToNot(BeNil())
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+				Expect(statusDetailsModel.Authenticated).To(Equal(core.BoolPtr(true)))
+				Expect(statusDetailsModel.ErrorMessage).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the CreateCredentialsOptions model
 				environmentID := "testString"
 				createCredentialsOptionsModel := discoveryService.NewCreateCredentialsOptions(environmentID)
 				createCredentialsOptionsModel.SetEnvironmentID("testString")
 				createCredentialsOptionsModel.SetSourceType("box")
 				createCredentialsOptionsModel.SetCredentialDetails(credentialDetailsModel)
-				createCredentialsOptionsModel.SetStatus("connected")
+				createCredentialsOptionsModel.SetStatus(statusDetailsModel)
 				createCredentialsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCredentialsOptionsModel).ToNot(BeNil())
 				Expect(createCredentialsOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
 				Expect(createCredentialsOptionsModel.SourceType).To(Equal(core.StringPtr("box")))
 				Expect(createCredentialsOptionsModel.CredentialDetails).To(Equal(credentialDetailsModel))
-				Expect(createCredentialsOptionsModel.Status).To(Equal(core.StringPtr("connected")))
+				Expect(createCredentialsOptionsModel.Status).To(Equal(statusDetailsModel))
 				Expect(createCredentialsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateEnvironmentOptions successfully`, func() {
@@ -18551,6 +18609,14 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(credentialDetailsModel.AccessKeyID).To(Equal(core.StringPtr("testString")))
 				Expect(credentialDetailsModel.SecretAccessKey).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				Expect(statusDetailsModel).ToNot(BeNil())
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+				Expect(statusDetailsModel.Authenticated).To(Equal(core.BoolPtr(true)))
+				Expect(statusDetailsModel.ErrorMessage).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				environmentID := "testString"
 				credentialID := "testString"
@@ -18559,14 +18625,14 @@ var _ = Describe(`DiscoveryV1`, func() {
 				updateCredentialsOptionsModel.SetCredentialID("testString")
 				updateCredentialsOptionsModel.SetSourceType("box")
 				updateCredentialsOptionsModel.SetCredentialDetails(credentialDetailsModel)
-				updateCredentialsOptionsModel.SetStatus("connected")
+				updateCredentialsOptionsModel.SetStatus(statusDetailsModel)
 				updateCredentialsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateCredentialsOptionsModel).ToNot(BeNil())
 				Expect(updateCredentialsOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCredentialsOptionsModel.CredentialID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCredentialsOptionsModel.SourceType).To(Equal(core.StringPtr("box")))
 				Expect(updateCredentialsOptionsModel.CredentialDetails).To(Equal(credentialDetailsModel))
-				Expect(updateCredentialsOptionsModel.Status).To(Equal(core.StringPtr("connected")))
+				Expect(updateCredentialsOptionsModel.Status).To(Equal(statusDetailsModel))
 				Expect(updateCredentialsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateDocumentOptions successfully`, func() {
