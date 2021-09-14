@@ -1,3 +1,28 @@
+# [2.2.0](https://github.com/watson-developer-cloud/go-sdk/compare/v2.1.1...v2.2.0) (2021-09-14)
+
+
+### Bug Fixes
+
+* **discoveryv1:** correctly structure StatusDetails ([ff0aa0e](https://github.com/watson-developer-cloud/go-sdk/commit/ff0aa0ed583841ba3e89e4baf626b176a4983f26))
+* **generated code:** un-nest list classifications models response ([fc00df3](https://github.com/watson-developer-cloud/go-sdk/commit/fc00df3742a7d2665e5b95eaedda0ac516097b5b))
+* **nlc-integration-testing:** update testing to expect an error on OnError ([3d3c22e](https://github.com/watson-developer-cloud/go-sdk/commit/3d3c22e0fb34b70fdd7448ab68d0ac8f02bbad78))
+* **sst-integration-test:** remove unintentional commit ([c02f6b4](https://github.com/watson-developer-cloud/go-sdk/commit/c02f6b4c5f103a39ac03d774212ec3cb51ed7029))
+* **stt:** serialize websocket parameters ([5c1ef05](https://github.com/watson-developer-cloud/go-sdk/commit/5c1ef0548b264a22f975690eb1b06592f699a2f5))
+* **stt:** update content-type json key to be all lower-case since the server requires this format ([4a437fd](https://github.com/watson-developer-cloud/go-sdk/commit/4a437fd2cc08ebb49e127eb0135b854bfb01514f))
+* **stt-integration-test:** rename the test for TestRecognizeUsingWebsocketWithRawAudio ([9582f67](https://github.com/watson-developer-cloud/go-sdk/commit/9582f67d23424c00d6fc23c69bb79d9ee21a472c))
+* **stt-integration-test:** update test cases ([911d82d](https://github.com/watson-developer-cloud/go-sdk/commit/911d82da0e5e4c4bdaa952138627ce2ce8f978e0))
+* **stt-websocket:** add Result Error checking and add onError handling insteading of letting it runs ([7cace42](https://github.com/watson-developer-cloud/go-sdk/commit/7cace429a5ababbead8ce7f6c25bddfd94570648))
+
+
+### Features
+
+* **assistantv2:** add SearchResultAnswer ([0c4b541](https://github.com/watson-developer-cloud/go-sdk/commit/0c4b54183ff1be10a2fe4e4a6c0327b280cc9917))
+* **generated code:** add alt_text; update based on api defs ([5014ea3](https://github.com/watson-developer-cloud/go-sdk/commit/5014ea3a2529ad3e2de09977d4b8ffa7e51b04e0))
+* **generated code:** add language models for stt ([2a7585f](https://github.com/watson-developer-cloud/go-sdk/commit/2a7585ff6323f9599fbfdebbd4e6cbaa806c3c4a))
+* **generated code:** add session_state_time and alt_text; change location to optional ([ee19141](https://github.com/watson-developer-cloud/go-sdk/commit/ee19141965da1193d4eefce296f690dcacce86d0))
+* **generated code:** add voice models for tts ([cc3be98](https://github.com/watson-developer-cloud/go-sdk/commit/cc3be9894eab930a39fe6a4cc4086b009e8a97c1))
+* **generated code:** update enums for create project constants ([d8b1d9b](https://github.com/watson-developer-cloud/go-sdk/commit/d8b1d9b405aa1b702a95d985d96dccd0a4e6fbb2))
+
 ## [2.1.1](https://github.com/watson-developer-cloud/go-sdk/compare/v2.1.0...v2.1.1) (2021-08-24)
 
 
