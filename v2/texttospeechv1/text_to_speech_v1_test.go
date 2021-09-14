@@ -612,8 +612,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Accept"]).ToNot(BeNil())
-					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/basic")))
-					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
+					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/ogg;codecs=opus")))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"en-US_MichaelV3Voice"}))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -636,8 +636,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the SynthesizeOptions model
 				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
 				synthesizeOptionsModel.Text = core.StringPtr("testString")
-				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
-				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/ogg;codecs=opus")
+				synthesizeOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
 				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
 				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -692,8 +692,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["Accept"]).ToNot(BeNil())
-					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/basic")))
-					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
+					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "audio/ogg;codecs=opus")))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"en-US_MichaelV3Voice"}))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "audio/basic")
@@ -718,8 +718,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the SynthesizeOptions model
 				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
 				synthesizeOptionsModel.Text = core.StringPtr("testString")
-				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
-				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/ogg;codecs=opus")
+				synthesizeOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
 				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
 				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -741,8 +741,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the SynthesizeOptions model
 				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
 				synthesizeOptionsModel.Text = core.StringPtr("testString")
-				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
-				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/ogg;codecs=opus")
+				synthesizeOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
 				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
 				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -785,8 +785,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the SynthesizeOptions model
 				synthesizeOptionsModel := new(texttospeechv1.SynthesizeOptions)
 				synthesizeOptionsModel.Text = core.StringPtr("testString")
-				synthesizeOptionsModel.Accept = core.StringPtr("audio/basic")
-				synthesizeOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
+				synthesizeOptionsModel.Accept = core.StringPtr("audio/ogg;codecs=opus")
+				synthesizeOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
 				synthesizeOptionsModel.CustomizationID = core.StringPtr("testString")
 				synthesizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -818,8 +818,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getPronunciationPath))
 					Expect(req.Method).To(Equal("GET"))
 					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"en-US_MichaelV3Voice"}))
+					Expect(req.URL.Query()["format"]).To(Equal([]string{"ipa"}))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -837,8 +837,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
 				getPronunciationOptionsModel.Text = core.StringPtr("testString")
-				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ipa")
 				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
 				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -871,8 +871,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"en-US_MichaelV3Voice"}))
+					Expect(req.URL.Query()["format"]).To(Equal([]string{"ipa"}))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -895,8 +895,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
 				getPronunciationOptionsModel.Text = core.StringPtr("testString")
-				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ipa")
 				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
 				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -935,8 +935,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 
 					Expect(req.URL.Query()["text"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["voice"]).To(Equal([]string{"ar-AR_OmarVoice"}))
-					Expect(req.URL.Query()["format"]).To(Equal([]string{"ibm"}))
+					Expect(req.URL.Query()["voice"]).To(Equal([]string{"en-US_MichaelV3Voice"}))
+					Expect(req.URL.Query()["format"]).To(Equal([]string{"ipa"}))
 					Expect(req.URL.Query()["customization_id"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -961,8 +961,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
 				getPronunciationOptionsModel.Text = core.StringPtr("testString")
-				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ipa")
 				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
 				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -984,8 +984,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
 				getPronunciationOptionsModel.Text = core.StringPtr("testString")
-				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ipa")
 				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
 				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1028,8 +1028,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the GetPronunciationOptions model
 				getPronunciationOptionsModel := new(texttospeechv1.GetPronunciationOptions)
 				getPronunciationOptionsModel.Text = core.StringPtr("testString")
-				getPronunciationOptionsModel.Voice = core.StringPtr("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.Format = core.StringPtr("ibm")
+				getPronunciationOptionsModel.Voice = core.StringPtr("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.Format = core.StringPtr("ipa")
 				getPronunciationOptionsModel.CustomizationID = core.StringPtr("testString")
 				getPronunciationOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1072,7 +1072,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Language = core.StringPtr("en-US")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -1141,7 +1141,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Language = core.StringPtr("en-US")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1218,7 +1218,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Language = core.StringPtr("en-US")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1240,7 +1240,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Language = core.StringPtr("en-US")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1283,7 +1283,7 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				// Construct an instance of the CreateCustomModelOptions model
 				createCustomModelOptionsModel := new(texttospeechv1.CreateCustomModelOptions)
 				createCustomModelOptionsModel.Name = core.StringPtr("testString")
-				createCustomModelOptionsModel.Language = core.StringPtr("ar-MS")
+				createCustomModelOptionsModel.Language = core.StringPtr("en-US")
 				createCustomModelOptionsModel.Description = core.StringPtr("testString")
 				createCustomModelOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -4208,12 +4208,12 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				createCustomModelOptionsName := "testString"
 				createCustomModelOptionsModel := textToSpeechService.NewCreateCustomModelOptions(createCustomModelOptionsName)
 				createCustomModelOptionsModel.SetName("testString")
-				createCustomModelOptionsModel.SetLanguage("ar-MS")
+				createCustomModelOptionsModel.SetLanguage("en-US")
 				createCustomModelOptionsModel.SetDescription("testString")
 				createCustomModelOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCustomModelOptionsModel).ToNot(BeNil())
 				Expect(createCustomModelOptionsModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(createCustomModelOptionsModel.Language).To(Equal(core.StringPtr("ar-MS")))
+				Expect(createCustomModelOptionsModel.Language).To(Equal(core.StringPtr("en-US")))
 				Expect(createCustomModelOptionsModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(createCustomModelOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -4314,14 +4314,14 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				text := "testString"
 				getPronunciationOptionsModel := textToSpeechService.NewGetPronunciationOptions(text)
 				getPronunciationOptionsModel.SetText("testString")
-				getPronunciationOptionsModel.SetVoice("ar-AR_OmarVoice")
-				getPronunciationOptionsModel.SetFormat("ibm")
+				getPronunciationOptionsModel.SetVoice("en-US_MichaelV3Voice")
+				getPronunciationOptionsModel.SetFormat("ipa")
 				getPronunciationOptionsModel.SetCustomizationID("testString")
 				getPronunciationOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(getPronunciationOptionsModel).ToNot(BeNil())
 				Expect(getPronunciationOptionsModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(getPronunciationOptionsModel.Voice).To(Equal(core.StringPtr("ar-AR_OmarVoice")))
-				Expect(getPronunciationOptionsModel.Format).To(Equal(core.StringPtr("ibm")))
+				Expect(getPronunciationOptionsModel.Voice).To(Equal(core.StringPtr("en-US_MichaelV3Voice")))
+				Expect(getPronunciationOptionsModel.Format).To(Equal(core.StringPtr("ipa")))
 				Expect(getPronunciationOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(getPronunciationOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -4405,8 +4405,8 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			})
 			It(`Invoke NewPromptMetadata successfully`, func() {
 				promptText := "testString"
-				model, err := textToSpeechService.NewPromptMetadata(promptText)
-				Expect(model).ToNot(BeNil())
+				_model, err := textToSpeechService.NewPromptMetadata(promptText)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSynthesizeOptions successfully`, func() {
@@ -4414,21 +4414,21 @@ var _ = Describe(`TextToSpeechV1`, func() {
 				synthesizeOptionsText := "testString"
 				synthesizeOptionsModel := textToSpeechService.NewSynthesizeOptions(synthesizeOptionsText)
 				synthesizeOptionsModel.SetText("testString")
-				synthesizeOptionsModel.SetAccept("audio/basic")
-				synthesizeOptionsModel.SetVoice("ar-AR_OmarVoice")
+				synthesizeOptionsModel.SetAccept("audio/ogg;codecs=opus")
+				synthesizeOptionsModel.SetVoice("en-US_MichaelV3Voice")
 				synthesizeOptionsModel.SetCustomizationID("testString")
 				synthesizeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(synthesizeOptionsModel).ToNot(BeNil())
 				Expect(synthesizeOptionsModel.Text).To(Equal(core.StringPtr("testString")))
-				Expect(synthesizeOptionsModel.Accept).To(Equal(core.StringPtr("audio/basic")))
-				Expect(synthesizeOptionsModel.Voice).To(Equal(core.StringPtr("ar-AR_OmarVoice")))
+				Expect(synthesizeOptionsModel.Accept).To(Equal(core.StringPtr("audio/ogg;codecs=opus")))
+				Expect(synthesizeOptionsModel.Voice).To(Equal(core.StringPtr("en-US_MichaelV3Voice")))
 				Expect(synthesizeOptionsModel.CustomizationID).To(Equal(core.StringPtr("testString")))
 				Expect(synthesizeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewTranslation successfully`, func() {
 				translation := "testString"
-				model, err := textToSpeechService.NewTranslation(translation)
-				Expect(model).ToNot(BeNil())
+				_model, err := textToSpeechService.NewTranslation(translation)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateCustomModelOptions successfully`, func() {
@@ -4460,14 +4460,14 @@ var _ = Describe(`TextToSpeechV1`, func() {
 			It(`Invoke NewWord successfully`, func() {
 				word := "testString"
 				translation := "testString"
-				model, err := textToSpeechService.NewWord(word, translation)
-				Expect(model).ToNot(BeNil())
+				_model, err := textToSpeechService.NewWord(word, translation)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewWords successfully`, func() {
 				words := []texttospeechv1.Word{}
-				model, err := textToSpeechService.NewWords(words)
-				Expect(model).ToNot(BeNil())
+				_model, err := textToSpeechService.NewWords(words)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 		})

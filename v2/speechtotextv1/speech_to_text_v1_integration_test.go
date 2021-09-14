@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package speechtotextv1_test
@@ -432,4 +433,49 @@ func TestRecognizeUsingWebsocket(t *testing.T) {
 
 	service.RecognizeUsingWebsocket(recognizeOptions, callback)
 
+}
+
+func TestRecognizeUsingWebsocketWithRawAudio(t *testing.T) {
+	shouldSkipTest(t)
+
+	f, err := os.Open("../resources/audio_raw_example.raw")
+	assert.Nil(t, err)
+
+	callback := myCallBack{T: t}
+
+	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mulaw;rate=8000;channels=1")
+
+	recognizeOptions.SetModel("en-US_NarrowbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
+
+	service.RecognizeUsingWebsocket(recognizeOptions, callback)
+}
+
+type callBackExpectError struct {
+	T *testing.T
+}
+
+func (cb callBackExpectError) OnOpen() {
+}
+func (cb callBackExpectError) OnClose() {
+}
+func (cb callBackExpectError) OnData(resp *core.DetailedResponse) {
+	cb.T.Fail()
+}
+func (cb callBackExpectError) OnError(err error) {
+	assert.Equal(cb.T, "unable to transcode data stream audio/mpeg -> audio/l16 ", err.Error(), "Expect a Call within the OnError callback")
+}
+
+func TestRecognizeUsingWebsocketWithRawAudioExpectOnError(t *testing.T) {
+	shouldSkipTest(t)
+
+	f, err := os.Open("../resources/audio_raw_example.raw")
+	assert.Nil(t, err)
+
+	callback := callBackExpectError{T: t}
+
+	recognizeOptions := service.NewRecognizeUsingWebsocketOptions(f, "audio/mp3")
+
+	recognizeOptions.SetModel("en-US_NarrowbandModel").SetWordConfidence(true).SetSpeakerLabels(true).SetTimestamps(true)
+
+	service.RecognizeUsingWebsocket(recognizeOptions, callback)
 }

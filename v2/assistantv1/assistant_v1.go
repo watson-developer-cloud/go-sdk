@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package assistantv1 : Operations and models for the AssistantV1 service
@@ -39,13 +39,13 @@ import (
 //
 // The Assistant v1 API provides authoring methods your application can use to create or update a workspace.
 //
-// Version: 1.0
+// API Version: 1.0
 // See: https://cloud.ibm.com/docs/assistant
 type AssistantV1 struct {
 	Service *core.BaseService
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-04-01`.
+	// `2021-06-14`.
 	Version *string
 }
 
@@ -62,7 +62,7 @@ type AssistantV1Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-04-01`.
+	// `2021-06-14`.
 	Version *string `validate:"required"`
 }
 
@@ -3717,10 +3717,10 @@ func UnmarshalAgentAvailabilityMessage(m map[string]json.RawMessage, result inte
 // BulkClassifyOptions : The BulkClassify options.
 type BulkClassifyOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// An array of input utterances to classify.
-	Input []BulkClassifyUtterance
+	Input []BulkClassifyUtterance `json:"input,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3734,15 +3734,15 @@ func (*AssistantV1) NewBulkClassifyOptions(workspaceID string) *BulkClassifyOpti
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *BulkClassifyOptions) SetWorkspaceID(workspaceID string) *BulkClassifyOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *BulkClassifyOptions) SetWorkspaceID(workspaceID string) *BulkClassifyOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetInput : Allow user to set Input
-func (options *BulkClassifyOptions) SetInput(input []BulkClassifyUtterance) *BulkClassifyOptions {
-	options.Input = input
-	return options
+func (_options *BulkClassifyOptions) SetInput(input []BulkClassifyUtterance) *BulkClassifyOptions {
+	_options.Input = input
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3806,11 +3806,11 @@ type BulkClassifyUtterance struct {
 }
 
 // NewBulkClassifyUtterance : Instantiate BulkClassifyUtterance (Generic Model Constructor)
-func (*AssistantV1) NewBulkClassifyUtterance(text string) (model *BulkClassifyUtterance, err error) {
-	model = &BulkClassifyUtterance{
+func (*AssistantV1) NewBulkClassifyUtterance(text string) (_model *BulkClassifyUtterance, err error) {
+	_model = &BulkClassifyUtterance{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3835,11 +3835,11 @@ type CaptureGroup struct {
 }
 
 // NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
-func (*AssistantV1) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
-	model = &CaptureGroup{
+func (*AssistantV1) NewCaptureGroup(group string) (_model *CaptureGroup, err error) {
+	_model = &CaptureGroup{
 		Group: core.StringPtr(group),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3867,11 +3867,11 @@ type ChannelTransferInfo struct {
 }
 
 // NewChannelTransferInfo : Instantiate ChannelTransferInfo (Generic Model Constructor)
-func (*AssistantV1) NewChannelTransferInfo(target *ChannelTransferTarget) (model *ChannelTransferInfo, err error) {
-	model = &ChannelTransferInfo{
+func (*AssistantV1) NewChannelTransferInfo(target *ChannelTransferTarget) (_model *ChannelTransferInfo, err error) {
+	_model = &ChannelTransferInfo{
 		Target: target,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3942,6 +3942,14 @@ func (o *Context) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of Context
+func (o *Context) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of Context
@@ -4021,11 +4029,11 @@ type Counterexample struct {
 }
 
 // NewCounterexample : Instantiate Counterexample (Generic Model Constructor)
-func (*AssistantV1) NewCounterexample(text string) (model *Counterexample, err error) {
-	model = &Counterexample{
+func (*AssistantV1) NewCounterexample(text string) (_model *Counterexample, err error) {
+	_model = &Counterexample{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -4075,15 +4083,15 @@ func UnmarshalCounterexampleCollection(m map[string]json.RawMessage, result inte
 // CreateCounterexampleOptions : The CreateCounterexample options.
 type CreateCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Text *string `validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4098,21 +4106,21 @@ func (*AssistantV1) NewCreateCounterexampleOptions(workspaceID string, text stri
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateCounterexampleOptions) SetWorkspaceID(workspaceID string) *CreateCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateCounterexampleOptions) SetWorkspaceID(workspaceID string) *CreateCounterexampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *CreateCounterexampleOptions) SetText(text string) *CreateCounterexampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *CreateCounterexampleOptions) SetText(text string) *CreateCounterexampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *CreateCounterexampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *CreateCounterexampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4124,40 +4132,40 @@ func (options *CreateCounterexampleOptions) SetHeaders(param map[string]string) 
 // CreateDialogNodeOptions : The CreateDialogNode options.
 type CreateDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other dialog
 	// nodes and in the diagnostic information included with message responses.
 	//
 	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	DialogNode *string `validate:"required"`
+	DialogNode *string `json:"dialog_node" validate:"required"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
 	// characters.
-	Conditions *string
+	Conditions *string `json:"conditions,omitempty"`
 
 	// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
-	Parent *string
+	Parent *string `json:"parent,omitempty"`
 
 	// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
 	// sibling.
-	PreviousSibling *string
+	PreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
-	Output *DialogNodeOutput
+	Output *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
-	Context *DialogNodeContext
+	Context *DialogNodeContext `json:"context,omitempty"`
 
 	// The metadata for the dialog node.
-	Metadata map[string]interface{}
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The next step to execute following this dialog node.
-	NextStep *DialogNodeNextStep
+	NextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
 	// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to populate
 	// the **label** property of the corresponding suggestion in the `suggestion` response type (unless it is overridden by
@@ -4165,39 +4173,39 @@ type CreateDialogNodeOptions struct {
 	// response type.
 	//
 	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	Title *string
+	Title *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	Type *string
+	Type *string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
-	EventName *string
+	EventName *string `json:"event_name,omitempty"`
 
 	// The location in the dialog context where output is stored.
-	Variable *string
+	Variable *string `json:"variable,omitempty"`
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	Actions []DialogNodeAction
+	Actions []DialogNodeAction `json:"actions,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
-	DigressIn *string
+	DigressIn *string `json:"digress_in,omitempty"`
 
 	// Whether this dialog node can be returned to after a digression.
-	DigressOut *string
+	DigressOut *string `json:"digress_out,omitempty"`
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	DigressOutSlots *string
+	DigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
 	// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is used to
 	// identify the node in disambiguation responses (overriding the value of the **title** property).
-	UserLabel *string
+	UserLabel *string `json:"user_label,omitempty"`
 
 	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
 	// `frame`.
-	DisambiguationOptOut *bool
+	DisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4261,129 +4269,129 @@ func (*AssistantV1) NewCreateDialogNodeOptions(workspaceID string, dialogNode st
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateDialogNodeOptions) SetWorkspaceID(workspaceID string) *CreateDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateDialogNodeOptions) SetWorkspaceID(workspaceID string) *CreateDialogNodeOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *CreateDialogNodeOptions) SetDialogNode(dialogNode string) *CreateDialogNodeOptions {
-	options.DialogNode = core.StringPtr(dialogNode)
-	return options
+func (_options *CreateDialogNodeOptions) SetDialogNode(dialogNode string) *CreateDialogNodeOptions {
+	_options.DialogNode = core.StringPtr(dialogNode)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateDialogNodeOptions) SetDescription(description string) *CreateDialogNodeOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateDialogNodeOptions) SetDescription(description string) *CreateDialogNodeOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetConditions : Allow user to set Conditions
-func (options *CreateDialogNodeOptions) SetConditions(conditions string) *CreateDialogNodeOptions {
-	options.Conditions = core.StringPtr(conditions)
-	return options
+func (_options *CreateDialogNodeOptions) SetConditions(conditions string) *CreateDialogNodeOptions {
+	_options.Conditions = core.StringPtr(conditions)
+	return _options
 }
 
 // SetParent : Allow user to set Parent
-func (options *CreateDialogNodeOptions) SetParent(parent string) *CreateDialogNodeOptions {
-	options.Parent = core.StringPtr(parent)
-	return options
+func (_options *CreateDialogNodeOptions) SetParent(parent string) *CreateDialogNodeOptions {
+	_options.Parent = core.StringPtr(parent)
+	return _options
 }
 
 // SetPreviousSibling : Allow user to set PreviousSibling
-func (options *CreateDialogNodeOptions) SetPreviousSibling(previousSibling string) *CreateDialogNodeOptions {
-	options.PreviousSibling = core.StringPtr(previousSibling)
-	return options
+func (_options *CreateDialogNodeOptions) SetPreviousSibling(previousSibling string) *CreateDialogNodeOptions {
+	_options.PreviousSibling = core.StringPtr(previousSibling)
+	return _options
 }
 
 // SetOutput : Allow user to set Output
-func (options *CreateDialogNodeOptions) SetOutput(output *DialogNodeOutput) *CreateDialogNodeOptions {
-	options.Output = output
-	return options
+func (_options *CreateDialogNodeOptions) SetOutput(output *DialogNodeOutput) *CreateDialogNodeOptions {
+	_options.Output = output
+	return _options
 }
 
 // SetContext : Allow user to set Context
-func (options *CreateDialogNodeOptions) SetContext(context *DialogNodeContext) *CreateDialogNodeOptions {
-	options.Context = context
-	return options
+func (_options *CreateDialogNodeOptions) SetContext(context *DialogNodeContext) *CreateDialogNodeOptions {
+	_options.Context = context
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateDialogNodeOptions) SetMetadata(metadata map[string]interface{}) *CreateDialogNodeOptions {
-	options.Metadata = metadata
-	return options
+func (_options *CreateDialogNodeOptions) SetMetadata(metadata map[string]interface{}) *CreateDialogNodeOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetNextStep : Allow user to set NextStep
-func (options *CreateDialogNodeOptions) SetNextStep(nextStep *DialogNodeNextStep) *CreateDialogNodeOptions {
-	options.NextStep = nextStep
-	return options
+func (_options *CreateDialogNodeOptions) SetNextStep(nextStep *DialogNodeNextStep) *CreateDialogNodeOptions {
+	_options.NextStep = nextStep
+	return _options
 }
 
 // SetTitle : Allow user to set Title
-func (options *CreateDialogNodeOptions) SetTitle(title string) *CreateDialogNodeOptions {
-	options.Title = core.StringPtr(title)
-	return options
+func (_options *CreateDialogNodeOptions) SetTitle(title string) *CreateDialogNodeOptions {
+	_options.Title = core.StringPtr(title)
+	return _options
 }
 
 // SetType : Allow user to set Type
-func (options *CreateDialogNodeOptions) SetType(typeVar string) *CreateDialogNodeOptions {
-	options.Type = core.StringPtr(typeVar)
-	return options
+func (_options *CreateDialogNodeOptions) SetType(typeVar string) *CreateDialogNodeOptions {
+	_options.Type = core.StringPtr(typeVar)
+	return _options
 }
 
 // SetEventName : Allow user to set EventName
-func (options *CreateDialogNodeOptions) SetEventName(eventName string) *CreateDialogNodeOptions {
-	options.EventName = core.StringPtr(eventName)
-	return options
+func (_options *CreateDialogNodeOptions) SetEventName(eventName string) *CreateDialogNodeOptions {
+	_options.EventName = core.StringPtr(eventName)
+	return _options
 }
 
 // SetVariable : Allow user to set Variable
-func (options *CreateDialogNodeOptions) SetVariable(variable string) *CreateDialogNodeOptions {
-	options.Variable = core.StringPtr(variable)
-	return options
+func (_options *CreateDialogNodeOptions) SetVariable(variable string) *CreateDialogNodeOptions {
+	_options.Variable = core.StringPtr(variable)
+	return _options
 }
 
 // SetActions : Allow user to set Actions
-func (options *CreateDialogNodeOptions) SetActions(actions []DialogNodeAction) *CreateDialogNodeOptions {
-	options.Actions = actions
-	return options
+func (_options *CreateDialogNodeOptions) SetActions(actions []DialogNodeAction) *CreateDialogNodeOptions {
+	_options.Actions = actions
+	return _options
 }
 
 // SetDigressIn : Allow user to set DigressIn
-func (options *CreateDialogNodeOptions) SetDigressIn(digressIn string) *CreateDialogNodeOptions {
-	options.DigressIn = core.StringPtr(digressIn)
-	return options
+func (_options *CreateDialogNodeOptions) SetDigressIn(digressIn string) *CreateDialogNodeOptions {
+	_options.DigressIn = core.StringPtr(digressIn)
+	return _options
 }
 
 // SetDigressOut : Allow user to set DigressOut
-func (options *CreateDialogNodeOptions) SetDigressOut(digressOut string) *CreateDialogNodeOptions {
-	options.DigressOut = core.StringPtr(digressOut)
-	return options
+func (_options *CreateDialogNodeOptions) SetDigressOut(digressOut string) *CreateDialogNodeOptions {
+	_options.DigressOut = core.StringPtr(digressOut)
+	return _options
 }
 
 // SetDigressOutSlots : Allow user to set DigressOutSlots
-func (options *CreateDialogNodeOptions) SetDigressOutSlots(digressOutSlots string) *CreateDialogNodeOptions {
-	options.DigressOutSlots = core.StringPtr(digressOutSlots)
-	return options
+func (_options *CreateDialogNodeOptions) SetDigressOutSlots(digressOutSlots string) *CreateDialogNodeOptions {
+	_options.DigressOutSlots = core.StringPtr(digressOutSlots)
+	return _options
 }
 
 // SetUserLabel : Allow user to set UserLabel
-func (options *CreateDialogNodeOptions) SetUserLabel(userLabel string) *CreateDialogNodeOptions {
-	options.UserLabel = core.StringPtr(userLabel)
-	return options
+func (_options *CreateDialogNodeOptions) SetUserLabel(userLabel string) *CreateDialogNodeOptions {
+	_options.UserLabel = core.StringPtr(userLabel)
+	return _options
 }
 
 // SetDisambiguationOptOut : Allow user to set DisambiguationOptOut
-func (options *CreateDialogNodeOptions) SetDisambiguationOptOut(disambiguationOptOut bool) *CreateDialogNodeOptions {
-	options.DisambiguationOptOut = core.BoolPtr(disambiguationOptOut)
-	return options
+func (_options *CreateDialogNodeOptions) SetDisambiguationOptOut(disambiguationOptOut bool) *CreateDialogNodeOptions {
+	_options.DisambiguationOptOut = core.BoolPtr(disambiguationOptOut)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *CreateDialogNodeOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *CreateDialogNodeOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4420,11 +4428,11 @@ type CreateEntity struct {
 }
 
 // NewCreateEntity : Instantiate CreateEntity (Generic Model Constructor)
-func (*AssistantV1) NewCreateEntity(entity string) (model *CreateEntity, err error) {
-	model = &CreateEntity{
+func (*AssistantV1) NewCreateEntity(entity string) (_model *CreateEntity, err error) {
+	_model = &CreateEntity{
 		Entity: core.StringPtr(entity),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -4466,28 +4474,28 @@ func UnmarshalCreateEntity(m map[string]json.RawMessage, result interface{}) (er
 // CreateEntityOptions : The CreateEntity options.
 type CreateEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - If you specify an entity name beginning with the reserved prefix `sys-`, it must be the name of a system entity
 	// that you want to enable. (Any entity content specified with the request is ignored.).
-	Entity *string `validate:"required"`
+	Entity *string `json:"entity" validate:"required"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
-	Metadata map[string]interface{}
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether to use fuzzy matching for the entity.
-	FuzzyMatch *bool
+	FuzzyMatch *bool `json:"fuzzy_match,omitempty"`
 
 	// An array of objects describing the entity values.
-	Values []CreateValue
+	Values []CreateValue `json:"values,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4502,45 +4510,45 @@ func (*AssistantV1) NewCreateEntityOptions(workspaceID string, entity string) *C
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateEntityOptions) SetWorkspaceID(workspaceID string) *CreateEntityOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateEntityOptions) SetWorkspaceID(workspaceID string) *CreateEntityOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateEntityOptions) SetEntity(entity string) *CreateEntityOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *CreateEntityOptions) SetEntity(entity string) *CreateEntityOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateEntityOptions) SetDescription(description string) *CreateEntityOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateEntityOptions) SetDescription(description string) *CreateEntityOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateEntityOptions) SetMetadata(metadata map[string]interface{}) *CreateEntityOptions {
-	options.Metadata = metadata
-	return options
+func (_options *CreateEntityOptions) SetMetadata(metadata map[string]interface{}) *CreateEntityOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetFuzzyMatch : Allow user to set FuzzyMatch
-func (options *CreateEntityOptions) SetFuzzyMatch(fuzzyMatch bool) *CreateEntityOptions {
-	options.FuzzyMatch = core.BoolPtr(fuzzyMatch)
-	return options
+func (_options *CreateEntityOptions) SetFuzzyMatch(fuzzyMatch bool) *CreateEntityOptions {
+	_options.FuzzyMatch = core.BoolPtr(fuzzyMatch)
+	return _options
 }
 
 // SetValues : Allow user to set Values
-func (options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntityOptions {
-	options.Values = values
-	return options
+func (_options *CreateEntityOptions) SetValues(values []CreateValue) *CreateEntityOptions {
+	_options.Values = values
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateEntityOptions) SetIncludeAudit(includeAudit bool) *CreateEntityOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateEntityOptions) SetIncludeAudit(includeAudit bool) *CreateEntityOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4552,21 +4560,21 @@ func (options *CreateEntityOptions) SetHeaders(param map[string]string) *CreateE
 // CreateExampleOptions : The CreateExample options.
 type CreateExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Text *string `validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// An array of contextual entity mentions.
-	Mentions []Mention
+	Mentions []Mention `json:"mentions,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4582,33 +4590,33 @@ func (*AssistantV1) NewCreateExampleOptions(workspaceID string, intent string, t
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateExampleOptions) SetWorkspaceID(workspaceID string) *CreateExampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateExampleOptions) SetWorkspaceID(workspaceID string) *CreateExampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *CreateExampleOptions) SetIntent(intent string) *CreateExampleOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *CreateExampleOptions) SetIntent(intent string) *CreateExampleOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *CreateExampleOptions) SetText(text string) *CreateExampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *CreateExampleOptions) SetText(text string) *CreateExampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetMentions : Allow user to set Mentions
-func (options *CreateExampleOptions) SetMentions(mentions []Mention) *CreateExampleOptions {
-	options.Mentions = mentions
-	return options
+func (_options *CreateExampleOptions) SetMentions(mentions []Mention) *CreateExampleOptions {
+	_options.Mentions = mentions
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateExampleOptions) SetIncludeAudit(includeAudit bool) *CreateExampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateExampleOptions) SetIncludeAudit(includeAudit bool) *CreateExampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4638,11 +4646,11 @@ type CreateIntent struct {
 }
 
 // NewCreateIntent : Instantiate CreateIntent (Generic Model Constructor)
-func (*AssistantV1) NewCreateIntent(intent string) (model *CreateIntent, err error) {
-	model = &CreateIntent{
+func (*AssistantV1) NewCreateIntent(intent string) (_model *CreateIntent, err error) {
+	_model = &CreateIntent{
 		Intent: core.StringPtr(intent),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -4676,21 +4684,21 @@ func UnmarshalCreateIntent(m map[string]json.RawMessage, result interface{}) (er
 // CreateIntentOptions : The CreateIntent options.
 type CreateIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	Intent *string `validate:"required"`
+	Intent *string `json:"intent" validate:"required"`
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
-	Examples []Example
+	Examples []Example `json:"examples,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4705,33 +4713,33 @@ func (*AssistantV1) NewCreateIntentOptions(workspaceID string, intent string) *C
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateIntentOptions) SetWorkspaceID(workspaceID string) *CreateIntentOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateIntentOptions) SetWorkspaceID(workspaceID string) *CreateIntentOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *CreateIntentOptions) SetIntent(intent string) *CreateIntentOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *CreateIntentOptions) SetIntent(intent string) *CreateIntentOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateIntentOptions) SetDescription(description string) *CreateIntentOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateIntentOptions) SetDescription(description string) *CreateIntentOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetExamples : Allow user to set Examples
-func (options *CreateIntentOptions) SetExamples(examples []Example) *CreateIntentOptions {
-	options.Examples = examples
-	return options
+func (_options *CreateIntentOptions) SetExamples(examples []Example) *CreateIntentOptions {
+	_options.Examples = examples
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateIntentOptions) SetIncludeAudit(includeAudit bool) *CreateIntentOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateIntentOptions) SetIncludeAudit(includeAudit bool) *CreateIntentOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4743,21 +4751,21 @@ func (options *CreateIntentOptions) SetHeaders(param map[string]string) *CreateI
 // CreateSynonymOptions : The CreateSynonym options.
 type CreateSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Synonym *string `validate:"required"`
+	Synonym *string `json:"synonym" validate:"required"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4774,33 +4782,33 @@ func (*AssistantV1) NewCreateSynonymOptions(workspaceID string, entity string, v
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateSynonymOptions) SetWorkspaceID(workspaceID string) *CreateSynonymOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateSynonymOptions) SetWorkspaceID(workspaceID string) *CreateSynonymOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateSynonymOptions) SetEntity(entity string) *CreateSynonymOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *CreateSynonymOptions) SetEntity(entity string) *CreateSynonymOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *CreateSynonymOptions) SetValue(value string) *CreateSynonymOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *CreateSynonymOptions) SetValue(value string) *CreateSynonymOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *CreateSynonymOptions) SetSynonym(synonym string) *CreateSynonymOptions {
-	options.Synonym = core.StringPtr(synonym)
-	return options
+func (_options *CreateSynonymOptions) SetSynonym(synonym string) *CreateSynonymOptions {
+	_options.Synonym = core.StringPtr(synonym)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateSynonymOptions) SetIncludeAudit(includeAudit bool) *CreateSynonymOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateSynonymOptions) SetIncludeAudit(includeAudit bool) *CreateSynonymOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4848,11 +4856,11 @@ const (
 )
 
 // NewCreateValue : Instantiate CreateValue (Generic Model Constructor)
-func (*AssistantV1) NewCreateValue(value string) (model *CreateValue, err error) {
-	model = &CreateValue{
+func (*AssistantV1) NewCreateValue(value string) (_model *CreateValue, err error) {
+	_model = &CreateValue{
 		Value: core.StringPtr(value),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -4894,35 +4902,35 @@ func UnmarshalCreateValue(m map[string]json.RawMessage, result interface{}) (err
 // CreateValueOptions : The CreateValue options.
 type CreateValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Value *string `validate:"required"`
+	Value *string `json:"value" validate:"required"`
 
 	// Any metadata related to the entity value.
-	Metadata map[string]interface{}
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	Type *string
+	Type *string `json:"type,omitempty"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	Synonyms []string
+	Synonyms []string `json:"synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
-	Patterns []string
+	Patterns []string `json:"patterns,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4945,51 +4953,51 @@ func (*AssistantV1) NewCreateValueOptions(workspaceID string, entity string, val
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *CreateValueOptions) SetWorkspaceID(workspaceID string) *CreateValueOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *CreateValueOptions) SetWorkspaceID(workspaceID string) *CreateValueOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *CreateValueOptions) SetEntity(entity string) *CreateValueOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *CreateValueOptions) SetEntity(entity string) *CreateValueOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *CreateValueOptions) SetValue(value string) *CreateValueOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *CreateValueOptions) SetValue(value string) *CreateValueOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateValueOptions) SetMetadata(metadata map[string]interface{}) *CreateValueOptions {
-	options.Metadata = metadata
-	return options
+func (_options *CreateValueOptions) SetMetadata(metadata map[string]interface{}) *CreateValueOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetType : Allow user to set Type
-func (options *CreateValueOptions) SetType(typeVar string) *CreateValueOptions {
-	options.Type = core.StringPtr(typeVar)
-	return options
+func (_options *CreateValueOptions) SetType(typeVar string) *CreateValueOptions {
+	_options.Type = core.StringPtr(typeVar)
+	return _options
 }
 
 // SetSynonyms : Allow user to set Synonyms
-func (options *CreateValueOptions) SetSynonyms(synonyms []string) *CreateValueOptions {
-	options.Synonyms = synonyms
-	return options
+func (_options *CreateValueOptions) SetSynonyms(synonyms []string) *CreateValueOptions {
+	_options.Synonyms = synonyms
+	return _options
 }
 
 // SetPatterns : Allow user to set Patterns
-func (options *CreateValueOptions) SetPatterns(patterns []string) *CreateValueOptions {
-	options.Patterns = patterns
-	return options
+func (_options *CreateValueOptions) SetPatterns(patterns []string) *CreateValueOptions {
+	_options.Patterns = patterns
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateValueOptions) SetIncludeAudit(includeAudit bool) *CreateValueOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateValueOptions) SetIncludeAudit(includeAudit bool) *CreateValueOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5001,40 +5009,40 @@ func (options *CreateValueOptions) SetHeaders(param map[string]string) *CreateVa
 // CreateWorkspaceOptions : The CreateWorkspace options.
 type CreateWorkspaceOptions struct {
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
-	Language *string
+	Language *string `json:"language,omitempty"`
 
 	// An array of objects describing the dialog nodes in the workspace.
-	DialogNodes []DialogNode
+	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []Counterexample
+	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
 	// Any metadata related to the workspace.
-	Metadata map[string]interface{}
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
 	// general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool
+	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings
+	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
 
-	Webhooks []Webhook
+	Webhooks []Webhook `json:"webhooks,omitempty"`
 
 	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent
+	Intents []CreateIntent `json:"intents,omitempty"`
 
 	// An array of objects describing the entities for the workspace.
-	Entities []CreateEntity
+	Entities []CreateEntity `json:"entities,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5046,75 +5054,75 @@ func (*AssistantV1) NewCreateWorkspaceOptions() *CreateWorkspaceOptions {
 }
 
 // SetName : Allow user to set Name
-func (options *CreateWorkspaceOptions) SetName(name string) *CreateWorkspaceOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateWorkspaceOptions) SetName(name string) *CreateWorkspaceOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateWorkspaceOptions) SetDescription(description string) *CreateWorkspaceOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateWorkspaceOptions) SetDescription(description string) *CreateWorkspaceOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateWorkspaceOptions) SetLanguage(language string) *CreateWorkspaceOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateWorkspaceOptions) SetLanguage(language string) *CreateWorkspaceOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetDialogNodes : Allow user to set DialogNodes
-func (options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *CreateWorkspaceOptions {
-	options.DialogNodes = dialogNodes
-	return options
+func (_options *CreateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *CreateWorkspaceOptions {
+	_options.DialogNodes = dialogNodes
+	return _options
 }
 
 // SetCounterexamples : Allow user to set Counterexamples
-func (options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *CreateWorkspaceOptions {
-	options.Counterexamples = counterexamples
-	return options
+func (_options *CreateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *CreateWorkspaceOptions {
+	_options.Counterexamples = counterexamples
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *CreateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *CreateWorkspaceOptions {
-	options.Metadata = metadata
-	return options
+func (_options *CreateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *CreateWorkspaceOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetLearningOptOut : Allow user to set LearningOptOut
-func (options *CreateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *CreateWorkspaceOptions {
-	options.LearningOptOut = core.BoolPtr(learningOptOut)
-	return options
+func (_options *CreateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *CreateWorkspaceOptions {
+	_options.LearningOptOut = core.BoolPtr(learningOptOut)
+	return _options
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *CreateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *CreateWorkspaceOptions {
-	options.SystemSettings = systemSettings
-	return options
+func (_options *CreateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *CreateWorkspaceOptions {
+	_options.SystemSettings = systemSettings
+	return _options
 }
 
 // SetWebhooks : Allow user to set Webhooks
-func (options *CreateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *CreateWorkspaceOptions {
-	options.Webhooks = webhooks
-	return options
+func (_options *CreateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *CreateWorkspaceOptions {
+	_options.Webhooks = webhooks
+	return _options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *CreateWorkspaceOptions) SetIntents(intents []CreateIntent) *CreateWorkspaceOptions {
-	options.Intents = intents
-	return options
+func (_options *CreateWorkspaceOptions) SetIntents(intents []CreateIntent) *CreateWorkspaceOptions {
+	_options.Intents = intents
+	return _options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *CreateWorkspaceOptions) SetEntities(entities []CreateEntity) *CreateWorkspaceOptions {
-	options.Entities = entities
-	return options
+func (_options *CreateWorkspaceOptions) SetEntities(entities []CreateEntity) *CreateWorkspaceOptions {
+	_options.Entities = entities
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *CreateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *CreateWorkspaceOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *CreateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *CreateWorkspaceOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5126,10 +5134,10 @@ func (options *CreateWorkspaceOptions) SetHeaders(param map[string]string) *Crea
 // DeleteCounterexampleOptions : The DeleteCounterexample options.
 type DeleteCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5144,15 +5152,15 @@ func (*AssistantV1) NewDeleteCounterexampleOptions(workspaceID string, text stri
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteCounterexampleOptions) SetWorkspaceID(workspaceID string) *DeleteCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteCounterexampleOptions) SetWorkspaceID(workspaceID string) *DeleteCounterexampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *DeleteCounterexampleOptions) SetText(text string) *DeleteCounterexampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *DeleteCounterexampleOptions) SetText(text string) *DeleteCounterexampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5164,10 +5172,10 @@ func (options *DeleteCounterexampleOptions) SetHeaders(param map[string]string) 
 // DeleteDialogNodeOptions : The DeleteDialogNode options.
 type DeleteDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The dialog node ID (for example, `node_1_1479323581900`).
-	DialogNode *string `validate:"required,ne="`
+	DialogNode *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5182,15 +5190,15 @@ func (*AssistantV1) NewDeleteDialogNodeOptions(workspaceID string, dialogNode st
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteDialogNodeOptions) SetWorkspaceID(workspaceID string) *DeleteDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteDialogNodeOptions) SetWorkspaceID(workspaceID string) *DeleteDialogNodeOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *DeleteDialogNodeOptions) SetDialogNode(dialogNode string) *DeleteDialogNodeOptions {
-	options.DialogNode = core.StringPtr(dialogNode)
-	return options
+func (_options *DeleteDialogNodeOptions) SetDialogNode(dialogNode string) *DeleteDialogNodeOptions {
+	_options.DialogNode = core.StringPtr(dialogNode)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5202,10 +5210,10 @@ func (options *DeleteDialogNodeOptions) SetHeaders(param map[string]string) *Del
 // DeleteEntityOptions : The DeleteEntity options.
 type DeleteEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5220,15 +5228,15 @@ func (*AssistantV1) NewDeleteEntityOptions(workspaceID string, entity string) *D
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteEntityOptions) SetWorkspaceID(workspaceID string) *DeleteEntityOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteEntityOptions) SetWorkspaceID(workspaceID string) *DeleteEntityOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteEntityOptions) SetEntity(entity string) *DeleteEntityOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *DeleteEntityOptions) SetEntity(entity string) *DeleteEntityOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5240,13 +5248,13 @@ func (options *DeleteEntityOptions) SetHeaders(param map[string]string) *DeleteE
 // DeleteExampleOptions : The DeleteExample options.
 type DeleteExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5262,21 +5270,21 @@ func (*AssistantV1) NewDeleteExampleOptions(workspaceID string, intent string, t
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteExampleOptions) SetWorkspaceID(workspaceID string) *DeleteExampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteExampleOptions) SetWorkspaceID(workspaceID string) *DeleteExampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *DeleteExampleOptions) SetIntent(intent string) *DeleteExampleOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *DeleteExampleOptions) SetIntent(intent string) *DeleteExampleOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *DeleteExampleOptions) SetText(text string) *DeleteExampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *DeleteExampleOptions) SetText(text string) *DeleteExampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5288,10 +5296,10 @@ func (options *DeleteExampleOptions) SetHeaders(param map[string]string) *Delete
 // DeleteIntentOptions : The DeleteIntent options.
 type DeleteIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5306,15 +5314,15 @@ func (*AssistantV1) NewDeleteIntentOptions(workspaceID string, intent string) *D
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteIntentOptions) SetWorkspaceID(workspaceID string) *DeleteIntentOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteIntentOptions) SetWorkspaceID(workspaceID string) *DeleteIntentOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *DeleteIntentOptions) SetIntent(intent string) *DeleteIntentOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *DeleteIntentOptions) SetIntent(intent string) *DeleteIntentOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5326,16 +5334,16 @@ func (options *DeleteIntentOptions) SetHeaders(param map[string]string) *DeleteI
 // DeleteSynonymOptions : The DeleteSynonym options.
 type DeleteSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `validate:"required,ne="`
+	Synonym *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5352,27 +5360,27 @@ func (*AssistantV1) NewDeleteSynonymOptions(workspaceID string, entity string, v
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteSynonymOptions) SetWorkspaceID(workspaceID string) *DeleteSynonymOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteSynonymOptions) SetWorkspaceID(workspaceID string) *DeleteSynonymOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteSynonymOptions) SetEntity(entity string) *DeleteSynonymOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *DeleteSynonymOptions) SetEntity(entity string) *DeleteSynonymOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *DeleteSynonymOptions) SetValue(value string) *DeleteSynonymOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *DeleteSynonymOptions) SetValue(value string) *DeleteSynonymOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *DeleteSynonymOptions) SetSynonym(synonym string) *DeleteSynonymOptions {
-	options.Synonym = core.StringPtr(synonym)
-	return options
+func (_options *DeleteSynonymOptions) SetSynonym(synonym string) *DeleteSynonymOptions {
+	_options.Synonym = core.StringPtr(synonym)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5384,7 +5392,7 @@ func (options *DeleteSynonymOptions) SetHeaders(param map[string]string) *Delete
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5398,9 +5406,9 @@ func (*AssistantV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDataO
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5412,13 +5420,13 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 // DeleteValueOptions : The DeleteValue options.
 type DeleteValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5434,21 +5442,21 @@ func (*AssistantV1) NewDeleteValueOptions(workspaceID string, entity string, val
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteValueOptions) SetWorkspaceID(workspaceID string) *DeleteValueOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteValueOptions) SetWorkspaceID(workspaceID string) *DeleteValueOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *DeleteValueOptions) SetEntity(entity string) *DeleteValueOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *DeleteValueOptions) SetEntity(entity string) *DeleteValueOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *DeleteValueOptions) SetValue(value string) *DeleteValueOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *DeleteValueOptions) SetValue(value string) *DeleteValueOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5460,7 +5468,7 @@ func (options *DeleteValueOptions) SetHeaders(param map[string]string) *DeleteVa
 // DeleteWorkspaceOptions : The DeleteWorkspace options.
 type DeleteWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5474,9 +5482,9 @@ func (*AssistantV1) NewDeleteWorkspaceOptions(workspaceID string) *DeleteWorkspa
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *DeleteWorkspaceOptions) SetWorkspaceID(workspaceID string) *DeleteWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *DeleteWorkspaceOptions) SetWorkspaceID(workspaceID string) *DeleteWorkspaceOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5617,11 +5625,11 @@ const (
 )
 
 // NewDialogNode : Instantiate DialogNode (Generic Model Constructor)
-func (*AssistantV1) NewDialogNode(dialogNode string) (model *DialogNode, err error) {
-	model = &DialogNode{
+func (*AssistantV1) NewDialogNode(dialogNode string) (_model *DialogNode, err error) {
+	_model = &DialogNode{
 		DialogNode: core.StringPtr(dialogNode),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -5749,12 +5757,12 @@ const (
 )
 
 // NewDialogNodeAction : Instantiate DialogNodeAction (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeAction(name string, resultVariable string) (model *DialogNodeAction, err error) {
-	model = &DialogNodeAction{
+func (*AssistantV1) NewDialogNodeAction(name string, resultVariable string) (_model *DialogNodeAction, err error) {
+	_model = &DialogNodeAction{
 		Name:           core.StringPtr(name),
 		ResultVariable: core.StringPtr(resultVariable),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -5824,6 +5832,14 @@ func (o *DialogNodeContext) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of DialogNodeContext
+func (o *DialogNodeContext) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of DialogNodeContext
@@ -5941,11 +5957,11 @@ const (
 )
 
 // NewDialogNodeNextStep : Instantiate DialogNodeNextStep (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeNextStep(behavior string) (model *DialogNodeNextStep, err error) {
-	model = &DialogNodeNextStep{
+func (*AssistantV1) NewDialogNodeNextStep(behavior string) (_model *DialogNodeNextStep, err error) {
+	_model = &DialogNodeNextStep{
 		Behavior: core.StringPtr(behavior),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -5991,6 +6007,14 @@ func (o *DialogNodeOutput) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of DialogNodeOutput
+func (o *DialogNodeOutput) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of DialogNodeOutput
@@ -6104,7 +6128,7 @@ type DialogNodeOutputGeneric struct {
 	// Whether to send a "user is typing" event during the pause. Ignored if the channel does not support this event.
 	Typing *bool `json:"typing,omitempty"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source,omitempty"`
 
 	// An optional title to show before the response.
@@ -6112,6 +6136,9 @@ type DialogNodeOutputGeneric struct {
 
 	// An optional description to show with the response.
 	Description *string `json:"description,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 
 	// The preferred type of control to display, if supported by the channel.
 	Preference *string `json:"preference,omitempty"`
@@ -6251,12 +6278,12 @@ type DialogNodeOutputOptionsElement struct {
 }
 
 // NewDialogNodeOutputOptionsElement : Instantiate DialogNodeOutputOptionsElement (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputOptionsElement(label string, value *DialogNodeOutputOptionsElementValue) (model *DialogNodeOutputOptionsElement, err error) {
-	model = &DialogNodeOutputOptionsElement{
+func (*AssistantV1) NewDialogNodeOutputOptionsElement(label string, value *DialogNodeOutputOptionsElementValue) (_model *DialogNodeOutputOptionsElement, err error) {
+	_model = &DialogNodeOutputOptionsElement{
 		Label: core.StringPtr(label),
 		Value: value,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6382,12 +6409,12 @@ type DialogSuggestion struct {
 }
 
 // NewDialogSuggestion : Instantiate DialogSuggestion (Generic Model Constructor)
-func (*AssistantV1) NewDialogSuggestion(label string, value *DialogSuggestionValue) (model *DialogSuggestion, err error) {
-	model = &DialogSuggestion{
+func (*AssistantV1) NewDialogSuggestion(label string, value *DialogSuggestionValue) (_model *DialogSuggestion, err error) {
+	_model = &DialogSuggestion{
 		Label: core.StringPtr(label),
 		Value: value,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6605,11 +6632,11 @@ type Example struct {
 }
 
 // NewExample : Instantiate Example (Generic Model Constructor)
-func (*AssistantV1) NewExample(text string) (model *Example, err error) {
-	model = &Example{
+func (*AssistantV1) NewExample(text string) (_model *Example, err error) {
+	_model = &Example{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6663,13 +6690,13 @@ func UnmarshalExampleCollection(m map[string]json.RawMessage, result interface{}
 // GetCounterexampleOptions : The GetCounterexample options.
 type GetCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6684,21 +6711,21 @@ func (*AssistantV1) NewGetCounterexampleOptions(workspaceID string, text string)
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetCounterexampleOptions) SetWorkspaceID(workspaceID string) *GetCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetCounterexampleOptions) SetWorkspaceID(workspaceID string) *GetCounterexampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *GetCounterexampleOptions) SetText(text string) *GetCounterexampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *GetCounterexampleOptions) SetText(text string) *GetCounterexampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetCounterexampleOptions) SetIncludeAudit(includeAudit bool) *GetCounterexampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetCounterexampleOptions) SetIncludeAudit(includeAudit bool) *GetCounterexampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6710,13 +6737,13 @@ func (options *GetCounterexampleOptions) SetHeaders(param map[string]string) *Ge
 // GetDialogNodeOptions : The GetDialogNode options.
 type GetDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The dialog node ID (for example, `node_1_1479323581900`).
-	DialogNode *string `validate:"required,ne="`
+	DialogNode *string `json:"-" validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6731,21 +6758,21 @@ func (*AssistantV1) NewGetDialogNodeOptions(workspaceID string, dialogNode strin
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetDialogNodeOptions) SetWorkspaceID(workspaceID string) *GetDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetDialogNodeOptions) SetWorkspaceID(workspaceID string) *GetDialogNodeOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *GetDialogNodeOptions) SetDialogNode(dialogNode string) *GetDialogNodeOptions {
-	options.DialogNode = core.StringPtr(dialogNode)
-	return options
+func (_options *GetDialogNodeOptions) SetDialogNode(dialogNode string) *GetDialogNodeOptions {
+	_options.DialogNode = core.StringPtr(dialogNode)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetDialogNodeOptions) SetIncludeAudit(includeAudit bool) *GetDialogNodeOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetDialogNodeOptions) SetIncludeAudit(includeAudit bool) *GetDialogNodeOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6757,17 +6784,17 @@ func (options *GetDialogNodeOptions) SetHeaders(param map[string]string) *GetDia
 // GetEntityOptions : The GetEntity options.
 type GetEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6782,27 +6809,27 @@ func (*AssistantV1) NewGetEntityOptions(workspaceID string, entity string) *GetE
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetEntityOptions) SetWorkspaceID(workspaceID string) *GetEntityOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetEntityOptions) SetWorkspaceID(workspaceID string) *GetEntityOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetEntityOptions) SetEntity(entity string) *GetEntityOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *GetEntityOptions) SetEntity(entity string) *GetEntityOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetEntityOptions) SetExport(export bool) *GetEntityOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *GetEntityOptions) SetExport(export bool) *GetEntityOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetEntityOptions) SetIncludeAudit(includeAudit bool) *GetEntityOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetEntityOptions) SetIncludeAudit(includeAudit bool) *GetEntityOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6814,16 +6841,16 @@ func (options *GetEntityOptions) SetHeaders(param map[string]string) *GetEntityO
 // GetExampleOptions : The GetExample options.
 type GetExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6839,27 +6866,27 @@ func (*AssistantV1) NewGetExampleOptions(workspaceID string, intent string, text
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetExampleOptions) SetWorkspaceID(workspaceID string) *GetExampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetExampleOptions) SetWorkspaceID(workspaceID string) *GetExampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *GetExampleOptions) SetIntent(intent string) *GetExampleOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *GetExampleOptions) SetIntent(intent string) *GetExampleOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *GetExampleOptions) SetText(text string) *GetExampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *GetExampleOptions) SetText(text string) *GetExampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetExampleOptions) SetIncludeAudit(includeAudit bool) *GetExampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetExampleOptions) SetIncludeAudit(includeAudit bool) *GetExampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6871,17 +6898,17 @@ func (options *GetExampleOptions) SetHeaders(param map[string]string) *GetExampl
 // GetIntentOptions : The GetIntent options.
 type GetIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6896,27 +6923,27 @@ func (*AssistantV1) NewGetIntentOptions(workspaceID string, intent string) *GetI
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetIntentOptions) SetWorkspaceID(workspaceID string) *GetIntentOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetIntentOptions) SetWorkspaceID(workspaceID string) *GetIntentOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *GetIntentOptions) SetIntent(intent string) *GetIntentOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *GetIntentOptions) SetIntent(intent string) *GetIntentOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetIntentOptions) SetExport(export bool) *GetIntentOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *GetIntentOptions) SetExport(export bool) *GetIntentOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetIntentOptions) SetIncludeAudit(includeAudit bool) *GetIntentOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetIntentOptions) SetIncludeAudit(includeAudit bool) *GetIntentOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6928,19 +6955,19 @@ func (options *GetIntentOptions) SetHeaders(param map[string]string) *GetIntentO
 // GetSynonymOptions : The GetSynonym options.
 type GetSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `validate:"required,ne="`
+	Synonym *string `json:"-" validate:"required,ne="`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6957,33 +6984,33 @@ func (*AssistantV1) NewGetSynonymOptions(workspaceID string, entity string, valu
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetSynonymOptions) SetWorkspaceID(workspaceID string) *GetSynonymOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetSynonymOptions) SetWorkspaceID(workspaceID string) *GetSynonymOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetSynonymOptions) SetEntity(entity string) *GetSynonymOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *GetSynonymOptions) SetEntity(entity string) *GetSynonymOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *GetSynonymOptions) SetValue(value string) *GetSynonymOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *GetSynonymOptions) SetValue(value string) *GetSynonymOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *GetSynonymOptions) SetSynonym(synonym string) *GetSynonymOptions {
-	options.Synonym = core.StringPtr(synonym)
-	return options
+func (_options *GetSynonymOptions) SetSynonym(synonym string) *GetSynonymOptions {
+	_options.Synonym = core.StringPtr(synonym)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetSynonymOptions) SetIncludeAudit(includeAudit bool) *GetSynonymOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetSynonymOptions) SetIncludeAudit(includeAudit bool) *GetSynonymOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6995,20 +7022,20 @@ func (options *GetSynonymOptions) SetHeaders(param map[string]string) *GetSynony
 // GetValueOptions : The GetValue options.
 type GetValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7024,33 +7051,33 @@ func (*AssistantV1) NewGetValueOptions(workspaceID string, entity string, value 
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetValueOptions) SetWorkspaceID(workspaceID string) *GetValueOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetValueOptions) SetWorkspaceID(workspaceID string) *GetValueOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *GetValueOptions) SetEntity(entity string) *GetValueOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *GetValueOptions) SetEntity(entity string) *GetValueOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *GetValueOptions) SetValue(value string) *GetValueOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *GetValueOptions) SetValue(value string) *GetValueOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetValueOptions) SetExport(export bool) *GetValueOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *GetValueOptions) SetExport(export bool) *GetValueOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetValueOptions) SetIncludeAudit(includeAudit bool) *GetValueOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetValueOptions) SetIncludeAudit(includeAudit bool) *GetValueOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7062,18 +7089,18 @@ func (options *GetValueOptions) SetHeaders(param map[string]string) *GetValueOpt
 // GetWorkspaceOptions : The GetWorkspace options.
 type GetWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Indicates how the returned workspace data will be sorted. This parameter is valid only if **export**=`true`. Specify
 	// `sort=stable` to sort all workspace objects by unique identifier, in ascending alphabetical order.
-	Sort *string
+	Sort *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7094,27 +7121,27 @@ func (*AssistantV1) NewGetWorkspaceOptions(workspaceID string) *GetWorkspaceOpti
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *GetWorkspaceOptions) SetWorkspaceID(workspaceID string) *GetWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *GetWorkspaceOptions) SetWorkspaceID(workspaceID string) *GetWorkspaceOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *GetWorkspaceOptions) SetExport(export bool) *GetWorkspaceOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *GetWorkspaceOptions) SetExport(export bool) *GetWorkspaceOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *GetWorkspaceOptions) SetIncludeAudit(includeAudit bool) *GetWorkspaceOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *GetWorkspaceOptions) SetIncludeAudit(includeAudit bool) *GetWorkspaceOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *GetWorkspaceOptions) SetSort(sort string) *GetWorkspaceOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *GetWorkspaceOptions) SetSort(sort string) *GetWorkspaceOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7198,19 +7225,20 @@ func UnmarshalIntentCollection(m map[string]json.RawMessage, result interface{})
 type ListAllLogsOptions struct {
 	// A cacheable parameter that limits the results to those matching the specified filter. You must specify a filter
 	// query that includes a value for `language`, as well as a value for `request.context.system.assistant_id`,
-	// `workspace_id`, or `request.context.metadata.deployment`. For more information, see the
+	// `workspace_id`, or `request.context.metadata.deployment`. These required filters must be specified using the exact
+	// match (`::`) operator. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string `validate:"required"`
+	Filter *string `json:"-" validate:"required"`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7224,27 +7252,27 @@ func (*AssistantV1) NewListAllLogsOptions(filter string) *ListAllLogsOptions {
 }
 
 // SetFilter : Allow user to set Filter
-func (options *ListAllLogsOptions) SetFilter(filter string) *ListAllLogsOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *ListAllLogsOptions) SetFilter(filter string) *ListAllLogsOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListAllLogsOptions) SetSort(sort string) *ListAllLogsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListAllLogsOptions) SetSort(sort string) *ListAllLogsOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListAllLogsOptions) SetPageLimit(pageLimit int64) *ListAllLogsOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListAllLogsOptions) SetPageLimit(pageLimit int64) *ListAllLogsOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListAllLogsOptions) SetCursor(cursor string) *ListAllLogsOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListAllLogsOptions) SetCursor(cursor string) *ListAllLogsOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7256,24 +7284,24 @@ func (options *ListAllLogsOptions) SetHeaders(param map[string]string) *ListAllL
 // ListCounterexamplesOptions : The ListCounterexamples options.
 type ListCounterexamplesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned counterexamples will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7295,39 +7323,39 @@ func (*AssistantV1) NewListCounterexamplesOptions(workspaceID string) *ListCount
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListCounterexamplesOptions) SetWorkspaceID(workspaceID string) *ListCounterexamplesOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListCounterexamplesOptions) SetWorkspaceID(workspaceID string) *ListCounterexamplesOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListCounterexamplesOptions) SetPageLimit(pageLimit int64) *ListCounterexamplesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListCounterexamplesOptions) SetPageLimit(pageLimit int64) *ListCounterexamplesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListCounterexamplesOptions) SetIncludeCount(includeCount bool) *ListCounterexamplesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListCounterexamplesOptions) SetIncludeCount(includeCount bool) *ListCounterexamplesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListCounterexamplesOptions) SetSort(sort string) *ListCounterexamplesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListCounterexamplesOptions) SetSort(sort string) *ListCounterexamplesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListCounterexamplesOptions) SetCursor(cursor string) *ListCounterexamplesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListCounterexamplesOptions) SetCursor(cursor string) *ListCounterexamplesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListCounterexamplesOptions) SetIncludeAudit(includeAudit bool) *ListCounterexamplesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListCounterexamplesOptions) SetIncludeAudit(includeAudit bool) *ListCounterexamplesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7339,24 +7367,24 @@ func (options *ListCounterexamplesOptions) SetHeaders(param map[string]string) *
 // ListDialogNodesOptions : The ListDialogNodes options.
 type ListDialogNodesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned dialog nodes will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7378,39 +7406,39 @@ func (*AssistantV1) NewListDialogNodesOptions(workspaceID string) *ListDialogNod
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListDialogNodesOptions) SetWorkspaceID(workspaceID string) *ListDialogNodesOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListDialogNodesOptions) SetWorkspaceID(workspaceID string) *ListDialogNodesOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListDialogNodesOptions) SetPageLimit(pageLimit int64) *ListDialogNodesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListDialogNodesOptions) SetPageLimit(pageLimit int64) *ListDialogNodesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListDialogNodesOptions) SetIncludeCount(includeCount bool) *ListDialogNodesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListDialogNodesOptions) SetIncludeCount(includeCount bool) *ListDialogNodesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListDialogNodesOptions) SetSort(sort string) *ListDialogNodesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListDialogNodesOptions) SetSort(sort string) *ListDialogNodesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListDialogNodesOptions) SetCursor(cursor string) *ListDialogNodesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListDialogNodesOptions) SetCursor(cursor string) *ListDialogNodesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListDialogNodesOptions) SetIncludeAudit(includeAudit bool) *ListDialogNodesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListDialogNodesOptions) SetIncludeAudit(includeAudit bool) *ListDialogNodesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7422,28 +7450,28 @@ func (options *ListDialogNodesOptions) SetHeaders(param map[string]string) *List
 // ListEntitiesOptions : The ListEntities options.
 type ListEntitiesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned entities will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7465,45 +7493,45 @@ func (*AssistantV1) NewListEntitiesOptions(workspaceID string) *ListEntitiesOpti
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListEntitiesOptions) SetWorkspaceID(workspaceID string) *ListEntitiesOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListEntitiesOptions) SetWorkspaceID(workspaceID string) *ListEntitiesOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListEntitiesOptions) SetExport(export bool) *ListEntitiesOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *ListEntitiesOptions) SetExport(export bool) *ListEntitiesOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListEntitiesOptions) SetPageLimit(pageLimit int64) *ListEntitiesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListEntitiesOptions) SetPageLimit(pageLimit int64) *ListEntitiesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListEntitiesOptions) SetIncludeCount(includeCount bool) *ListEntitiesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListEntitiesOptions) SetIncludeCount(includeCount bool) *ListEntitiesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListEntitiesOptions) SetSort(sort string) *ListEntitiesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListEntitiesOptions) SetSort(sort string) *ListEntitiesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListEntitiesOptions) SetCursor(cursor string) *ListEntitiesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListEntitiesOptions) SetCursor(cursor string) *ListEntitiesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListEntitiesOptions) SetIncludeAudit(includeAudit bool) *ListEntitiesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListEntitiesOptions) SetIncludeAudit(includeAudit bool) *ListEntitiesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7515,27 +7543,27 @@ func (options *ListEntitiesOptions) SetHeaders(param map[string]string) *ListEnt
 // ListExamplesOptions : The ListExamples options.
 type ListExamplesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned examples will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7558,45 +7586,45 @@ func (*AssistantV1) NewListExamplesOptions(workspaceID string, intent string) *L
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListExamplesOptions) SetWorkspaceID(workspaceID string) *ListExamplesOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListExamplesOptions) SetWorkspaceID(workspaceID string) *ListExamplesOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *ListExamplesOptions) SetIntent(intent string) *ListExamplesOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *ListExamplesOptions) SetIntent(intent string) *ListExamplesOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListExamplesOptions) SetPageLimit(pageLimit int64) *ListExamplesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListExamplesOptions) SetPageLimit(pageLimit int64) *ListExamplesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListExamplesOptions) SetIncludeCount(includeCount bool) *ListExamplesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListExamplesOptions) SetIncludeCount(includeCount bool) *ListExamplesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListExamplesOptions) SetSort(sort string) *ListExamplesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListExamplesOptions) SetSort(sort string) *ListExamplesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListExamplesOptions) SetCursor(cursor string) *ListExamplesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListExamplesOptions) SetCursor(cursor string) *ListExamplesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListExamplesOptions) SetIncludeAudit(includeAudit bool) *ListExamplesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListExamplesOptions) SetIncludeAudit(includeAudit bool) *ListExamplesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7608,28 +7636,28 @@ func (options *ListExamplesOptions) SetHeaders(param map[string]string) *ListExa
 // ListIntentsOptions : The ListIntents options.
 type ListIntentsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned intents will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7651,45 +7679,45 @@ func (*AssistantV1) NewListIntentsOptions(workspaceID string) *ListIntentsOption
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListIntentsOptions) SetWorkspaceID(workspaceID string) *ListIntentsOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListIntentsOptions) SetWorkspaceID(workspaceID string) *ListIntentsOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListIntentsOptions) SetExport(export bool) *ListIntentsOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *ListIntentsOptions) SetExport(export bool) *ListIntentsOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListIntentsOptions) SetPageLimit(pageLimit int64) *ListIntentsOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListIntentsOptions) SetPageLimit(pageLimit int64) *ListIntentsOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListIntentsOptions) SetIncludeCount(includeCount bool) *ListIntentsOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListIntentsOptions) SetIncludeCount(includeCount bool) *ListIntentsOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListIntentsOptions) SetSort(sort string) *ListIntentsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListIntentsOptions) SetSort(sort string) *ListIntentsOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListIntentsOptions) SetCursor(cursor string) *ListIntentsOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListIntentsOptions) SetCursor(cursor string) *ListIntentsOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListIntentsOptions) SetIncludeAudit(includeAudit bool) *ListIntentsOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListIntentsOptions) SetIncludeAudit(includeAudit bool) *ListIntentsOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7701,21 +7729,21 @@ func (options *ListIntentsOptions) SetHeaders(param map[string]string) *ListInte
 // ListLogsOptions : The ListLogs options.
 type ListLogsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string
+	Filter *string `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7729,33 +7757,33 @@ func (*AssistantV1) NewListLogsOptions(workspaceID string) *ListLogsOptions {
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListLogsOptions) SetWorkspaceID(workspaceID string) *ListLogsOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListLogsOptions) SetWorkspaceID(workspaceID string) *ListLogsOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7767,17 +7795,17 @@ func (options *ListLogsOptions) SetHeaders(param map[string]string) *ListLogsOpt
 // ListMentionsOptions : The ListMentions options.
 type ListMentionsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7792,27 +7820,27 @@ func (*AssistantV1) NewListMentionsOptions(workspaceID string, entity string) *L
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListMentionsOptions) SetWorkspaceID(workspaceID string) *ListMentionsOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListMentionsOptions) SetWorkspaceID(workspaceID string) *ListMentionsOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListMentionsOptions) SetEntity(entity string) *ListMentionsOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *ListMentionsOptions) SetEntity(entity string) *ListMentionsOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListMentionsOptions) SetExport(export bool) *ListMentionsOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *ListMentionsOptions) SetExport(export bool) *ListMentionsOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListMentionsOptions) SetIncludeAudit(includeAudit bool) *ListMentionsOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListMentionsOptions) SetIncludeAudit(includeAudit bool) *ListMentionsOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7824,30 +7852,30 @@ func (options *ListMentionsOptions) SetHeaders(param map[string]string) *ListMen
 // ListSynonymsOptions : The ListSynonyms options.
 type ListSynonymsOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned entity value synonyms will be sorted. To reverse the sort order, prefix the value
 	// with a minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7871,51 +7899,51 @@ func (*AssistantV1) NewListSynonymsOptions(workspaceID string, entity string, va
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListSynonymsOptions) SetWorkspaceID(workspaceID string) *ListSynonymsOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListSynonymsOptions) SetWorkspaceID(workspaceID string) *ListSynonymsOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListSynonymsOptions) SetEntity(entity string) *ListSynonymsOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *ListSynonymsOptions) SetEntity(entity string) *ListSynonymsOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *ListSynonymsOptions) SetValue(value string) *ListSynonymsOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *ListSynonymsOptions) SetValue(value string) *ListSynonymsOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListSynonymsOptions) SetPageLimit(pageLimit int64) *ListSynonymsOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListSynonymsOptions) SetPageLimit(pageLimit int64) *ListSynonymsOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListSynonymsOptions) SetIncludeCount(includeCount bool) *ListSynonymsOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListSynonymsOptions) SetIncludeCount(includeCount bool) *ListSynonymsOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListSynonymsOptions) SetSort(sort string) *ListSynonymsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListSynonymsOptions) SetSort(sort string) *ListSynonymsOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListSynonymsOptions) SetCursor(cursor string) *ListSynonymsOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListSynonymsOptions) SetCursor(cursor string) *ListSynonymsOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListSynonymsOptions) SetIncludeAudit(includeAudit bool) *ListSynonymsOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListSynonymsOptions) SetIncludeAudit(includeAudit bool) *ListSynonymsOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -7927,31 +7955,31 @@ func (options *ListSynonymsOptions) SetHeaders(param map[string]string) *ListSyn
 // ListValuesOptions : The ListValues options.
 type ListValuesOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// Whether to include all element content in the returned data. If **export**=`false`, the returned data includes only
 	// information about the element itself. If **export**=`true`, all content, including subelements, is included.
-	Export *bool
+	Export *bool `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned entity values will be sorted. To reverse the sort order, prefix the value with a
 	// minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -7974,51 +8002,51 @@ func (*AssistantV1) NewListValuesOptions(workspaceID string, entity string) *Lis
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *ListValuesOptions) SetWorkspaceID(workspaceID string) *ListValuesOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *ListValuesOptions) SetWorkspaceID(workspaceID string) *ListValuesOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *ListValuesOptions) SetEntity(entity string) *ListValuesOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *ListValuesOptions) SetEntity(entity string) *ListValuesOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetExport : Allow user to set Export
-func (options *ListValuesOptions) SetExport(export bool) *ListValuesOptions {
-	options.Export = core.BoolPtr(export)
-	return options
+func (_options *ListValuesOptions) SetExport(export bool) *ListValuesOptions {
+	_options.Export = core.BoolPtr(export)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListValuesOptions) SetPageLimit(pageLimit int64) *ListValuesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListValuesOptions) SetPageLimit(pageLimit int64) *ListValuesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListValuesOptions) SetIncludeCount(includeCount bool) *ListValuesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListValuesOptions) SetIncludeCount(includeCount bool) *ListValuesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListValuesOptions) SetSort(sort string) *ListValuesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListValuesOptions) SetSort(sort string) *ListValuesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListValuesOptions) SetCursor(cursor string) *ListValuesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListValuesOptions) SetCursor(cursor string) *ListValuesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListValuesOptions) SetIncludeAudit(includeAudit bool) *ListValuesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListValuesOptions) SetIncludeAudit(includeAudit bool) *ListValuesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8030,21 +8058,21 @@ func (options *ListValuesOptions) SetHeaders(param map[string]string) *ListValue
 // ListWorkspacesOptions : The ListWorkspaces options.
 type ListWorkspacesOptions struct {
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// Whether to include information about the number of records that satisfy the request, regardless of the page limit.
 	// If this parameter is `true`, the `pagination` object in the response includes the `total` property.
-	IncludeCount *bool
+	IncludeCount *bool `json:"-"`
 
 	// The attribute by which returned workspaces will be sorted. To reverse the sort order, prefix the value with a minus
 	// sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8064,33 +8092,33 @@ func (*AssistantV1) NewListWorkspacesOptions() *ListWorkspacesOptions {
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListWorkspacesOptions) SetPageLimit(pageLimit int64) *ListWorkspacesOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListWorkspacesOptions) SetPageLimit(pageLimit int64) *ListWorkspacesOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetIncludeCount : Allow user to set IncludeCount
-func (options *ListWorkspacesOptions) SetIncludeCount(includeCount bool) *ListWorkspacesOptions {
-	options.IncludeCount = core.BoolPtr(includeCount)
-	return options
+func (_options *ListWorkspacesOptions) SetIncludeCount(includeCount bool) *ListWorkspacesOptions {
+	_options.IncludeCount = core.BoolPtr(includeCount)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListWorkspacesOptions) SetSort(sort string) *ListWorkspacesOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListWorkspacesOptions) SetSort(sort string) *ListWorkspacesOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListWorkspacesOptions) SetCursor(cursor string) *ListWorkspacesOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListWorkspacesOptions) SetCursor(cursor string) *ListWorkspacesOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *ListWorkspacesOptions) SetIncludeAudit(includeAudit bool) *ListWorkspacesOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *ListWorkspacesOptions) SetIncludeAudit(includeAudit bool) *ListWorkspacesOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8206,13 +8234,13 @@ const (
 )
 
 // NewLogMessage : Instantiate LogMessage (Generic Model Constructor)
-func (*AssistantV1) NewLogMessage(level string, msg string, code string) (model *LogMessage, err error) {
-	model = &LogMessage{
+func (*AssistantV1) NewLogMessage(level string, msg string, code string) (_model *LogMessage, err error) {
+	_model = &LogMessage{
 		Level: core.StringPtr(level),
 		Msg:   core.StringPtr(msg),
 		Code:  core.StringPtr(code),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -8310,12 +8338,12 @@ type Mention struct {
 }
 
 // NewMention : Instantiate Mention (Generic Model Constructor)
-func (*AssistantV1) NewMention(entity string, location []int64) (model *Mention, err error) {
-	model = &Mention{
+func (*AssistantV1) NewMention(entity string, location []int64) (_model *Mention, err error) {
+	_model = &Mention{
 		Entity:   core.StringPtr(entity),
 		Location: location,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -8401,6 +8429,14 @@ func (o *MessageInput) SetProperty(key string, value interface{}) {
 	o.additionalProperties[key] = value
 }
 
+// SetProperties allows the user to set a map of arbitrary properties on an instance of MessageInput
+func (o *MessageInput) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
+}
+
 // GetProperty allows the user to retrieve an arbitrary property from an instance of MessageInput
 func (o *MessageInput) GetProperty(key string) interface{} {
 	return o.additionalProperties[key]
@@ -8482,28 +8518,28 @@ func UnmarshalMessageInput(m map[string]json.RawMessage, result interface{}) (er
 // MessageOptions : The Message options.
 type MessageOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInput
+	Input *MessageInput `json:"input,omitempty"`
 
 	// Intents to use when evaluating the user input. Include intents from the previous response to continue using those
 	// intents rather than trying to recognize intents in the new input.
-	Intents []RuntimeIntent
+	Intents []RuntimeIntent `json:"intents,omitempty"`
 
 	// Entities to use when evaluating the message. Include entities from the previous response to continue using those
 	// entities rather than detecting entities in the new input.
-	Entities []RuntimeEntity
+	Entities []RuntimeEntity `json:"entities,omitempty"`
 
 	// Whether to return more than one intent. A value of `true` indicates that all matching intents are returned.
-	AlternateIntents *bool
+	AlternateIntents *bool `json:"alternate_intents,omitempty"`
 
 	// State information for the conversation. To maintain state, include the context from the previous response.
-	Context *Context
+	Context *Context `json:"context,omitempty"`
 
 	// An output object that includes the response to the user, the dialog nodes that were triggered, and messages from the
 	// log.
-	Output *OutputData
+	Output *OutputData `json:"output,omitempty"`
 
 	// A string value that identifies the user who is interacting with the workspace. The client must provide a unique
 	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
@@ -8512,11 +8548,11 @@ type MessageOptions struct {
 	//
 	// **Note:** This property is the same as the **user_id** property in the context metadata. If **user_id** is specified
 	// in both locations in a message request, the value specified at the root is used.
-	UserID *string
+	UserID *string `json:"user_id,omitempty"`
 
 	// Whether to include additional diagnostic information about the dialog nodes that were visited during processing of
 	// the message.
-	NodesVisitedDetails *bool
+	NodesVisitedDetails *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -8530,57 +8566,57 @@ func (*AssistantV1) NewMessageOptions(workspaceID string) *MessageOptions {
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *MessageOptions) SetWorkspaceID(workspaceID string) *MessageOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *MessageOptions) SetWorkspaceID(workspaceID string) *MessageOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
-	options.Input = input
-	return options
+func (_options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
+	_options.Input = input
+	return _options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptions {
-	options.Intents = intents
-	return options
+func (_options *MessageOptions) SetIntents(intents []RuntimeIntent) *MessageOptions {
+	_options.Intents = intents
+	return _options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *MessageOptions) SetEntities(entities []RuntimeEntity) *MessageOptions {
-	options.Entities = entities
-	return options
+func (_options *MessageOptions) SetEntities(entities []RuntimeEntity) *MessageOptions {
+	_options.Entities = entities
+	return _options
 }
 
 // SetAlternateIntents : Allow user to set AlternateIntents
-func (options *MessageOptions) SetAlternateIntents(alternateIntents bool) *MessageOptions {
-	options.AlternateIntents = core.BoolPtr(alternateIntents)
-	return options
+func (_options *MessageOptions) SetAlternateIntents(alternateIntents bool) *MessageOptions {
+	_options.AlternateIntents = core.BoolPtr(alternateIntents)
+	return _options
 }
 
 // SetContext : Allow user to set Context
-func (options *MessageOptions) SetContext(context *Context) *MessageOptions {
-	options.Context = context
-	return options
+func (_options *MessageOptions) SetContext(context *Context) *MessageOptions {
+	_options.Context = context
+	return _options
 }
 
 // SetOutput : Allow user to set Output
-func (options *MessageOptions) SetOutput(output *OutputData) *MessageOptions {
-	options.Output = output
-	return options
+func (_options *MessageOptions) SetOutput(output *OutputData) *MessageOptions {
+	_options.Output = output
+	return _options
 }
 
 // SetUserID : Allow user to set UserID
-func (options *MessageOptions) SetUserID(userID string) *MessageOptions {
-	options.UserID = core.StringPtr(userID)
-	return options
+func (_options *MessageOptions) SetUserID(userID string) *MessageOptions {
+	_options.UserID = core.StringPtr(userID)
+	return _options
 }
 
 // SetNodesVisitedDetails : Allow user to set NodesVisitedDetails
-func (options *MessageOptions) SetNodesVisitedDetails(nodesVisitedDetails bool) *MessageOptions {
-	options.NodesVisitedDetails = core.BoolPtr(nodesVisitedDetails)
-	return options
+func (_options *MessageOptions) SetNodesVisitedDetails(nodesVisitedDetails bool) *MessageOptions {
+	_options.NodesVisitedDetails = core.BoolPtr(nodesVisitedDetails)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -8763,12 +8799,12 @@ type OutputData struct {
 }
 
 // NewOutputData : Instantiate OutputData (Generic Model Constructor)
-func (*AssistantV1) NewOutputData(logMessages []LogMessage, text []string) (model *OutputData, err error) {
-	model = &OutputData{
+func (*AssistantV1) NewOutputData(logMessages []LogMessage, text []string) (_model *OutputData, err error) {
+	_model = &OutputData{
 		LogMessages: logMessages,
 		Text:        text,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -8778,6 +8814,14 @@ func (o *OutputData) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of OutputData
+func (o *OutputData) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of OutputData
@@ -8947,7 +8991,7 @@ type RuntimeEntity struct {
 
 	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
 	// text.
-	Location []int64 `json:"location" validate:"required"`
+	Location []int64 `json:"location,omitempty"`
 
 	// The entity value that was recognized in the user input.
 	Value *string `json:"value" validate:"required"`
@@ -8955,7 +8999,10 @@ type RuntimeEntity struct {
 	// A decimal percentage that represents Watson's confidence in the recognized entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 
-	// Any metadata for the entity.
+	// **Deprecated.** Any metadata for the entity.
+	//
+	// Beginning with the `2021-06-14` API version, the `metadata` property is no longer returned. For information about
+	// system entities recognized in the user input, see the `interpretation` property.
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
@@ -8980,13 +9027,12 @@ type RuntimeEntity struct {
 }
 
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
-	model = &RuntimeEntity{
-		Entity:   core.StringPtr(entity),
-		Location: location,
-		Value:    core.StringPtr(value),
+func (*AssistantV1) NewRuntimeEntity(entity string, value string) (_model *RuntimeEntity, err error) {
+	_model = &RuntimeEntity{
+		Entity: core.StringPtr(entity),
+		Value:  core.StringPtr(value),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -9320,12 +9366,12 @@ type RuntimeIntent struct {
 }
 
 // NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
-	model = &RuntimeIntent{
+func (*AssistantV1) NewRuntimeIntent(intent string, confidence float64) (_model *RuntimeIntent, err error) {
+	_model = &RuntimeIntent{
 		Intent:     core.StringPtr(intent),
 		Confidence: core.Float64Ptr(confidence),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -9372,7 +9418,7 @@ type RuntimeResponseGeneric struct {
 	// Whether to send a "user is typing" event during the pause.
 	Typing *bool `json:"typing,omitempty"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source,omitempty"`
 
 	// The title or introductory text to show before the response.
@@ -9380,6 +9426,9 @@ type RuntimeResponseGeneric struct {
 
 	// The description to show with the the response.
 	Description *string `json:"description,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 
 	// The preferred type of control to display.
 	Preference *string `json:"preference,omitempty"`
@@ -9484,11 +9533,11 @@ type Synonym struct {
 }
 
 // NewSynonym : Instantiate Synonym (Generic Model Constructor)
-func (*AssistantV1) NewSynonym(synonym string) (model *Synonym, err error) {
-	model = &Synonym{
+func (*AssistantV1) NewSynonym(synonym string) (_model *Synonym, err error) {
+	_model = &Synonym{
 		Synonym: core.StringPtr(synonym),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -9538,18 +9587,18 @@ func UnmarshalSynonymCollection(m map[string]json.RawMessage, result interface{}
 // UpdateCounterexampleOptions : The UpdateCounterexample options.
 type UpdateCounterexampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input counterexample (for example, `What are you wearing?`).
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// The text of a user input marked as irrelevant input. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewText *string
+	NewText *string `json:"text,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9564,27 +9613,27 @@ func (*AssistantV1) NewUpdateCounterexampleOptions(workspaceID string, text stri
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateCounterexampleOptions) SetWorkspaceID(workspaceID string) *UpdateCounterexampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateCounterexampleOptions) SetWorkspaceID(workspaceID string) *UpdateCounterexampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *UpdateCounterexampleOptions) SetText(text string) *UpdateCounterexampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *UpdateCounterexampleOptions) SetText(text string) *UpdateCounterexampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetNewText : Allow user to set NewText
-func (options *UpdateCounterexampleOptions) SetNewText(newText string) *UpdateCounterexampleOptions {
-	options.NewText = core.StringPtr(newText)
-	return options
+func (_options *UpdateCounterexampleOptions) SetNewText(newText string) *UpdateCounterexampleOptions {
+	_options.NewText = core.StringPtr(newText)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *UpdateCounterexampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateCounterexampleOptions) SetIncludeAudit(includeAudit bool) *UpdateCounterexampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9596,43 +9645,43 @@ func (options *UpdateCounterexampleOptions) SetHeaders(param map[string]string) 
 // UpdateDialogNodeOptions : The UpdateDialogNode options.
 type UpdateDialogNodeOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The dialog node ID (for example, `node_1_1479323581900`).
-	DialogNode *string `validate:"required,ne="`
+	DialogNode *string `json:"-" validate:"required,ne="`
 
 	// The unique ID of the dialog node. This is an internal identifier used to refer to the dialog node from other dialog
 	// nodes and in the diagnostic information included with message responses.
 	//
 	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	NewDialogNode *string
+	NewDialogNode *string `json:"dialog_node,omitempty"`
 
 	// The description of the dialog node. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string
+	NewDescription *string `json:"description,omitempty"`
 
 	// The condition that will trigger the dialog node. This string cannot contain carriage return, newline, or tab
 	// characters.
-	NewConditions *string
+	NewConditions *string `json:"conditions,omitempty"`
 
 	// The unique ID of the parent dialog node. This property is omitted if the dialog node has no parent.
-	NewParent *string
+	NewParent *string `json:"parent,omitempty"`
 
 	// The unique ID of the previous sibling dialog node. This property is omitted if the dialog node has no previous
 	// sibling.
-	NewPreviousSibling *string
+	NewPreviousSibling *string `json:"previous_sibling,omitempty"`
 
 	// The output of the dialog node. For more information about how to specify dialog node output, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-dialog-overview#dialog-overview-responses).
-	NewOutput *DialogNodeOutput
+	NewOutput *DialogNodeOutput `json:"output,omitempty"`
 
 	// The context for the dialog node.
-	NewContext *DialogNodeContext
+	NewContext *DialogNodeContext `json:"context,omitempty"`
 
 	// The metadata for the dialog node.
-	NewMetadata map[string]interface{}
+	NewMetadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The next step to execute following this dialog node.
-	NewNextStep *DialogNodeNextStep
+	NewNextStep *DialogNodeNextStep `json:"next_step,omitempty"`
 
 	// A human-readable name for the dialog node. If the node is included in disambiguation, this title is used to populate
 	// the **label** property of the corresponding suggestion in the `suggestion` response type (unless it is overridden by
@@ -9640,39 +9689,39 @@ type UpdateDialogNodeOptions struct {
 	// response type.
 	//
 	// This string can contain only Unicode alphanumeric, space, underscore, hyphen, and dot characters.
-	NewTitle *string
+	NewTitle *string `json:"title,omitempty"`
 
 	// How the dialog node is processed.
-	NewType *string
+	NewType *string `json:"type,omitempty"`
 
 	// How an `event_handler` node is processed.
-	NewEventName *string
+	NewEventName *string `json:"event_name,omitempty"`
 
 	// The location in the dialog context where output is stored.
-	NewVariable *string
+	NewVariable *string `json:"variable,omitempty"`
 
 	// An array of objects describing any actions to be invoked by the dialog node.
-	NewActions []DialogNodeAction
+	NewActions []DialogNodeAction `json:"actions,omitempty"`
 
 	// Whether this top-level dialog node can be digressed into.
-	NewDigressIn *string
+	NewDigressIn *string `json:"digress_in,omitempty"`
 
 	// Whether this dialog node can be returned to after a digression.
-	NewDigressOut *string
+	NewDigressOut *string `json:"digress_out,omitempty"`
 
 	// Whether the user can digress to top-level nodes while filling out slots.
-	NewDigressOutSlots *string
+	NewDigressOutSlots *string `json:"digress_out_slots,omitempty"`
 
 	// A label that can be displayed externally to describe the purpose of the node to users. If set, this label is used to
 	// identify the node in disambiguation responses (overriding the value of the **title** property).
-	NewUserLabel *string
+	NewUserLabel *string `json:"user_label,omitempty"`
 
 	// Whether the dialog node should be excluded from disambiguation suggestions. Valid only when **type**=`standard` or
 	// `frame`.
-	NewDisambiguationOptOut *bool
+	NewDisambiguationOptOut *bool `json:"disambiguation_opt_out,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9736,135 +9785,135 @@ func (*AssistantV1) NewUpdateDialogNodeOptions(workspaceID string, dialogNode st
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateDialogNodeOptions) SetWorkspaceID(workspaceID string) *UpdateDialogNodeOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateDialogNodeOptions) SetWorkspaceID(workspaceID string) *UpdateDialogNodeOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetDialogNode : Allow user to set DialogNode
-func (options *UpdateDialogNodeOptions) SetDialogNode(dialogNode string) *UpdateDialogNodeOptions {
-	options.DialogNode = core.StringPtr(dialogNode)
-	return options
+func (_options *UpdateDialogNodeOptions) SetDialogNode(dialogNode string) *UpdateDialogNodeOptions {
+	_options.DialogNode = core.StringPtr(dialogNode)
+	return _options
 }
 
 // SetNewDialogNode : Allow user to set NewDialogNode
-func (options *UpdateDialogNodeOptions) SetNewDialogNode(newDialogNode string) *UpdateDialogNodeOptions {
-	options.NewDialogNode = core.StringPtr(newDialogNode)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDialogNode(newDialogNode string) *UpdateDialogNodeOptions {
+	_options.NewDialogNode = core.StringPtr(newDialogNode)
+	return _options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateDialogNodeOptions) SetNewDescription(newDescription string) *UpdateDialogNodeOptions {
-	options.NewDescription = core.StringPtr(newDescription)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDescription(newDescription string) *UpdateDialogNodeOptions {
+	_options.NewDescription = core.StringPtr(newDescription)
+	return _options
 }
 
 // SetNewConditions : Allow user to set NewConditions
-func (options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *UpdateDialogNodeOptions {
-	options.NewConditions = core.StringPtr(newConditions)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewConditions(newConditions string) *UpdateDialogNodeOptions {
+	_options.NewConditions = core.StringPtr(newConditions)
+	return _options
 }
 
 // SetNewParent : Allow user to set NewParent
-func (options *UpdateDialogNodeOptions) SetNewParent(newParent string) *UpdateDialogNodeOptions {
-	options.NewParent = core.StringPtr(newParent)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewParent(newParent string) *UpdateDialogNodeOptions {
+	_options.NewParent = core.StringPtr(newParent)
+	return _options
 }
 
 // SetNewPreviousSibling : Allow user to set NewPreviousSibling
-func (options *UpdateDialogNodeOptions) SetNewPreviousSibling(newPreviousSibling string) *UpdateDialogNodeOptions {
-	options.NewPreviousSibling = core.StringPtr(newPreviousSibling)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewPreviousSibling(newPreviousSibling string) *UpdateDialogNodeOptions {
+	_options.NewPreviousSibling = core.StringPtr(newPreviousSibling)
+	return _options
 }
 
 // SetNewOutput : Allow user to set NewOutput
-func (options *UpdateDialogNodeOptions) SetNewOutput(newOutput *DialogNodeOutput) *UpdateDialogNodeOptions {
-	options.NewOutput = newOutput
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewOutput(newOutput *DialogNodeOutput) *UpdateDialogNodeOptions {
+	_options.NewOutput = newOutput
+	return _options
 }
 
 // SetNewContext : Allow user to set NewContext
-func (options *UpdateDialogNodeOptions) SetNewContext(newContext *DialogNodeContext) *UpdateDialogNodeOptions {
-	options.NewContext = newContext
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewContext(newContext *DialogNodeContext) *UpdateDialogNodeOptions {
+	_options.NewContext = newContext
+	return _options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateDialogNodeOptions {
-	options.NewMetadata = newMetadata
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateDialogNodeOptions {
+	_options.NewMetadata = newMetadata
+	return _options
 }
 
 // SetNewNextStep : Allow user to set NewNextStep
-func (options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep *DialogNodeNextStep) *UpdateDialogNodeOptions {
-	options.NewNextStep = newNextStep
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewNextStep(newNextStep *DialogNodeNextStep) *UpdateDialogNodeOptions {
+	_options.NewNextStep = newNextStep
+	return _options
 }
 
 // SetNewTitle : Allow user to set NewTitle
-func (options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDialogNodeOptions {
-	options.NewTitle = core.StringPtr(newTitle)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewTitle(newTitle string) *UpdateDialogNodeOptions {
+	_options.NewTitle = core.StringPtr(newTitle)
+	return _options
 }
 
 // SetNewType : Allow user to set NewType
-func (options *UpdateDialogNodeOptions) SetNewType(newType string) *UpdateDialogNodeOptions {
-	options.NewType = core.StringPtr(newType)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewType(newType string) *UpdateDialogNodeOptions {
+	_options.NewType = core.StringPtr(newType)
+	return _options
 }
 
 // SetNewEventName : Allow user to set NewEventName
-func (options *UpdateDialogNodeOptions) SetNewEventName(newEventName string) *UpdateDialogNodeOptions {
-	options.NewEventName = core.StringPtr(newEventName)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewEventName(newEventName string) *UpdateDialogNodeOptions {
+	_options.NewEventName = core.StringPtr(newEventName)
+	return _options
 }
 
 // SetNewVariable : Allow user to set NewVariable
-func (options *UpdateDialogNodeOptions) SetNewVariable(newVariable string) *UpdateDialogNodeOptions {
-	options.NewVariable = core.StringPtr(newVariable)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewVariable(newVariable string) *UpdateDialogNodeOptions {
+	_options.NewVariable = core.StringPtr(newVariable)
+	return _options
 }
 
 // SetNewActions : Allow user to set NewActions
-func (options *UpdateDialogNodeOptions) SetNewActions(newActions []DialogNodeAction) *UpdateDialogNodeOptions {
-	options.NewActions = newActions
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewActions(newActions []DialogNodeAction) *UpdateDialogNodeOptions {
+	_options.NewActions = newActions
+	return _options
 }
 
 // SetNewDigressIn : Allow user to set NewDigressIn
-func (options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *UpdateDialogNodeOptions {
-	options.NewDigressIn = core.StringPtr(newDigressIn)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDigressIn(newDigressIn string) *UpdateDialogNodeOptions {
+	_options.NewDigressIn = core.StringPtr(newDigressIn)
+	return _options
 }
 
 // SetNewDigressOut : Allow user to set NewDigressOut
-func (options *UpdateDialogNodeOptions) SetNewDigressOut(newDigressOut string) *UpdateDialogNodeOptions {
-	options.NewDigressOut = core.StringPtr(newDigressOut)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDigressOut(newDigressOut string) *UpdateDialogNodeOptions {
+	_options.NewDigressOut = core.StringPtr(newDigressOut)
+	return _options
 }
 
 // SetNewDigressOutSlots : Allow user to set NewDigressOutSlots
-func (options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots string) *UpdateDialogNodeOptions {
-	options.NewDigressOutSlots = core.StringPtr(newDigressOutSlots)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDigressOutSlots(newDigressOutSlots string) *UpdateDialogNodeOptions {
+	_options.NewDigressOutSlots = core.StringPtr(newDigressOutSlots)
+	return _options
 }
 
 // SetNewUserLabel : Allow user to set NewUserLabel
-func (options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
-	options.NewUserLabel = core.StringPtr(newUserLabel)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewUserLabel(newUserLabel string) *UpdateDialogNodeOptions {
+	_options.NewUserLabel = core.StringPtr(newUserLabel)
+	return _options
 }
 
 // SetNewDisambiguationOptOut : Allow user to set NewDisambiguationOptOut
-func (options *UpdateDialogNodeOptions) SetNewDisambiguationOptOut(newDisambiguationOptOut bool) *UpdateDialogNodeOptions {
-	options.NewDisambiguationOptOut = core.BoolPtr(newDisambiguationOptOut)
-	return options
+func (_options *UpdateDialogNodeOptions) SetNewDisambiguationOptOut(newDisambiguationOptOut bool) *UpdateDialogNodeOptions {
+	_options.NewDisambiguationOptOut = core.BoolPtr(newDisambiguationOptOut)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *UpdateDialogNodeOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateDialogNodeOptions) SetIncludeAudit(includeAudit bool) *UpdateDialogNodeOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9876,27 +9925,27 @@ func (options *UpdateDialogNodeOptions) SetHeaders(param map[string]string) *Upd
 // UpdateEntityOptions : The UpdateEntity options.
 type UpdateEntityOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, and hyphen characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	NewEntity *string
+	NewEntity *string `json:"entity,omitempty"`
 
 	// The description of the entity. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string
+	NewDescription *string `json:"description,omitempty"`
 
 	// Any metadata related to the entity.
-	NewMetadata map[string]interface{}
+	NewMetadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether to use fuzzy matching for the entity.
-	NewFuzzyMatch *bool
+	NewFuzzyMatch *bool `json:"fuzzy_match,omitempty"`
 
 	// An array of objects describing the entity values.
-	NewValues []CreateValue
+	NewValues []CreateValue `json:"values,omitempty"`
 
 	// Whether the new data is to be appended to the existing data in the entity. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -9905,10 +9954,10 @@ type UpdateEntityOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool
+	Append *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -9923,57 +9972,57 @@ func (*AssistantV1) NewUpdateEntityOptions(workspaceID string, entity string) *U
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateEntityOptions) SetWorkspaceID(workspaceID string) *UpdateEntityOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateEntityOptions) SetWorkspaceID(workspaceID string) *UpdateEntityOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateEntityOptions) SetEntity(entity string) *UpdateEntityOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *UpdateEntityOptions) SetEntity(entity string) *UpdateEntityOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetNewEntity : Allow user to set NewEntity
-func (options *UpdateEntityOptions) SetNewEntity(newEntity string) *UpdateEntityOptions {
-	options.NewEntity = core.StringPtr(newEntity)
-	return options
+func (_options *UpdateEntityOptions) SetNewEntity(newEntity string) *UpdateEntityOptions {
+	_options.NewEntity = core.StringPtr(newEntity)
+	return _options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateEntityOptions) SetNewDescription(newDescription string) *UpdateEntityOptions {
-	options.NewDescription = core.StringPtr(newDescription)
-	return options
+func (_options *UpdateEntityOptions) SetNewDescription(newDescription string) *UpdateEntityOptions {
+	_options.NewDescription = core.StringPtr(newDescription)
+	return _options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateEntityOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateEntityOptions {
-	options.NewMetadata = newMetadata
-	return options
+func (_options *UpdateEntityOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateEntityOptions {
+	_options.NewMetadata = newMetadata
+	return _options
 }
 
 // SetNewFuzzyMatch : Allow user to set NewFuzzyMatch
-func (options *UpdateEntityOptions) SetNewFuzzyMatch(newFuzzyMatch bool) *UpdateEntityOptions {
-	options.NewFuzzyMatch = core.BoolPtr(newFuzzyMatch)
-	return options
+func (_options *UpdateEntityOptions) SetNewFuzzyMatch(newFuzzyMatch bool) *UpdateEntityOptions {
+	_options.NewFuzzyMatch = core.BoolPtr(newFuzzyMatch)
+	return _options
 }
 
 // SetNewValues : Allow user to set NewValues
-func (options *UpdateEntityOptions) SetNewValues(newValues []CreateValue) *UpdateEntityOptions {
-	options.NewValues = newValues
-	return options
+func (_options *UpdateEntityOptions) SetNewValues(newValues []CreateValue) *UpdateEntityOptions {
+	_options.NewValues = newValues
+	return _options
 }
 
 // SetAppend : Allow user to set Append
-func (options *UpdateEntityOptions) SetAppend(append bool) *UpdateEntityOptions {
-	options.Append = core.BoolPtr(append)
-	return options
+func (_options *UpdateEntityOptions) SetAppend(append bool) *UpdateEntityOptions {
+	_options.Append = core.BoolPtr(append)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateEntityOptions) SetIncludeAudit(includeAudit bool) *UpdateEntityOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateEntityOptions) SetIncludeAudit(includeAudit bool) *UpdateEntityOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -9985,24 +10034,24 @@ func (options *UpdateEntityOptions) SetHeaders(param map[string]string) *UpdateE
 // UpdateExampleOptions : The UpdateExample options.
 type UpdateExampleOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The text of the user input example.
-	Text *string `validate:"required,ne="`
+	Text *string `json:"-" validate:"required,ne="`
 
 	// The text of the user input example. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewText *string
+	NewText *string `json:"text,omitempty"`
 
 	// An array of contextual entity mentions.
-	NewMentions []Mention
+	NewMentions []Mention `json:"mentions,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10018,39 +10067,39 @@ func (*AssistantV1) NewUpdateExampleOptions(workspaceID string, intent string, t
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateExampleOptions) SetWorkspaceID(workspaceID string) *UpdateExampleOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateExampleOptions) SetWorkspaceID(workspaceID string) *UpdateExampleOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *UpdateExampleOptions) SetIntent(intent string) *UpdateExampleOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *UpdateExampleOptions) SetIntent(intent string) *UpdateExampleOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *UpdateExampleOptions) SetText(text string) *UpdateExampleOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *UpdateExampleOptions) SetText(text string) *UpdateExampleOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetNewText : Allow user to set NewText
-func (options *UpdateExampleOptions) SetNewText(newText string) *UpdateExampleOptions {
-	options.NewText = core.StringPtr(newText)
-	return options
+func (_options *UpdateExampleOptions) SetNewText(newText string) *UpdateExampleOptions {
+	_options.NewText = core.StringPtr(newText)
+	return _options
 }
 
 // SetNewMentions : Allow user to set NewMentions
-func (options *UpdateExampleOptions) SetNewMentions(newMentions []Mention) *UpdateExampleOptions {
-	options.NewMentions = newMentions
-	return options
+func (_options *UpdateExampleOptions) SetNewMentions(newMentions []Mention) *UpdateExampleOptions {
+	_options.NewMentions = newMentions
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateExampleOptions) SetIncludeAudit(includeAudit bool) *UpdateExampleOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateExampleOptions) SetIncludeAudit(includeAudit bool) *UpdateExampleOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10062,21 +10111,21 @@ func (options *UpdateExampleOptions) SetHeaders(param map[string]string) *Update
 // UpdateIntentOptions : The UpdateIntent options.
 type UpdateIntentOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The intent name.
-	Intent *string `validate:"required,ne="`
+	Intent *string `json:"-" validate:"required,ne="`
 
 	// The name of the intent. This string must conform to the following restrictions:
 	// - It can contain only Unicode alphanumeric, underscore, hyphen, and dot characters.
 	// - It cannot begin with the reserved prefix `sys-`.
-	NewIntent *string
+	NewIntent *string `json:"intent,omitempty"`
 
 	// The description of the intent. This string cannot contain carriage return, newline, or tab characters.
-	NewDescription *string
+	NewDescription *string `json:"description,omitempty"`
 
 	// An array of user input examples for the intent.
-	NewExamples []Example
+	NewExamples []Example `json:"examples,omitempty"`
 
 	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -10085,10 +10134,10 @@ type UpdateIntentOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool
+	Append *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10103,45 +10152,45 @@ func (*AssistantV1) NewUpdateIntentOptions(workspaceID string, intent string) *U
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateIntentOptions) SetWorkspaceID(workspaceID string) *UpdateIntentOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateIntentOptions) SetWorkspaceID(workspaceID string) *UpdateIntentOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetIntent : Allow user to set Intent
-func (options *UpdateIntentOptions) SetIntent(intent string) *UpdateIntentOptions {
-	options.Intent = core.StringPtr(intent)
-	return options
+func (_options *UpdateIntentOptions) SetIntent(intent string) *UpdateIntentOptions {
+	_options.Intent = core.StringPtr(intent)
+	return _options
 }
 
 // SetNewIntent : Allow user to set NewIntent
-func (options *UpdateIntentOptions) SetNewIntent(newIntent string) *UpdateIntentOptions {
-	options.NewIntent = core.StringPtr(newIntent)
-	return options
+func (_options *UpdateIntentOptions) SetNewIntent(newIntent string) *UpdateIntentOptions {
+	_options.NewIntent = core.StringPtr(newIntent)
+	return _options
 }
 
 // SetNewDescription : Allow user to set NewDescription
-func (options *UpdateIntentOptions) SetNewDescription(newDescription string) *UpdateIntentOptions {
-	options.NewDescription = core.StringPtr(newDescription)
-	return options
+func (_options *UpdateIntentOptions) SetNewDescription(newDescription string) *UpdateIntentOptions {
+	_options.NewDescription = core.StringPtr(newDescription)
+	return _options
 }
 
 // SetNewExamples : Allow user to set NewExamples
-func (options *UpdateIntentOptions) SetNewExamples(newExamples []Example) *UpdateIntentOptions {
-	options.NewExamples = newExamples
-	return options
+func (_options *UpdateIntentOptions) SetNewExamples(newExamples []Example) *UpdateIntentOptions {
+	_options.NewExamples = newExamples
+	return _options
 }
 
 // SetAppend : Allow user to set Append
-func (options *UpdateIntentOptions) SetAppend(append bool) *UpdateIntentOptions {
-	options.Append = core.BoolPtr(append)
-	return options
+func (_options *UpdateIntentOptions) SetAppend(append bool) *UpdateIntentOptions {
+	_options.Append = core.BoolPtr(append)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateIntentOptions) SetIncludeAudit(includeAudit bool) *UpdateIntentOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateIntentOptions) SetIncludeAudit(includeAudit bool) *UpdateIntentOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10153,24 +10202,24 @@ func (options *UpdateIntentOptions) SetHeaders(param map[string]string) *UpdateI
 // UpdateSynonymOptions : The UpdateSynonym options.
 type UpdateSynonymOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The text of the synonym.
-	Synonym *string `validate:"required,ne="`
+	Synonym *string `json:"-" validate:"required,ne="`
 
 	// The text of the synonym. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewSynonym *string
+	NewSynonym *string `json:"synonym,omitempty"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10187,39 +10236,39 @@ func (*AssistantV1) NewUpdateSynonymOptions(workspaceID string, entity string, v
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateSynonymOptions) SetWorkspaceID(workspaceID string) *UpdateSynonymOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateSynonymOptions) SetWorkspaceID(workspaceID string) *UpdateSynonymOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateSynonymOptions) SetEntity(entity string) *UpdateSynonymOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *UpdateSynonymOptions) SetEntity(entity string) *UpdateSynonymOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *UpdateSynonymOptions) SetValue(value string) *UpdateSynonymOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *UpdateSynonymOptions) SetValue(value string) *UpdateSynonymOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetSynonym : Allow user to set Synonym
-func (options *UpdateSynonymOptions) SetSynonym(synonym string) *UpdateSynonymOptions {
-	options.Synonym = core.StringPtr(synonym)
-	return options
+func (_options *UpdateSynonymOptions) SetSynonym(synonym string) *UpdateSynonymOptions {
+	_options.Synonym = core.StringPtr(synonym)
+	return _options
 }
 
 // SetNewSynonym : Allow user to set NewSynonym
-func (options *UpdateSynonymOptions) SetNewSynonym(newSynonym string) *UpdateSynonymOptions {
-	options.NewSynonym = core.StringPtr(newSynonym)
-	return options
+func (_options *UpdateSynonymOptions) SetNewSynonym(newSynonym string) *UpdateSynonymOptions {
+	_options.NewSynonym = core.StringPtr(newSynonym)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateSynonymOptions) SetIncludeAudit(includeAudit bool) *UpdateSynonymOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateSynonymOptions) SetIncludeAudit(includeAudit bool) *UpdateSynonymOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10231,35 +10280,35 @@ func (options *UpdateSynonymOptions) SetHeaders(param map[string]string) *Update
 // UpdateValueOptions : The UpdateValue options.
 type UpdateValueOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the entity.
-	Entity *string `validate:"required,ne="`
+	Entity *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value.
-	Value *string `validate:"required,ne="`
+	Value *string `json:"-" validate:"required,ne="`
 
 	// The text of the entity value. This string must conform to the following restrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewValue *string
+	NewValue *string `json:"value,omitempty"`
 
 	// Any metadata related to the entity value.
-	NewMetadata map[string]interface{}
+	NewMetadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Specifies the type of entity value.
-	NewType *string
+	NewType *string `json:"type,omitempty"`
 
 	// An array of synonyms for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A synonym must conform to the following resrictions:
 	// - It cannot contain carriage return, newline, or tab characters.
 	// - It cannot consist of only whitespace characters.
-	NewSynonyms []string
+	NewSynonyms []string `json:"synonyms,omitempty"`
 
 	// An array of patterns for the entity value. A value can specify either synonyms or patterns (depending on the value
 	// type), but not both. A pattern is a regular expression; for more information about how to specify a pattern, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-entities#entities-create-dictionary-based).
-	NewPatterns []string
+	NewPatterns []string `json:"patterns,omitempty"`
 
 	// Whether the new data is to be appended to the existing data in the entity value. If **append**=`false`, elements
 	// included in the new data completely replace the corresponding existing elements, including all subelements. For
@@ -10268,10 +10317,10 @@ type UpdateValueOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool
+	Append *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10294,63 +10343,63 @@ func (*AssistantV1) NewUpdateValueOptions(workspaceID string, entity string, val
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateValueOptions) SetWorkspaceID(workspaceID string) *UpdateValueOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateValueOptions) SetWorkspaceID(workspaceID string) *UpdateValueOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetEntity : Allow user to set Entity
-func (options *UpdateValueOptions) SetEntity(entity string) *UpdateValueOptions {
-	options.Entity = core.StringPtr(entity)
-	return options
+func (_options *UpdateValueOptions) SetEntity(entity string) *UpdateValueOptions {
+	_options.Entity = core.StringPtr(entity)
+	return _options
 }
 
 // SetValue : Allow user to set Value
-func (options *UpdateValueOptions) SetValue(value string) *UpdateValueOptions {
-	options.Value = core.StringPtr(value)
-	return options
+func (_options *UpdateValueOptions) SetValue(value string) *UpdateValueOptions {
+	_options.Value = core.StringPtr(value)
+	return _options
 }
 
 // SetNewValue : Allow user to set NewValue
-func (options *UpdateValueOptions) SetNewValue(newValue string) *UpdateValueOptions {
-	options.NewValue = core.StringPtr(newValue)
-	return options
+func (_options *UpdateValueOptions) SetNewValue(newValue string) *UpdateValueOptions {
+	_options.NewValue = core.StringPtr(newValue)
+	return _options
 }
 
 // SetNewMetadata : Allow user to set NewMetadata
-func (options *UpdateValueOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateValueOptions {
-	options.NewMetadata = newMetadata
-	return options
+func (_options *UpdateValueOptions) SetNewMetadata(newMetadata map[string]interface{}) *UpdateValueOptions {
+	_options.NewMetadata = newMetadata
+	return _options
 }
 
 // SetNewType : Allow user to set NewType
-func (options *UpdateValueOptions) SetNewType(newType string) *UpdateValueOptions {
-	options.NewType = core.StringPtr(newType)
-	return options
+func (_options *UpdateValueOptions) SetNewType(newType string) *UpdateValueOptions {
+	_options.NewType = core.StringPtr(newType)
+	return _options
 }
 
 // SetNewSynonyms : Allow user to set NewSynonyms
-func (options *UpdateValueOptions) SetNewSynonyms(newSynonyms []string) *UpdateValueOptions {
-	options.NewSynonyms = newSynonyms
-	return options
+func (_options *UpdateValueOptions) SetNewSynonyms(newSynonyms []string) *UpdateValueOptions {
+	_options.NewSynonyms = newSynonyms
+	return _options
 }
 
 // SetNewPatterns : Allow user to set NewPatterns
-func (options *UpdateValueOptions) SetNewPatterns(newPatterns []string) *UpdateValueOptions {
-	options.NewPatterns = newPatterns
-	return options
+func (_options *UpdateValueOptions) SetNewPatterns(newPatterns []string) *UpdateValueOptions {
+	_options.NewPatterns = newPatterns
+	return _options
 }
 
 // SetAppend : Allow user to set Append
-func (options *UpdateValueOptions) SetAppend(append bool) *UpdateValueOptions {
-	options.Append = core.BoolPtr(append)
-	return options
+func (_options *UpdateValueOptions) SetAppend(append bool) *UpdateValueOptions {
+	_options.Append = core.BoolPtr(append)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateValueOptions) SetIncludeAudit(includeAudit bool) *UpdateValueOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateValueOptions) SetIncludeAudit(includeAudit bool) *UpdateValueOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10362,40 +10411,40 @@ func (options *UpdateValueOptions) SetHeaders(param map[string]string) *UpdateVa
 // UpdateWorkspaceOptions : The UpdateWorkspace options.
 type UpdateWorkspaceOptions struct {
 	// Unique identifier of the workspace.
-	WorkspaceID *string `validate:"required,ne="`
+	WorkspaceID *string `json:"-" validate:"required,ne="`
 
 	// The name of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// The description of the workspace. This string cannot contain carriage return, newline, or tab characters.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The language of the workspace.
-	Language *string
+	Language *string `json:"language,omitempty"`
 
 	// An array of objects describing the dialog nodes in the workspace.
-	DialogNodes []DialogNode
+	DialogNodes []DialogNode `json:"dialog_nodes,omitempty"`
 
 	// An array of objects defining input examples that have been marked as irrelevant input.
-	Counterexamples []Counterexample
+	Counterexamples []Counterexample `json:"counterexamples,omitempty"`
 
 	// Any metadata related to the workspace.
-	Metadata map[string]interface{}
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Whether training data from the workspace (including artifacts such as intents and entities) can be used by IBM for
 	// general service improvements. `true` indicates that workspace training data is not to be used.
-	LearningOptOut *bool
+	LearningOptOut *bool `json:"learning_opt_out,omitempty"`
 
 	// Global settings for the workspace.
-	SystemSettings *WorkspaceSystemSettings
+	SystemSettings *WorkspaceSystemSettings `json:"system_settings,omitempty"`
 
-	Webhooks []Webhook
+	Webhooks []Webhook `json:"webhooks,omitempty"`
 
 	// An array of objects defining the intents for the workspace.
-	Intents []CreateIntent
+	Intents []CreateIntent `json:"intents,omitempty"`
 
 	// An array of objects describing the entities for the workspace.
-	Entities []CreateEntity
+	Entities []CreateEntity `json:"entities,omitempty"`
 
 	// Whether the new data is to be appended to the existing data in the object. If **append**=`false`, elements included
 	// in the new data completely replace the corresponding existing elements, including all subelements. For example, if
@@ -10404,10 +10453,10 @@ type UpdateWorkspaceOptions struct {
 	//
 	// If **append**=`true`, existing elements are preserved, and the new elements are added. If any elements in the new
 	// data collide with existing elements, the update request fails.
-	Append *bool
+	Append *bool `json:"-"`
 
 	// Whether to include the audit properties (`created` and `updated` timestamps) in the response.
-	IncludeAudit *bool
+	IncludeAudit *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -10421,87 +10470,87 @@ func (*AssistantV1) NewUpdateWorkspaceOptions(workspaceID string) *UpdateWorkspa
 }
 
 // SetWorkspaceID : Allow user to set WorkspaceID
-func (options *UpdateWorkspaceOptions) SetWorkspaceID(workspaceID string) *UpdateWorkspaceOptions {
-	options.WorkspaceID = core.StringPtr(workspaceID)
-	return options
+func (_options *UpdateWorkspaceOptions) SetWorkspaceID(workspaceID string) *UpdateWorkspaceOptions {
+	_options.WorkspaceID = core.StringPtr(workspaceID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateWorkspaceOptions) SetName(name string) *UpdateWorkspaceOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateWorkspaceOptions) SetName(name string) *UpdateWorkspaceOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateWorkspaceOptions) SetDescription(description string) *UpdateWorkspaceOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateWorkspaceOptions) SetDescription(description string) *UpdateWorkspaceOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *UpdateWorkspaceOptions) SetLanguage(language string) *UpdateWorkspaceOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *UpdateWorkspaceOptions) SetLanguage(language string) *UpdateWorkspaceOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetDialogNodes : Allow user to set DialogNodes
-func (options *UpdateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *UpdateWorkspaceOptions {
-	options.DialogNodes = dialogNodes
-	return options
+func (_options *UpdateWorkspaceOptions) SetDialogNodes(dialogNodes []DialogNode) *UpdateWorkspaceOptions {
+	_options.DialogNodes = dialogNodes
+	return _options
 }
 
 // SetCounterexamples : Allow user to set Counterexamples
-func (options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *UpdateWorkspaceOptions {
-	options.Counterexamples = counterexamples
-	return options
+func (_options *UpdateWorkspaceOptions) SetCounterexamples(counterexamples []Counterexample) *UpdateWorkspaceOptions {
+	_options.Counterexamples = counterexamples
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *UpdateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *UpdateWorkspaceOptions {
-	options.Metadata = metadata
-	return options
+func (_options *UpdateWorkspaceOptions) SetMetadata(metadata map[string]interface{}) *UpdateWorkspaceOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetLearningOptOut : Allow user to set LearningOptOut
-func (options *UpdateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *UpdateWorkspaceOptions {
-	options.LearningOptOut = core.BoolPtr(learningOptOut)
-	return options
+func (_options *UpdateWorkspaceOptions) SetLearningOptOut(learningOptOut bool) *UpdateWorkspaceOptions {
+	_options.LearningOptOut = core.BoolPtr(learningOptOut)
+	return _options
 }
 
 // SetSystemSettings : Allow user to set SystemSettings
-func (options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *UpdateWorkspaceOptions {
-	options.SystemSettings = systemSettings
-	return options
+func (_options *UpdateWorkspaceOptions) SetSystemSettings(systemSettings *WorkspaceSystemSettings) *UpdateWorkspaceOptions {
+	_options.SystemSettings = systemSettings
+	return _options
 }
 
 // SetWebhooks : Allow user to set Webhooks
-func (options *UpdateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *UpdateWorkspaceOptions {
-	options.Webhooks = webhooks
-	return options
+func (_options *UpdateWorkspaceOptions) SetWebhooks(webhooks []Webhook) *UpdateWorkspaceOptions {
+	_options.Webhooks = webhooks
+	return _options
 }
 
 // SetIntents : Allow user to set Intents
-func (options *UpdateWorkspaceOptions) SetIntents(intents []CreateIntent) *UpdateWorkspaceOptions {
-	options.Intents = intents
-	return options
+func (_options *UpdateWorkspaceOptions) SetIntents(intents []CreateIntent) *UpdateWorkspaceOptions {
+	_options.Intents = intents
+	return _options
 }
 
 // SetEntities : Allow user to set Entities
-func (options *UpdateWorkspaceOptions) SetEntities(entities []CreateEntity) *UpdateWorkspaceOptions {
-	options.Entities = entities
-	return options
+func (_options *UpdateWorkspaceOptions) SetEntities(entities []CreateEntity) *UpdateWorkspaceOptions {
+	_options.Entities = entities
+	return _options
 }
 
 // SetAppend : Allow user to set Append
-func (options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOptions {
-	options.Append = core.BoolPtr(append)
-	return options
+func (_options *UpdateWorkspaceOptions) SetAppend(append bool) *UpdateWorkspaceOptions {
+	_options.Append = core.BoolPtr(append)
+	return _options
 }
 
 // SetIncludeAudit : Allow user to set IncludeAudit
-func (options *UpdateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *UpdateWorkspaceOptions {
-	options.IncludeAudit = core.BoolPtr(includeAudit)
-	return options
+func (_options *UpdateWorkspaceOptions) SetIncludeAudit(includeAudit bool) *UpdateWorkspaceOptions {
+	_options.IncludeAudit = core.BoolPtr(includeAudit)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -10622,12 +10671,12 @@ type Webhook struct {
 }
 
 // NewWebhook : Instantiate Webhook (Generic Model Constructor)
-func (*AssistantV1) NewWebhook(url string, name string) (model *Webhook, err error) {
-	model = &Webhook{
+func (*AssistantV1) NewWebhook(url string, name string) (_model *Webhook, err error) {
+	_model = &Webhook{
 		URL:  core.StringPtr(url),
 		Name: core.StringPtr(name),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -10660,12 +10709,12 @@ type WebhookHeader struct {
 }
 
 // NewWebhookHeader : Instantiate WebhookHeader (Generic Model Constructor)
-func (*AssistantV1) NewWebhookHeader(name string, value string) (model *WebhookHeader, err error) {
-	model = &WebhookHeader{
+func (*AssistantV1) NewWebhookHeader(name string, value string) (_model *WebhookHeader, err error) {
+	_model = &WebhookHeader{
 		Name:  core.StringPtr(name),
 		Value: core.StringPtr(value),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -10907,8 +10956,8 @@ type WorkspaceSystemSettingsDisambiguation struct {
 	// Whether the disambiguation feature is enabled for the workspace.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
-	// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+	// The sensitivity of the disambiguation feature to intent detection uncertainty. Higher sensitivity means that the
+	// disambiguation feature is triggered more often and includes more choices.
 	Sensitivity *string `json:"sensitivity,omitempty"`
 
 	// Whether the order in which disambiguation suggestions are presented should be randomized (but still influenced by
@@ -10923,11 +10972,15 @@ type WorkspaceSystemSettingsDisambiguation struct {
 }
 
 // Constants associated with the WorkspaceSystemSettingsDisambiguation.Sensitivity property.
-// The sensitivity of the disambiguation feature to intent detection conflicts. Set to **high** if you want the
-// disambiguation feature to be triggered more often. This can be useful for testing or demonstration purposes.
+// The sensitivity of the disambiguation feature to intent detection uncertainty. Higher sensitivity means that the
+// disambiguation feature is triggered more often and includes more choices.
 const (
-	WorkspaceSystemSettingsDisambiguationSensitivityAutoConst = "auto"
-	WorkspaceSystemSettingsDisambiguationSensitivityHighConst = "high"
+	WorkspaceSystemSettingsDisambiguationSensitivityAutoConst       = "auto"
+	WorkspaceSystemSettingsDisambiguationSensitivityHighConst       = "high"
+	WorkspaceSystemSettingsDisambiguationSensitivityLowConst        = "low"
+	WorkspaceSystemSettingsDisambiguationSensitivityMediumConst     = "medium"
+	WorkspaceSystemSettingsDisambiguationSensitivityMediumHighConst = "medium_high"
+	WorkspaceSystemSettingsDisambiguationSensitivityMediumLowConst  = "medium_low"
 )
 
 // UnmarshalWorkspaceSystemSettingsDisambiguation unmarshals an instance of WorkspaceSystemSettingsDisambiguation from the specified map of raw messages.
@@ -11034,13 +11087,13 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer struct {
 }
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeChannelTransfer{
 		ResponseType:  core.StringPtr(responseType),
 		MessageToUser: core.StringPtr(messageToUser),
 		TransferInfo:  transferInfo,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11097,11 +11150,11 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent struct {
 }
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent(responseType string) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeConnectToAgent{
 		ResponseType: core.StringPtr(responseType),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11147,7 +11200,7 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeImage struct {
 	// application or channel.
 	ResponseType *string `json:"response_type" validate:"required"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source" validate:"required"`
 
 	// An optional title to show before the response.
@@ -11158,15 +11211,18 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeImage struct {
 
 	// An array of objects specifying channels for which the response is intended.
 	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 }
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeImage (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType string, source string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeImage, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeImage{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(responseType string, source string) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeImage, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeImage{
 		ResponseType: core.StringPtr(responseType),
 		Source:       core.StringPtr(source),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11194,6 +11250,10 @@ func UnmarshalDialogNodeOutputGenericDialogNodeOutputResponseTypeImage(m map[str
 		return
 	}
 	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "alt_text", &obj.AltText)
 	if err != nil {
 		return
 	}
@@ -11232,13 +11292,13 @@ const (
 )
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeOption (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeOption, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeOption{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeOption, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeOption{
 		ResponseType: core.StringPtr(responseType),
 		Title:        core.StringPtr(title),
 		Options:      options,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11295,12 +11355,12 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypePause struct {
 }
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypePause (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType string, time int64) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypePause, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypePause{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypePause(responseType string, time int64) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypePause, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypePause{
 		ResponseType: core.StringPtr(responseType),
 		Time:         core.Int64Ptr(time),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11368,13 +11428,13 @@ const (
 )
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(responseType string, query string, queryType string) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill(responseType string, query string, queryType string) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeSearchSkill{
 		ResponseType: core.StringPtr(responseType),
 		Query:        core.StringPtr(query),
 		QueryType:    core.StringPtr(queryType),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11442,12 +11502,12 @@ const (
 )
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeText (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType string, values []DialogNodeOutputTextValuesElement) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeText, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeText{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeText(responseType string, values []DialogNodeOutputTextValuesElement) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeText, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeText{
 		ResponseType: core.StringPtr(responseType),
 		Values:       values,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11498,12 +11558,12 @@ type DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined struct {
 }
 
 // NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined : Instantiate DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined (Generic Model Constructor)
-func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (model *DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined, err error) {
-	model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined{
+func (*AssistantV1) NewDialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (_model *DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined, err error) {
+	_model = &DialogNodeOutputGenericDialogNodeOutputResponseTypeUserDefined{
 		ResponseType: core.StringPtr(responseType),
 		UserDefined:  userDefined,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11549,13 +11609,13 @@ type RuntimeResponseGenericRuntimeResponseTypeChannelTransfer struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer : Instantiate RuntimeResponseGenericRuntimeResponseTypeChannelTransfer (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (model *RuntimeResponseGenericRuntimeResponseTypeChannelTransfer, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeChannelTransfer{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeChannelTransfer(responseType string, messageToUser string, transferInfo *ChannelTransferInfo) (_model *RuntimeResponseGenericRuntimeResponseTypeChannelTransfer, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeChannelTransfer{
 		ResponseType:  core.StringPtr(responseType),
 		MessageToUser: core.StringPtr(messageToUser),
 		TransferInfo:  transferInfo,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11621,11 +11681,11 @@ type RuntimeResponseGenericRuntimeResponseTypeConnectToAgent struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent : Instantiate RuntimeResponseGenericRuntimeResponseTypeConnectToAgent (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType string) (model *RuntimeResponseGenericRuntimeResponseTypeConnectToAgent, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeConnectToAgent{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeConnectToAgent(responseType string) (_model *RuntimeResponseGenericRuntimeResponseTypeConnectToAgent, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeConnectToAgent{
 		ResponseType: core.StringPtr(responseType),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11679,7 +11739,7 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// application or channel.
 	ResponseType *string `json:"response_type" validate:"required"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source" validate:"required"`
 
 	// The title or introductory text to show before the response.
@@ -11691,15 +11751,18 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
 	// is intended for a built-in integration and should not be handled by an API client.
 	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeImage : Instantiate RuntimeResponseGenericRuntimeResponseTypeImage (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType string, source string) (model *RuntimeResponseGenericRuntimeResponseTypeImage, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeImage{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeImage(responseType string, source string) (_model *RuntimeResponseGenericRuntimeResponseTypeImage, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeImage{
 		ResponseType: core.StringPtr(responseType),
 		Source:       core.StringPtr(source),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11727,6 +11790,10 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage(m map[string]json.R
 		return
 	}
 	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "alt_text", &obj.AltText)
 	if err != nil {
 		return
 	}
@@ -11766,13 +11833,13 @@ const (
 )
 
 // NewRuntimeResponseGenericRuntimeResponseTypeOption : Instantiate RuntimeResponseGenericRuntimeResponseTypeOption (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (model *RuntimeResponseGenericRuntimeResponseTypeOption, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeOption{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeOption(responseType string, title string, options []DialogNodeOutputOptionsElement) (_model *RuntimeResponseGenericRuntimeResponseTypeOption, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeOption{
 		ResponseType: core.StringPtr(responseType),
 		Title:        core.StringPtr(title),
 		Options:      options,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11830,12 +11897,12 @@ type RuntimeResponseGenericRuntimeResponseTypePause struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypePause : Instantiate RuntimeResponseGenericRuntimeResponseTypePause (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypePause(responseType string, time int64) (model *RuntimeResponseGenericRuntimeResponseTypePause, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypePause{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypePause(responseType string, time int64) (_model *RuntimeResponseGenericRuntimeResponseTypePause, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypePause{
 		ResponseType: core.StringPtr(responseType),
 		Time:         core.Int64Ptr(time),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11885,13 +11952,13 @@ type RuntimeResponseGenericRuntimeResponseTypeSuggestion struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeSuggestion : Instantiate RuntimeResponseGenericRuntimeResponseTypeSuggestion (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType string, title string, suggestions []DialogSuggestion) (model *RuntimeResponseGenericRuntimeResponseTypeSuggestion, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeSuggestion{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeSuggestion(responseType string, title string, suggestions []DialogSuggestion) (_model *RuntimeResponseGenericRuntimeResponseTypeSuggestion, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeSuggestion{
 		ResponseType: core.StringPtr(responseType),
 		Title:        core.StringPtr(title),
 		Suggestions:  suggestions,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11938,12 +12005,12 @@ type RuntimeResponseGenericRuntimeResponseTypeText struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeText : Instantiate RuntimeResponseGenericRuntimeResponseTypeText (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeText(responseType string, text string) (model *RuntimeResponseGenericRuntimeResponseTypeText, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeText{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeText(responseType string, text string) (_model *RuntimeResponseGenericRuntimeResponseTypeText, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeText{
 		ResponseType: core.StringPtr(responseType),
 		Text:         core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -11986,12 +12053,12 @@ type RuntimeResponseGenericRuntimeResponseTypeUserDefined struct {
 }
 
 // NewRuntimeResponseGenericRuntimeResponseTypeUserDefined : Instantiate RuntimeResponseGenericRuntimeResponseTypeUserDefined (Generic Model Constructor)
-func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (model *RuntimeResponseGenericRuntimeResponseTypeUserDefined, err error) {
-	model = &RuntimeResponseGenericRuntimeResponseTypeUserDefined{
+func (*AssistantV1) NewRuntimeResponseGenericRuntimeResponseTypeUserDefined(responseType string, userDefined map[string]interface{}) (_model *RuntimeResponseGenericRuntimeResponseTypeUserDefined, err error) {
+	_model = &RuntimeResponseGenericRuntimeResponseTypeUserDefined{
 		ResponseType: core.StringPtr(responseType),
 		UserDefined:  userDefined,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 

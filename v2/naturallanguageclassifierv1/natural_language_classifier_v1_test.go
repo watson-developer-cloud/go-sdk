@@ -1406,8 +1406,8 @@ var _ = Describe(`NaturalLanguageClassifierV1`, func() {
 			})
 			It(`Invoke NewClassifyInput successfully`, func() {
 				text := "testString"
-				model, err := naturalLanguageClassifierService.NewClassifyInput(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := naturalLanguageClassifierService.NewClassifyInput(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewClassifyOptions successfully`, func() {

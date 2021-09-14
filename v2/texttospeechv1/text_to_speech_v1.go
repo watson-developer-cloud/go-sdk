@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package texttospeechv1 : Operations and models for the TextToSpeechV1 service
@@ -48,13 +48,16 @@ import (
 // words. A sounds-like translation consists of one or more words that, when combined, sound like the word. A phonetic
 // translation is based on the SSML phoneme format for representing a word. You can specify a phonetic translation in
 // standard International Phonetic Alphabet (IPA) representation or in the proprietary IBM Symbolic Phonetic
-// Representation (SPR). The Arabic, Chinese, Dutch, Australian English, and Korean languages support only IPA.
+// Representation (SPR).
 //
 // The service also offers a Tune by Example feature that lets you define custom prompts. You can also define speaker
 // models to improve the quality of your custom prompts. The service support custom prompts only for US English custom
 // models and voices.
 //
-// Version: 1.0.0
+// **IBM Cloud&reg;.** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported
+// only for IBM Cloud. For phonetic translation, they support only IPA, not SPR.
+//
+// API Version: 1.0.0
 // See: https://cloud.ibm.com/docs/text-to-speech
 type TextToSpeechV1 struct {
 	Service *core.BaseService
@@ -174,7 +177,7 @@ func (textToSpeech *TextToSpeechV1) DisableSSLVerification() {
 // ListVoices : List voices
 // Lists all voices available for use with the service. The information includes the name, language, gender, and other
 // details about the voice. The ordering of the list of voices can change from call to call; do not rely on an
-// alphabetized or static list of voices. To see information about a specific voice, use the **Get a voice** method.
+// alphabetized or static list of voices. To see information about a specific voice, use the [Get a voice](#getvoice).
 //
 // **See also:** [Listing all available
 // voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoices).
@@ -231,12 +234,12 @@ func (textToSpeech *TextToSpeechV1) ListVoicesWithContext(ctx context.Context, l
 // GetVoice : Get a voice
 // Gets information about the specified voice. The information includes the name, language, gender, and other details
 // about the voice. Specify a customization ID to obtain information for a custom model that is defined for the language
-// of the specified voice. To list information about all available voices, use the **List voices** method.
+// of the specified voice. To list information about all available voices, use the [List voices](#listvoices) method.
 //
 // **See also:** [Listing a specific
 // voice](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices#listVoice).
 //
-// ### Important voice updates
+// ### Important voice updates for IBM Cloud
 //
 //  The service's voices underwent significant change on 2 December 2020.
 // * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -252,7 +255,7 @@ func (textToSpeech *TextToSpeechV1) ListVoicesWithContext(ctx context.Context, l
 // date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
 // information about all voice updates, see the [2 December 2020 service
 // update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
-// notes.
+// notes for IBM Cloud.
 func (textToSpeech *TextToSpeechV1) GetVoice(getVoiceOptions *GetVoiceOptions) (result *Voice, response *core.DetailedResponse, err error) {
 	return textToSpeech.GetVoiceWithContext(context.Background(), getVoiceOptions)
 }
@@ -360,9 +363,9 @@ func (textToSpeech *TextToSpeechV1) GetVoiceWithContext(ctx context.Context, get
 // 22,050 Hz.
 //
 // For more information about specifying an audio format, including additional details about some of the formats, see
-// [Audio formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audioFormats#audioFormats).
+// [Using audio formats](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-audio-formats).
 //
-// ### Important voice updates
+// ### Important voice updates for IBM Cloud
 //
 //  The service's voices underwent significant change on 2 December 2020.
 // * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -378,7 +381,7 @@ func (textToSpeech *TextToSpeechV1) GetVoiceWithContext(ctx context.Context, get
 // date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
 // information about all voice updates, see the [2 December 2020 service
 // update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
-// notes.
+// notes for IBM Cloud.
 //
 // ### Warning messages
 //
@@ -457,7 +460,7 @@ func (textToSpeech *TextToSpeechV1) SynthesizeWithContext(ctx context.Context, s
 // **See also:** [Querying a word from a
 // language](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customWords#cuWordsQueryLanguage).
 //
-// ### Important voice updates
+// ### Important voice updates for IBM Cloud
 //
 //  The service's voices underwent significant change on 2 December 2020.
 // * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -473,7 +476,7 @@ func (textToSpeech *TextToSpeechV1) SynthesizeWithContext(ctx context.Context, s
 // date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
 // information about all voice updates, see the [2 December 2020 service
 // update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
-// notes.
+// notes for IBM Cloud.
 func (textToSpeech *TextToSpeechV1) GetPronunciation(getPronunciationOptions *GetPronunciationOptions) (result *Pronunciation, response *core.DetailedResponse, err error) {
 	return textToSpeech.GetPronunciationWithContext(context.Background(), getPronunciationOptions)
 }
@@ -547,7 +550,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciationWithContext(ctx context.Cont
 // **See also:** [Creating a custom
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsCreate).
 //
-// ### Important voice updates
+// ### Important voice updates for IBM Cloud
 //
 //  The service's voices underwent significant change on 2 December 2020.
 // * The Arabic, Chinese, Dutch, Australian English, and Korean voices are now neural instead of concatenative.
@@ -563,7 +566,7 @@ func (textToSpeech *TextToSpeechV1) GetPronunciationWithContext(ctx context.Cont
 // date. You are encouraged to migrate to the equivalent neural voices at your earliest convenience. For more
 // information about all voice updates, see the [2 December 2020 service
 // update](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-release-notes#December2020) in the release
-// notes.
+// notes for IBM Cloud.
 func (textToSpeech *TextToSpeechV1) CreateCustomModel(createCustomModelOptions *CreateCustomModelOptions) (result *CustomModel, response *core.DetailedResponse, err error) {
 	return textToSpeech.CreateCustomModelWithContext(context.Background(), createCustomModelOptions)
 }
@@ -637,8 +640,8 @@ func (textToSpeech *TextToSpeechV1) CreateCustomModelWithContext(ctx context.Con
 // ListCustomModels : List custom models
 // Lists metadata such as the name and description for all custom models that are owned by an instance of the service.
 // Specify a language to list the custom models for that language only. To see the words and prompts in addition to the
-// metadata for a specific custom model, use the **Get a custom model** method. You must use credentials for the
-// instance of the service that owns a model to list information about it.
+// metadata for a specific custom model, use the [Get a custom model](#getcustommodel) method. You must use credentials
+// for the instance of the service that owns a model to list information about it.
 //
 // **See also:** [Querying all custom
 // models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQueryAll).
@@ -785,7 +788,8 @@ func (textToSpeech *TextToSpeechV1) UpdateCustomModelWithContext(ctx context.Con
 // GetCustomModel : Get a custom model
 // Gets all information about a specified custom model. In addition to metadata such as the name and description of the
 // custom model, the output includes the words and their translations that are defined for the model, as well as any
-// prompts that are defined for the model. To see just the metadata for a model, use the **List custom models** method.
+// prompts that are defined for the model. To see just the metadata for a model, use the [List custom
+// models](#listcustommodels) method.
 //
 // **See also:** [Querying a custom
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-customModels#cuModelsQuery).
@@ -1247,11 +1251,9 @@ func (textToSpeech *TextToSpeechV1) DeleteWordWithContext(ctx context.Context, d
 // Lists information about all custom prompts that are defined for a custom model. The information includes the prompt
 // ID, prompt text, status, and optional speaker ID for each prompt of the custom model. You must use credentials for
 // the instance of the service that owns the custom model. The same information about all of the prompts for a custom
-// model is also provided by the **Get a custom model** method. That method provides complete details about a specified
-// custom model, including its language, owner, custom words, and more.
-//
-// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models and
-// voices.
+// model is also provided by the [Get a custom model](#getcustommodel) method. That method provides complete details
+// about a specified custom model, including its language, owner, custom words, and more. Custom prompts are supported
+// only for use with US English custom models and voices.
 //
 // **See also:** [Listing custom
 // prompts](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-list).
@@ -1337,9 +1339,10 @@ func (textToSpeech *TextToSpeechV1) ListCustomPromptsWithContext(ctx context.Con
 // seconds to process a 20-second prompt).
 //
 // For shorter prompts, you can wait for a reasonable amount of time and then check the status of the prompt with the
-// **Get a custom prompt** method. For longer prompts, consider using that method to poll the service every few seconds
-// to determine when the prompt becomes available. No prompt can be used for speech synthesis if it is in the
-// `processing` or `failed` state. Only prompts that are in the `available` state can be used for speech synthesis.
+// [Get a custom prompt](#getcustomprompt) method. For longer prompts, consider using that method to poll the service
+// every few seconds to determine when the prompt becomes available. No prompt can be used for speech synthesis if it is
+// in the `processing` or `failed` state. Only prompts that are in the `available` state can be used for speech
+// synthesis.
 //
 // When it processes a request, the service attempts to align the text and the audio that are provided for the prompt.
 // The text that is passed with a prompt must match the spoken audio as closely as possible. Optimally, the text and
@@ -1368,10 +1371,8 @@ func (textToSpeech *TextToSpeechV1) ListCustomPromptsWithContext(ctx context.Con
 // If a prompt that is created without a speaker ID does not adequately reflect the intended prosody, enrolling the
 // speaker and providing a speaker ID for the prompt is one recommended means of potentially improving the quality of
 // the prompt. This is especially important for shorter prompts such as "good-bye" or "thank you," where less audio data
-// makes it more difficult to match the prosody of the speaker.
-//
-// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models and
-// voices.
+// makes it more difficult to match the prosody of the speaker. Custom prompts are supported only for use with US
+// English custom models and voices.
 //
 // **See also:**
 // * [Add a custom
@@ -1446,10 +1447,8 @@ func (textToSpeech *TextToSpeechV1) AddCustomPromptWithContext(ctx context.Conte
 // GetCustomPrompt : Get a custom prompt
 // Gets information about a specified custom prompt for a specified custom model. The information includes the prompt
 // ID, prompt text, status, and optional speaker ID for each prompt of the custom model. You must use credentials for
-// the instance of the service that owns the custom model.
-//
-// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models and
-// voices.
+// the instance of the service that owns the custom model. Custom prompts are supported only for use with US English
+// custom models and voices.
 //
 // **See also:** [Listing custom
 // prompts](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-list).
@@ -1517,10 +1516,8 @@ func (textToSpeech *TextToSpeechV1) GetCustomPromptWithContext(ctx context.Conte
 // use credentials for the instance of the service that owns the custom model from which the prompt is to be deleted.
 //
 // **Caution:** Deleting a custom prompt elicits a 400 response code from synthesis requests that attempt to use the
-// prompt. Make sure that you do not attempt to use a deleted prompt in a production application.
-//
-// **Beta:** Custom prompts are beta functionality that is supported only for use with US English custom models and
-// voices.
+// prompt. Make sure that you do not attempt to use a deleted prompt in a production application. Custom prompts are
+// supported only for use with US English custom models and voices.
 //
 // **See also:** [Deleting a custom
 // prompt](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-custom-prompts#tbe-custom-prompts-delete).
@@ -1574,10 +1571,8 @@ func (textToSpeech *TextToSpeechV1) DeleteCustomPromptWithContext(ctx context.Co
 // ListSpeakerModels : List speaker models
 // Lists information about all speaker models that are defined for a service instance. The information includes the
 // speaker ID and speaker name of each defined speaker. You must use credentials for the instance of a service to list
-// its speakers.
-//
-// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is supported
-// only for use with US English custom models and voices.
+// its speakers. Speaker models and the custom prompts with which they are used are supported only for use with US
+// English custom models and voices.
 //
 // **See also:** [Listing speaker
 // models](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-list).
@@ -1660,10 +1655,8 @@ func (textToSpeech *TextToSpeechV1) ListSpeakerModelsWithContext(ctx context.Con
 // is fully processed and the speaker enrollment is complete.
 //
 // The service returns a speaker ID with the request. A speaker ID is globally unique identifier (GUID) that you use to
-// identify the speaker in subsequent requests to the service.
-//
-// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is supported
-// only for use with US English custom models and voices.
+// identify the speaker in subsequent requests to the service. Speaker models and the custom prompts with which they are
+// used are supported only for use with US English custom models and voices.
 //
 // **See also:**
 // * [Create a speaker
@@ -1736,10 +1729,8 @@ func (textToSpeech *TextToSpeechV1) CreateSpeakerModelWithContext(ctx context.Co
 // Gets information about all prompts that are defined by a specified speaker for all custom models that are owned by a
 // service instance. The information is grouped by the customization IDs of the custom models. For each custom model,
 // the information lists information about each prompt that is defined for that custom model by the speaker. You must
-// use credentials for the instance of the service that owns a speaker model to list its prompts.
-//
-// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is supported
-// only for use with US English custom models and voices.
+// use credentials for the instance of the service that owns a speaker model to list its prompts. Speaker models and the
+// custom prompts with which they are used are supported only for use with US English custom models and voices.
 //
 // **See also:** [Listing the custom prompts for a speaker
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-list-prompts).
@@ -1809,10 +1800,8 @@ func (textToSpeech *TextToSpeechV1) GetSpeakerModelWithContext(ctx context.Conte
 // Any prompts that are associated with the deleted speaker are not affected by the speaker's deletion. The prosodic
 // data that defines the quality of a prompt is established when the prompt is created. A prompt is static and remains
 // unaffected by deletion of its associated speaker. However, the prompt cannot be resubmitted or updated with its
-// original speaker once that speaker is deleted.
-//
-// **Beta:** Speaker models and the custom prompts with which they are used are beta functionality that is supported
-// only for use with US English custom models and voices.
+// original speaker once that speaker is deleted. Speaker models and the custom prompts with which they are used are
+// supported only for use with US English custom models and voices.
 //
 // **See also:** [Deleting a speaker
 // model](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-tbe-speaker-models#tbe-speaker-models-delete).
@@ -1923,7 +1912,7 @@ func (textToSpeech *TextToSpeechV1) DeleteUserDataWithContext(ctx context.Contex
 type AddCustomPromptOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The identifier of the prompt that is to be added to the custom model:
 	// * Include a maximum of 49 characters in the ID.
@@ -1932,20 +1921,20 @@ type AddCustomPromptOptions struct {
 	// the ID.
 	// * To add a new prompt, the ID must be unique for the specified custom model. Otherwise, the new information for the
 	// prompt overwrites the existing prompt that has that ID.
-	PromptID *string `validate:"required,ne="`
+	PromptID *string `json:"-" validate:"required,ne="`
 
 	// Information about the prompt that is to be added to a custom model. The following example of a `PromptMetadata`
 	// object includes both the required prompt text and an optional speaker model ID:
 	//
 	// `{ "prompt_text": "Thank you and good-bye!", "speaker_id": "823068b2-ed4e-11ea-b6e0-7b6456aa95cc" }`.
-	Metadata *PromptMetadata `validate:"required"`
+	Metadata *PromptMetadata `json:"-" validate:"required"`
 
 	// An audio file that speaks the text of the prompt with intonation and prosody that matches how you would like the
 	// prompt to be spoken.
 	// * The prompt audio must be in WAV format and must have a minimum sampling rate of 16 kHz. The service accepts audio
 	// with higher sampling rates. The service transcodes all audio to 16 kHz before processing it.
 	// * The length of the prompt audio is limited to 30 seconds.
-	File io.ReadCloser `validate:"required"`
+	File io.ReadCloser `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1962,27 +1951,27 @@ func (*TextToSpeechV1) NewAddCustomPromptOptions(customizationID string, promptI
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddCustomPromptOptions) SetCustomizationID(customizationID string) *AddCustomPromptOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *AddCustomPromptOptions) SetCustomizationID(customizationID string) *AddCustomPromptOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetPromptID : Allow user to set PromptID
-func (options *AddCustomPromptOptions) SetPromptID(promptID string) *AddCustomPromptOptions {
-	options.PromptID = core.StringPtr(promptID)
-	return options
+func (_options *AddCustomPromptOptions) SetPromptID(promptID string) *AddCustomPromptOptions {
+	_options.PromptID = core.StringPtr(promptID)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *AddCustomPromptOptions) SetMetadata(metadata *PromptMetadata) *AddCustomPromptOptions {
-	options.Metadata = metadata
-	return options
+func (_options *AddCustomPromptOptions) SetMetadata(metadata *PromptMetadata) *AddCustomPromptOptions {
+	_options.Metadata = metadata
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *AddCustomPromptOptions) SetFile(file io.ReadCloser) *AddCustomPromptOptions {
-	options.File = file
-	return options
+func (_options *AddCustomPromptOptions) SetFile(file io.ReadCloser) *AddCustomPromptOptions {
+	_options.File = file
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1995,22 +1984,22 @@ func (options *AddCustomPromptOptions) SetHeaders(param map[string]string) *AddC
 type AddWordOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The word that is to be added or updated for the custom model.
-	Word *string `validate:"required,ne="`
+	Word *string `json:"-" validate:"required,ne="`
 
 	// The phonetic or sounds-like translation for the word. A phonetic translation is based on the SSML format for
 	// representing the phonetic string of a word either as an IPA translation or as an IBM SPR translation. The Arabic,
 	// Chinese, Dutch, Australian English, and Korean languages support only IPA. A sounds-like is one or more words that,
 	// when combined, sound like the word.
-	Translation *string `validate:"required"`
+	Translation *string `json:"translation" validate:"required"`
 
 	// **Japanese only.** The part of speech for the word. The service uses the value to produce the correct intonation for
 	// the word. You can create only a single entry, with or without a single part of speech, for any word; you cannot
 	// create multiple entries with different parts of speech for the same word. For more information, see [Working with
 	// Japanese entries](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-rules#jaNotes).
-	PartOfSpeech *string
+	PartOfSpeech *string `json:"part_of_speech,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2051,27 +2040,27 @@ func (*TextToSpeechV1) NewAddWordOptions(customizationID string, word string, tr
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddWordOptions) SetCustomizationID(customizationID string) *AddWordOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *AddWordOptions) SetCustomizationID(customizationID string) *AddWordOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetWord : Allow user to set Word
-func (options *AddWordOptions) SetWord(word string) *AddWordOptions {
-	options.Word = core.StringPtr(word)
-	return options
+func (_options *AddWordOptions) SetWord(word string) *AddWordOptions {
+	_options.Word = core.StringPtr(word)
+	return _options
 }
 
 // SetTranslation : Allow user to set Translation
-func (options *AddWordOptions) SetTranslation(translation string) *AddWordOptions {
-	options.Translation = core.StringPtr(translation)
-	return options
+func (_options *AddWordOptions) SetTranslation(translation string) *AddWordOptions {
+	_options.Translation = core.StringPtr(translation)
+	return _options
 }
 
 // SetPartOfSpeech : Allow user to set PartOfSpeech
-func (options *AddWordOptions) SetPartOfSpeech(partOfSpeech string) *AddWordOptions {
-	options.PartOfSpeech = core.StringPtr(partOfSpeech)
-	return options
+func (_options *AddWordOptions) SetPartOfSpeech(partOfSpeech string) *AddWordOptions {
+	_options.PartOfSpeech = core.StringPtr(partOfSpeech)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2084,15 +2073,15 @@ func (options *AddWordOptions) SetHeaders(param map[string]string) *AddWordOptio
 type AddWordsOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
-	// The **Add custom words** method accepts an array of `Word` objects. Each object provides a word that is to be added
-	// or updated for the custom model and the word's translation.
+	// The [Add custom words](#addwords) method accepts an array of `Word` objects. Each object provides a word that is to
+	// be added or updated for the custom model and the word's translation.
 	//
-	// The **List custom words** method returns an array of `Word` objects. Each object shows a word and its translation
-	// from the custom model. The words are listed in alphabetical order, with uppercase letters listed before lowercase
-	// letters. The array is empty if the custom model contains no words.
-	Words []Word `validate:"required"`
+	// The [List custom words](#listwords) method returns an array of `Word` objects. Each object shows a word and its
+	// translation from the custom model. The words are listed in alphabetical order, with uppercase letters listed before
+	// lowercase letters. The array is empty if the custom model contains no words.
+	Words []Word `json:"words" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2107,15 +2096,15 @@ func (*TextToSpeechV1) NewAddWordsOptions(customizationID string, words []Word) 
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *AddWordsOptions) SetCustomizationID(customizationID string) *AddWordsOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *AddWordsOptions) SetCustomizationID(customizationID string) *AddWordsOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetWords : Allow user to set Words
-func (options *AddWordsOptions) SetWords(words []Word) *AddWordsOptions {
-	options.Words = words
-	return options
+func (_options *AddWordsOptions) SetWords(words []Word) *AddWordsOptions {
+	_options.Words = words
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2127,16 +2116,19 @@ func (options *AddWordsOptions) SetHeaders(param map[string]string) *AddWordsOpt
 // CreateCustomModelOptions : The CreateCustomModel options.
 type CreateCustomModelOptions struct {
 	// The name of the new custom model.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// The language of the new custom model. You create a custom model for a specific language, not for a specific voice. A
 	// custom model can be used with any voice for its specified language. Omit the parameter to use the the default
 	// language, `en-US`. **Note:** The `ar-AR` language identifier cannot be used to create a custom model. Use the
 	// `ar-MS` identifier instead.
-	Language *string
+	//
+	// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only
+	// for IBM Cloud.
+	Language *string `json:"language,omitempty"`
 
 	// A description of the new custom model. Specifying a description is recommended.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2147,6 +2139,9 @@ type CreateCustomModelOptions struct {
 // custom model can be used with any voice for its specified language. Omit the parameter to use the the default
 // language, `en-US`. **Note:** The `ar-AR` language identifier cannot be used to create a custom model. Use the `ar-MS`
 // identifier instead.
+//
+// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only for
+// IBM Cloud.
 const (
 	CreateCustomModelOptionsLanguageArMsConst = "ar-MS"
 	CreateCustomModelOptionsLanguageDeDeConst = "de-DE"
@@ -2160,6 +2155,7 @@ const (
 	CreateCustomModelOptionsLanguageItItConst = "it-IT"
 	CreateCustomModelOptionsLanguageJaJpConst = "ja-JP"
 	CreateCustomModelOptionsLanguageKoKrConst = "ko-KR"
+	CreateCustomModelOptionsLanguageNlBeConst = "nl-BE"
 	CreateCustomModelOptionsLanguageNlNlConst = "nl-NL"
 	CreateCustomModelOptionsLanguagePtBrConst = "pt-BR"
 	CreateCustomModelOptionsLanguageZhCnConst = "zh-CN"
@@ -2173,21 +2169,21 @@ func (*TextToSpeechV1) NewCreateCustomModelOptions(name string) *CreateCustomMod
 }
 
 // SetName : Allow user to set Name
-func (options *CreateCustomModelOptions) SetName(name string) *CreateCustomModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateCustomModelOptions) SetName(name string) *CreateCustomModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateCustomModelOptions) SetLanguage(language string) *CreateCustomModelOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateCustomModelOptions) SetLanguage(language string) *CreateCustomModelOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateCustomModelOptions) SetDescription(description string) *CreateCustomModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateCustomModelOptions) SetDescription(description string) *CreateCustomModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2204,14 +2200,14 @@ type CreateSpeakerModelOptions struct {
 	// * Do not include XML sensitive characters (double quotes, single quotes, ampersands, angle brackets, and slashes) in
 	// the name.
 	// * Do not use the name of an existing speaker that is already defined for the service instance.
-	SpeakerName *string `validate:"required"`
+	SpeakerName *string `json:"-" validate:"required"`
 
 	// An enrollment audio file that contains a sample of the speaker’s voice.
 	// * The enrollment audio must be in WAV format and must have a minimum sampling rate of 16 kHz. The service accepts
 	// audio with higher sampling rates. It transcodes all audio to 16 kHz before processing it.
 	// * The length of the enrollment audio is limited to 1 minute. Speaking one or two paragraphs of text that include
 	// five to ten sentences is recommended.
-	Audio io.ReadCloser `validate:"required"`
+	Audio io.ReadCloser `json:"audio" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2226,15 +2222,15 @@ func (*TextToSpeechV1) NewCreateSpeakerModelOptions(speakerName string, audio io
 }
 
 // SetSpeakerName : Allow user to set SpeakerName
-func (options *CreateSpeakerModelOptions) SetSpeakerName(speakerName string) *CreateSpeakerModelOptions {
-	options.SpeakerName = core.StringPtr(speakerName)
-	return options
+func (_options *CreateSpeakerModelOptions) SetSpeakerName(speakerName string) *CreateSpeakerModelOptions {
+	_options.SpeakerName = core.StringPtr(speakerName)
+	return _options
 }
 
 // SetAudio : Allow user to set Audio
-func (options *CreateSpeakerModelOptions) SetAudio(audio io.ReadCloser) *CreateSpeakerModelOptions {
-	options.Audio = audio
-	return options
+func (_options *CreateSpeakerModelOptions) SetAudio(audio io.ReadCloser) *CreateSpeakerModelOptions {
+	_options.Audio = audio
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2245,8 +2241,8 @@ func (options *CreateSpeakerModelOptions) SetHeaders(param map[string]string) *C
 
 // CustomModel : Information about an existing custom model.
 type CustomModel struct {
-	// The customization ID (GUID) of the custom model. The **Create a custom model** method returns only this field. It
-	// does not not return the other fields of this object.
+	// The customization ID (GUID) of the custom model. The [Create a custom model](#createcustommodel) method returns only
+	// this field. It does not not return the other fields of this object.
 	CustomizationID *string `json:"customization_id" validate:"required"`
 
 	// The name of the custom model.
@@ -2272,12 +2268,12 @@ type CustomModel struct {
 
 	// An array of `Word` objects that lists the words and their translations from the custom model. The words are listed
 	// in alphabetical order, with uppercase letters listed before lowercase letters. The array is empty if no words are
-	// defined for the custom model. This field is returned only by the **Get a custom model** method.
+	// defined for the custom model. This field is returned only by the [Get a custom model](#getcustommodel) method.
 	Words []Word `json:"words,omitempty"`
 
 	// An array of `Prompt` objects that provides information about the prompts that are defined for the specified custom
-	// model. The array is empty if no prompts are defined for the custom model. This field is returned only by the **Get a
-	// custom model** method.
+	// model. The array is empty if no prompts are defined for the custom model. This field is returned only by the [Get a
+	// custom model](#getcustommodel) method.
 	Prompts []Prompt `json:"prompts,omitempty"`
 }
 
@@ -2347,7 +2343,7 @@ func UnmarshalCustomModels(m map[string]json.RawMessage, result interface{}) (er
 type DeleteCustomModelOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2361,9 +2357,9 @@ func (*TextToSpeechV1) NewDeleteCustomModelOptions(customizationID string) *Dele
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteCustomModelOptions) SetCustomizationID(customizationID string) *DeleteCustomModelOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *DeleteCustomModelOptions) SetCustomizationID(customizationID string) *DeleteCustomModelOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2376,10 +2372,10 @@ func (options *DeleteCustomModelOptions) SetHeaders(param map[string]string) *De
 type DeleteCustomPromptOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The identifier (name) of the prompt that is to be deleted.
-	PromptID *string `validate:"required,ne="`
+	PromptID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2394,15 +2390,15 @@ func (*TextToSpeechV1) NewDeleteCustomPromptOptions(customizationID string, prom
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteCustomPromptOptions) SetCustomizationID(customizationID string) *DeleteCustomPromptOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *DeleteCustomPromptOptions) SetCustomizationID(customizationID string) *DeleteCustomPromptOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetPromptID : Allow user to set PromptID
-func (options *DeleteCustomPromptOptions) SetPromptID(promptID string) *DeleteCustomPromptOptions {
-	options.PromptID = core.StringPtr(promptID)
-	return options
+func (_options *DeleteCustomPromptOptions) SetPromptID(promptID string) *DeleteCustomPromptOptions {
+	_options.PromptID = core.StringPtr(promptID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2415,7 +2411,7 @@ func (options *DeleteCustomPromptOptions) SetHeaders(param map[string]string) *D
 type DeleteSpeakerModelOptions struct {
 	// The speaker ID (GUID) of the speaker model. You must make the request with service credentials for the instance of
 	// the service that owns the speaker model.
-	SpeakerID *string `validate:"required,ne="`
+	SpeakerID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2429,9 +2425,9 @@ func (*TextToSpeechV1) NewDeleteSpeakerModelOptions(speakerID string) *DeleteSpe
 }
 
 // SetSpeakerID : Allow user to set SpeakerID
-func (options *DeleteSpeakerModelOptions) SetSpeakerID(speakerID string) *DeleteSpeakerModelOptions {
-	options.SpeakerID = core.StringPtr(speakerID)
-	return options
+func (_options *DeleteSpeakerModelOptions) SetSpeakerID(speakerID string) *DeleteSpeakerModelOptions {
+	_options.SpeakerID = core.StringPtr(speakerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2443,7 +2439,7 @@ func (options *DeleteSpeakerModelOptions) SetHeaders(param map[string]string) *D
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2457,9 +2453,9 @@ func (*TextToSpeechV1) NewDeleteUserDataOptions(customerID string) *DeleteUserDa
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2472,10 +2468,10 @@ func (options *DeleteUserDataOptions) SetHeaders(param map[string]string) *Delet
 type DeleteWordOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The word that is to be deleted from the custom model.
-	Word *string `validate:"required,ne="`
+	Word *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2490,15 +2486,15 @@ func (*TextToSpeechV1) NewDeleteWordOptions(customizationID string, word string)
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *DeleteWordOptions) SetCustomizationID(customizationID string) *DeleteWordOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *DeleteWordOptions) SetCustomizationID(customizationID string) *DeleteWordOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetWord : Allow user to set Word
-func (options *DeleteWordOptions) SetWord(word string) *DeleteWordOptions {
-	options.Word = core.StringPtr(word)
-	return options
+func (_options *DeleteWordOptions) SetWord(word string) *DeleteWordOptions {
+	_options.Word = core.StringPtr(word)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2511,7 +2507,7 @@ func (options *DeleteWordOptions) SetHeaders(param map[string]string) *DeleteWor
 type GetCustomModelOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2525,9 +2521,9 @@ func (*TextToSpeechV1) NewGetCustomModelOptions(customizationID string) *GetCust
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetCustomModelOptions) SetCustomizationID(customizationID string) *GetCustomModelOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *GetCustomModelOptions) SetCustomizationID(customizationID string) *GetCustomModelOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2540,10 +2536,10 @@ func (options *GetCustomModelOptions) SetHeaders(param map[string]string) *GetCu
 type GetCustomPromptOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The identifier (name) of the prompt.
-	PromptID *string `validate:"required,ne="`
+	PromptID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2558,15 +2554,15 @@ func (*TextToSpeechV1) NewGetCustomPromptOptions(customizationID string, promptI
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetCustomPromptOptions) SetCustomizationID(customizationID string) *GetCustomPromptOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *GetCustomPromptOptions) SetCustomizationID(customizationID string) *GetCustomPromptOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetPromptID : Allow user to set PromptID
-func (options *GetCustomPromptOptions) SetPromptID(promptID string) *GetCustomPromptOptions {
-	options.PromptID = core.StringPtr(promptID)
-	return options
+func (_options *GetCustomPromptOptions) SetPromptID(promptID string) *GetCustomPromptOptions {
+	_options.PromptID = core.StringPtr(promptID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2578,23 +2574,26 @@ func (options *GetCustomPromptOptions) SetHeaders(param map[string]string) *GetC
 // GetPronunciationOptions : The GetPronunciation options.
 type GetPronunciationOptions struct {
 	// The word for which the pronunciation is requested.
-	Text *string `validate:"required"`
+	Text *string `json:"-" validate:"required"`
 
 	// A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 	// (for example, `en-US`) return the same translation. For more information about specifying a voice, see **Important
-	// voice updates** in the method description.
-	Voice *string
+	// voice updates for IBM Cloud** in the method description.
+	//
+	// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only
+	// for IBM Cloud.
+	Voice *string `json:"-"`
 
 	// The phoneme format in which to return the pronunciation. The Arabic, Chinese, Dutch, Australian English, and Korean
 	// languages support only IPA. Omit the parameter to obtain the pronunciation in the default format.
-	Format *string
+	Format *string `json:"-"`
 
 	// The customization ID (GUID) of a custom model for which the pronunciation is to be returned. The language of a
 	// specified custom model must match the language of the specified voice. If the word is not defined in the specified
 	// custom model, the service returns the default translation for the custom model's language. You must make the request
 	// with credentials for the instance of the service that owns the custom model. Omit the parameter to see the
 	// translation for the specified voice with no customization.
-	CustomizationID *string
+	CustomizationID *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2603,7 +2602,10 @@ type GetPronunciationOptions struct {
 // Constants associated with the GetPronunciationOptions.Voice property.
 // A voice that specifies the language in which the pronunciation is to be returned. All voices for the same language
 // (for example, `en-US`) return the same translation. For more information about specifying a voice, see **Important
-// voice updates** in the method description.
+// voice updates for IBM Cloud** in the method description.
+//
+// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only for
+// IBM Cloud.
 const (
 	GetPronunciationOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
 	GetPronunciationOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
@@ -2648,6 +2650,7 @@ const (
 	GetPronunciationOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	GetPronunciationOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	GetPronunciationOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	GetPronunciationOptionsVoiceNlBeAdelevoiceConst       = "nl-BE_AdeleVoice"
 	GetPronunciationOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
 	GetPronunciationOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
 	GetPronunciationOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
@@ -2673,27 +2676,27 @@ func (*TextToSpeechV1) NewGetPronunciationOptions(text string) *GetPronunciation
 }
 
 // SetText : Allow user to set Text
-func (options *GetPronunciationOptions) SetText(text string) *GetPronunciationOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *GetPronunciationOptions) SetText(text string) *GetPronunciationOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetVoice : Allow user to set Voice
-func (options *GetPronunciationOptions) SetVoice(voice string) *GetPronunciationOptions {
-	options.Voice = core.StringPtr(voice)
-	return options
+func (_options *GetPronunciationOptions) SetVoice(voice string) *GetPronunciationOptions {
+	_options.Voice = core.StringPtr(voice)
+	return _options
 }
 
 // SetFormat : Allow user to set Format
-func (options *GetPronunciationOptions) SetFormat(format string) *GetPronunciationOptions {
-	options.Format = core.StringPtr(format)
-	return options
+func (_options *GetPronunciationOptions) SetFormat(format string) *GetPronunciationOptions {
+	_options.Format = core.StringPtr(format)
+	return _options
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetPronunciationOptions) SetCustomizationID(customizationID string) *GetPronunciationOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *GetPronunciationOptions) SetCustomizationID(customizationID string) *GetPronunciationOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2706,7 +2709,7 @@ func (options *GetPronunciationOptions) SetHeaders(param map[string]string) *Get
 type GetSpeakerModelOptions struct {
 	// The speaker ID (GUID) of the speaker model. You must make the request with service credentials for the instance of
 	// the service that owns the speaker model.
-	SpeakerID *string `validate:"required,ne="`
+	SpeakerID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2720,9 +2723,9 @@ func (*TextToSpeechV1) NewGetSpeakerModelOptions(speakerID string) *GetSpeakerMo
 }
 
 // SetSpeakerID : Allow user to set SpeakerID
-func (options *GetSpeakerModelOptions) SetSpeakerID(speakerID string) *GetSpeakerModelOptions {
-	options.SpeakerID = core.StringPtr(speakerID)
-	return options
+func (_options *GetSpeakerModelOptions) SetSpeakerID(speakerID string) *GetSpeakerModelOptions {
+	_options.SpeakerID = core.StringPtr(speakerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2734,13 +2737,16 @@ func (options *GetSpeakerModelOptions) SetHeaders(param map[string]string) *GetS
 // GetVoiceOptions : The GetVoice options.
 type GetVoiceOptions struct {
 	// The voice for which information is to be returned. For more information about specifying a voice, see **Important
-	// voice updates** in the method description.
-	Voice *string `validate:"required,ne="`
+	// voice updates for IBM Cloud** in the method description.
+	//
+	// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only
+	// for IBM Cloud.
+	Voice *string `json:"-" validate:"required,ne="`
 
 	// The customization ID (GUID) of a custom model for which information is to be returned. You must make the request
 	// with credentials for the instance of the service that owns the custom model. Omit the parameter to see information
 	// about the specified voice with no customization.
-	CustomizationID *string
+	CustomizationID *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2748,7 +2754,10 @@ type GetVoiceOptions struct {
 
 // Constants associated with the GetVoiceOptions.Voice property.
 // The voice for which information is to be returned. For more information about specifying a voice, see **Important
-// voice updates** in the method description.
+// voice updates for IBM Cloud** in the method description.
+//
+// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only for
+// IBM Cloud.
 const (
 	GetVoiceOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
 	GetVoiceOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
@@ -2793,6 +2802,7 @@ const (
 	GetVoiceOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	GetVoiceOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	GetVoiceOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	GetVoiceOptionsVoiceNlBeAdelevoiceConst       = "nl-BE_AdeleVoice"
 	GetVoiceOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
 	GetVoiceOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
 	GetVoiceOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
@@ -2810,15 +2820,15 @@ func (*TextToSpeechV1) NewGetVoiceOptions(voice string) *GetVoiceOptions {
 }
 
 // SetVoice : Allow user to set Voice
-func (options *GetVoiceOptions) SetVoice(voice string) *GetVoiceOptions {
-	options.Voice = core.StringPtr(voice)
-	return options
+func (_options *GetVoiceOptions) SetVoice(voice string) *GetVoiceOptions {
+	_options.Voice = core.StringPtr(voice)
+	return _options
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetVoiceOptions) SetCustomizationID(customizationID string) *GetVoiceOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *GetVoiceOptions) SetCustomizationID(customizationID string) *GetVoiceOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2831,10 +2841,10 @@ func (options *GetVoiceOptions) SetHeaders(param map[string]string) *GetVoiceOpt
 type GetWordOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// The word that is to be queried from the custom model.
-	Word *string `validate:"required,ne="`
+	Word *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2849,15 +2859,15 @@ func (*TextToSpeechV1) NewGetWordOptions(customizationID string, word string) *G
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *GetWordOptions) SetCustomizationID(customizationID string) *GetWordOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *GetWordOptions) SetCustomizationID(customizationID string) *GetWordOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetWord : Allow user to set Word
-func (options *GetWordOptions) SetWord(word string) *GetWordOptions {
-	options.Word = core.StringPtr(word)
-	return options
+func (_options *GetWordOptions) SetWord(word string) *GetWordOptions {
+	_options.Word = core.StringPtr(word)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2870,7 +2880,7 @@ func (options *GetWordOptions) SetHeaders(param map[string]string) *GetWordOptio
 type ListCustomModelsOptions struct {
 	// The language for which custom models that are owned by the requesting credentials are to be returned. Omit the
 	// parameter to see all custom models that are owned by the requester.
-	Language *string
+	Language *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2893,6 +2903,7 @@ const (
 	ListCustomModelsOptionsLanguageItItConst = "it-IT"
 	ListCustomModelsOptionsLanguageJaJpConst = "ja-JP"
 	ListCustomModelsOptionsLanguageKoKrConst = "ko-KR"
+	ListCustomModelsOptionsLanguageNlBeConst = "nl-BE"
 	ListCustomModelsOptionsLanguageNlNlConst = "nl-NL"
 	ListCustomModelsOptionsLanguagePtBrConst = "pt-BR"
 	ListCustomModelsOptionsLanguageZhCnConst = "zh-CN"
@@ -2904,9 +2915,9 @@ func (*TextToSpeechV1) NewListCustomModelsOptions() *ListCustomModelsOptions {
 }
 
 // SetLanguage : Allow user to set Language
-func (options *ListCustomModelsOptions) SetLanguage(language string) *ListCustomModelsOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *ListCustomModelsOptions) SetLanguage(language string) *ListCustomModelsOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2919,7 +2930,7 @@ func (options *ListCustomModelsOptions) SetHeaders(param map[string]string) *Lis
 type ListCustomPromptsOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2933,9 +2944,9 @@ func (*TextToSpeechV1) NewListCustomPromptsOptions(customizationID string) *List
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ListCustomPromptsOptions) SetCustomizationID(customizationID string) *ListCustomPromptsOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *ListCustomPromptsOptions) SetCustomizationID(customizationID string) *ListCustomPromptsOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2984,7 +2995,7 @@ func (options *ListVoicesOptions) SetHeaders(param map[string]string) *ListVoice
 type ListWordsOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2998,9 +3009,9 @@ func (*TextToSpeechV1) NewListWordsOptions(customizationID string) *ListWordsOpt
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *ListWordsOptions) SetCustomizationID(customizationID string) *ListWordsOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *ListWordsOptions) SetCustomizationID(customizationID string) *ListWordsOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3077,11 +3088,11 @@ type PromptMetadata struct {
 }
 
 // NewPromptMetadata : Instantiate PromptMetadata (Generic Model Constructor)
-func (*TextToSpeechV1) NewPromptMetadata(promptText string) (model *PromptMetadata, err error) {
-	model = &PromptMetadata{
+func (*TextToSpeechV1) NewPromptMetadata(promptText string) (_model *PromptMetadata, err error) {
+	_model = &PromptMetadata{
 		PromptText: core.StringPtr(promptText),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3312,29 +3323,41 @@ func UnmarshalSupportedFeatures(m map[string]json.RawMessage, result interface{}
 // SynthesizeOptions : The Synthesize options.
 type SynthesizeOptions struct {
 	// The text to synthesize.
-	Text *string `validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// The requested format (MIME type) of the audio. You can use the `Accept` header or the `accept` parameter to specify
 	// the audio format. For more information about specifying an audio format, see **Audio formats (accept types)** in the
 	// method description.
-	Accept *string
+	Accept *string `json:"-"`
 
-	// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates** in
-	// the method description.
-	Voice *string
+	// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates for IBM
+	// Cloud** in the method description.
+	//
+	// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only
+	// for IBM Cloud.
+	//
+	// **See also:** See also [Using languages and
+	// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices).
+	Voice *string `json:"-"`
 
 	// The customization ID (GUID) of a custom model to use for the synthesis. If a custom model is specified, it works
 	// only if it matches the language of the indicated voice. You must make the request with credentials for the instance
 	// of the service that owns the custom model. Omit the parameter to use the specified voice with no customization.
-	CustomizationID *string
+	CustomizationID *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the SynthesizeOptions.Voice property.
-// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates** in the
-// method description.
+// The voice to use for synthesis. For more information about specifying a voice, see **Important voice updates for IBM
+// Cloud** in the method description.
+//
+// **IBM Cloud:** The Arabic, Chinese, Dutch, Australian English, and Korean languages and voices are supported only for
+// IBM Cloud.
+//
+// **See also:** See also [Using languages and
+// voices](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices).
 const (
 	SynthesizeOptionsVoiceArArOmarvoiceConst        = "ar-AR_OmarVoice"
 	SynthesizeOptionsVoiceArMsOmarvoiceConst        = "ar-MS_OmarVoice"
@@ -3379,6 +3402,7 @@ const (
 	SynthesizeOptionsVoiceKoKrSiwoovoiceConst       = "ko-KR_SiWooVoice"
 	SynthesizeOptionsVoiceKoKrYoungmivoiceConst     = "ko-KR_YoungmiVoice"
 	SynthesizeOptionsVoiceKoKrYunavoiceConst        = "ko-KR_YunaVoice"
+	SynthesizeOptionsVoiceNlBeAdelevoiceConst       = "nl-BE_AdeleVoice"
 	SynthesizeOptionsVoiceNlNlEmmavoiceConst        = "nl-NL_EmmaVoice"
 	SynthesizeOptionsVoiceNlNlLiamvoiceConst        = "nl-NL_LiamVoice"
 	SynthesizeOptionsVoicePtBrIsabelav3voiceConst   = "pt-BR_IsabelaV3Voice"
@@ -3396,27 +3420,27 @@ func (*TextToSpeechV1) NewSynthesizeOptions(text string) *SynthesizeOptions {
 }
 
 // SetText : Allow user to set Text
-func (options *SynthesizeOptions) SetText(text string) *SynthesizeOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *SynthesizeOptions) SetText(text string) *SynthesizeOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetAccept : Allow user to set Accept
-func (options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
-	options.Accept = core.StringPtr(accept)
-	return options
+func (_options *SynthesizeOptions) SetAccept(accept string) *SynthesizeOptions {
+	_options.Accept = core.StringPtr(accept)
+	return _options
 }
 
 // SetVoice : Allow user to set Voice
-func (options *SynthesizeOptions) SetVoice(voice string) *SynthesizeOptions {
-	options.Voice = core.StringPtr(voice)
-	return options
+func (_options *SynthesizeOptions) SetVoice(voice string) *SynthesizeOptions {
+	_options.Voice = core.StringPtr(voice)
+	return _options
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *SynthesizeOptions) SetCustomizationID(customizationID string) *SynthesizeOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *SynthesizeOptions) SetCustomizationID(customizationID string) *SynthesizeOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3466,11 +3490,11 @@ const (
 )
 
 // NewTranslation : Instantiate Translation (Generic Model Constructor)
-func (*TextToSpeechV1) NewTranslation(translation string) (model *Translation, err error) {
-	model = &Translation{
+func (*TextToSpeechV1) NewTranslation(translation string) (_model *Translation, err error) {
+	_model = &Translation{
 		Translation: core.StringPtr(translation),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3493,17 +3517,17 @@ func UnmarshalTranslation(m map[string]json.RawMessage, result interface{}) (err
 type UpdateCustomModelOptions struct {
 	// The customization ID (GUID) of the custom model. You must make the request with credentials for the instance of the
 	// service that owns the custom model.
-	CustomizationID *string `validate:"required,ne="`
+	CustomizationID *string `json:"-" validate:"required,ne="`
 
 	// A new name for the custom model.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// A new description for the custom model.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// An array of `Word` objects that provides the words and their translations that are to be added or updated for the
 	// custom model. Pass an empty array to make no additions or updates.
-	Words []Word
+	Words []Word `json:"words,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3517,27 +3541,27 @@ func (*TextToSpeechV1) NewUpdateCustomModelOptions(customizationID string) *Upda
 }
 
 // SetCustomizationID : Allow user to set CustomizationID
-func (options *UpdateCustomModelOptions) SetCustomizationID(customizationID string) *UpdateCustomModelOptions {
-	options.CustomizationID = core.StringPtr(customizationID)
-	return options
+func (_options *UpdateCustomModelOptions) SetCustomizationID(customizationID string) *UpdateCustomModelOptions {
+	_options.CustomizationID = core.StringPtr(customizationID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateCustomModelOptions) SetName(name string) *UpdateCustomModelOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateCustomModelOptions) SetName(name string) *UpdateCustomModelOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateCustomModelOptions) SetDescription(description string) *UpdateCustomModelOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateCustomModelOptions) SetDescription(description string) *UpdateCustomModelOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetWords : Allow user to set Words
-func (options *UpdateCustomModelOptions) SetWords(words []Word) *UpdateCustomModelOptions {
-	options.Words = words
-	return options
+func (_options *UpdateCustomModelOptions) SetWords(words []Word) *UpdateCustomModelOptions {
+	_options.Words = words
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3570,8 +3594,8 @@ type Voice struct {
 	// Additional service features that are supported with the voice.
 	SupportedFeatures *SupportedFeatures `json:"supported_features" validate:"required"`
 
-	// Returns information about a specified custom model. This field is returned only by the **Get a voice** method and
-	// only when you specify the customization ID of a custom model.
+	// Returns information about a specified custom model. This field is returned only by the [Get a voice](#getvoice)
+	// method and only when you specify the customization ID of a custom model.
 	Customization *CustomModel `json:"customization,omitempty"`
 }
 
@@ -3675,12 +3699,12 @@ const (
 )
 
 // NewWord : Instantiate Word (Generic Model Constructor)
-func (*TextToSpeechV1) NewWord(word string, translation string) (model *Word, err error) {
-	model = &Word{
+func (*TextToSpeechV1) NewWord(word string, translation string) (_model *Word, err error) {
+	_model = &Word{
 		Word:        core.StringPtr(word),
 		Translation: core.StringPtr(translation),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -3703,26 +3727,26 @@ func UnmarshalWord(m map[string]json.RawMessage, result interface{}) (err error)
 	return
 }
 
-// Words : For the **Add custom words** method, one or more words that are to be added or updated for the custom model and the
-// translation for each specified word.
+// Words : For the [Add custom words](#addwords) method, one or more words that are to be added or updated for the custom model
+// and the translation for each specified word.
 //
-// For the **List custom words** method, the words and their translations from the custom model.
+// For the [List custom words](#listwords) method, the words and their translations from the custom model.
 type Words struct {
-	// The **Add custom words** method accepts an array of `Word` objects. Each object provides a word that is to be added
-	// or updated for the custom model and the word's translation.
+	// The [Add custom words](#addwords) method accepts an array of `Word` objects. Each object provides a word that is to
+	// be added or updated for the custom model and the word's translation.
 	//
-	// The **List custom words** method returns an array of `Word` objects. Each object shows a word and its translation
-	// from the custom model. The words are listed in alphabetical order, with uppercase letters listed before lowercase
-	// letters. The array is empty if the custom model contains no words.
+	// The [List custom words](#listwords) method returns an array of `Word` objects. Each object shows a word and its
+	// translation from the custom model. The words are listed in alphabetical order, with uppercase letters listed before
+	// lowercase letters. The array is empty if the custom model contains no words.
 	Words []Word `json:"words" validate:"required"`
 }
 
 // NewWords : Instantiate Words (Generic Model Constructor)
-func (*TextToSpeechV1) NewWords(words []Word) (model *Words, err error) {
-	model = &Words{
+func (*TextToSpeechV1) NewWords(words []Word) (_model *Words, err error) {
+	_model = &Words{
 		Words: words,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 

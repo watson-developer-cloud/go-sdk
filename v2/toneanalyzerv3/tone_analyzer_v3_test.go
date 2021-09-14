@@ -198,7 +198,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for sentences query parameter
 					res.Header().Set("Content-type", "application/json")
@@ -226,7 +226,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.Sentences = core.BoolPtr(true)
 				toneOptionsModel.Tones = []string{"emotion"}
 				toneOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := toneAnalyzerService.Tone(toneOptionsModel)
@@ -279,7 +279,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for sentences query parameter
 					// Sleep a short time to support a timeout test
@@ -312,7 +312,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.Sentences = core.BoolPtr(true)
 				toneOptionsModel.Tones = []string{"emotion"}
 				toneOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -370,7 +370,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for sentences query parameter
 					// Set mock response
@@ -405,7 +405,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.Sentences = core.BoolPtr(true)
 				toneOptionsModel.Tones = []string{"emotion"}
 				toneOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -435,7 +435,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.Sentences = core.BoolPtr(true)
 				toneOptionsModel.Tones = []string{"emotion"}
 				toneOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := toneAnalyzerService.SetServiceURL("")
@@ -479,7 +479,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.Sentences = core.BoolPtr(true)
 				toneOptionsModel.Tones = []string{"emotion"}
 				toneOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -509,7 +509,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -534,7 +534,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := new(toneanalyzerv3.ToneChatOptions)
 				toneChatOptionsModel.Utterances = []toneanalyzerv3.Utterance{*utteranceModel}
 				toneChatOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneChatOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneChatOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneChatOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := toneAnalyzerService.ToneChat(toneChatOptionsModel)
@@ -585,7 +585,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -615,7 +615,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := new(toneanalyzerv3.ToneChatOptions)
 				toneChatOptionsModel.Utterances = []toneanalyzerv3.Utterance{*utteranceModel}
 				toneChatOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneChatOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneChatOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneChatOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -671,7 +671,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 					Expect(req.Header["Content-Language"]).ToNot(BeNil())
 					Expect(req.Header["Content-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.Header["Accept-Language"]).ToNot(BeNil())
-					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "ar")))
+					Expect(req.Header["Accept-Language"][0]).To(Equal(fmt.Sprintf("%v", "en")))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -703,7 +703,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := new(toneanalyzerv3.ToneChatOptions)
 				toneChatOptionsModel.Utterances = []toneanalyzerv3.Utterance{*utteranceModel}
 				toneChatOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneChatOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneChatOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneChatOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -731,7 +731,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := new(toneanalyzerv3.ToneChatOptions)
 				toneChatOptionsModel.Utterances = []toneanalyzerv3.Utterance{*utteranceModel}
 				toneChatOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneChatOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneChatOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneChatOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := toneAnalyzerService.SetServiceURL("")
@@ -780,7 +780,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := new(toneanalyzerv3.ToneChatOptions)
 				toneChatOptionsModel.Utterances = []toneanalyzerv3.Utterance{*utteranceModel}
 				toneChatOptionsModel.ContentLanguage = core.StringPtr("en")
-				toneChatOptionsModel.AcceptLanguage = core.StringPtr("ar")
+				toneChatOptionsModel.AcceptLanguage = core.StringPtr("en")
 				toneChatOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -818,18 +818,18 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneChatOptionsModel := toneAnalyzerService.NewToneChatOptions(toneChatOptionsUtterances)
 				toneChatOptionsModel.SetUtterances([]toneanalyzerv3.Utterance{*utteranceModel})
 				toneChatOptionsModel.SetContentLanguage("en")
-				toneChatOptionsModel.SetAcceptLanguage("ar")
+				toneChatOptionsModel.SetAcceptLanguage("en")
 				toneChatOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(toneChatOptionsModel).ToNot(BeNil())
 				Expect(toneChatOptionsModel.Utterances).To(Equal([]toneanalyzerv3.Utterance{*utteranceModel}))
 				Expect(toneChatOptionsModel.ContentLanguage).To(Equal(core.StringPtr("en")))
-				Expect(toneChatOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("ar")))
+				Expect(toneChatOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("en")))
 				Expect(toneChatOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewToneInput successfully`, func() {
 				text := "testString"
-				model, err := toneAnalyzerService.NewToneInput(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := toneAnalyzerService.NewToneInput(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewToneOptions successfully`, func() {
@@ -847,7 +847,7 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				toneOptionsModel.SetSentences(true)
 				toneOptionsModel.SetTones([]string{"emotion"})
 				toneOptionsModel.SetContentLanguage("en")
-				toneOptionsModel.SetAcceptLanguage("ar")
+				toneOptionsModel.SetAcceptLanguage("en")
 				toneOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(toneOptionsModel).ToNot(BeNil())
 				Expect(toneOptionsModel.ToneInput).To(Equal(toneInputModel))
@@ -856,13 +856,13 @@ var _ = Describe(`ToneAnalyzerV3`, func() {
 				Expect(toneOptionsModel.Sentences).To(Equal(core.BoolPtr(true)))
 				Expect(toneOptionsModel.Tones).To(Equal([]string{"emotion"}))
 				Expect(toneOptionsModel.ContentLanguage).To(Equal(core.StringPtr("en")))
-				Expect(toneOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("ar")))
+				Expect(toneOptionsModel.AcceptLanguage).To(Equal(core.StringPtr("en")))
 				Expect(toneOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUtterance successfully`, func() {
 				text := "testString"
-				model, err := toneAnalyzerService.NewUtterance(text)
-				Expect(model).ToNot(BeNil())
+				_model, err := toneAnalyzerService.NewUtterance(text)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 		})

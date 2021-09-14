@@ -1676,8 +1676,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -1757,15 +1757,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -1788,11 +1788,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -1879,7 +1879,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke CreateConfiguration successfully with retries`, func() {
@@ -1938,8 +1938,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -2019,15 +2019,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -2050,11 +2050,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -2143,7 +2143,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke CreateConfiguration successfully`, func() {
@@ -2207,8 +2207,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -2288,15 +2288,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -2319,11 +2319,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -2420,8 +2420,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -2501,15 +2501,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -2532,11 +2532,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -2654,8 +2654,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -2735,15 +2735,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -2766,11 +2766,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -2888,7 +2888,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
+					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
 				}))
 			})
 			It(`Invoke ListConfigurations successfully with retries`, func() {
@@ -2946,7 +2946,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
+					fmt.Fprintf(res, "%s", `{"configurations": [{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}]}`)
 				}))
 			})
 			It(`Invoke ListConfigurations successfully`, func() {
@@ -3116,7 +3116,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke GetConfiguration successfully with retries`, func() {
@@ -3173,7 +3173,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke GetConfiguration successfully`, func() {
@@ -3347,8 +3347,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -3428,15 +3428,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -3459,11 +3459,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -3551,7 +3551,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke UpdateConfiguration successfully with retries`, func() {
@@ -3610,8 +3610,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -3691,15 +3691,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -3722,11 +3722,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -3816,7 +3816,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": true, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": false, "time_zone": "TimeZone", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "gentle", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
+					fmt.Fprintf(res, "%s", `{"configuration_id": "ConfigurationID", "name": "Name", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "description": "Description", "conversions": {"pdf": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}]}}, "word": {"heading": {"fonts": [{"level": 5, "min_size": 7, "max_size": 7, "bold": true, "italic": true, "name": "Name"}], "styles": [{"level": 5, "names": ["Names"]}]}}, "html": {"exclude_tags_completely": ["ExcludeTagsCompletely"], "exclude_tags_keep_content": ["ExcludeTagsKeepContent"], "keep_content": {"xpaths": ["Xpaths"]}, "exclude_content": {"xpaths": ["Xpaths"]}, "keep_tag_attributes": ["KeepTagAttributes"], "exclude_tag_attributes": ["ExcludeTagAttributes"]}, "segment": {"enabled": false, "selector_tags": ["SelectorTags"], "annotated_fields": ["AnnotatedFields"]}, "json_normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "image_text_recognition": true}, "enrichments": [{"description": "Description", "destination_field": "DestinationField", "source_field": "SourceField", "overwrite": false, "enrichment": "Enrichment", "ignore_downstream_errors": false, "options": {"features": {"keywords": {"sentiment": false, "emotion": false, "limit": 5}, "entities": {"sentiment": false, "emotion": false, "limit": 5, "mentions": true, "mention_types": true, "sentence_locations": false, "model": "Model"}, "sentiment": {"document": true, "targets": ["Target"]}, "emotion": {"document": true, "targets": ["Target"]}, "categories": {"mapKey": "anyValue"}, "semantic_roles": {"entities": true, "keywords": true, "limit": 5}, "relations": {"model": "Model"}, "concepts": {"limit": 5}}, "language": "ar", "model": "Model"}}], "normalizations": [{"operation": "copy", "source_field": "SourceField", "destination_field": "DestinationField"}], "source": {"type": "box", "credential_id": "CredentialID", "schedule": {"enabled": true, "time_zone": "America/New_York", "frequency": "daily"}, "options": {"folders": [{"owner_user_id": "OwnerUserID", "folder_id": "FolderID", "limit": 5}], "objects": [{"name": "Name", "limit": 5}], "site_collections": [{"site_collection_path": "SiteCollectionPath", "limit": 5}], "urls": [{"url": "URL", "limit_to_starting_hosts": true, "crawl_speed": "normal", "allow_untrusted_certificate": false, "maximum_hops": 11, "request_timeout": 14, "override_robots_txt": false, "blacklist": ["Blacklist"]}], "buckets": [{"name": "Name", "limit": 5}], "crawl_all_buckets": false}}}`)
 				}))
 			})
 			It(`Invoke UpdateConfiguration successfully`, func() {
@@ -3880,8 +3880,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -3961,15 +3961,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -3992,11 +3992,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -4094,8 +4094,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -4175,15 +4175,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -4206,11 +4206,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -4329,8 +4329,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
 
 				// Construct an instance of the NormalizationOperation model
@@ -4410,15 +4410,15 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -4441,11 +4441,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sourceOptionsWebCrawlModel := new(discoveryv1.SourceOptionsWebCrawl)
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -4808,7 +4808,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke CreateCollection successfully with retries`, func() {
@@ -4884,7 +4884,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke CreateCollection successfully`, func() {
@@ -5065,7 +5065,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
+					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
 				}))
 			})
 			It(`Invoke ListCollections successfully with retries`, func() {
@@ -5123,7 +5123,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
+					fmt.Fprintf(res, "%s", `{"collections": [{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}]}`)
 				}))
 			})
 			It(`Invoke ListCollections successfully`, func() {
@@ -5293,7 +5293,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke GetCollection successfully with retries`, func() {
@@ -5350,7 +5350,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke GetCollection successfully`, func() {
@@ -5539,7 +5539,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke UpdateCollection successfully with retries`, func() {
@@ -5615,7 +5615,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": false, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "updated": "2019-01-01T12:00:00.000Z", "status": "active", "configuration_id": "ConfigurationID", "language": "Language", "document_counts": {"available": 9, "processing": 10, "failed": 6, "pending": 7}, "disk_usage": {"used_bytes": 9}, "training_status": {"total_examples": 13, "available": false, "processing": true, "minimum_queries_added": false, "minimum_examples_added": true, "sufficient_label_diversity": true, "notices": 7, "successfully_trained": "2019-01-01T12:00:00.000Z", "data_updated": "2019-01-01T12:00:00.000Z"}, "crawl_status": {"source_crawl": {"status": "running", "next_crawl": "2019-01-01T12:00:00.000Z"}}, "smart_document_understanding": {"enabled": true, "total_annotated_pages": 19, "total_pages": 10, "total_documents": 14, "custom_fields": {"defined": 7, "maximum_allowed": 14}}}`)
 				}))
 			})
 			It(`Invoke UpdateCollection successfully`, func() {
@@ -8917,7 +8917,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(queryPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -8946,18 +8946,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.Return = core.StringPtr("testString")
 				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryOptionsModel.Sort = core.StringPtr("testString")
-				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.Highlight = core.BoolPtr(false)
 				queryOptionsModel.PassagesFields = core.StringPtr("testString")
 				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.Deduplicate = core.BoolPtr(false)
 				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.Similar = core.BoolPtr(false)
 				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				queryOptionsModel.SimilarFields = core.StringPtr("testString")
 				queryOptionsModel.Bias = core.StringPtr("testString")
-				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
-				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(false)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.Query(queryOptionsModel)
@@ -9006,7 +9006,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -9040,18 +9040,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.Return = core.StringPtr("testString")
 				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryOptionsModel.Sort = core.StringPtr("testString")
-				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.Highlight = core.BoolPtr(false)
 				queryOptionsModel.PassagesFields = core.StringPtr("testString")
 				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.Deduplicate = core.BoolPtr(false)
 				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.Similar = core.BoolPtr(false)
 				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				queryOptionsModel.SimilarFields = core.StringPtr("testString")
 				queryOptionsModel.Bias = core.StringPtr("testString")
-				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
-				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(false)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9105,7 +9105,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -9141,18 +9141,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.Return = core.StringPtr("testString")
 				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryOptionsModel.Sort = core.StringPtr("testString")
-				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.Highlight = core.BoolPtr(false)
 				queryOptionsModel.PassagesFields = core.StringPtr("testString")
 				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.Deduplicate = core.BoolPtr(false)
 				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.Similar = core.BoolPtr(false)
 				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				queryOptionsModel.SimilarFields = core.StringPtr("testString")
 				queryOptionsModel.Bias = core.StringPtr("testString")
-				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
-				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(false)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9184,18 +9184,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.Return = core.StringPtr("testString")
 				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryOptionsModel.Sort = core.StringPtr("testString")
-				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.Highlight = core.BoolPtr(false)
 				queryOptionsModel.PassagesFields = core.StringPtr("testString")
 				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.Deduplicate = core.BoolPtr(false)
 				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.Similar = core.BoolPtr(false)
 				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				queryOptionsModel.SimilarFields = core.StringPtr("testString")
 				queryOptionsModel.Bias = core.StringPtr("testString")
-				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
-				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(false)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -9248,18 +9248,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.Return = core.StringPtr("testString")
 				queryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryOptionsModel.Sort = core.StringPtr("testString")
-				queryOptionsModel.Highlight = core.BoolPtr(true)
+				queryOptionsModel.Highlight = core.BoolPtr(false)
 				queryOptionsModel.PassagesFields = core.StringPtr("testString")
 				queryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				queryOptionsModel.Deduplicate = core.BoolPtr(true)
+				queryOptionsModel.Deduplicate = core.BoolPtr(false)
 				queryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryOptionsModel.Similar = core.BoolPtr(true)
+				queryOptionsModel.Similar = core.BoolPtr(false)
 				queryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				queryOptionsModel.SimilarFields = core.StringPtr("testString")
 				queryOptionsModel.Bias = core.StringPtr("testString")
-				queryOptionsModel.SpellingSuggestions = core.BoolPtr(true)
-				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				queryOptionsModel.SpellingSuggestions = core.BoolPtr(false)
+				queryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				queryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -9326,12 +9326,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.Return = []string{"testString"}
 				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryNoticesOptionsModel.Sort = []string{"testString"}
-				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
 				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
 				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -9410,12 +9410,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.Return = []string{"testString"}
 				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryNoticesOptionsModel.Sort = []string{"testString"}
-				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
 				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
 				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -9501,12 +9501,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.Return = []string{"testString"}
 				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryNoticesOptionsModel.Sort = []string{"testString"}
-				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
 				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
 				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -9540,12 +9540,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.Return = []string{"testString"}
 				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryNoticesOptionsModel.Sort = []string{"testString"}
-				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
 				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
 				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -9600,12 +9600,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.Return = []string{"testString"}
 				queryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				queryNoticesOptionsModel.Sort = []string{"testString"}
-				queryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				queryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				queryNoticesOptionsModel.PassagesFields = []string{"testString"}
 				queryNoticesOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				queryNoticesOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
 				queryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				queryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				queryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				queryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				queryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				queryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -9635,7 +9635,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(federatedQueryPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -9664,17 +9664,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.Return = core.StringPtr("testString")
 				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
-				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(false)
 				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
-				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.FederatedQuery(federatedQueryOptionsModel)
@@ -9723,7 +9723,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -9757,17 +9757,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.Return = core.StringPtr("testString")
 				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
-				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(false)
 				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
-				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -9821,7 +9821,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
 					Expect(req.Header["X-Watson-Logging-Opt-Out"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Logging-Opt-Out"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -9857,17 +9857,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.Return = core.StringPtr("testString")
 				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
-				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(false)
 				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
-				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -9899,17 +9899,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.Return = core.StringPtr("testString")
 				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
-				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(false)
 				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
-				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -9962,17 +9962,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.Return = core.StringPtr("testString")
 				federatedQueryOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryOptionsModel.Sort = core.StringPtr("testString")
-				federatedQueryOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryOptionsModel.PassagesFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.PassagesCount = core.Int64Ptr(int64(100))
 				federatedQueryOptionsModel.PassagesCharacters = core.Int64Ptr(int64(50))
-				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(true)
+				federatedQueryOptionsModel.Deduplicate = core.BoolPtr(false)
 				federatedQueryOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryOptionsModel.SimilarDocumentIds = core.StringPtr("testString")
 				federatedQueryOptionsModel.SimilarFields = core.StringPtr("testString")
 				federatedQueryOptionsModel.Bias = core.StringPtr("testString")
-				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(true)
+				federatedQueryOptionsModel.XWatsonLoggingOptOut = core.BoolPtr(false)
 				federatedQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -10035,9 +10035,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
-				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -10112,9 +10112,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
-				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -10196,9 +10196,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
-				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -10231,9 +10231,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
-				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -10287,9 +10287,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.Return = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Offset = core.Int64Ptr(int64(38))
 				federatedQueryNoticesOptionsModel.Sort = []string{"testString"}
-				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Highlight = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.DeduplicateField = core.StringPtr("testString")
-				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(true)
+				federatedQueryNoticesOptionsModel.Similar = core.BoolPtr(false)
 				federatedQueryNoticesOptionsModel.SimilarDocumentIds = []string{"testString"}
 				federatedQueryNoticesOptionsModel.SimilarFields = []string{"testString"}
 				federatedQueryNoticesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -14421,7 +14421,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}]}`)
+					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}]}`)
 				}))
 			})
 			It(`Invoke ListCredentials successfully with retries`, func() {
@@ -14477,7 +14477,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}]}`)
+					fmt.Fprintf(res, "%s", `{"credentials": [{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}]}`)
 				}))
 			})
 			It(`Invoke ListCredentials successfully`, func() {
@@ -14624,12 +14624,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.CreateCredentials(createCredentialsOptionsModel)
@@ -14684,7 +14689,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke CreateCredentials successfully with retries`, func() {
@@ -14719,12 +14724,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -14781,7 +14791,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke CreateCredentials successfully`, func() {
@@ -14821,12 +14831,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -14867,12 +14882,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -14934,12 +14954,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the CreateCredentialsOptions model
 				createCredentialsOptionsModel := new(discoveryv1.CreateCredentialsOptions)
 				createCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				createCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				createCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				createCredentialsOptionsModel.Status = core.StringPtr("connected")
+				createCredentialsOptionsModel.Status = statusDetailsModel
 				createCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -15023,7 +15048,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke GetCredentials successfully with retries`, func() {
@@ -15080,7 +15105,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke GetCredentials successfully`, func() {
@@ -15230,13 +15255,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.UpdateCredentials(updateCredentialsOptionsModel)
@@ -15291,7 +15321,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke UpdateCredentials successfully with retries`, func() {
@@ -15326,13 +15356,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -15389,7 +15424,7 @@ var _ = Describe(`DiscoveryV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": "connected"}`)
+					fmt.Fprintf(res, "%s", `{"credential_id": "CredentialID", "source_type": "box", "credential_details": {"credential_type": "oauth2", "client_id": "ClientID", "enterprise_id": "EnterpriseID", "url": "URL", "username": "Username", "organization_url": "OrganizationURL", "site_collection.path": "SiteCollectionPath", "client_secret": "ClientSecret", "public_key_id": "PublicKeyID", "private_key": "PrivateKey", "passphrase": "Passphrase", "password": "Password", "gateway_id": "GatewayID", "source_version": "online", "web_application_url": "WebApplicationURL", "domain": "Domain", "endpoint": "Endpoint", "access_key_id": "AccessKeyID", "secret_access_key": "SecretAccessKey"}, "status": {"authenticated": false, "error_message": "ErrorMessage"}}`)
 				}))
 			})
 			It(`Invoke UpdateCredentials successfully`, func() {
@@ -15429,13 +15464,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -15476,13 +15516,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -15544,13 +15589,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				credentialDetailsModel.AccessKeyID = core.StringPtr("testString")
 				credentialDetailsModel.SecretAccessKey = core.StringPtr("testString")
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				updateCredentialsOptionsModel := new(discoveryv1.UpdateCredentialsOptions)
 				updateCredentialsOptionsModel.EnvironmentID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.CredentialID = core.StringPtr("testString")
 				updateCredentialsOptionsModel.SourceType = core.StringPtr("box")
 				updateCredentialsOptionsModel.CredentialDetails = credentialDetailsModel
-				updateCredentialsOptionsModel.Status = core.StringPtr("connected")
+				updateCredentialsOptionsModel.Status = statusDetailsModel
 				updateCredentialsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -16788,8 +16838,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 			})
 			It(`Invoke NewConfiguration successfully`, func() {
 				name := "testString"
-				model, err := discoveryService.NewConfiguration(name)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewConfiguration(name)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateCollectionOptions successfully`, func() {
@@ -16887,11 +16937,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
 				Expect(segmentSettingsModel).ToNot(BeNil())
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
-				Expect(segmentSettingsModel.Enabled).To(Equal(core.BoolPtr(true)))
-				Expect(segmentSettingsModel.SelectorTags).To(Equal([]string{"testString"}))
+				Expect(segmentSettingsModel.Enabled).To(Equal(core.BoolPtr(false)))
+				Expect(segmentSettingsModel.SelectorTags).To(Equal([]string{"h1", "h2"}))
 				Expect(segmentSettingsModel.AnnotatedFields).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the NormalizationOperation model
@@ -17022,26 +17072,26 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 				Expect(enrichmentModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(enrichmentModel.DestinationField).To(Equal(core.StringPtr("testString")))
 				Expect(enrichmentModel.SourceField).To(Equal(core.StringPtr("testString")))
-				Expect(enrichmentModel.Overwrite).To(Equal(core.BoolPtr(true)))
+				Expect(enrichmentModel.Overwrite).To(Equal(core.BoolPtr(false)))
 				Expect(enrichmentModel.Enrichment).To(Equal(core.StringPtr("testString")))
-				Expect(enrichmentModel.IgnoreDownstreamErrors).To(Equal(core.BoolPtr(true)))
+				Expect(enrichmentModel.IgnoreDownstreamErrors).To(Equal(core.BoolPtr(false)))
 				Expect(enrichmentModel.Options).To(Equal(enrichmentOptionsModel))
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				Expect(sourceScheduleModel).ToNot(BeNil())
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 				Expect(sourceScheduleModel.Enabled).To(Equal(core.BoolPtr(true)))
-				Expect(sourceScheduleModel.TimeZone).To(Equal(core.StringPtr("testString")))
+				Expect(sourceScheduleModel.TimeZone).To(Equal(core.StringPtr("America/New_York")))
 				Expect(sourceScheduleModel.Frequency).To(Equal(core.StringPtr("daily")))
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -17075,19 +17125,19 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(sourceOptionsWebCrawlModel).ToNot(BeNil())
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 				Expect(sourceOptionsWebCrawlModel.URL).To(Equal(core.StringPtr("testString")))
 				Expect(sourceOptionsWebCrawlModel.LimitToStartingHosts).To(Equal(core.BoolPtr(true)))
-				Expect(sourceOptionsWebCrawlModel.CrawlSpeed).To(Equal(core.StringPtr("gentle")))
-				Expect(sourceOptionsWebCrawlModel.AllowUntrustedCertificate).To(Equal(core.BoolPtr(true)))
+				Expect(sourceOptionsWebCrawlModel.CrawlSpeed).To(Equal(core.StringPtr("normal")))
+				Expect(sourceOptionsWebCrawlModel.AllowUntrustedCertificate).To(Equal(core.BoolPtr(false)))
 				Expect(sourceOptionsWebCrawlModel.MaximumHops).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(sourceOptionsWebCrawlModel.RequestTimeout).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(sourceOptionsWebCrawlModel.OverrideRobotsTxt).To(Equal(core.BoolPtr(true)))
+				Expect(sourceOptionsWebCrawlModel.OverrideRobotsTxt).To(Equal(core.BoolPtr(false)))
 				Expect(sourceOptionsWebCrawlModel.Blacklist).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -17191,19 +17241,27 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(credentialDetailsModel.AccessKeyID).To(Equal(core.StringPtr("testString")))
 				Expect(credentialDetailsModel.SecretAccessKey).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				Expect(statusDetailsModel).ToNot(BeNil())
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+				Expect(statusDetailsModel.Authenticated).To(Equal(core.BoolPtr(true)))
+				Expect(statusDetailsModel.ErrorMessage).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the CreateCredentialsOptions model
 				environmentID := "testString"
 				createCredentialsOptionsModel := discoveryService.NewCreateCredentialsOptions(environmentID)
 				createCredentialsOptionsModel.SetEnvironmentID("testString")
 				createCredentialsOptionsModel.SetSourceType("box")
 				createCredentialsOptionsModel.SetCredentialDetails(credentialDetailsModel)
-				createCredentialsOptionsModel.SetStatus("connected")
+				createCredentialsOptionsModel.SetStatus(statusDetailsModel)
 				createCredentialsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCredentialsOptionsModel).ToNot(BeNil())
 				Expect(createCredentialsOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
 				Expect(createCredentialsOptionsModel.SourceType).To(Equal(core.StringPtr("box")))
 				Expect(createCredentialsOptionsModel.CredentialDetails).To(Equal(credentialDetailsModel))
-				Expect(createCredentialsOptionsModel.Status).To(Equal(core.StringPtr("connected")))
+				Expect(createCredentialsOptionsModel.Status).To(Equal(statusDetailsModel))
 				Expect(createCredentialsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateEnvironmentOptions successfully`, func() {
@@ -17532,8 +17590,8 @@ var _ = Describe(`DiscoveryV1`, func() {
 				destinationField := "testString"
 				sourceField := "testString"
 				enrichment := "testString"
-				model, err := discoveryService.NewEnrichment(destinationField, sourceField, enrichment)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewEnrichment(destinationField, sourceField, enrichment)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewEventData successfully`, func() {
@@ -17541,20 +17599,20 @@ var _ = Describe(`DiscoveryV1`, func() {
 				sessionToken := "testString"
 				collectionID := "testString"
 				documentID := "testString"
-				model, err := discoveryService.NewEventData(environmentID, sessionToken, collectionID, documentID)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewEventData(environmentID, sessionToken, collectionID, documentID)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewExpansion successfully`, func() {
 				expandedTerms := []string{"testString"}
-				model, err := discoveryService.NewExpansion(expandedTerms)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewExpansion(expandedTerms)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewExpansions successfully`, func() {
 				expansions := []discoveryv1.Expansion{}
-				model, err := discoveryService.NewExpansions(expansions)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewExpansions(expansions)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewFederatedQueryNoticesOptions successfully`, func() {
@@ -17572,9 +17630,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryNoticesOptionsModel.SetReturn([]string{"testString"})
 				federatedQueryNoticesOptionsModel.SetOffset(int64(38))
 				federatedQueryNoticesOptionsModel.SetSort([]string{"testString"})
-				federatedQueryNoticesOptionsModel.SetHighlight(true)
+				federatedQueryNoticesOptionsModel.SetHighlight(false)
 				federatedQueryNoticesOptionsModel.SetDeduplicateField("testString")
-				federatedQueryNoticesOptionsModel.SetSimilar(true)
+				federatedQueryNoticesOptionsModel.SetSimilar(false)
 				federatedQueryNoticesOptionsModel.SetSimilarDocumentIds([]string{"testString"})
 				federatedQueryNoticesOptionsModel.SetSimilarFields([]string{"testString"})
 				federatedQueryNoticesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
@@ -17589,9 +17647,9 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(federatedQueryNoticesOptionsModel.Return).To(Equal([]string{"testString"}))
 				Expect(federatedQueryNoticesOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(federatedQueryNoticesOptionsModel.Sort).To(Equal([]string{"testString"}))
-				Expect(federatedQueryNoticesOptionsModel.Highlight).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryNoticesOptionsModel.Highlight).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryNoticesOptionsModel.DeduplicateField).To(Equal(core.StringPtr("testString")))
-				Expect(federatedQueryNoticesOptionsModel.Similar).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryNoticesOptionsModel.Similar).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryNoticesOptionsModel.SimilarDocumentIds).To(Equal([]string{"testString"}))
 				Expect(federatedQueryNoticesOptionsModel.SimilarFields).To(Equal([]string{"testString"}))
 				Expect(federatedQueryNoticesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
@@ -17612,17 +17670,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				federatedQueryOptionsModel.SetReturn("testString")
 				federatedQueryOptionsModel.SetOffset(int64(38))
 				federatedQueryOptionsModel.SetSort("testString")
-				federatedQueryOptionsModel.SetHighlight(true)
+				federatedQueryOptionsModel.SetHighlight(false)
 				federatedQueryOptionsModel.SetPassagesFields("testString")
 				federatedQueryOptionsModel.SetPassagesCount(int64(100))
 				federatedQueryOptionsModel.SetPassagesCharacters(int64(50))
-				federatedQueryOptionsModel.SetDeduplicate(true)
+				federatedQueryOptionsModel.SetDeduplicate(false)
 				federatedQueryOptionsModel.SetDeduplicateField("testString")
-				federatedQueryOptionsModel.SetSimilar(true)
+				federatedQueryOptionsModel.SetSimilar(false)
 				federatedQueryOptionsModel.SetSimilarDocumentIds("testString")
 				federatedQueryOptionsModel.SetSimilarFields("testString")
 				federatedQueryOptionsModel.SetBias("testString")
-				federatedQueryOptionsModel.SetXWatsonLoggingOptOut(true)
+				federatedQueryOptionsModel.SetXWatsonLoggingOptOut(false)
 				federatedQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(federatedQueryOptionsModel).ToNot(BeNil())
 				Expect(federatedQueryOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
@@ -17636,17 +17694,17 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(federatedQueryOptionsModel.Return).To(Equal(core.StringPtr("testString")))
 				Expect(federatedQueryOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(federatedQueryOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
-				Expect(federatedQueryOptionsModel.Highlight).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryOptionsModel.Highlight).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryOptionsModel.PassagesFields).To(Equal(core.StringPtr("testString")))
 				Expect(federatedQueryOptionsModel.PassagesCount).To(Equal(core.Int64Ptr(int64(100))))
 				Expect(federatedQueryOptionsModel.PassagesCharacters).To(Equal(core.Int64Ptr(int64(50))))
-				Expect(federatedQueryOptionsModel.Deduplicate).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryOptionsModel.Deduplicate).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryOptionsModel.DeduplicateField).To(Equal(core.StringPtr("testString")))
-				Expect(federatedQueryOptionsModel.Similar).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryOptionsModel.Similar).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryOptionsModel.SimilarDocumentIds).To(Equal(core.StringPtr("testString")))
 				Expect(federatedQueryOptionsModel.SimilarFields).To(Equal(core.StringPtr("testString")))
 				Expect(federatedQueryOptionsModel.Bias).To(Equal(core.StringPtr("testString")))
-				Expect(federatedQueryOptionsModel.XWatsonLoggingOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(federatedQueryOptionsModel.XWatsonLoggingOptOut).To(Equal(core.BoolPtr(false)))
 				Expect(federatedQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetAutocompletionOptions successfully`, func() {
@@ -18023,12 +18081,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryNoticesOptionsModel.SetReturn([]string{"testString"})
 				queryNoticesOptionsModel.SetOffset(int64(38))
 				queryNoticesOptionsModel.SetSort([]string{"testString"})
-				queryNoticesOptionsModel.SetHighlight(true)
+				queryNoticesOptionsModel.SetHighlight(false)
 				queryNoticesOptionsModel.SetPassagesFields([]string{"testString"})
 				queryNoticesOptionsModel.SetPassagesCount(int64(100))
 				queryNoticesOptionsModel.SetPassagesCharacters(int64(50))
 				queryNoticesOptionsModel.SetDeduplicateField("testString")
-				queryNoticesOptionsModel.SetSimilar(true)
+				queryNoticesOptionsModel.SetSimilar(false)
 				queryNoticesOptionsModel.SetSimilarDocumentIds([]string{"testString"})
 				queryNoticesOptionsModel.SetSimilarFields([]string{"testString"})
 				queryNoticesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
@@ -18044,12 +18102,12 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(queryNoticesOptionsModel.Return).To(Equal([]string{"testString"}))
 				Expect(queryNoticesOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(queryNoticesOptionsModel.Sort).To(Equal([]string{"testString"}))
-				Expect(queryNoticesOptionsModel.Highlight).To(Equal(core.BoolPtr(true)))
+				Expect(queryNoticesOptionsModel.Highlight).To(Equal(core.BoolPtr(false)))
 				Expect(queryNoticesOptionsModel.PassagesFields).To(Equal([]string{"testString"}))
 				Expect(queryNoticesOptionsModel.PassagesCount).To(Equal(core.Int64Ptr(int64(100))))
 				Expect(queryNoticesOptionsModel.PassagesCharacters).To(Equal(core.Int64Ptr(int64(50))))
 				Expect(queryNoticesOptionsModel.DeduplicateField).To(Equal(core.StringPtr("testString")))
-				Expect(queryNoticesOptionsModel.Similar).To(Equal(core.BoolPtr(true)))
+				Expect(queryNoticesOptionsModel.Similar).To(Equal(core.BoolPtr(false)))
 				Expect(queryNoticesOptionsModel.SimilarDocumentIds).To(Equal([]string{"testString"}))
 				Expect(queryNoticesOptionsModel.SimilarFields).To(Equal([]string{"testString"}))
 				Expect(queryNoticesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
@@ -18070,18 +18128,18 @@ var _ = Describe(`DiscoveryV1`, func() {
 				queryOptionsModel.SetReturn("testString")
 				queryOptionsModel.SetOffset(int64(38))
 				queryOptionsModel.SetSort("testString")
-				queryOptionsModel.SetHighlight(true)
+				queryOptionsModel.SetHighlight(false)
 				queryOptionsModel.SetPassagesFields("testString")
 				queryOptionsModel.SetPassagesCount(int64(100))
 				queryOptionsModel.SetPassagesCharacters(int64(50))
-				queryOptionsModel.SetDeduplicate(true)
+				queryOptionsModel.SetDeduplicate(false)
 				queryOptionsModel.SetDeduplicateField("testString")
-				queryOptionsModel.SetSimilar(true)
+				queryOptionsModel.SetSimilar(false)
 				queryOptionsModel.SetSimilarDocumentIds("testString")
 				queryOptionsModel.SetSimilarFields("testString")
 				queryOptionsModel.SetBias("testString")
-				queryOptionsModel.SetSpellingSuggestions(true)
-				queryOptionsModel.SetXWatsonLoggingOptOut(true)
+				queryOptionsModel.SetSpellingSuggestions(false)
+				queryOptionsModel.SetXWatsonLoggingOptOut(false)
 				queryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(queryOptionsModel).ToNot(BeNil())
 				Expect(queryOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
@@ -18095,57 +18153,57 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(queryOptionsModel.Return).To(Equal(core.StringPtr("testString")))
 				Expect(queryOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(queryOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
-				Expect(queryOptionsModel.Highlight).To(Equal(core.BoolPtr(true)))
+				Expect(queryOptionsModel.Highlight).To(Equal(core.BoolPtr(false)))
 				Expect(queryOptionsModel.PassagesFields).To(Equal(core.StringPtr("testString")))
 				Expect(queryOptionsModel.PassagesCount).To(Equal(core.Int64Ptr(int64(100))))
 				Expect(queryOptionsModel.PassagesCharacters).To(Equal(core.Int64Ptr(int64(50))))
-				Expect(queryOptionsModel.Deduplicate).To(Equal(core.BoolPtr(true)))
+				Expect(queryOptionsModel.Deduplicate).To(Equal(core.BoolPtr(false)))
 				Expect(queryOptionsModel.DeduplicateField).To(Equal(core.StringPtr("testString")))
-				Expect(queryOptionsModel.Similar).To(Equal(core.BoolPtr(true)))
+				Expect(queryOptionsModel.Similar).To(Equal(core.BoolPtr(false)))
 				Expect(queryOptionsModel.SimilarDocumentIds).To(Equal(core.StringPtr("testString")))
 				Expect(queryOptionsModel.SimilarFields).To(Equal(core.StringPtr("testString")))
 				Expect(queryOptionsModel.Bias).To(Equal(core.StringPtr("testString")))
-				Expect(queryOptionsModel.SpellingSuggestions).To(Equal(core.BoolPtr(true)))
-				Expect(queryOptionsModel.XWatsonLoggingOptOut).To(Equal(core.BoolPtr(true)))
+				Expect(queryOptionsModel.SpellingSuggestions).To(Equal(core.BoolPtr(false)))
+				Expect(queryOptionsModel.XWatsonLoggingOptOut).To(Equal(core.BoolPtr(false)))
 				Expect(queryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewSourceOptionsBuckets successfully`, func() {
 				name := "testString"
-				model, err := discoveryService.NewSourceOptionsBuckets(name)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewSourceOptionsBuckets(name)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSourceOptionsFolder successfully`, func() {
 				ownerUserID := "testString"
 				folderID := "testString"
-				model, err := discoveryService.NewSourceOptionsFolder(ownerUserID, folderID)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewSourceOptionsFolder(ownerUserID, folderID)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSourceOptionsObject successfully`, func() {
 				name := "testString"
-				model, err := discoveryService.NewSourceOptionsObject(name)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewSourceOptionsObject(name)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSourceOptionsSiteColl successfully`, func() {
 				siteCollectionPath := "testString"
-				model, err := discoveryService.NewSourceOptionsSiteColl(siteCollectionPath)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewSourceOptionsSiteColl(siteCollectionPath)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewSourceOptionsWebCrawl successfully`, func() {
 				url := "testString"
-				model, err := discoveryService.NewSourceOptionsWebCrawl(url)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewSourceOptionsWebCrawl(url)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewTokenDictRule successfully`, func() {
 				text := "testString"
 				tokens := []string{"testString"}
 				partOfSpeech := "testString"
-				model, err := discoveryService.NewTokenDictRule(text, tokens, partOfSpeech)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewTokenDictRule(text, tokens, partOfSpeech)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateCollectionOptions successfully`, func() {
@@ -18244,11 +18302,11 @@ var _ = Describe(`DiscoveryV1`, func() {
 				// Construct an instance of the SegmentSettings model
 				segmentSettingsModel := new(discoveryv1.SegmentSettings)
 				Expect(segmentSettingsModel).ToNot(BeNil())
-				segmentSettingsModel.Enabled = core.BoolPtr(true)
-				segmentSettingsModel.SelectorTags = []string{"testString"}
+				segmentSettingsModel.Enabled = core.BoolPtr(false)
+				segmentSettingsModel.SelectorTags = []string{"h1", "h2"}
 				segmentSettingsModel.AnnotatedFields = []string{"testString"}
-				Expect(segmentSettingsModel.Enabled).To(Equal(core.BoolPtr(true)))
-				Expect(segmentSettingsModel.SelectorTags).To(Equal([]string{"testString"}))
+				Expect(segmentSettingsModel.Enabled).To(Equal(core.BoolPtr(false)))
+				Expect(segmentSettingsModel.SelectorTags).To(Equal([]string{"h1", "h2"}))
 				Expect(segmentSettingsModel.AnnotatedFields).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the NormalizationOperation model
@@ -18379,26 +18437,26 @@ var _ = Describe(`DiscoveryV1`, func() {
 				enrichmentModel.Description = core.StringPtr("testString")
 				enrichmentModel.DestinationField = core.StringPtr("testString")
 				enrichmentModel.SourceField = core.StringPtr("testString")
-				enrichmentModel.Overwrite = core.BoolPtr(true)
+				enrichmentModel.Overwrite = core.BoolPtr(false)
 				enrichmentModel.Enrichment = core.StringPtr("testString")
-				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(true)
+				enrichmentModel.IgnoreDownstreamErrors = core.BoolPtr(false)
 				enrichmentModel.Options = enrichmentOptionsModel
 				Expect(enrichmentModel.Description).To(Equal(core.StringPtr("testString")))
 				Expect(enrichmentModel.DestinationField).To(Equal(core.StringPtr("testString")))
 				Expect(enrichmentModel.SourceField).To(Equal(core.StringPtr("testString")))
-				Expect(enrichmentModel.Overwrite).To(Equal(core.BoolPtr(true)))
+				Expect(enrichmentModel.Overwrite).To(Equal(core.BoolPtr(false)))
 				Expect(enrichmentModel.Enrichment).To(Equal(core.StringPtr("testString")))
-				Expect(enrichmentModel.IgnoreDownstreamErrors).To(Equal(core.BoolPtr(true)))
+				Expect(enrichmentModel.IgnoreDownstreamErrors).To(Equal(core.BoolPtr(false)))
 				Expect(enrichmentModel.Options).To(Equal(enrichmentOptionsModel))
 
 				// Construct an instance of the SourceSchedule model
 				sourceScheduleModel := new(discoveryv1.SourceSchedule)
 				Expect(sourceScheduleModel).ToNot(BeNil())
 				sourceScheduleModel.Enabled = core.BoolPtr(true)
-				sourceScheduleModel.TimeZone = core.StringPtr("testString")
+				sourceScheduleModel.TimeZone = core.StringPtr("America/New_York")
 				sourceScheduleModel.Frequency = core.StringPtr("daily")
 				Expect(sourceScheduleModel.Enabled).To(Equal(core.BoolPtr(true)))
-				Expect(sourceScheduleModel.TimeZone).To(Equal(core.StringPtr("testString")))
+				Expect(sourceScheduleModel.TimeZone).To(Equal(core.StringPtr("America/New_York")))
 				Expect(sourceScheduleModel.Frequency).To(Equal(core.StringPtr("daily")))
 
 				// Construct an instance of the SourceOptionsFolder model
@@ -18432,19 +18490,19 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(sourceOptionsWebCrawlModel).ToNot(BeNil())
 				sourceOptionsWebCrawlModel.URL = core.StringPtr("testString")
 				sourceOptionsWebCrawlModel.LimitToStartingHosts = core.BoolPtr(true)
-				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("gentle")
-				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.CrawlSpeed = core.StringPtr("normal")
+				sourceOptionsWebCrawlModel.AllowUntrustedCertificate = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.MaximumHops = core.Int64Ptr(int64(38))
 				sourceOptionsWebCrawlModel.RequestTimeout = core.Int64Ptr(int64(38))
-				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(true)
+				sourceOptionsWebCrawlModel.OverrideRobotsTxt = core.BoolPtr(false)
 				sourceOptionsWebCrawlModel.Blacklist = []string{"testString"}
 				Expect(sourceOptionsWebCrawlModel.URL).To(Equal(core.StringPtr("testString")))
 				Expect(sourceOptionsWebCrawlModel.LimitToStartingHosts).To(Equal(core.BoolPtr(true)))
-				Expect(sourceOptionsWebCrawlModel.CrawlSpeed).To(Equal(core.StringPtr("gentle")))
-				Expect(sourceOptionsWebCrawlModel.AllowUntrustedCertificate).To(Equal(core.BoolPtr(true)))
+				Expect(sourceOptionsWebCrawlModel.CrawlSpeed).To(Equal(core.StringPtr("normal")))
+				Expect(sourceOptionsWebCrawlModel.AllowUntrustedCertificate).To(Equal(core.BoolPtr(false)))
 				Expect(sourceOptionsWebCrawlModel.MaximumHops).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(sourceOptionsWebCrawlModel.RequestTimeout).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(sourceOptionsWebCrawlModel.OverrideRobotsTxt).To(Equal(core.BoolPtr(true)))
+				Expect(sourceOptionsWebCrawlModel.OverrideRobotsTxt).To(Equal(core.BoolPtr(false)))
 				Expect(sourceOptionsWebCrawlModel.Blacklist).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the SourceOptionsBuckets model
@@ -18551,6 +18609,14 @@ var _ = Describe(`DiscoveryV1`, func() {
 				Expect(credentialDetailsModel.AccessKeyID).To(Equal(core.StringPtr("testString")))
 				Expect(credentialDetailsModel.SecretAccessKey).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the StatusDetails model
+				statusDetailsModel := new(discoveryv1.StatusDetails)
+				Expect(statusDetailsModel).ToNot(BeNil())
+				statusDetailsModel.Authenticated = core.BoolPtr(true)
+				statusDetailsModel.ErrorMessage = core.StringPtr("testString")
+				Expect(statusDetailsModel.Authenticated).To(Equal(core.BoolPtr(true)))
+				Expect(statusDetailsModel.ErrorMessage).To(Equal(core.StringPtr("testString")))
+
 				// Construct an instance of the UpdateCredentialsOptions model
 				environmentID := "testString"
 				credentialID := "testString"
@@ -18559,14 +18625,14 @@ var _ = Describe(`DiscoveryV1`, func() {
 				updateCredentialsOptionsModel.SetCredentialID("testString")
 				updateCredentialsOptionsModel.SetSourceType("box")
 				updateCredentialsOptionsModel.SetCredentialDetails(credentialDetailsModel)
-				updateCredentialsOptionsModel.SetStatus("connected")
+				updateCredentialsOptionsModel.SetStatus(statusDetailsModel)
 				updateCredentialsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateCredentialsOptionsModel).ToNot(BeNil())
 				Expect(updateCredentialsOptionsModel.EnvironmentID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCredentialsOptionsModel.CredentialID).To(Equal(core.StringPtr("testString")))
 				Expect(updateCredentialsOptionsModel.SourceType).To(Equal(core.StringPtr("box")))
 				Expect(updateCredentialsOptionsModel.CredentialDetails).To(Equal(credentialDetailsModel))
-				Expect(updateCredentialsOptionsModel.Status).To(Equal(core.StringPtr("connected")))
+				Expect(updateCredentialsOptionsModel.Status).To(Equal(statusDetailsModel))
 				Expect(updateCredentialsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateDocumentOptions successfully`, func() {

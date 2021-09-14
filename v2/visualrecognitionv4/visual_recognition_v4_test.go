@@ -4540,8 +4540,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 			It(`Invoke NewFileWithMetadata successfully`, func() {
 				data := CreateMockReader("This is a mock file.")
-				model, err := visualRecognitionService.NewFileWithMetadata(data)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewFileWithMetadata(data)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewGetCollectionOptions successfully`, func() {
@@ -4654,8 +4654,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				left := int64(38)
 				width := int64(38)
 				height := int64(38)
-				model, err := visualRecognitionService.NewLocation(top, left, width, height)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewLocation(top, left, width, height)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewObjectTrainingStatus successfully`, func() {
@@ -4665,8 +4665,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 				latestFailed := true
 				rscnnReady := true
 				description := "testString"
-				model, err := visualRecognitionService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rscnnReady, description)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewObjectTrainingStatus(ready, inProgress, dataChanged, latestFailed, rscnnReady, description)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewTrainOptions successfully`, func() {
@@ -4722,8 +4722,8 @@ var _ = Describe(`VisualRecognitionV4`, func() {
 			})
 			It(`Invoke NewUpdateObjectMetadata successfully`, func() {
 				object := "testString"
-				model, err := visualRecognitionService.NewUpdateObjectMetadata(object)
-				Expect(model).ToNot(BeNil())
+				_model, err := visualRecognitionService.NewUpdateObjectMetadata(object)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateObjectMetadataOptions successfully`, func() {

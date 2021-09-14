@@ -224,16 +224,16 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the EntitiesOptions model
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -245,8 +245,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the SemanticRolesOptions model
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -260,7 +260,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
 
@@ -298,7 +298,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.Clean = core.BoolPtr(true)
 				analyzeOptionsModel.Xpath = core.StringPtr("testString")
 				analyzeOptionsModel.FallbackToRaw = core.BoolPtr(true)
-				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(true)
+				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(false)
 				analyzeOptionsModel.Language = core.StringPtr("testString")
 				analyzeOptionsModel.LimitTextCharacters = core.Int64Ptr(int64(38))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -384,16 +384,16 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the EntitiesOptions model
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -405,8 +405,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the SemanticRolesOptions model
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -420,7 +420,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
 
@@ -458,7 +458,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.Clean = core.BoolPtr(true)
 				analyzeOptionsModel.Xpath = core.StringPtr("testString")
 				analyzeOptionsModel.FallbackToRaw = core.BoolPtr(true)
-				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(true)
+				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(false)
 				analyzeOptionsModel.Language = core.StringPtr("testString")
 				analyzeOptionsModel.LimitTextCharacters = core.Int64Ptr(int64(38))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -551,16 +551,16 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the EntitiesOptions model
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -572,8 +572,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the SemanticRolesOptions model
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -587,7 +587,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
 
@@ -625,7 +625,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.Clean = core.BoolPtr(true)
 				analyzeOptionsModel.Xpath = core.StringPtr("testString")
 				analyzeOptionsModel.FallbackToRaw = core.BoolPtr(true)
-				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(true)
+				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(false)
 				analyzeOptionsModel.Language = core.StringPtr("testString")
 				analyzeOptionsModel.LimitTextCharacters = core.Int64Ptr(int64(38))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -662,16 +662,16 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the EntitiesOptions model
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -683,8 +683,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the SemanticRolesOptions model
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -698,7 +698,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
 
@@ -736,7 +736,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.Clean = core.BoolPtr(true)
 				analyzeOptionsModel.Xpath = core.StringPtr("testString")
 				analyzeOptionsModel.FallbackToRaw = core.BoolPtr(true)
-				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(true)
+				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(false)
 				analyzeOptionsModel.Language = core.StringPtr("testString")
 				analyzeOptionsModel.LimitTextCharacters = core.Int64Ptr(int64(38))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -794,16 +794,16 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the EntitiesOptions model
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -815,8 +815,8 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the SemanticRolesOptions model
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -830,7 +830,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
 
@@ -868,7 +868,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.Clean = core.BoolPtr(true)
 				analyzeOptionsModel.Xpath = core.StringPtr("testString")
 				analyzeOptionsModel.FallbackToRaw = core.BoolPtr(true)
-				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(true)
+				analyzeOptionsModel.ReturnAnalyzedText = core.BoolPtr(false)
 				analyzeOptionsModel.Language = core.StringPtr("testString")
 				analyzeOptionsModel.LimitTextCharacters = core.Int64Ptr(int64(38))
 				analyzeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
@@ -3977,7 +3977,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"models": [{"models": [{"name": "Name", "user_metadata": {"mapKey": {"anyKey": "anyValue"}}, "language": "Language", "description": "Description", "model_version": "ModelVersion", "workspace_id": "WorkspaceID", "version_description": "VersionDescription", "features": ["Features"], "status": "starting", "model_id": "ModelID", "created": "2019-01-01T12:00:00.000Z", "notices": [{"message": "Message"}], "last_trained": "2019-01-01T12:00:00.000Z", "last_deployed": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"models": [{"name": "Name", "user_metadata": {"mapKey": {"anyKey": "anyValue"}}, "language": "Language", "description": "Description", "model_version": "ModelVersion", "workspace_id": "WorkspaceID", "version_description": "VersionDescription", "features": ["Features"], "status": "starting", "model_id": "ModelID", "created": "2019-01-01T12:00:00.000Z", "notices": [{"message": "Message"}], "last_trained": "2019-01-01T12:00:00.000Z", "last_deployed": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke ListClassificationsModels successfully with retries`, func() {
@@ -4032,7 +4032,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"models": [{"models": [{"name": "Name", "user_metadata": {"mapKey": {"anyKey": "anyValue"}}, "language": "Language", "description": "Description", "model_version": "ModelVersion", "workspace_id": "WorkspaceID", "version_description": "VersionDescription", "features": ["Features"], "status": "starting", "model_id": "ModelID", "created": "2019-01-01T12:00:00.000Z", "notices": [{"message": "Message"}], "last_trained": "2019-01-01T12:00:00.000Z", "last_deployed": "2019-01-01T12:00:00.000Z"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"models": [{"name": "Name", "user_metadata": {"mapKey": {"anyKey": "anyValue"}}, "language": "Language", "description": "Description", "model_version": "ModelVersion", "workspace_id": "WorkspaceID", "version_description": "VersionDescription", "features": ["Features"], "status": "starting", "model_id": "ModelID", "created": "2019-01-01T12:00:00.000Z", "notices": [{"message": "Message"}], "last_trained": "2019-01-01T12:00:00.000Z", "last_deployed": "2019-01-01T12:00:00.000Z"}]}`)
 				}))
 			})
 			It(`Invoke ListClassificationsModels successfully`, func() {
@@ -4860,25 +4860,25 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				entitiesOptionsModel := new(naturallanguageunderstandingv1.EntitiesOptions)
 				Expect(entitiesOptionsModel).ToNot(BeNil())
 				entitiesOptionsModel.Limit = core.Int64Ptr(int64(250))
-				entitiesOptionsModel.Mentions = core.BoolPtr(true)
+				entitiesOptionsModel.Mentions = core.BoolPtr(false)
 				entitiesOptionsModel.Model = core.StringPtr("testString")
-				entitiesOptionsModel.Sentiment = core.BoolPtr(true)
-				entitiesOptionsModel.Emotion = core.BoolPtr(true)
+				entitiesOptionsModel.Sentiment = core.BoolPtr(false)
+				entitiesOptionsModel.Emotion = core.BoolPtr(false)
 				Expect(entitiesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(250))))
-				Expect(entitiesOptionsModel.Mentions).To(Equal(core.BoolPtr(true)))
+				Expect(entitiesOptionsModel.Mentions).To(Equal(core.BoolPtr(false)))
 				Expect(entitiesOptionsModel.Model).To(Equal(core.StringPtr("testString")))
-				Expect(entitiesOptionsModel.Sentiment).To(Equal(core.BoolPtr(true)))
-				Expect(entitiesOptionsModel.Emotion).To(Equal(core.BoolPtr(true)))
+				Expect(entitiesOptionsModel.Sentiment).To(Equal(core.BoolPtr(false)))
+				Expect(entitiesOptionsModel.Emotion).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the KeywordsOptions model
 				keywordsOptionsModel := new(naturallanguageunderstandingv1.KeywordsOptions)
 				Expect(keywordsOptionsModel).ToNot(BeNil())
 				keywordsOptionsModel.Limit = core.Int64Ptr(int64(250))
-				keywordsOptionsModel.Sentiment = core.BoolPtr(true)
-				keywordsOptionsModel.Emotion = core.BoolPtr(true)
+				keywordsOptionsModel.Sentiment = core.BoolPtr(false)
+				keywordsOptionsModel.Emotion = core.BoolPtr(false)
 				Expect(keywordsOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(250))))
-				Expect(keywordsOptionsModel.Sentiment).To(Equal(core.BoolPtr(true)))
-				Expect(keywordsOptionsModel.Emotion).To(Equal(core.BoolPtr(true)))
+				Expect(keywordsOptionsModel.Sentiment).To(Equal(core.BoolPtr(false)))
+				Expect(keywordsOptionsModel.Emotion).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the MetadataOptions model
 				metadataOptionsModel := new(naturallanguageunderstandingv1.MetadataOptions)
@@ -4894,11 +4894,11 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				semanticRolesOptionsModel := new(naturallanguageunderstandingv1.SemanticRolesOptions)
 				Expect(semanticRolesOptionsModel).ToNot(BeNil())
 				semanticRolesOptionsModel.Limit = core.Int64Ptr(int64(38))
-				semanticRolesOptionsModel.Keywords = core.BoolPtr(true)
-				semanticRolesOptionsModel.Entities = core.BoolPtr(true)
+				semanticRolesOptionsModel.Keywords = core.BoolPtr(false)
+				semanticRolesOptionsModel.Entities = core.BoolPtr(false)
 				Expect(semanticRolesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(38))))
-				Expect(semanticRolesOptionsModel.Keywords).To(Equal(core.BoolPtr(true)))
-				Expect(semanticRolesOptionsModel.Entities).To(Equal(core.BoolPtr(true)))
+				Expect(semanticRolesOptionsModel.Keywords).To(Equal(core.BoolPtr(false)))
+				Expect(semanticRolesOptionsModel.Entities).To(Equal(core.BoolPtr(false)))
 
 				// Construct an instance of the SentimentOptions model
 				sentimentOptionsModel := new(naturallanguageunderstandingv1.SentimentOptions)
@@ -4919,10 +4919,10 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				// Construct an instance of the CategoriesOptions model
 				categoriesOptionsModel := new(naturallanguageunderstandingv1.CategoriesOptions)
 				Expect(categoriesOptionsModel).ToNot(BeNil())
-				categoriesOptionsModel.Explanation = core.BoolPtr(true)
+				categoriesOptionsModel.Explanation = core.BoolPtr(false)
 				categoriesOptionsModel.Limit = core.Int64Ptr(int64(10))
 				categoriesOptionsModel.Model = core.StringPtr("testString")
-				Expect(categoriesOptionsModel.Explanation).To(Equal(core.BoolPtr(true)))
+				Expect(categoriesOptionsModel.Explanation).To(Equal(core.BoolPtr(false)))
 				Expect(categoriesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(10))))
 				Expect(categoriesOptionsModel.Model).To(Equal(core.StringPtr("testString")))
 
@@ -4980,7 +4980,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				analyzeOptionsModel.SetClean(true)
 				analyzeOptionsModel.SetXpath("testString")
 				analyzeOptionsModel.SetFallbackToRaw(true)
-				analyzeOptionsModel.SetReturnAnalyzedText(true)
+				analyzeOptionsModel.SetReturnAnalyzedText(false)
 				analyzeOptionsModel.SetLanguage("testString")
 				analyzeOptionsModel.SetLimitTextCharacters(int64(38))
 				analyzeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
@@ -4992,7 +4992,7 @@ var _ = Describe(`NaturalLanguageUnderstandingV1`, func() {
 				Expect(analyzeOptionsModel.Clean).To(Equal(core.BoolPtr(true)))
 				Expect(analyzeOptionsModel.Xpath).To(Equal(core.StringPtr("testString")))
 				Expect(analyzeOptionsModel.FallbackToRaw).To(Equal(core.BoolPtr(true)))
-				Expect(analyzeOptionsModel.ReturnAnalyzedText).To(Equal(core.BoolPtr(true)))
+				Expect(analyzeOptionsModel.ReturnAnalyzedText).To(Equal(core.BoolPtr(false)))
 				Expect(analyzeOptionsModel.Language).To(Equal(core.StringPtr("testString")))
 				Expect(analyzeOptionsModel.LimitTextCharacters).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(analyzeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))

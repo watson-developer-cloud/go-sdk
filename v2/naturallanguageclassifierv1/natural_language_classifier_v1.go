@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package naturallanguageclassifierv1 : Operations and models for the NaturalLanguageClassifierV1 service
@@ -35,18 +35,18 @@ import (
 	common "github.com/watson-developer-cloud/go-sdk/v2/common"
 )
 
-// NaturalLanguageClassifierV1 : IBM Watson&trade; Language Classifier is discontinued.
-// On 9 August 2021, IBM announced the deprecation of the Natural Language Classifier service.
-// The service will no longer be available from 8 August 2022. As of 9 September 2021,
-// you will not be able to create new instances. Existing instances will be supported until 8 August 2022.
-// Any instance that still exists on that date will be deleted.
+// NaturalLanguageClassifierV1 : On 9 August 2021, IBM announced the deprecation of IBM Watson&trade; Natural Language
+// Classifier. As of 9 September 2021, you cannot create new instances. However, existing instances are supported until
+// 8 August 2022. The service will no longer be available on 8 August 2022.<br/><br/>As an alternative, consider
+// migrating to IBM Watson Natural Language Understanding. For more information, see [Migrating to Natural Language
+// Understanding](https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-migrating).
 // {: deprecated}
-
-//Natural Language Classifier uses machine learning algorithms to
-// return the top matching predefined classes for short text input. You create and train a classifier to connect
-// predefined classes to example texts so that the service can apply those classes to new inputs.
 //
-// Version: 1.0
+// Natural Language Classifier uses machine learning algorithms to return the top matching predefined classes for short
+// text input. You create and train a classifier to connect predefined classes to example texts so that the service can
+// apply those classes to new inputs.
+//
+// API Version: 1.0
 // See: https://cloud.ibm.com/docs/natural-language-classifier
 type NaturalLanguageClassifierV1 struct {
 	Service *core.BaseService
@@ -721,10 +721,10 @@ func UnmarshalClassifierList(m map[string]json.RawMessage, result interface{}) (
 // ClassifyCollectionOptions : The ClassifyCollection options.
 type ClassifyCollectionOptions struct {
 	// Classifier ID to use.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// The submitted phrases.
-	Collection []ClassifyInput `validate:"required"`
+	Collection []ClassifyInput `json:"collection" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -739,15 +739,15 @@ func (*NaturalLanguageClassifierV1) NewClassifyCollectionOptions(classifierID st
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *ClassifyCollectionOptions) SetClassifierID(classifierID string) *ClassifyCollectionOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *ClassifyCollectionOptions) SetClassifierID(classifierID string) *ClassifyCollectionOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetCollection : Allow user to set Collection
-func (options *ClassifyCollectionOptions) SetCollection(collection []ClassifyInput) *ClassifyCollectionOptions {
-	options.Collection = collection
-	return options
+func (_options *ClassifyCollectionOptions) SetCollection(collection []ClassifyInput) *ClassifyCollectionOptions {
+	_options.Collection = collection
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -763,11 +763,11 @@ type ClassifyInput struct {
 }
 
 // NewClassifyInput : Instantiate ClassifyInput (Generic Model Constructor)
-func (*NaturalLanguageClassifierV1) NewClassifyInput(text string) (model *ClassifyInput, err error) {
-	model = &ClassifyInput{
+func (*NaturalLanguageClassifierV1) NewClassifyInput(text string) (_model *ClassifyInput, err error) {
+	_model = &ClassifyInput{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -785,10 +785,10 @@ func UnmarshalClassifyInput(m map[string]json.RawMessage, result interface{}) (e
 // ClassifyOptions : The Classify options.
 type ClassifyOptions struct {
 	// Classifier ID to use.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// The submitted phrase. The maximum length is 2048 characters.
-	Text *string `validate:"required"`
+	Text *string `json:"text" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -803,15 +803,15 @@ func (*NaturalLanguageClassifierV1) NewClassifyOptions(classifierID string, text
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *ClassifyOptions) SetClassifierID(classifierID string) *ClassifyOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *ClassifyOptions) SetClassifierID(classifierID string) *ClassifyOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetText : Allow user to set Text
-func (options *ClassifyOptions) SetText(text string) *ClassifyOptions {
-	options.Text = core.StringPtr(text)
-	return options
+func (_options *ClassifyOptions) SetText(text string) *ClassifyOptions {
+	_options.Text = core.StringPtr(text)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -858,12 +858,12 @@ type CreateClassifierOptions struct {
 	//
 	// Supported languages are English (`en`), Arabic (`ar`), French (`fr`), German, (`de`), Italian (`it`), Japanese
 	// (`ja`), Korean (`ko`), Brazilian Portuguese (`pt`), and Spanish (`es`).
-	TrainingMetadata io.ReadCloser `validate:"required"`
+	TrainingMetadata io.ReadCloser `json:"-" validate:"required"`
 
 	// Training data in CSV format. Each text value must have at least one class. The data can include up to 3,000 classes
 	// and 20,000 records. For details, see [Data
 	// preparation](https://cloud.ibm.com/docs/natural-language-classifier?topic=natural-language-classifier-using-your-data).
-	TrainingData io.ReadCloser `validate:"required"`
+	TrainingData io.ReadCloser `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -878,15 +878,15 @@ func (*NaturalLanguageClassifierV1) NewCreateClassifierOptions(trainingMetadata 
 }
 
 // SetTrainingMetadata : Allow user to set TrainingMetadata
-func (options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata io.ReadCloser) *CreateClassifierOptions {
-	options.TrainingMetadata = trainingMetadata
-	return options
+func (_options *CreateClassifierOptions) SetTrainingMetadata(trainingMetadata io.ReadCloser) *CreateClassifierOptions {
+	_options.TrainingMetadata = trainingMetadata
+	return _options
 }
 
 // SetTrainingData : Allow user to set TrainingData
-func (options *CreateClassifierOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassifierOptions {
-	options.TrainingData = trainingData
-	return options
+func (_options *CreateClassifierOptions) SetTrainingData(trainingData io.ReadCloser) *CreateClassifierOptions {
+	_options.TrainingData = trainingData
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -898,7 +898,7 @@ func (options *CreateClassifierOptions) SetHeaders(param map[string]string) *Cre
 // DeleteClassifierOptions : The DeleteClassifier options.
 type DeleteClassifierOptions struct {
 	// Classifier ID to delete.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -912,9 +912,9 @@ func (*NaturalLanguageClassifierV1) NewDeleteClassifierOptions(classifierID stri
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *DeleteClassifierOptions) SetClassifierID(classifierID string) *DeleteClassifierOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -926,7 +926,7 @@ func (options *DeleteClassifierOptions) SetHeaders(param map[string]string) *Del
 // GetClassifierOptions : The GetClassifier options.
 type GetClassifierOptions struct {
 	// Classifier ID to query.
-	ClassifierID *string `validate:"required,ne="`
+	ClassifierID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -940,9 +940,9 @@ func (*NaturalLanguageClassifierV1) NewGetClassifierOptions(classifierID string)
 }
 
 // SetClassifierID : Allow user to set ClassifierID
-func (options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
-	options.ClassifierID = core.StringPtr(classifierID)
-	return options
+func (_options *GetClassifierOptions) SetClassifierID(classifierID string) *GetClassifierOptions {
+	_options.ClassifierID = core.StringPtr(classifierID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers

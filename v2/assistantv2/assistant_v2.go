@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package assistantv2 : Operations and models for the AssistantV2 service
@@ -39,13 +39,13 @@ import (
 // The Assistant v2 API provides runtime methods your client application can use to send user input to an assistant and
 // receive a response.
 //
-// Version: 2.0
+// API Version: 2.0
 // See: https://cloud.ibm.com/docs/assistant
 type AssistantV2 struct {
 	Service *core.BaseService
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-09-24`.
+	// `2021-06-14`.
 	Version *string
 }
 
@@ -62,7 +62,7 @@ type AssistantV2Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the API version you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2020-09-24`.
+	// `2021-06-14`.
 	Version *string `validate:"required"`
 }
 
@@ -677,10 +677,10 @@ func UnmarshalAgentAvailabilityMessage(m map[string]json.RawMessage, result inte
 type BulkClassifyOptions struct {
 	// Unique identifier of the skill. To find the skill ID in the Watson Assistant user interface, open the skill settings
 	// and click **API Details**.
-	SkillID *string `validate:"required,ne="`
+	SkillID *string `json:"-" validate:"required,ne="`
 
 	// An array of input utterances to classify.
-	Input []BulkClassifyUtterance
+	Input []BulkClassifyUtterance `json:"input,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -694,15 +694,15 @@ func (*AssistantV2) NewBulkClassifyOptions(skillID string) *BulkClassifyOptions 
 }
 
 // SetSkillID : Allow user to set SkillID
-func (options *BulkClassifyOptions) SetSkillID(skillID string) *BulkClassifyOptions {
-	options.SkillID = core.StringPtr(skillID)
-	return options
+func (_options *BulkClassifyOptions) SetSkillID(skillID string) *BulkClassifyOptions {
+	_options.SkillID = core.StringPtr(skillID)
+	return _options
 }
 
 // SetInput : Allow user to set Input
-func (options *BulkClassifyOptions) SetInput(input []BulkClassifyUtterance) *BulkClassifyOptions {
-	options.Input = input
-	return options
+func (_options *BulkClassifyOptions) SetInput(input []BulkClassifyUtterance) *BulkClassifyOptions {
+	_options.Input = input
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -766,11 +766,11 @@ type BulkClassifyUtterance struct {
 }
 
 // NewBulkClassifyUtterance : Instantiate BulkClassifyUtterance (Generic Model Constructor)
-func (*AssistantV2) NewBulkClassifyUtterance(text string) (model *BulkClassifyUtterance, err error) {
-	model = &BulkClassifyUtterance{
+func (*AssistantV2) NewBulkClassifyUtterance(text string) (_model *BulkClassifyUtterance, err error) {
+	_model = &BulkClassifyUtterance{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -795,11 +795,11 @@ type CaptureGroup struct {
 }
 
 // NewCaptureGroup : Instantiate CaptureGroup (Generic Model Constructor)
-func (*AssistantV2) NewCaptureGroup(group string) (model *CaptureGroup, err error) {
-	model = &CaptureGroup{
+func (*AssistantV2) NewCaptureGroup(group string) (_model *CaptureGroup, err error) {
+	_model = &CaptureGroup{
 		Group: core.StringPtr(group),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -879,7 +879,7 @@ type CreateSessionOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `validate:"required,ne="`
+	AssistantID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -893,9 +893,9 @@ func (*AssistantV2) NewCreateSessionOptions(assistantID string) *CreateSessionOp
 }
 
 // SetAssistantID : Allow user to set AssistantID
-func (options *CreateSessionOptions) SetAssistantID(assistantID string) *CreateSessionOptions {
-	options.AssistantID = core.StringPtr(assistantID)
-	return options
+func (_options *CreateSessionOptions) SetAssistantID(assistantID string) *CreateSessionOptions {
+	_options.AssistantID = core.StringPtr(assistantID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -911,10 +911,10 @@ type DeleteSessionOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `validate:"required,ne="`
+	AssistantID *string `json:"-" validate:"required,ne="`
 
 	// Unique identifier of the session.
-	SessionID *string `validate:"required,ne="`
+	SessionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -929,15 +929,15 @@ func (*AssistantV2) NewDeleteSessionOptions(assistantID string, sessionID string
 }
 
 // SetAssistantID : Allow user to set AssistantID
-func (options *DeleteSessionOptions) SetAssistantID(assistantID string) *DeleteSessionOptions {
-	options.AssistantID = core.StringPtr(assistantID)
-	return options
+func (_options *DeleteSessionOptions) SetAssistantID(assistantID string) *DeleteSessionOptions {
+	_options.AssistantID = core.StringPtr(assistantID)
+	return _options
 }
 
 // SetSessionID : Allow user to set SessionID
-func (options *DeleteSessionOptions) SetSessionID(sessionID string) *DeleteSessionOptions {
-	options.SessionID = core.StringPtr(sessionID)
-	return options
+func (_options *DeleteSessionOptions) SetSessionID(sessionID string) *DeleteSessionOptions {
+	_options.SessionID = core.StringPtr(sessionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -949,7 +949,7 @@ func (options *DeleteSessionOptions) SetHeaders(param map[string]string) *Delete
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -963,9 +963,9 @@ func (*AssistantV2) NewDeleteUserDataOptions(customerID string) *DeleteUserDataO
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1221,21 +1221,21 @@ type ListLogsOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `validate:"required,ne="`
+	AssistantID *string `json:"-" validate:"required,ne="`
 
 	// How to sort the returned log events. You can sort by **request_timestamp**. To reverse the sort order, prefix the
 	// parameter value with a minus sign (`-`).
-	Sort *string
+	Sort *string `json:"-"`
 
 	// A cacheable parameter that limits the results to those matching the specified filter. For more information, see the
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-filter-reference#filter-reference).
-	Filter *string
+	Filter *string `json:"-"`
 
 	// The number of records to return in each page of results.
-	PageLimit *int64
+	PageLimit *int64 `json:"-"`
 
 	// A token identifying the page of results to retrieve.
-	Cursor *string
+	Cursor *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -1249,33 +1249,33 @@ func (*AssistantV2) NewListLogsOptions(assistantID string) *ListLogsOptions {
 }
 
 // SetAssistantID : Allow user to set AssistantID
-func (options *ListLogsOptions) SetAssistantID(assistantID string) *ListLogsOptions {
-	options.AssistantID = core.StringPtr(assistantID)
-	return options
+func (_options *ListLogsOptions) SetAssistantID(assistantID string) *ListLogsOptions {
+	_options.AssistantID = core.StringPtr(assistantID)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *ListLogsOptions) SetSort(sort string) *ListLogsOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *ListLogsOptions) SetFilter(filter string) *ListLogsOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetPageLimit : Allow user to set PageLimit
-func (options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
-	options.PageLimit = core.Int64Ptr(pageLimit)
-	return options
+func (_options *ListLogsOptions) SetPageLimit(pageLimit int64) *ListLogsOptions {
+	_options.PageLimit = core.Int64Ptr(pageLimit)
+	return _options
 }
 
 // SetCursor : Allow user to set Cursor
-func (options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
-	options.Cursor = core.StringPtr(cursor)
-	return options
+func (_options *ListLogsOptions) SetCursor(cursor string) *ListLogsOptions {
+	_options.Cursor = core.StringPtr(cursor)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -1591,11 +1591,26 @@ type MessageContextGlobalSystem struct {
 	// can be useful for simulating past or future times for testing purposes, or when analyzing documents such as news
 	// articles.
 	//
-	// This value must be a UTC time value formatted according to ISO 8601 (for example, `2019-06-26T12:00:00Z` for noon on
-	// 26 June 2019.
+	// This value must be a UTC time value formatted according to ISO 8601 (for example, `2021-06-26T12:00:00Z` for noon
+	// UTC on 26 June 2021).
 	//
 	// This property is included only if the new system entities are enabled for the skill.
 	ReferenceTime *string `json:"reference_time,omitempty"`
+
+	// The time at which the session started. With the stateful `message` method, the start time is always present, and is
+	// set by the service based on the time the session was created. With the stateless `message` method, the start time is
+	// set by the service in the response to the first message, and should be returned as part of the context with each
+	// subsequent message in the session.
+	//
+	// This value is a UTC time value formatted according to ISO 8601 (for example, `2021-06-26T12:00:00Z` for noon UTC on
+	// 26 June 2021).
+	SessionStartTime *string `json:"session_start_time,omitempty"`
+
+	// An encoded string that represents the configuration state of the assistant at the beginning of the conversation. If
+	// you are using the stateless `message` method, save this value and then send it in the context of the subsequent
+	// message request to avoid disruptions if there are configuration changes during the conversation (such as a change to
+	// a skill the assistant uses).
+	State *string `json:"state,omitempty"`
 }
 
 // Constants associated with the MessageContextGlobalSystem.Locale property.
@@ -1645,6 +1660,14 @@ func UnmarshalMessageContextGlobalSystem(m map[string]json.RawMessage, result in
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalPrimitive(m, "session_start_time", &obj.SessionStartTime)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "state", &obj.State)
+	if err != nil {
+		return
+	}
 	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
 	return
 }
@@ -1691,6 +1714,14 @@ func (o *MessageContextSkillSystem) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of MessageContextSkillSystem
+func (o *MessageContextSkillSystem) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of MessageContextSkillSystem
@@ -1768,7 +1799,12 @@ func UnmarshalMessageContextStateless(m map[string]json.RawMessage, result inter
 
 // MessageInput : An input object that includes the input text.
 type MessageInput struct {
-	// The type of user input. Currently, only text input is supported.
+	// The type of the message:
+	//
+	// - `text`: The user input is processed normally by the assistant.
+	// - `search`: Only search results are returned. (Any dialog or actions skill is bypassed.)
+	//
+	// **Note:** A `search` message results in an error if no search skill is configured for the assistant.
 	MessageType *string `json:"message_type,omitempty"`
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters.
@@ -1790,9 +1826,15 @@ type MessageInput struct {
 }
 
 // Constants associated with the MessageInput.MessageType property.
-// The type of user input. Currently, only text input is supported.
+// The type of the message:
+//
+// - `text`: The user input is processed normally by the assistant.
+// - `search`: Only search results are returned. (Any dialog or actions skill is bypassed.)
+//
+// **Note:** A `search` message results in an error if no search skill is configured for the assistant.
 const (
-	MessageInputMessageTypeTextConst = "text"
+	MessageInputMessageTypeSearchConst = "search"
+	MessageInputMessageTypeTextConst   = "text"
 )
 
 // UnmarshalMessageInput unmarshals an instance of MessageInput from the specified map of raw messages.
@@ -1961,7 +2003,12 @@ func UnmarshalMessageInputOptionsStateless(m map[string]json.RawMessage, result 
 
 // MessageInputStateless : An input object that includes the input text.
 type MessageInputStateless struct {
-	// The type of user input. Currently, only text input is supported.
+	// The type of the message:
+	//
+	// - `text`: The user input is processed normally by the assistant.
+	// - `search`: Only search results are returned. (Any dialog or actions skill is bypassed.)
+	//
+	// **Note:** A `search` message results in an error if no search skill is configured for the assistant.
 	MessageType *string `json:"message_type,omitempty"`
 
 	// The text of the user input. This string cannot contain carriage return, newline, or tab characters.
@@ -1983,9 +2030,15 @@ type MessageInputStateless struct {
 }
 
 // Constants associated with the MessageInputStateless.MessageType property.
-// The type of user input. Currently, only text input is supported.
+// The type of the message:
+//
+// - `text`: The user input is processed normally by the assistant.
+// - `search`: Only search results are returned. (Any dialog or actions skill is bypassed.)
+//
+// **Note:** A `search` message results in an error if no search skill is configured for the assistant.
 const (
-	MessageInputStatelessMessageTypeTextConst = "text"
+	MessageInputStatelessMessageTypeSearchConst = "search"
+	MessageInputStatelessMessageTypeTextConst   = "text"
 )
 
 // UnmarshalMessageInputStateless unmarshals an instance of MessageInputStateless from the specified map of raw messages.
@@ -2026,19 +2079,19 @@ type MessageOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `validate:"required,ne="`
+	AssistantID *string `json:"-" validate:"required,ne="`
 
 	// Unique identifier of the session.
-	SessionID *string `validate:"required,ne="`
+	SessionID *string `json:"-" validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInput
+	Input *MessageInput `json:"input,omitempty"`
 
 	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
 	// accessed by dialog nodes. The context is stored by the assistant on a per-session basis.
 	//
 	// **Note:** The total size of the context data stored for a stateful session cannot exceed 100KB.
-	Context *MessageContext
+	Context *MessageContext `json:"context,omitempty"`
 
 	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
 	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
@@ -2048,7 +2101,7 @@ type MessageOptions struct {
 	//
 	// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id** is
 	// specified in both locations, the value specified at the root is used.
-	UserID *string
+	UserID *string `json:"user_id,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2063,33 +2116,33 @@ func (*AssistantV2) NewMessageOptions(assistantID string, sessionID string) *Mes
 }
 
 // SetAssistantID : Allow user to set AssistantID
-func (options *MessageOptions) SetAssistantID(assistantID string) *MessageOptions {
-	options.AssistantID = core.StringPtr(assistantID)
-	return options
+func (_options *MessageOptions) SetAssistantID(assistantID string) *MessageOptions {
+	_options.AssistantID = core.StringPtr(assistantID)
+	return _options
 }
 
 // SetSessionID : Allow user to set SessionID
-func (options *MessageOptions) SetSessionID(sessionID string) *MessageOptions {
-	options.SessionID = core.StringPtr(sessionID)
-	return options
+func (_options *MessageOptions) SetSessionID(sessionID string) *MessageOptions {
+	_options.SessionID = core.StringPtr(sessionID)
+	return _options
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
-	options.Input = input
-	return options
+func (_options *MessageOptions) SetInput(input *MessageInput) *MessageOptions {
+	_options.Input = input
+	return _options
 }
 
 // SetContext : Allow user to set Context
-func (options *MessageOptions) SetContext(context *MessageContext) *MessageOptions {
-	options.Context = context
-	return options
+func (_options *MessageOptions) SetContext(context *MessageContext) *MessageOptions {
+	_options.Context = context
+	return _options
 }
 
 // SetUserID : Allow user to set UserID
-func (options *MessageOptions) SetUserID(userID string) *MessageOptions {
-	options.UserID = core.StringPtr(userID)
-	return options
+func (_options *MessageOptions) SetUserID(userID string) *MessageOptions {
+	_options.UserID = core.StringPtr(userID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2368,17 +2421,17 @@ type MessageStatelessOptions struct {
 	// [documentation](https://cloud.ibm.com/docs/assistant?topic=assistant-assistant-add#assistant-add-task).
 	//
 	// **Note:** Currently, the v2 API does not support creating assistants.
-	AssistantID *string `validate:"required,ne="`
+	AssistantID *string `json:"-" validate:"required,ne="`
 
 	// An input object that includes the input text.
-	Input *MessageInputStateless
+	Input *MessageInputStateless `json:"input,omitempty"`
 
 	// Context data for the conversation. You can use this property to set or modify context variables, which can also be
 	// accessed by dialog nodes. The context is not stored by the assistant. To maintain session state, include the context
 	// from the previous response.
 	//
 	// **Note:** The total size of the context data for a stateless session cannot exceed 250KB.
-	Context *MessageContextStateless
+	Context *MessageContextStateless `json:"context,omitempty"`
 
 	// A string value that identifies the user who is interacting with the assistant. The client must provide a unique
 	// identifier for each individual end user who accesses the application. For user-based plans, this user ID is used to
@@ -2388,7 +2441,7 @@ type MessageStatelessOptions struct {
 	//
 	// **Note:** This property is the same as the **user_id** property in the global system context. If **user_id** is
 	// specified in both locations in a message request, the value specified at the root is used.
-	UserID *string
+	UserID *string `json:"user_id,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2402,27 +2455,27 @@ func (*AssistantV2) NewMessageStatelessOptions(assistantID string) *MessageState
 }
 
 // SetAssistantID : Allow user to set AssistantID
-func (options *MessageStatelessOptions) SetAssistantID(assistantID string) *MessageStatelessOptions {
-	options.AssistantID = core.StringPtr(assistantID)
-	return options
+func (_options *MessageStatelessOptions) SetAssistantID(assistantID string) *MessageStatelessOptions {
+	_options.AssistantID = core.StringPtr(assistantID)
+	return _options
 }
 
 // SetInput : Allow user to set Input
-func (options *MessageStatelessOptions) SetInput(input *MessageInputStateless) *MessageStatelessOptions {
-	options.Input = input
-	return options
+func (_options *MessageStatelessOptions) SetInput(input *MessageInputStateless) *MessageStatelessOptions {
+	_options.Input = input
+	return _options
 }
 
 // SetContext : Allow user to set Context
-func (options *MessageStatelessOptions) SetContext(context *MessageContextStateless) *MessageStatelessOptions {
-	options.Context = context
-	return options
+func (_options *MessageStatelessOptions) SetContext(context *MessageContextStateless) *MessageStatelessOptions {
+	_options.Context = context
+	return _options
 }
 
 // SetUserID : Allow user to set UserID
-func (options *MessageStatelessOptions) SetUserID(userID string) *MessageStatelessOptions {
-	options.UserID = core.StringPtr(userID)
-	return options
+func (_options *MessageStatelessOptions) SetUserID(userID string) *MessageStatelessOptions {
+	_options.UserID = core.StringPtr(userID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2455,7 +2508,7 @@ type RuntimeEntity struct {
 
 	// An array of zero-based character offsets that indicate where the detected entity values begin and end in the input
 	// text.
-	Location []int64 `json:"location" validate:"required"`
+	Location []int64 `json:"location,omitempty"`
 
 	// The term in the input text that was recognized as an entity value.
 	Value *string `json:"value" validate:"required"`
@@ -2463,7 +2516,10 @@ type RuntimeEntity struct {
 	// A decimal percentage that represents Watson's confidence in the recognized entity.
 	Confidence *float64 `json:"confidence,omitempty"`
 
-	// Any metadata for the entity.
+	// **Deprecated.** Any metadata for the entity.
+	//
+	// Beginning with the `2021-06-14` API version, the `metadata` property is no longer returned. For information about
+	// system entities recognized in the user input, see the `interpretation` property.
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// The recognized capture groups for the entity, as defined by the entity pattern.
@@ -2489,13 +2545,12 @@ type RuntimeEntity struct {
 }
 
 // NewRuntimeEntity : Instantiate RuntimeEntity (Generic Model Constructor)
-func (*AssistantV2) NewRuntimeEntity(entity string, location []int64, value string) (model *RuntimeEntity, err error) {
-	model = &RuntimeEntity{
-		Entity:   core.StringPtr(entity),
-		Location: location,
-		Value:    core.StringPtr(value),
+func (*AssistantV2) NewRuntimeEntity(entity string, value string) (_model *RuntimeEntity, err error) {
+	_model = &RuntimeEntity{
+		Entity: core.StringPtr(entity),
+		Value:  core.StringPtr(value),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2829,12 +2884,12 @@ type RuntimeIntent struct {
 }
 
 // NewRuntimeIntent : Instantiate RuntimeIntent (Generic Model Constructor)
-func (*AssistantV2) NewRuntimeIntent(intent string, confidence float64) (model *RuntimeIntent, err error) {
-	model = &RuntimeIntent{
+func (*AssistantV2) NewRuntimeIntent(intent string, confidence float64) (_model *RuntimeIntent, err error) {
+	_model = &RuntimeIntent{
 		Intent:     core.StringPtr(intent),
 		Confidence: core.Float64Ptr(confidence),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2882,7 +2937,7 @@ type RuntimeResponseGeneric struct {
 	// Whether to send a "user is typing" event during the pause.
 	Typing *bool `json:"typing,omitempty"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source,omitempty"`
 
 	// The title to show before the response.
@@ -2890,6 +2945,9 @@ type RuntimeResponseGeneric struct {
 
 	// The description to show with the the response.
 	Description *string `json:"description,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 
 	// The preferred type of control to display.
 	Preference *string `json:"preference,omitempty"`
@@ -3011,6 +3069,13 @@ type SearchResult struct {
 	// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
 	// tags.
 	Highlight *SearchResultHighlight `json:"highlight,omitempty"`
+
+	// An array specifying segments of text within the result that were identified as direct answers to the search query.
+	// Currently, only the single answer with the highest confidence (if any) is returned.
+	//
+	// **Note:** This property uses the answer finding beta feature, and is available only if the search skill is connected
+	// to a Discovery v2 service instance.
+	Answers []SearchResultAnswer `json:"answers,omitempty"`
 }
 
 // UnmarshalSearchResult unmarshals an instance of SearchResult from the specified map of raw messages.
@@ -3037,6 +3102,34 @@ func UnmarshalSearchResult(m map[string]json.RawMessage, result interface{}) (er
 		return
 	}
 	err = core.UnmarshalModel(m, "highlight", &obj.Highlight, UnmarshalSearchResultHighlight)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "answers", &obj.Answers, UnmarshalSearchResultAnswer)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// SearchResultAnswer : An object specifing a segment of text that was identified as a direct answer to the search query.
+type SearchResultAnswer struct {
+	// The text of the answer.
+	Text *string `json:"text" validate:"required"`
+
+	// The confidence score for the answer, as returned by the Discovery service.
+	Confidence *float64 `json:"confidence" validate:"required"`
+}
+
+// UnmarshalSearchResultAnswer unmarshals an instance of SearchResultAnswer from the specified map of raw messages.
+func UnmarshalSearchResultAnswer(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SearchResultAnswer)
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
 	if err != nil {
 		return
 	}
@@ -3069,6 +3162,14 @@ func (o *SearchResultHighlight) SetProperty(key string, value []string) {
 		o.additionalProperties = make(map[string][]string)
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of SearchResultHighlight
+func (o *SearchResultHighlight) SetProperties(m map[string][]string) {
+	o.additionalProperties = make(map[string][]string)
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of SearchResultHighlight
@@ -3433,7 +3534,7 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// application or channel.
 	ResponseType *string `json:"response_type" validate:"required"`
 
-	// The URL of the image.
+	// The `https:` URL of the image.
 	Source *string `json:"source" validate:"required"`
 
 	// The title to show before the response.
@@ -3445,6 +3546,9 @@ type RuntimeResponseGenericRuntimeResponseTypeImage struct {
 	// An array of objects specifying channels for which the response is intended. If **channels** is present, the response
 	// is intended for a built-in integration and should not be handled by an API client.
 	Channels []ResponseGenericChannel `json:"channels,omitempty"`
+
+	// Descriptive text that can be used for screen readers or other situations where the image cannot be seen.
+	AltText *string `json:"alt_text,omitempty"`
 }
 
 func (*RuntimeResponseGenericRuntimeResponseTypeImage) isaRuntimeResponseGeneric() bool {
@@ -3471,6 +3575,10 @@ func UnmarshalRuntimeResponseGenericRuntimeResponseTypeImage(m map[string]json.R
 		return
 	}
 	err = core.UnmarshalModel(m, "channels", &obj.Channels, UnmarshalResponseGenericChannel)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "alt_text", &obj.AltText)
 	if err != nil {
 		return
 	}

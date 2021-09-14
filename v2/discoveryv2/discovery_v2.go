@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package discoveryv2 : Operations and models for the DiscoveryV2 service
@@ -41,13 +41,13 @@ import (
 // structured and unstructured data with pre-enriched content, and use a simplified query language to eliminate the need
 // for manual filtering of results.
 //
-// Version: 2.0
+// API Version: 2.0
 // See: https://cloud.ibm.com/docs/discovery-data
 type DiscoveryV2 struct {
 	Service *core.BaseService
 
 	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2019-11-22`.
+	// `2020-08-30`.
 	Version *string
 }
 
@@ -64,7 +64,7 @@ type DiscoveryV2Options struct {
 	Authenticator core.Authenticator
 
 	// Release date of the version of the API you want to use. Specify dates in YYYY-MM-DD format. The current version is
-	// `2019-11-22`.
+	// `2020-08-30`.
 	Version *string `validate:"required"`
 }
 
@@ -983,30 +983,31 @@ func (discovery *DiscoveryV2) GetComponentSettingsWithContext(ctx context.Contex
 // AddDocument : Add a document
 // Add a document to a collection with optional metadata.
 //
-//  Returns immediately after the system has accepted the document for processing.
+// Returns immediately after the system has accepted the document for processing.
 //
 //   * The user must provide document content, metadata, or both. If the request is missing both document content and
 // metadata, it is rejected.
 //
-//   * The user can set the **Content-Type** parameter on the **file** part to indicate the media type of the document.
-// If the **Content-Type** parameter is missing or is one of the generic media types (for example,
+//   * You can set the **Content-Type** parameter on the **file** part to indicate the media type of the document. If
+// the **Content-Type** parameter is missing or is one of the generic media types (for example,
 // `application/octet-stream`), then the service attempts to automatically detect the document's media type.
 //
-//   * The following field names are reserved and will be filtered out if present after normalization: `id`, `score`,
+//   * The following field names are reserved and are filtered out if present after normalization: `id`, `score`,
 // `highlight`, and any field with the prefix of: `_`, `+`, or `-`
 //
 //   * Fields with empty name values after normalization are filtered out before indexing.
 //
 //   * Fields that contain the following characters after normalization are filtered out before indexing: `#` and `,`
 //
-//   If the document is uploaded to a collection that has it's data shared with another collection, the
+//   If the document is uploaded to a collection that shares its data with another collection, the
 // **X-Watson-Discovery-Force** header must be set to `true`.
 //
-//  **Note:** Documents can be added with a specific **document_id** by using the
-// **_/v2/projects/{project_id}/collections/{collection_id}/documents** method.
+// **Note:** You can assign an ID to a document that you add by appending the ID to the endpoint
+// (`/v2/projects/{project_id}/collections/{collection_id}/documents/{document_id}`). If a document already exists with
+// the specified ID, it is replaced.
 //
-// **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
-// a collection that connects to an external source such as Microsoft SharePoint.
+// **Note:** This operation works with a file upload collection. It cannot be used to modify a collection that crawls an
+// external data source.
 func (discovery *DiscoveryV2) AddDocument(addDocumentOptions *AddDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	return discovery.AddDocumentWithContext(context.Background(), addDocumentOptions)
 }
@@ -1087,7 +1088,7 @@ func (discovery *DiscoveryV2) AddDocumentWithContext(ctx context.Context, addDoc
 // Replace an existing document or add a document with a specified **document_id**. Starts ingesting a document with
 // optional metadata.
 //
-// If the document is uploaded to a collection that has it's data shared with another collection, the
+// If the document is uploaded to a collection that shares its data with another collection, the
 // **X-Watson-Discovery-Force** header must be set to `true`.
 //
 // **Note:** When uploading a new document with this method it automatically replaces any document stored with the same
@@ -1096,7 +1097,7 @@ func (discovery *DiscoveryV2) AddDocumentWithContext(ctx context.Context, addDoc
 // **Note:** This operation only works on collections created to accept direct file uploads. It cannot be used to modify
 // a collection that connects to an external source such as Microsoft SharePoint.
 //
-// **Note:** If an uploaded document is segmented, all segments will be overwritten, even if the updated version of the
+// **Note:** If an uploaded document is segmented, all segments are overwritten, even if the updated version of the
 // document has fewer segments.
 func (discovery *DiscoveryV2) UpdateDocument(updateDocumentOptions *UpdateDocumentOptions) (result *DocumentAccepted, response *core.DetailedResponse, err error) {
 	return discovery.UpdateDocumentWithContext(context.Background(), updateDocumentOptions)
@@ -1633,11 +1634,11 @@ func (discovery *DiscoveryV2) DeleteTrainingQueryWithContext(ctx context.Context
 }
 
 // AnalyzeDocument : Analyze a Document
-// Process a document using the specified collection's settings and return it for realtime use.
+// Process a document and return it for realtime use. Supports JSON files only.
 //
-// **Note:** Documents processed using this method are not added to the specified collection.
+// The document is processed according to the collection's configuration settings but is not stored in the collection.
 //
-// **Note:** This method is only supported on IBM Cloud Pak for Data instances of Discovery.
+// **Note:** This method is supported on installed instances of Discovery only.
 func (discovery *DiscoveryV2) AnalyzeDocument(analyzeDocumentOptions *AnalyzeDocumentOptions) (result *AnalyzedDocument, response *core.DetailedResponse, err error) {
 	return discovery.AnalyzeDocumentWithContext(context.Background(), analyzeDocumentOptions)
 }
@@ -1712,7 +1713,8 @@ func (discovery *DiscoveryV2) AnalyzeDocumentWithContext(ctx context.Context, an
 }
 
 // ListEnrichments : List Enrichments
-// List the enrichments available to this project.
+// Lists the enrichments available to this project. The *Part of Speech* and *Sentiment of Phrases* enrichments might be
+// listed, but are reserved for internal use only.
 func (discovery *DiscoveryV2) ListEnrichments(listEnrichmentsOptions *ListEnrichmentsOptions) (result *Enrichments, response *core.DetailedResponse, err error) {
 	return discovery.ListEnrichmentsWithContext(context.Background(), listEnrichmentsOptions)
 }
@@ -1774,7 +1776,7 @@ func (discovery *DiscoveryV2) ListEnrichmentsWithContext(ctx context.Context, li
 }
 
 // CreateEnrichment : Create an enrichment
-// Create an enrichment for use with the specified project/.
+// Create an enrichment for use with the specified project.
 func (discovery *DiscoveryV2) CreateEnrichment(createEnrichmentOptions *CreateEnrichmentOptions) (result *Enrichment, response *core.DetailedResponse, err error) {
 	return discovery.CreateEnrichmentWithContext(context.Background(), createEnrichmentOptions)
 }
@@ -2404,22 +2406,21 @@ func (discovery *DiscoveryV2) DeleteUserDataWithContext(ctx context.Context, del
 
 // AddDocumentOptions : The AddDocument options.
 type AddDocumentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
-	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 32 MB.
-	// The maximum supported file size when testing a configuration is 1 MB. Files larger than the supported size are
-	// rejected.
-	File io.ReadCloser
+	// The content of the document to ingest. For maximum supported file size limits, see [the
+	// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-collections#collections-doc-limits).
+	File io.ReadCloser `json:"-"`
 
 	// The filename for file.
-	Filename *string
+	Filename *string `json:"-"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
 	//
@@ -2428,11 +2429,11 @@ type AddDocumentOptions struct {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string
+	Metadata *string `json:"-"`
 
 	// When `true`, the uploaded document is added to the collection even if the data for that collection is shared with
 	// other collections.
-	XWatsonDiscoveryForce *bool
+	XWatsonDiscoveryForce *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2447,45 +2448,45 @@ func (*DiscoveryV2) NewAddDocumentOptions(projectID string, collectionID string)
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *AddDocumentOptions) SetProjectID(projectID string) *AddDocumentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *AddDocumentOptions) SetProjectID(projectID string) *AddDocumentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AddDocumentOptions) SetCollectionID(collectionID string) *AddDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AddDocumentOptions) SetCollectionID(collectionID string) *AddDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *AddDocumentOptions) SetFile(file io.ReadCloser) *AddDocumentOptions {
-	options.File = file
-	return options
+func (_options *AddDocumentOptions) SetFile(file io.ReadCloser) *AddDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *AddDocumentOptions) SetFilename(filename string) *AddDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *AddDocumentOptions) SetFilename(filename string) *AddDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *AddDocumentOptions) SetFileContentType(fileContentType string) *AddDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *AddDocumentOptions) SetFileContentType(fileContentType string) *AddDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
+func (_options *AddDocumentOptions) SetMetadata(metadata string) *AddDocumentOptions {
+	_options.Metadata = core.StringPtr(metadata)
+	return _options
 }
 
 // SetXWatsonDiscoveryForce : Allow user to set XWatsonDiscoveryForce
-func (options *AddDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *AddDocumentOptions {
-	options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
-	return options
+func (_options *AddDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *AddDocumentOptions {
+	_options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2496,22 +2497,21 @@ func (options *AddDocumentOptions) SetHeaders(param map[string]string) *AddDocum
 
 // AnalyzeDocumentOptions : The AnalyzeDocument options.
 type AnalyzeDocumentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
-	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 32 MB.
-	// The maximum supported file size when testing a configuration is 1 MB. Files larger than the supported size are
-	// rejected.
-	File io.ReadCloser
+	// The content of the document to ingest. For maximum supported file size limits, see [the
+	// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-collections#collections-doc-limits).
+	File io.ReadCloser `json:"-"`
 
 	// The filename for file.
-	Filename *string
+	Filename *string `json:"-"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
 	//
@@ -2520,7 +2520,7 @@ type AnalyzeDocumentOptions struct {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string
+	Metadata *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2535,39 +2535,39 @@ func (*DiscoveryV2) NewAnalyzeDocumentOptions(projectID string, collectionID str
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *AnalyzeDocumentOptions) SetProjectID(projectID string) *AnalyzeDocumentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *AnalyzeDocumentOptions) SetProjectID(projectID string) *AnalyzeDocumentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *AnalyzeDocumentOptions) SetCollectionID(collectionID string) *AnalyzeDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *AnalyzeDocumentOptions) SetCollectionID(collectionID string) *AnalyzeDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *AnalyzeDocumentOptions) SetFile(file io.ReadCloser) *AnalyzeDocumentOptions {
-	options.File = file
-	return options
+func (_options *AnalyzeDocumentOptions) SetFile(file io.ReadCloser) *AnalyzeDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *AnalyzeDocumentOptions) SetFilename(filename string) *AnalyzeDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *AnalyzeDocumentOptions) SetFilename(filename string) *AnalyzeDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *AnalyzeDocumentOptions) SetFileContentType(fileContentType string) *AnalyzeDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *AnalyzeDocumentOptions) SetFileContentType(fileContentType string) *AnalyzeDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *AnalyzeDocumentOptions) SetMetadata(metadata string) *AnalyzeDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
+func (_options *AnalyzeDocumentOptions) SetMetadata(metadata string) *AnalyzeDocumentOptions {
+	_options.Metadata = core.StringPtr(metadata)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -2615,6 +2615,14 @@ func (o *AnalyzedResult) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of AnalyzedResult
+func (o *AnalyzedResult) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of AnalyzedResult
@@ -2709,11 +2717,11 @@ type CollectionDetails struct {
 }
 
 // NewCollectionDetails : Instantiate CollectionDetails (Generic Model Constructor)
-func (*DiscoveryV2) NewCollectionDetails(name string) (model *CollectionDetails, err error) {
-	model = &CollectionDetails{
+func (*DiscoveryV2) NewCollectionDetails(name string) (_model *CollectionDetails, err error) {
+	_model = &CollectionDetails{
 		Name: core.StringPtr(name),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -2754,6 +2762,9 @@ type CollectionEnrichment struct {
 	EnrichmentID *string `json:"enrichment_id,omitempty"`
 
 	// An array of field names that the enrichment is applied to.
+	//
+	// If you apply an enrichment to a field from a JSON file, the data is converted to an array automatically, even if the
+	// field contains a single value.
 	Fields []string `json:"fields,omitempty"`
 }
 
@@ -2948,20 +2959,20 @@ func UnmarshalComponentSettingsResponse(m map[string]json.RawMessage, result int
 
 // CreateCollectionOptions : The CreateCollection options.
 type CreateCollectionOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The name of the collection.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// A description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// The language of the collection.
-	Language *string
+	Language *string `json:"language,omitempty"`
 
 	// An array of enrichments that are applied to this collection.
-	Enrichments []CollectionEnrichment
+	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -2976,33 +2987,33 @@ func (*DiscoveryV2) NewCreateCollectionOptions(projectID string, name string) *C
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *CreateCollectionOptions) SetProjectID(projectID string) *CreateCollectionOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *CreateCollectionOptions) SetProjectID(projectID string) *CreateCollectionOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateCollectionOptions) SetName(name string) *CreateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *CreateCollectionOptions) SetDescription(description string) *CreateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetLanguage : Allow user to set Language
-func (options *CreateCollectionOptions) SetLanguage(language string) *CreateCollectionOptions {
-	options.Language = core.StringPtr(language)
-	return options
+func (_options *CreateCollectionOptions) SetLanguage(language string) *CreateCollectionOptions {
+	_options.Language = core.StringPtr(language)
+	return _options
 }
 
 // SetEnrichments : Allow user to set Enrichments
-func (options *CreateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *CreateCollectionOptions {
-	options.Enrichments = enrichments
-	return options
+func (_options *CreateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *CreateCollectionOptions {
+	_options.Enrichments = enrichments
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3022,7 +3033,8 @@ type CreateEnrichment struct {
 	// The type of this enrichment.
 	Type *string `json:"type,omitempty"`
 
-	// A object that contains options for the current enrichment.
+	// An object that contains options for the current enrichment. Starting with version `2020-08-30`, the enrichment
+	// options are not included in responses from the List Enrichments method.
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
@@ -3061,14 +3073,14 @@ func UnmarshalCreateEnrichment(m map[string]json.RawMessage, result interface{})
 
 // CreateEnrichmentOptions : The CreateEnrichment options.
 type CreateEnrichmentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Information about a specific enrichment.
-	Enrichment *CreateEnrichment `validate:"required"`
+	Enrichment *CreateEnrichment `json:"-" validate:"required"`
 
 	// The enrichment file to upload.
-	File io.ReadCloser
+	File io.ReadCloser `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3083,21 +3095,21 @@ func (*DiscoveryV2) NewCreateEnrichmentOptions(projectID string, enrichment *Cre
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *CreateEnrichmentOptions) SetProjectID(projectID string) *CreateEnrichmentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *CreateEnrichmentOptions) SetProjectID(projectID string) *CreateEnrichmentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetEnrichment : Allow user to set Enrichment
-func (options *CreateEnrichmentOptions) SetEnrichment(enrichment *CreateEnrichment) *CreateEnrichmentOptions {
-	options.Enrichment = enrichment
-	return options
+func (_options *CreateEnrichmentOptions) SetEnrichment(enrichment *CreateEnrichment) *CreateEnrichmentOptions {
+	_options.Enrichment = enrichment
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *CreateEnrichmentOptions) SetFile(file io.ReadCloser) *CreateEnrichmentOptions {
-	options.File = file
-	return options
+func (_options *CreateEnrichmentOptions) SetFile(file io.ReadCloser) *CreateEnrichmentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3109,25 +3121,38 @@ func (options *CreateEnrichmentOptions) SetHeaders(param map[string]string) *Cre
 // CreateProjectOptions : The CreateProject options.
 type CreateProjectOptions struct {
 	// The human readable name of this project.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
-	// The project type of this project.
-	Type *string `validate:"required"`
+	// The type of project.
+	//
+	// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+	// project.
+	//
+	// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+	// installed deployments only.
+	Type *string `json:"type" validate:"required"`
 
 	// Default query parameters for this project.
-	DefaultQueryParameters *DefaultQueryParams
+	DefaultQueryParameters *DefaultQueryParams `json:"default_query_parameters,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
 
 // Constants associated with the CreateProjectOptions.Type property.
-// The project type of this project.
+// The type of project.
+//
+// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+// project.
+//
+// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+// installed deployments only.
 const (
-	CreateProjectOptionsTypeAnswerRetrievalConst   = "answer_retrieval"
-	CreateProjectOptionsTypeContentMiningConst     = "content_mining"
-	CreateProjectOptionsTypeDocumentRetrievalConst = "document_retrieval"
-	CreateProjectOptionsTypeOtherConst             = "other"
+	CreateProjectOptionsTypeContentIntelligenceConst  = "content_intelligence"
+	CreateProjectOptionsTypeContentMiningConst        = "content_mining"
+	CreateProjectOptionsTypeConversationalSearchConst = "conversational_search"
+	CreateProjectOptionsTypeDocumentRetrievalConst    = "document_retrieval"
+	CreateProjectOptionsTypeOtherConst                = "other"
 )
 
 // NewCreateProjectOptions : Instantiate CreateProjectOptions
@@ -3139,21 +3164,21 @@ func (*DiscoveryV2) NewCreateProjectOptions(name string, typeVar string) *Create
 }
 
 // SetName : Allow user to set Name
-func (options *CreateProjectOptions) SetName(name string) *CreateProjectOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *CreateProjectOptions) SetName(name string) *CreateProjectOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetType : Allow user to set Type
-func (options *CreateProjectOptions) SetType(typeVar string) *CreateProjectOptions {
-	options.Type = core.StringPtr(typeVar)
-	return options
+func (_options *CreateProjectOptions) SetType(typeVar string) *CreateProjectOptions {
+	_options.Type = core.StringPtr(typeVar)
+	return _options
 }
 
 // SetDefaultQueryParameters : Allow user to set DefaultQueryParameters
-func (options *CreateProjectOptions) SetDefaultQueryParameters(defaultQueryParameters *DefaultQueryParams) *CreateProjectOptions {
-	options.DefaultQueryParameters = defaultQueryParameters
-	return options
+func (_options *CreateProjectOptions) SetDefaultQueryParameters(defaultQueryParameters *DefaultQueryParams) *CreateProjectOptions {
+	_options.DefaultQueryParameters = defaultQueryParameters
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3164,17 +3189,17 @@ func (options *CreateProjectOptions) SetHeaders(param map[string]string) *Create
 
 // CreateTrainingQueryOptions : The CreateTrainingQuery options.
 type CreateTrainingQueryOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The natural text query for the training query.
-	NaturalLanguageQuery *string `validate:"required"`
+	NaturalLanguageQuery *string `json:"natural_language_query" validate:"required"`
 
 	// Array of training examples.
-	Examples []TrainingExample `validate:"required"`
+	Examples []TrainingExample `json:"examples" validate:"required"`
 
 	// The filter used on the collection before the **natural_language_query** is applied.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3190,27 +3215,27 @@ func (*DiscoveryV2) NewCreateTrainingQueryOptions(projectID string, naturalLangu
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *CreateTrainingQueryOptions) SetProjectID(projectID string) *CreateTrainingQueryOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *CreateTrainingQueryOptions) SetProjectID(projectID string) *CreateTrainingQueryOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *CreateTrainingQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *CreateTrainingQueryOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *CreateTrainingQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *CreateTrainingQueryOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetExamples : Allow user to set Examples
-func (options *CreateTrainingQueryOptions) SetExamples(examples []TrainingExample) *CreateTrainingQueryOptions {
-	options.Examples = examples
-	return options
+func (_options *CreateTrainingQueryOptions) SetExamples(examples []TrainingExample) *CreateTrainingQueryOptions {
+	_options.Examples = examples
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *CreateTrainingQueryOptions) SetFilter(filter string) *CreateTrainingQueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *CreateTrainingQueryOptions) SetFilter(filter string) *CreateTrainingQueryOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3233,7 +3258,7 @@ type DefaultQueryParams struct {
 	// A string representing the default aggregation query for the project.
 	Aggregation *string `json:"aggregation,omitempty"`
 
-	// Object that contains suggested refinement settings.
+	// Object that contains suggested refinement settings. Available with Premium plans only.
 	SuggestedRefinements *DefaultQueryParamsSuggestedRefinements `json:"suggested_refinements,omitempty"`
 
 	// When `true`, a spelling suggestions for the query are returned by default.
@@ -3352,9 +3377,9 @@ func UnmarshalDefaultQueryParamsPassages(m map[string]json.RawMessage, result in
 	return
 }
 
-// DefaultQueryParamsSuggestedRefinements : Object that contains suggested refinement settings.
+// DefaultQueryParamsSuggestedRefinements : Object that contains suggested refinement settings. Available with Premium plans only.
 type DefaultQueryParamsSuggestedRefinements struct {
-	// When `true`, a suggested refinements for the query are returned by default.
+	// When `true`, suggested refinements for the query are returned by default.
 	Enabled *bool `json:"enabled,omitempty"`
 
 	// The number of suggested refinements to return by default.
@@ -3409,11 +3434,11 @@ func UnmarshalDefaultQueryParamsTableResults(m map[string]json.RawMessage, resul
 
 // DeleteCollectionOptions : The DeleteCollection options.
 type DeleteCollectionOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3428,15 +3453,15 @@ func (*DiscoveryV2) NewDeleteCollectionOptions(projectID string, collectionID st
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteCollectionOptions) SetProjectID(projectID string) *DeleteCollectionOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteCollectionOptions) SetProjectID(projectID string) *DeleteCollectionOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteCollectionOptions) SetCollectionID(collectionID string) *DeleteCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3447,18 +3472,18 @@ func (options *DeleteCollectionOptions) SetHeaders(param map[string]string) *Del
 
 // DeleteDocumentOptions : The DeleteDocument options.
 type DeleteDocumentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
 	// When `true`, the uploaded document is added to the collection even if the data for that collection is shared with
 	// other collections.
-	XWatsonDiscoveryForce *bool
+	XWatsonDiscoveryForce *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3474,27 +3499,27 @@ func (*DiscoveryV2) NewDeleteDocumentOptions(projectID string, collectionID stri
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteDocumentOptions) SetProjectID(projectID string) *DeleteDocumentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteDocumentOptions) SetProjectID(projectID string) *DeleteDocumentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *DeleteDocumentOptions) SetCollectionID(collectionID string) *DeleteDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *DeleteDocumentOptions) SetCollectionID(collectionID string) *DeleteDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *DeleteDocumentOptions) SetDocumentID(documentID string) *DeleteDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetXWatsonDiscoveryForce : Allow user to set XWatsonDiscoveryForce
-func (options *DeleteDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *DeleteDocumentOptions {
-	options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
-	return options
+func (_options *DeleteDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *DeleteDocumentOptions {
+	_options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3535,11 +3560,11 @@ func UnmarshalDeleteDocumentResponse(m map[string]json.RawMessage, result interf
 
 // DeleteEnrichmentOptions : The DeleteEnrichment options.
 type DeleteEnrichmentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the enrichment.
-	EnrichmentID *string `validate:"required,ne="`
+	EnrichmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3554,15 +3579,15 @@ func (*DiscoveryV2) NewDeleteEnrichmentOptions(projectID string, enrichmentID st
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteEnrichmentOptions) SetProjectID(projectID string) *DeleteEnrichmentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteEnrichmentOptions) SetProjectID(projectID string) *DeleteEnrichmentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetEnrichmentID : Allow user to set EnrichmentID
-func (options *DeleteEnrichmentOptions) SetEnrichmentID(enrichmentID string) *DeleteEnrichmentOptions {
-	options.EnrichmentID = core.StringPtr(enrichmentID)
-	return options
+func (_options *DeleteEnrichmentOptions) SetEnrichmentID(enrichmentID string) *DeleteEnrichmentOptions {
+	_options.EnrichmentID = core.StringPtr(enrichmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3573,8 +3598,8 @@ func (options *DeleteEnrichmentOptions) SetHeaders(param map[string]string) *Del
 
 // DeleteProjectOptions : The DeleteProject options.
 type DeleteProjectOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3588,9 +3613,9 @@ func (*DiscoveryV2) NewDeleteProjectOptions(projectID string) *DeleteProjectOpti
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteProjectOptions) SetProjectID(projectID string) *DeleteProjectOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteProjectOptions) SetProjectID(projectID string) *DeleteProjectOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3601,8 +3626,8 @@ func (options *DeleteProjectOptions) SetHeaders(param map[string]string) *Delete
 
 // DeleteTrainingQueriesOptions : The DeleteTrainingQueries options.
 type DeleteTrainingQueriesOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3616,9 +3641,9 @@ func (*DiscoveryV2) NewDeleteTrainingQueriesOptions(projectID string) *DeleteTra
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteTrainingQueriesOptions) SetProjectID(projectID string) *DeleteTrainingQueriesOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteTrainingQueriesOptions) SetProjectID(projectID string) *DeleteTrainingQueriesOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3629,11 +3654,11 @@ func (options *DeleteTrainingQueriesOptions) SetHeaders(param map[string]string)
 
 // DeleteTrainingQueryOptions : The DeleteTrainingQuery options.
 type DeleteTrainingQueryOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3648,15 +3673,15 @@ func (*DiscoveryV2) NewDeleteTrainingQueryOptions(projectID string, queryID stri
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *DeleteTrainingQueryOptions) SetProjectID(projectID string) *DeleteTrainingQueryOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *DeleteTrainingQueryOptions) SetProjectID(projectID string) *DeleteTrainingQueryOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *DeleteTrainingQueryOptions) SetQueryID(queryID string) *DeleteTrainingQueryOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *DeleteTrainingQueryOptions) SetQueryID(queryID string) *DeleteTrainingQueryOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3668,7 +3693,7 @@ func (options *DeleteTrainingQueryOptions) SetHeaders(param map[string]string) *
 // DeleteUserDataOptions : The DeleteUserData options.
 type DeleteUserDataOptions struct {
 	// The customer ID for which all data is to be deleted.
-	CustomerID *string `validate:"required"`
+	CustomerID *string `json:"-" validate:"required"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3682,9 +3707,9 @@ func (*DiscoveryV2) NewDeleteUserDataOptions(customerID string) *DeleteUserDataO
 }
 
 // SetCustomerID : Allow user to set CustomerID
-func (options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
-	options.CustomerID = core.StringPtr(customerID)
-	return options
+func (_options *DeleteUserDataOptions) SetCustomerID(customerID string) *DeleteUserDataOptions {
+	_options.CustomerID = core.StringPtr(customerID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3772,7 +3797,8 @@ type Enrichment struct {
 	// The type of this enrichment.
 	Type *string `json:"type,omitempty"`
 
-	// A object that contains options for the current enrichment.
+	// An object that contains options for the current enrichment. Starting with version `2020-08-30`, the enrichment
+	// options are not included in responses from the List Enrichments method.
 	Options *EnrichmentOptions `json:"options,omitempty"`
 }
 
@@ -3816,21 +3842,23 @@ func UnmarshalEnrichment(m map[string]json.RawMessage, result interface{}) (err 
 	return
 }
 
-// EnrichmentOptions : A object that contains options for the current enrichment.
+// EnrichmentOptions : An object that contains options for the current enrichment. Starting with version `2020-08-30`, the enrichment
+// options are not included in responses from the List Enrichments method.
 type EnrichmentOptions struct {
-	// An array of supported languages for this enrichment.
+	// An array of supported languages for this enrichment. Required when `type` is `dictionary`. Optional when `type` is
+	// `rule_based`. Not valid when creating any other type of enrichment.
 	Languages []string `json:"languages,omitempty"`
 
-	// The type of entity. Required when creating `dictionary` and `regular_expression` **type** enrichment. Not valid when
-	// creating any other type of enrichment.
+	// The name of the entity type. This value is used as the field name in the index. Required when `type` is `dictionary`
+	// or `regular_expression`. Not valid when creating any other type of enrichment.
 	EntityType *string `json:"entity_type,omitempty"`
 
-	// The regular expression to apply for this enrichment. Required only when the **type** of enrichment being created is
-	// a `regular_expression`. Not valid when creating any other type of enrichment.
+	// The regular expression to apply for this enrichment. Required when `type` is `regular_expression`. Not valid when
+	// creating any other type of enrichment.
 	RegularExpression *string `json:"regular_expression,omitempty"`
 
-	// The name of the result document field that this enrichment creates. Required only when the enrichment **type** is
-	// `rule_based`. Not valid when creating any other type of enrichment.
+	// The name of the result document field that this enrichment creates. Required when `type` is `rule_based`. Not valid
+	// when creating any other type of enrichment.
 	ResultField *string `json:"result_field,omitempty"`
 }
 
@@ -3923,22 +3951,21 @@ func UnmarshalField(m map[string]json.RawMessage, result interface{}) (err error
 
 // GetAutocompletionOptions : The GetAutocompletion options.
 type GetAutocompletionOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
-	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `Hot`, `Housing`, or `How
-	// do I upgrade`. Possible completions are.
-	Prefix *string `validate:"required"`
+	// The prefix to use for autocompletion. For example, the prefix `Ho` could autocomplete to `hot`, `housing`, or `how`.
+	Prefix *string `json:"-" validate:"required"`
 
 	// Comma separated list of the collection IDs. If this parameter is not specified, all collections in the project are
 	// used.
-	CollectionIds []string
+	CollectionIds []string `json:"-"`
 
 	// The field in the result documents that autocompletion suggestions are identified from.
-	Field *string
+	Field *string `json:"-"`
 
 	// The number of autocompletion suggestions to return.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -3953,33 +3980,33 @@ func (*DiscoveryV2) NewGetAutocompletionOptions(projectID string, prefix string)
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetAutocompletionOptions) SetProjectID(projectID string) *GetAutocompletionOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetAutocompletionOptions) SetProjectID(projectID string) *GetAutocompletionOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetPrefix : Allow user to set Prefix
-func (options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
-	options.Prefix = core.StringPtr(prefix)
-	return options
+func (_options *GetAutocompletionOptions) SetPrefix(prefix string) *GetAutocompletionOptions {
+	_options.Prefix = core.StringPtr(prefix)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *GetAutocompletionOptions) SetCollectionIds(collectionIds []string) *GetAutocompletionOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *GetAutocompletionOptions) SetCollectionIds(collectionIds []string) *GetAutocompletionOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetField : Allow user to set Field
-func (options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
-	options.Field = core.StringPtr(field)
-	return options
+func (_options *GetAutocompletionOptions) SetField(field string) *GetAutocompletionOptions {
+	_options.Field = core.StringPtr(field)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *GetAutocompletionOptions) SetCount(count int64) *GetAutocompletionOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *GetAutocompletionOptions) SetCount(count int64) *GetAutocompletionOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -3990,11 +4017,11 @@ func (options *GetAutocompletionOptions) SetHeaders(param map[string]string) *Ge
 
 // GetCollectionOptions : The GetCollection options.
 type GetCollectionOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4009,15 +4036,15 @@ func (*DiscoveryV2) NewGetCollectionOptions(projectID string, collectionID strin
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetCollectionOptions) SetProjectID(projectID string) *GetCollectionOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetCollectionOptions) SetProjectID(projectID string) *GetCollectionOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *GetCollectionOptions) SetCollectionID(collectionID string) *GetCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4028,8 +4055,8 @@ func (options *GetCollectionOptions) SetHeaders(param map[string]string) *GetCol
 
 // GetComponentSettingsOptions : The GetComponentSettings options.
 type GetComponentSettingsOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4043,9 +4070,9 @@ func (*DiscoveryV2) NewGetComponentSettingsOptions(projectID string) *GetCompone
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetComponentSettingsOptions) SetProjectID(projectID string) *GetComponentSettingsOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetComponentSettingsOptions) SetProjectID(projectID string) *GetComponentSettingsOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4056,11 +4083,11 @@ func (options *GetComponentSettingsOptions) SetHeaders(param map[string]string) 
 
 // GetEnrichmentOptions : The GetEnrichment options.
 type GetEnrichmentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the enrichment.
-	EnrichmentID *string `validate:"required,ne="`
+	EnrichmentID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4075,15 +4102,15 @@ func (*DiscoveryV2) NewGetEnrichmentOptions(projectID string, enrichmentID strin
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetEnrichmentOptions) SetProjectID(projectID string) *GetEnrichmentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetEnrichmentOptions) SetProjectID(projectID string) *GetEnrichmentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetEnrichmentID : Allow user to set EnrichmentID
-func (options *GetEnrichmentOptions) SetEnrichmentID(enrichmentID string) *GetEnrichmentOptions {
-	options.EnrichmentID = core.StringPtr(enrichmentID)
-	return options
+func (_options *GetEnrichmentOptions) SetEnrichmentID(enrichmentID string) *GetEnrichmentOptions {
+	_options.EnrichmentID = core.StringPtr(enrichmentID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4094,8 +4121,8 @@ func (options *GetEnrichmentOptions) SetHeaders(param map[string]string) *GetEnr
 
 // GetProjectOptions : The GetProject options.
 type GetProjectOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4109,9 +4136,9 @@ func (*DiscoveryV2) NewGetProjectOptions(projectID string) *GetProjectOptions {
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetProjectOptions) SetProjectID(projectID string) *GetProjectOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetProjectOptions) SetProjectID(projectID string) *GetProjectOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4122,11 +4149,11 @@ func (options *GetProjectOptions) SetHeaders(param map[string]string) *GetProjec
 
 // GetTrainingQueryOptions : The GetTrainingQuery options.
 type GetTrainingQueryOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4141,15 +4168,15 @@ func (*DiscoveryV2) NewGetTrainingQueryOptions(projectID string, queryID string)
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *GetTrainingQueryOptions) SetProjectID(projectID string) *GetTrainingQueryOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *GetTrainingQueryOptions) SetProjectID(projectID string) *GetTrainingQueryOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *GetTrainingQueryOptions) SetQueryID(queryID string) *GetTrainingQueryOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *GetTrainingQueryOptions) SetQueryID(queryID string) *GetTrainingQueryOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4160,8 +4187,8 @@ func (options *GetTrainingQueryOptions) SetHeaders(param map[string]string) *Get
 
 // ListCollectionsOptions : The ListCollections options.
 type ListCollectionsOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4175,9 +4202,9 @@ func (*DiscoveryV2) NewListCollectionsOptions(projectID string) *ListCollections
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *ListCollectionsOptions) SetProjectID(projectID string) *ListCollectionsOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *ListCollectionsOptions) SetProjectID(projectID string) *ListCollectionsOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4205,8 +4232,8 @@ func UnmarshalListCollectionsResponse(m map[string]json.RawMessage, result inter
 
 // ListEnrichmentsOptions : The ListEnrichments options.
 type ListEnrichmentsOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4220,9 +4247,9 @@ func (*DiscoveryV2) NewListEnrichmentsOptions(projectID string) *ListEnrichments
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *ListEnrichmentsOptions) SetProjectID(projectID string) *ListEnrichmentsOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *ListEnrichmentsOptions) SetProjectID(projectID string) *ListEnrichmentsOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4233,12 +4260,12 @@ func (options *ListEnrichmentsOptions) SetHeaders(param map[string]string) *List
 
 // ListFieldsOptions : The ListFields options.
 type ListFieldsOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Comma separated list of the collection IDs. If this parameter is not specified, all collections in the project are
 	// used.
-	CollectionIds []string
+	CollectionIds []string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4252,15 +4279,15 @@ func (*DiscoveryV2) NewListFieldsOptions(projectID string) *ListFieldsOptions {
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *ListFieldsOptions) SetProjectID(projectID string) *ListFieldsOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *ListFieldsOptions) SetProjectID(projectID string) *ListFieldsOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *ListFieldsOptions) SetCollectionIds(collectionIds []string) *ListFieldsOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *ListFieldsOptions) SetCollectionIds(collectionIds []string) *ListFieldsOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4331,8 +4358,8 @@ func UnmarshalListProjectsResponse(m map[string]json.RawMessage, result interfac
 
 // ListTrainingQueriesOptions : The ListTrainingQueries options.
 type ListTrainingQueriesOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4346,9 +4373,9 @@ func (*DiscoveryV2) NewListTrainingQueriesOptions(projectID string) *ListTrainin
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *ListTrainingQueriesOptions) SetProjectID(projectID string) *ListTrainingQueriesOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *ListTrainingQueriesOptions) SetProjectID(projectID string) *ListTrainingQueriesOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4445,7 +4472,13 @@ type ProjectDetails struct {
 	// The human readable name of this project.
 	Name *string `json:"name,omitempty"`
 
-	// The project type of this project.
+	// The type of project.
+	//
+	// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+	// project.
+	//
+	// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+	// installed deployments only.
 	Type *string `json:"type,omitempty"`
 
 	// Relevancy training status information for this project.
@@ -4459,12 +4492,19 @@ type ProjectDetails struct {
 }
 
 // Constants associated with the ProjectDetails.Type property.
-// The project type of this project.
+// The type of project.
+//
+// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+// project.
+//
+// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+// installed deployments only.
 const (
-	ProjectDetailsTypeAnswerRetrievalConst   = "answer_retrieval"
-	ProjectDetailsTypeContentMiningConst     = "content_mining"
-	ProjectDetailsTypeDocumentRetrievalConst = "document_retrieval"
-	ProjectDetailsTypeOtherConst             = "other"
+	ProjectDetailsTypeContentIntelligenceConst  = "content_intelligence"
+	ProjectDetailsTypeContentMiningConst        = "content_mining"
+	ProjectDetailsTypeConversationalSearchConst = "conversational_search"
+	ProjectDetailsTypeDocumentRetrievalConst    = "document_retrieval"
+	ProjectDetailsTypeOtherConst                = "other"
 )
 
 // UnmarshalProjectDetails unmarshals an instance of ProjectDetails from the specified map of raw messages.
@@ -4506,7 +4546,13 @@ type ProjectListDetails struct {
 	// The human readable name of this project.
 	Name *string `json:"name,omitempty"`
 
-	// The project type of this project.
+	// The type of project.
+	//
+	// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+	// project.
+	//
+	// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+	// installed deployments only.
 	Type *string `json:"type,omitempty"`
 
 	// Relevancy training status information for this project.
@@ -4517,12 +4563,19 @@ type ProjectListDetails struct {
 }
 
 // Constants associated with the ProjectListDetails.Type property.
-// The project type of this project.
+// The type of project.
+//
+// The `content_intelligence` type is a *Document Retrieval for Contracts* project and the `other` type is a *Custom*
+// project.
+//
+// The `content_mining` and `content_intelligence` types are available with Premium plan managed deployments and
+// installed deployments only.
 const (
-	ProjectListDetailsTypeAnswerRetrievalConst   = "answer_retrieval"
-	ProjectListDetailsTypeContentMiningConst     = "content_mining"
-	ProjectListDetailsTypeDocumentRetrievalConst = "document_retrieval"
-	ProjectListDetailsTypeOtherConst             = "other"
+	ProjectListDetailsTypeContentIntelligenceConst  = "content_intelligence"
+	ProjectListDetailsTypeContentMiningConst        = "content_mining"
+	ProjectListDetailsTypeConversationalSearchConst = "conversational_search"
+	ProjectListDetailsTypeDocumentRetrievalConst    = "document_retrieval"
+	ProjectListDetailsTypeOtherConst                = "other"
 )
 
 // UnmarshalProjectListDetails unmarshals an instance of ProjectListDetails from the specified map of raw messages.
@@ -4685,32 +4738,32 @@ func UnmarshalQueryAggregation(m map[string]json.RawMessage, result interface{})
 
 // QueryCollectionNoticesOptions : The QueryCollectionNotices options.
 type QueryCollectionNoticesOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"-"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string
+	Query *string `json:"-"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"-"`
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64
+	Offset *int64 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -4725,45 +4778,45 @@ func (*DiscoveryV2) NewQueryCollectionNoticesOptions(projectID string, collectio
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *QueryCollectionNoticesOptions) SetProjectID(projectID string) *QueryCollectionNoticesOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetProjectID(projectID string) *QueryCollectionNoticesOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *QueryCollectionNoticesOptions) SetCollectionID(collectionID string) *QueryCollectionNoticesOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetCollectionID(collectionID string) *QueryCollectionNoticesOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryCollectionNoticesOptions) SetFilter(filter string) *QueryCollectionNoticesOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetFilter(filter string) *QueryCollectionNoticesOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryCollectionNoticesOptions) SetQuery(query string) *QueryCollectionNoticesOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetQuery(query string) *QueryCollectionNoticesOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *QueryCollectionNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryCollectionNoticesOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryCollectionNoticesOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryCollectionNoticesOptions) SetCount(count int64) *QueryCollectionNoticesOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetCount(count int64) *QueryCollectionNoticesOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryCollectionNoticesOptions) SetOffset(offset int64) *QueryCollectionNoticesOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryCollectionNoticesOptions) SetOffset(offset int64) *QueryCollectionNoticesOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -4791,7 +4844,7 @@ type QueryGroupByAggregationResult struct {
 	// `relevancy` parameter is set to `true`.
 	EstimatedMatchingDocuments *int64 `json:"estimated_matching_documents,omitempty"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
@@ -4834,7 +4887,7 @@ type QueryHistogramAggregationResult struct {
 	// Number of documents with the specified key as the upper bound.
 	MatchingResults *int64 `json:"matching_results" validate:"required"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
@@ -4862,7 +4915,11 @@ type QueryLargePassages struct {
 	// A passages query that returns the most relevant passages from the results.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// Indicates whether to group passages with the document that they are extracted from in the query result.
+	// If `true`, ranks the documents by document quality, and then returns the highest-ranked passages per document in a
+	// `document_passages` field for each document entry in the results list of the response.
+	//
+	// If `false`, ranks the passages from all of the documents by passage quality regardless of the document quality and
+	// returns them in a separate `passages` field in the response.
 	PerDocument *bool `json:"per_document,omitempty"`
 
 	// Maximum number of passages to return per document in the result. Ignored if `passages.per_document` is `false`.
@@ -4880,16 +4937,18 @@ type QueryLargePassages struct {
 
 	// When true, `answer` objects are returned as part of each passage in the query results. The primary difference
 	// between an `answer` and a `passage` is that the length of a passage is defined by the query, where the length of an
-	// `answer` is calculated by Discovery based on how much text is needed to answer the question./n/nThis parameter is
-	// ignored if passages are not enabled for the query, or no **natural_language_query** is specified./n/nIf the
-	// **find_answers** parameter is set to `true` and **per_document** parameter is also set to `true`, then the document
-	// search results and the passage search results within each document are reordered using the answer confidences. The
-	// goal of this reordering is to do as much as possible to make sure that the first answer of the first passage of the
-	// first document is the best answer. Similarly, if the **find_answers** parameter is set to `true` and
-	// **per_document** parameter is set to `false`, then the passage search results are reordered in decreasing order of
-	// the highest confidence answer for each document and passage./n/nThe **find_answers** parameter is **beta**
-	// functionality available only on managed instances and should not be used in a production environment. This parameter
-	// is not available on installed instances of Discovery.
+	// `answer` is calculated by Discovery based on how much text is needed to answer the question.
+	//
+	// This parameter is ignored if passages are not enabled for the query, or no **natural_language_query** is specified.
+	//
+	// If the **find_answers** parameter is set to `true` and **per_document** parameter is also set to `true`, then the
+	// document search results and the passage search results within each document are reordered using the answer
+	// confidences. The goal of this reordering is to place the best answer as the first answer of the first passage of the
+	// first document. Similarly, if the **find_answers** parameter is set to `true` and **per_document** parameter is set
+	// to `false`, then the passage search results are reordered in decreasing order of the highest confidence answer for
+	// each document and passage.
+	//
+	// The **find_answers** parameter is available only on managed instances of Discovery.
 	FindAnswers *bool `json:"find_answers,omitempty"`
 
 	// The number of `answer` objects to return per passage if the **find_answers** parmeter is specified as `true`.
@@ -4935,7 +4994,7 @@ func UnmarshalQueryLargePassages(m map[string]json.RawMessage, result interface{
 	return
 }
 
-// QueryLargeSuggestedRefinements : Configuration for suggested refinements.
+// QueryLargeSuggestedRefinements : Configuration for suggested refinements. Available with Premium plans only.
 type QueryLargeSuggestedRefinements struct {
 	// Whether to perform suggested refinements.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -4985,29 +5044,29 @@ func UnmarshalQueryLargeTableResults(m map[string]json.RawMessage, result interf
 
 // QueryNoticesOptions : The QueryNotices options.
 type QueryNoticesOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"-"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first.
-	Query *string
+	Query *string `json:"-"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"-"`
 
 	// Number of results to return. The maximum for the **count** and **offset** values together in any one query is
 	// **10000**.
-	Count *int64
+	Count *int64 `json:"-"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results. The maximum for the **count** and **offset** values
 	// together in any one query is **10000**.
-	Offset *int64
+	Offset *int64 `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5021,39 +5080,39 @@ func (*DiscoveryV2) NewQueryNoticesOptions(projectID string) *QueryNoticesOption
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *QueryNoticesOptions) SetProjectID(projectID string) *QueryNoticesOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *QueryNoticesOptions) SetProjectID(projectID string) *QueryNoticesOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryNoticesOptions) SetFilter(filter string) *QueryNoticesOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryNoticesOptions) SetFilter(filter string) *QueryNoticesOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryNoticesOptions) SetQuery(query string) *QueryNoticesOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryNoticesOptions) SetQuery(query string) *QueryNoticesOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *QueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryNoticesOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *QueryNoticesOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryNoticesOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryNoticesOptions) SetCount(count int64) *QueryNoticesOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryNoticesOptions) SetCount(count int64) *QueryNoticesOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryNoticesOptions) SetOffset(offset int64) *QueryNoticesOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryNoticesOptions) SetOffset(offset int64) *QueryNoticesOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5088,60 +5147,60 @@ func UnmarshalQueryNoticesResponse(m map[string]json.RawMessage, result interfac
 
 // QueryOptions : The Query options.
 type QueryOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// A comma-separated list of collection IDs to be queried against.
-	CollectionIds []string
+	CollectionIds []string `json:"collection_ids,omitempty"`
 
 	// A cacheable query that excludes documents that don't mention the query content. Filter searches are better for
 	// metadata-type searches and for assessing the concepts in the data set.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// A query search returns all documents in your data set with full enrichments and full text, but with the most
 	// relevant documents listed first. Use a query search when you want to find the most relevant search results.
-	Query *string
+	Query *string `json:"query,omitempty"`
 
 	// A natural language query that returns relevant documents by utilizing training data and natural language
 	// understanding.
-	NaturalLanguageQuery *string
+	NaturalLanguageQuery *string `json:"natural_language_query,omitempty"`
 
 	// An aggregation search that returns an exact answer by combining query search with filters. Useful for applications
 	// to build lists, tables, and time series. For a full list of possible aggregations, see the Query reference.
-	Aggregation *string
+	Aggregation *string `json:"aggregation,omitempty"`
 
 	// Number of results to return.
-	Count *int64
+	Count *int64 `json:"count,omitempty"`
 
 	// A list of the fields in the document hierarchy to return. If this parameter is an empty list, then all fields are
 	// returned.
-	Return []string
+	Return []string `json:"return,omitempty"`
 
 	// The number of query results to skip at the beginning. For example, if the total number of results that are returned
 	// is 10 and the offset is 8, it returns the last two results.
-	Offset *int64
+	Offset *int64 `json:"offset,omitempty"`
 
 	// A comma-separated list of fields in the document to sort on. You can optionally specify a sort direction by
 	// prefixing the field with `-` for descending or `+` for ascending. Ascending is the default sort direction if no
 	// prefix is specified.
-	Sort *string
+	Sort *string `json:"sort,omitempty"`
 
 	// When `true`, a highlight field is returned for each result which contains the fields which match the query with
 	// `<em></em>` tags around the matching query terms.
-	Highlight *bool
+	Highlight *bool `json:"highlight,omitempty"`
 
 	// When `true` and the **natural_language_query** parameter is used, the **natural_language_query** parameter is spell
 	// checked. The most likely correction is returned in the **suggested_query** field of the response (if one exists).
-	SpellingSuggestions *bool
+	SpellingSuggestions *bool `json:"spelling_suggestions,omitempty"`
 
 	// Configuration for table retrieval.
-	TableResults *QueryLargeTableResults
+	TableResults *QueryLargeTableResults `json:"table_results,omitempty"`
 
-	// Configuration for suggested refinements.
-	SuggestedRefinements *QueryLargeSuggestedRefinements
+	// Configuration for suggested refinements. Available with Premium plans only.
+	SuggestedRefinements *QueryLargeSuggestedRefinements `json:"suggested_refinements,omitempty"`
 
 	// Configuration for passage retrieval.
-	Passages *QueryLargePassages
+	Passages *QueryLargePassages `json:"passages,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -5155,93 +5214,93 @@ func (*DiscoveryV2) NewQueryOptions(projectID string) *QueryOptions {
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *QueryOptions) SetProjectID(projectID string) *QueryOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *QueryOptions) SetProjectID(projectID string) *QueryOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionIds : Allow user to set CollectionIds
-func (options *QueryOptions) SetCollectionIds(collectionIds []string) *QueryOptions {
-	options.CollectionIds = collectionIds
-	return options
+func (_options *QueryOptions) SetCollectionIds(collectionIds []string) *QueryOptions {
+	_options.CollectionIds = collectionIds
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *QueryOptions) SetFilter(filter string) *QueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *QueryOptions) SetFilter(filter string) *QueryOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetQuery : Allow user to set Query
-func (options *QueryOptions) SetQuery(query string) *QueryOptions {
-	options.Query = core.StringPtr(query)
-	return options
+func (_options *QueryOptions) SetQuery(query string) *QueryOptions {
+	_options.Query = core.StringPtr(query)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *QueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *QueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *QueryOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetAggregation : Allow user to set Aggregation
-func (options *QueryOptions) SetAggregation(aggregation string) *QueryOptions {
-	options.Aggregation = core.StringPtr(aggregation)
-	return options
+func (_options *QueryOptions) SetAggregation(aggregation string) *QueryOptions {
+	_options.Aggregation = core.StringPtr(aggregation)
+	return _options
 }
 
 // SetCount : Allow user to set Count
-func (options *QueryOptions) SetCount(count int64) *QueryOptions {
-	options.Count = core.Int64Ptr(count)
-	return options
+func (_options *QueryOptions) SetCount(count int64) *QueryOptions {
+	_options.Count = core.Int64Ptr(count)
+	return _options
 }
 
 // SetReturn : Allow user to set Return
-func (options *QueryOptions) SetReturn(returnVar []string) *QueryOptions {
-	options.Return = returnVar
-	return options
+func (_options *QueryOptions) SetReturn(returnVar []string) *QueryOptions {
+	_options.Return = returnVar
+	return _options
 }
 
 // SetOffset : Allow user to set Offset
-func (options *QueryOptions) SetOffset(offset int64) *QueryOptions {
-	options.Offset = core.Int64Ptr(offset)
-	return options
+func (_options *QueryOptions) SetOffset(offset int64) *QueryOptions {
+	_options.Offset = core.Int64Ptr(offset)
+	return _options
 }
 
 // SetSort : Allow user to set Sort
-func (options *QueryOptions) SetSort(sort string) *QueryOptions {
-	options.Sort = core.StringPtr(sort)
-	return options
+func (_options *QueryOptions) SetSort(sort string) *QueryOptions {
+	_options.Sort = core.StringPtr(sort)
+	return _options
 }
 
 // SetHighlight : Allow user to set Highlight
-func (options *QueryOptions) SetHighlight(highlight bool) *QueryOptions {
-	options.Highlight = core.BoolPtr(highlight)
-	return options
+func (_options *QueryOptions) SetHighlight(highlight bool) *QueryOptions {
+	_options.Highlight = core.BoolPtr(highlight)
+	return _options
 }
 
 // SetSpellingSuggestions : Allow user to set SpellingSuggestions
-func (options *QueryOptions) SetSpellingSuggestions(spellingSuggestions bool) *QueryOptions {
-	options.SpellingSuggestions = core.BoolPtr(spellingSuggestions)
-	return options
+func (_options *QueryOptions) SetSpellingSuggestions(spellingSuggestions bool) *QueryOptions {
+	_options.SpellingSuggestions = core.BoolPtr(spellingSuggestions)
+	return _options
 }
 
 // SetTableResults : Allow user to set TableResults
-func (options *QueryOptions) SetTableResults(tableResults *QueryLargeTableResults) *QueryOptions {
-	options.TableResults = tableResults
-	return options
+func (_options *QueryOptions) SetTableResults(tableResults *QueryLargeTableResults) *QueryOptions {
+	_options.TableResults = tableResults
+	return _options
 }
 
 // SetSuggestedRefinements : Allow user to set SuggestedRefinements
-func (options *QueryOptions) SetSuggestedRefinements(suggestedRefinements *QueryLargeSuggestedRefinements) *QueryOptions {
-	options.SuggestedRefinements = suggestedRefinements
-	return options
+func (_options *QueryOptions) SetSuggestedRefinements(suggestedRefinements *QueryLargeSuggestedRefinements) *QueryOptions {
+	_options.SuggestedRefinements = suggestedRefinements
+	return _options
 }
 
 // SetPassages : Allow user to set Passages
-func (options *QueryOptions) SetPassages(passages *QueryLargePassages) *QueryOptions {
-	options.Passages = passages
-	return options
+func (_options *QueryOptions) SetPassages(passages *QueryLargePassages) *QueryOptions {
+	_options.Passages = passages
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -5252,7 +5311,8 @@ func (options *QueryOptions) SetHeaders(param map[string]string) *QueryOptions {
 
 // QueryResponse : A response that contains the documents and aggregations for the query.
 type QueryResponse struct {
-	// The number of matching results for the query.
+	// The number of matching results for the query. Results that match due to a curation only are not counted in the
+	// total.
 	MatchingResults *int64 `json:"matching_results,omitempty"`
 
 	// Array of document results for the query.
@@ -5273,7 +5333,7 @@ type QueryResponse struct {
 	// Array of table results.
 	TableResults []QueryTableResult `json:"table_results,omitempty"`
 
-	// Passages returned by Discovery.
+	// Passages that best match the query from across all of the collections in the project.
 	Passages []QueryResponsePassage `json:"passages,omitempty"`
 }
 
@@ -5333,7 +5393,7 @@ type QueryResponsePassage struct {
 	// The position of the first character of the extracted passage in the originating field.
 	StartOffset *int64 `json:"start_offset,omitempty"`
 
-	// The position of the last character of the extracted passage in the originating field.
+	// The position after the last character of the extracted passage in the originating field.
 	EndOffset *int64 `json:"end_offset,omitempty"`
 
 	// The label of the field from which the passage has been extracted.
@@ -5400,7 +5460,7 @@ type QueryResult struct {
 	// Metadata of a query result.
 	ResultMetadata *QueryResultMetadata `json:"result_metadata" validate:"required"`
 
-	// Passages returned by Discovery.
+	// Passages from the document that best matches the query.
 	DocumentPassages []QueryResultPassage `json:"document_passages,omitempty"`
 
 	// Allows users to set arbitrary properties
@@ -5413,6 +5473,14 @@ func (o *QueryResult) SetProperty(key string, value interface{}) {
 		o.additionalProperties = make(map[string]interface{})
 	}
 	o.additionalProperties[key] = value
+}
+
+// SetProperties allows the user to set a map of arbitrary properties on an instance of QueryResult
+func (o *QueryResult) SetProperties(m map[string]interface{}) {
+	o.additionalProperties = make(map[string]interface{})
+	for k, v := range m {
+		o.additionalProperties[k] = v
+	}
 }
 
 // GetProperty allows the user to retrieve an arbitrary property from an instance of QueryResult
@@ -5534,7 +5602,7 @@ type QueryResultPassage struct {
 	// The position of the first character of the extracted passage in the originating field.
 	StartOffset *int64 `json:"start_offset,omitempty"`
 
-	// The position of the last character of the extracted passage in the originating field.
+	// The position after the last character of the extracted passage in the originating field.
 	EndOffset *int64 `json:"end_offset,omitempty"`
 
 	// The label of the field from which the passage has been extracted.
@@ -5666,7 +5734,7 @@ type QueryTermAggregationResult struct {
 	// `relevancy` parameter is set to `true`.
 	EstimatedMatchingDocuments *int64 `json:"estimated_matching_documents,omitempty"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
@@ -5712,7 +5780,7 @@ type QueryTimesliceAggregationResult struct {
 	// Number of documents with the specified key as the upper bound.
 	MatchingResults *int64 `json:"matching_results" validate:"required"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
@@ -5806,8 +5874,8 @@ type RetrievalDetails struct {
 	// Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
 	// returned using a relevancy trained model.
 	//
-	//  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
-	// the **document_retrieval_strategy** will be listed as `untrained`.
+	// **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
+	// the **document_retrieval_strategy** is listed as `untrained`.
 	DocumentRetrievalStrategy *string `json:"document_retrieval_strategy,omitempty"`
 }
 
@@ -5815,8 +5883,8 @@ type RetrievalDetails struct {
 // Identifies the document retrieval strategy used for this query. `relevancy_training` indicates that the results were
 // returned using a relevancy trained model.
 //
-//  **Note**: In the event of trained collections being queried, but the trained model is not used to return results,
-// the **document_retrieval_strategy** will be listed as `untrained`.
+// **Note**: In the event of trained collections being queried, but the trained model is not used to return results, the
+// **document_retrieval_strategy** is listed as `untrained`.
 const (
 	RetrievalDetailsDocumentRetrievalStrategyRelevancyTrainingConst = "relevancy_training"
 	RetrievalDetailsDocumentRetrievalStrategyUntrainedConst         = "untrained"
@@ -6483,13 +6551,13 @@ type TrainingExample struct {
 }
 
 // NewTrainingExample : Instantiate TrainingExample (Generic Model Constructor)
-func (*DiscoveryV2) NewTrainingExample(documentID string, collectionID string, relevance int64) (model *TrainingExample, err error) {
-	model = &TrainingExample{
+func (*DiscoveryV2) NewTrainingExample(documentID string, collectionID string, relevance int64) (_model *TrainingExample, err error) {
+	_model = &TrainingExample{
 		DocumentID:   core.StringPtr(documentID),
 		CollectionID: core.StringPtr(collectionID),
 		Relevance:    core.Int64Ptr(relevance),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6542,12 +6610,12 @@ type TrainingQuery struct {
 }
 
 // NewTrainingQuery : Instantiate TrainingQuery (Generic Model Constructor)
-func (*DiscoveryV2) NewTrainingQuery(naturalLanguageQuery string, examples []TrainingExample) (model *TrainingQuery, err error) {
-	model = &TrainingQuery{
+func (*DiscoveryV2) NewTrainingQuery(naturalLanguageQuery string, examples []TrainingExample) (_model *TrainingQuery, err error) {
+	_model = &TrainingQuery{
 		NaturalLanguageQuery: core.StringPtr(naturalLanguageQuery),
 		Examples:             examples,
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -6601,20 +6669,20 @@ func UnmarshalTrainingQuerySet(m map[string]json.RawMessage, result interface{})
 
 // UpdateCollectionOptions : The UpdateCollection options.
 type UpdateCollectionOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The name of the collection.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// A description of the collection.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// An array of enrichments that are applied to this collection.
-	Enrichments []CollectionEnrichment
+	Enrichments []CollectionEnrichment `json:"enrichments,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6629,33 +6697,33 @@ func (*DiscoveryV2) NewUpdateCollectionOptions(projectID string, collectionID st
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *UpdateCollectionOptions) SetProjectID(projectID string) *UpdateCollectionOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *UpdateCollectionOptions) SetProjectID(projectID string) *UpdateCollectionOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateCollectionOptions) SetCollectionID(collectionID string) *UpdateCollectionOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateCollectionOptions) SetName(name string) *UpdateCollectionOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateCollectionOptions) SetDescription(description string) *UpdateCollectionOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetEnrichments : Allow user to set Enrichments
-func (options *UpdateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *UpdateCollectionOptions {
-	options.Enrichments = enrichments
-	return options
+func (_options *UpdateCollectionOptions) SetEnrichments(enrichments []CollectionEnrichment) *UpdateCollectionOptions {
+	_options.Enrichments = enrichments
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6666,25 +6734,24 @@ func (options *UpdateCollectionOptions) SetHeaders(param map[string]string) *Upd
 
 // UpdateDocumentOptions : The UpdateDocument options.
 type UpdateDocumentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the collection.
-	CollectionID *string `validate:"required,ne="`
+	CollectionID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the document.
-	DocumentID *string `validate:"required,ne="`
+	DocumentID *string `json:"-" validate:"required,ne="`
 
-	// The content of the document to ingest. The maximum supported file size when adding a file to a collection is 32 MB.
-	// The maximum supported file size when testing a configuration is 1 MB. Files larger than the supported size are
-	// rejected.
-	File io.ReadCloser
+	// The content of the document to ingest. For maximum supported file size limits, see [the
+	// documentation](https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-collections#collections-doc-limits).
+	File io.ReadCloser `json:"-"`
 
 	// The filename for file.
-	Filename *string
+	Filename *string `json:"-"`
 
 	// The content type of file.
-	FileContentType *string
+	FileContentType *string `json:"-"`
 
 	// The maximum supported metadata file size is 1 MB. Metadata parts larger than 1 MB are rejected.
 	//
@@ -6693,11 +6760,11 @@ type UpdateDocumentOptions struct {
 	//   "Creator": "Johnny Appleseed",
 	//   "Subject": "Apples"
 	// } ```.
-	Metadata *string
+	Metadata *string `json:"-"`
 
 	// When `true`, the uploaded document is added to the collection even if the data for that collection is shared with
 	// other collections.
-	XWatsonDiscoveryForce *bool
+	XWatsonDiscoveryForce *bool `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6713,51 +6780,51 @@ func (*DiscoveryV2) NewUpdateDocumentOptions(projectID string, collectionID stri
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *UpdateDocumentOptions) SetProjectID(projectID string) *UpdateDocumentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *UpdateDocumentOptions) SetProjectID(projectID string) *UpdateDocumentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetCollectionID : Allow user to set CollectionID
-func (options *UpdateDocumentOptions) SetCollectionID(collectionID string) *UpdateDocumentOptions {
-	options.CollectionID = core.StringPtr(collectionID)
-	return options
+func (_options *UpdateDocumentOptions) SetCollectionID(collectionID string) *UpdateDocumentOptions {
+	_options.CollectionID = core.StringPtr(collectionID)
+	return _options
 }
 
 // SetDocumentID : Allow user to set DocumentID
-func (options *UpdateDocumentOptions) SetDocumentID(documentID string) *UpdateDocumentOptions {
-	options.DocumentID = core.StringPtr(documentID)
-	return options
+func (_options *UpdateDocumentOptions) SetDocumentID(documentID string) *UpdateDocumentOptions {
+	_options.DocumentID = core.StringPtr(documentID)
+	return _options
 }
 
 // SetFile : Allow user to set File
-func (options *UpdateDocumentOptions) SetFile(file io.ReadCloser) *UpdateDocumentOptions {
-	options.File = file
-	return options
+func (_options *UpdateDocumentOptions) SetFile(file io.ReadCloser) *UpdateDocumentOptions {
+	_options.File = file
+	return _options
 }
 
 // SetFilename : Allow user to set Filename
-func (options *UpdateDocumentOptions) SetFilename(filename string) *UpdateDocumentOptions {
-	options.Filename = core.StringPtr(filename)
-	return options
+func (_options *UpdateDocumentOptions) SetFilename(filename string) *UpdateDocumentOptions {
+	_options.Filename = core.StringPtr(filename)
+	return _options
 }
 
 // SetFileContentType : Allow user to set FileContentType
-func (options *UpdateDocumentOptions) SetFileContentType(fileContentType string) *UpdateDocumentOptions {
-	options.FileContentType = core.StringPtr(fileContentType)
-	return options
+func (_options *UpdateDocumentOptions) SetFileContentType(fileContentType string) *UpdateDocumentOptions {
+	_options.FileContentType = core.StringPtr(fileContentType)
+	return _options
 }
 
 // SetMetadata : Allow user to set Metadata
-func (options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
-	options.Metadata = core.StringPtr(metadata)
-	return options
+func (_options *UpdateDocumentOptions) SetMetadata(metadata string) *UpdateDocumentOptions {
+	_options.Metadata = core.StringPtr(metadata)
+	return _options
 }
 
 // SetXWatsonDiscoveryForce : Allow user to set XWatsonDiscoveryForce
-func (options *UpdateDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *UpdateDocumentOptions {
-	options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
-	return options
+func (_options *UpdateDocumentOptions) SetXWatsonDiscoveryForce(xWatsonDiscoveryForce bool) *UpdateDocumentOptions {
+	_options.XWatsonDiscoveryForce = core.BoolPtr(xWatsonDiscoveryForce)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6768,17 +6835,17 @@ func (options *UpdateDocumentOptions) SetHeaders(param map[string]string) *Updat
 
 // UpdateEnrichmentOptions : The UpdateEnrichment options.
 type UpdateEnrichmentOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the enrichment.
-	EnrichmentID *string `validate:"required,ne="`
+	EnrichmentID *string `json:"-" validate:"required,ne="`
 
 	// A new name for the enrichment.
-	Name *string `validate:"required"`
+	Name *string `json:"name" validate:"required"`
 
 	// A new description for the enrichment.
-	Description *string
+	Description *string `json:"description,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6794,27 +6861,27 @@ func (*DiscoveryV2) NewUpdateEnrichmentOptions(projectID string, enrichmentID st
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *UpdateEnrichmentOptions) SetProjectID(projectID string) *UpdateEnrichmentOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *UpdateEnrichmentOptions) SetProjectID(projectID string) *UpdateEnrichmentOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetEnrichmentID : Allow user to set EnrichmentID
-func (options *UpdateEnrichmentOptions) SetEnrichmentID(enrichmentID string) *UpdateEnrichmentOptions {
-	options.EnrichmentID = core.StringPtr(enrichmentID)
-	return options
+func (_options *UpdateEnrichmentOptions) SetEnrichmentID(enrichmentID string) *UpdateEnrichmentOptions {
+	_options.EnrichmentID = core.StringPtr(enrichmentID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateEnrichmentOptions) SetName(name string) *UpdateEnrichmentOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateEnrichmentOptions) SetName(name string) *UpdateEnrichmentOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetDescription : Allow user to set Description
-func (options *UpdateEnrichmentOptions) SetDescription(description string) *UpdateEnrichmentOptions {
-	options.Description = core.StringPtr(description)
-	return options
+func (_options *UpdateEnrichmentOptions) SetDescription(description string) *UpdateEnrichmentOptions {
+	_options.Description = core.StringPtr(description)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6825,11 +6892,11 @@ func (options *UpdateEnrichmentOptions) SetHeaders(param map[string]string) *Upd
 
 // UpdateProjectOptions : The UpdateProject options.
 type UpdateProjectOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The new name to give this project.
-	Name *string
+	Name *string `json:"name,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6843,15 +6910,15 @@ func (*DiscoveryV2) NewUpdateProjectOptions(projectID string) *UpdateProjectOpti
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *UpdateProjectOptions) SetProjectID(projectID string) *UpdateProjectOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *UpdateProjectOptions) SetProjectID(projectID string) *UpdateProjectOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetName : Allow user to set Name
-func (options *UpdateProjectOptions) SetName(name string) *UpdateProjectOptions {
-	options.Name = core.StringPtr(name)
-	return options
+func (_options *UpdateProjectOptions) SetName(name string) *UpdateProjectOptions {
+	_options.Name = core.StringPtr(name)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6862,20 +6929,20 @@ func (options *UpdateProjectOptions) SetHeaders(param map[string]string) *Update
 
 // UpdateTrainingQueryOptions : The UpdateTrainingQuery options.
 type UpdateTrainingQueryOptions struct {
-	// The ID of the project. This information can be found from the deploy page of the Discovery administrative tooling.
-	ProjectID *string `validate:"required,ne="`
+	// The ID of the project. This information can be found from the *Integrate and Deploy* page in Discovery.
+	ProjectID *string `json:"-" validate:"required,ne="`
 
 	// The ID of the query used for training.
-	QueryID *string `validate:"required,ne="`
+	QueryID *string `json:"-" validate:"required,ne="`
 
 	// The natural text query for the training query.
-	NaturalLanguageQuery *string `validate:"required"`
+	NaturalLanguageQuery *string `json:"natural_language_query" validate:"required"`
 
 	// Array of training examples.
-	Examples []TrainingExample `validate:"required"`
+	Examples []TrainingExample `json:"examples" validate:"required"`
 
 	// The filter used on the collection before the **natural_language_query** is applied.
-	Filter *string
+	Filter *string `json:"filter,omitempty"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -6892,33 +6959,33 @@ func (*DiscoveryV2) NewUpdateTrainingQueryOptions(projectID string, queryID stri
 }
 
 // SetProjectID : Allow user to set ProjectID
-func (options *UpdateTrainingQueryOptions) SetProjectID(projectID string) *UpdateTrainingQueryOptions {
-	options.ProjectID = core.StringPtr(projectID)
-	return options
+func (_options *UpdateTrainingQueryOptions) SetProjectID(projectID string) *UpdateTrainingQueryOptions {
+	_options.ProjectID = core.StringPtr(projectID)
+	return _options
 }
 
 // SetQueryID : Allow user to set QueryID
-func (options *UpdateTrainingQueryOptions) SetQueryID(queryID string) *UpdateTrainingQueryOptions {
-	options.QueryID = core.StringPtr(queryID)
-	return options
+func (_options *UpdateTrainingQueryOptions) SetQueryID(queryID string) *UpdateTrainingQueryOptions {
+	_options.QueryID = core.StringPtr(queryID)
+	return _options
 }
 
 // SetNaturalLanguageQuery : Allow user to set NaturalLanguageQuery
-func (options *UpdateTrainingQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *UpdateTrainingQueryOptions {
-	options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
-	return options
+func (_options *UpdateTrainingQueryOptions) SetNaturalLanguageQuery(naturalLanguageQuery string) *UpdateTrainingQueryOptions {
+	_options.NaturalLanguageQuery = core.StringPtr(naturalLanguageQuery)
+	return _options
 }
 
 // SetExamples : Allow user to set Examples
-func (options *UpdateTrainingQueryOptions) SetExamples(examples []TrainingExample) *UpdateTrainingQueryOptions {
-	options.Examples = examples
-	return options
+func (_options *UpdateTrainingQueryOptions) SetExamples(examples []TrainingExample) *UpdateTrainingQueryOptions {
+	_options.Examples = examples
+	return _options
 }
 
 // SetFilter : Allow user to set Filter
-func (options *UpdateTrainingQueryOptions) SetFilter(filter string) *UpdateTrainingQueryOptions {
-	options.Filter = core.StringPtr(filter)
-	return options
+func (_options *UpdateTrainingQueryOptions) SetFilter(filter string) *UpdateTrainingQueryOptions {
+	_options.Filter = core.StringPtr(filter)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -6965,20 +7032,21 @@ func UnmarshalQueryCalculationAggregation(m map[string]json.RawMessage, result i
 	return
 }
 
-// QueryFilterAggregation : A modifier that will narrow down the document set of the sub aggregations it precedes.
+// QueryFilterAggregation : A modifier that narrows the document set of the sub-aggregations it precedes.
 // This model "extends" QueryAggregation
 type QueryFilterAggregation struct {
 	// The type of aggregation command used. Options include: term, histogram, timeslice, nested, filter, min, max, sum,
 	// average, unique_count, and top_hits.
 	Type *string `json:"type" validate:"required"`
 
-	// The filter written in Discovery Query Language syntax applied to the documents before sub aggregations are run.
+	// The filter that is written in Discovery Query Language syntax and is applied to the documents before
+	// sub-aggregations are run.
 	Match *string `json:"match" validate:"required"`
 
 	// Number of documents that match the filter.
 	MatchingResults *int64 `json:"matching_results" validate:"required"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 
@@ -7050,7 +7118,7 @@ type QueryHistogramAggregation struct {
 	// The numeric field name used to create the histogram.
 	Field *string `json:"field" validate:"required"`
 
-	// The size of the sections the results are split into.
+	// The size of the sections that the results are split into.
 	Interval *int64 `json:"interval" validate:"required"`
 
 	// Identifier specified in the query request of this aggregation.
@@ -7091,21 +7159,21 @@ func UnmarshalQueryHistogramAggregation(m map[string]json.RawMessage, result int
 	return
 }
 
-// QueryNestedAggregation : A restriction that alter the document set used for sub aggregations it precedes to nested documents found in the
-// field specified.
+// QueryNestedAggregation : A restriction that alters the document set that is used for sub-aggregations it precedes to nested documents found in
+// the field specified.
 // This model "extends" QueryAggregation
 type QueryNestedAggregation struct {
 	// The type of aggregation command used. Options include: term, histogram, timeslice, nested, filter, min, max, sum,
 	// average, unique_count, and top_hits.
 	Type *string `json:"type" validate:"required"`
 
-	// The path to the document field to scope sub aggregations to.
+	// The path to the document field to scope sub-aggregations to.
 	Path *string `json:"path" validate:"required"`
 
 	// Number of nested documents found in the specified field.
 	MatchingResults *int64 `json:"matching_results" validate:"required"`
 
-	// An array of sub aggregations.
+	// An array of sub-aggregations.
 	Aggregations []QueryAggregationIntf `json:"aggregations,omitempty"`
 }
 

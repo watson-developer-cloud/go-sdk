@@ -15,7 +15,7 @@
  */
 
 /*
- * IBM OpenAPI SDK Code Generator Version: 3.31.0-902c9336-20210504-161156
+ * IBM OpenAPI SDK Code Generator Version: 3.38.0-07189efd-20210827-205025
  */
 
 // Package toneanalyzerv3 : Operations and models for the ToneAnalyzerV3 service
@@ -43,7 +43,7 @@ import (
 // **Note:** Request logging is disabled for the Tone Analyzer service. Regardless of whether you set the
 // `X-Watson-Learning-Opt-Out` request header, the service does not log or retain data from requests and responses.
 //
-// Version: 3.5.3
+// API Version: 3.5.3
 // See: https://cloud.ibm.com/docs/tone-analyzer
 type ToneAnalyzerV3 struct {
 	Service *core.BaseService
@@ -512,7 +512,7 @@ func UnmarshalToneCategory(m map[string]json.RawMessage, result interface{}) (er
 // ToneChatOptions : The ToneChat options.
 type ToneChatOptions struct {
 	// An array of `Utterance` objects that provides the input content that the service is to analyze.
-	Utterances []Utterance `validate:"required"`
+	Utterances []Utterance `json:"utterances" validate:"required"`
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not
@@ -520,12 +520,12 @@ type ToneChatOptions struct {
 	// **Accept-Language**.
 	// * **`2017-09-21`:** Accepts `en` or `fr`.
 	// * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage *string
+	ContentLanguage *string `json:"-"`
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 	// **Accept-Language**.
-	AcceptLanguage *string
+	AcceptLanguage *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -569,21 +569,21 @@ func (*ToneAnalyzerV3) NewToneChatOptions(utterances []Utterance) *ToneChatOptio
 }
 
 // SetUtterances : Allow user to set Utterances
-func (options *ToneChatOptions) SetUtterances(utterances []Utterance) *ToneChatOptions {
-	options.Utterances = utterances
-	return options
+func (_options *ToneChatOptions) SetUtterances(utterances []Utterance) *ToneChatOptions {
+	_options.Utterances = utterances
+	return _options
 }
 
 // SetContentLanguage : Allow user to set ContentLanguage
-func (options *ToneChatOptions) SetContentLanguage(contentLanguage string) *ToneChatOptions {
-	options.ContentLanguage = core.StringPtr(contentLanguage)
-	return options
+func (_options *ToneChatOptions) SetContentLanguage(contentLanguage string) *ToneChatOptions {
+	_options.ContentLanguage = core.StringPtr(contentLanguage)
+	return _options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ToneChatOptions) SetAcceptLanguage(acceptLanguage string) *ToneChatOptions {
-	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
+func (_options *ToneChatOptions) SetAcceptLanguage(acceptLanguage string) *ToneChatOptions {
+	_options.AcceptLanguage = core.StringPtr(acceptLanguage)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -645,11 +645,11 @@ type ToneInput struct {
 }
 
 // NewToneInput : Instantiate ToneInput (Generic Model Constructor)
-func (*ToneAnalyzerV3) NewToneInput(text string) (model *ToneInput, err error) {
-	model = &ToneInput{
+func (*ToneAnalyzerV3) NewToneInput(text string) (_model *ToneInput, err error) {
+	_model = &ToneInput{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 
@@ -668,19 +668,19 @@ func UnmarshalToneInput(m map[string]json.RawMessage, result interface{}) (err e
 type ToneOptions struct {
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
-	ToneInput *ToneInput
+	ToneInput *ToneInput `json:"tone_input,omitempty"`
 
 	// JSON, plain text, or HTML input that contains the content to be analyzed. For JSON input, provide an object of type
 	// `ToneInput`.
-	Body *string
+	Body *string `json:"body,omitempty"`
 
 	// The type of the input. A character encoding can be specified by including a `charset` parameter. For example,
 	// 'text/plain;charset=utf-8'.
-	ContentType *string
+	ContentType *string `json:"-"`
 
 	// Indicates whether the service is to return an analysis of each individual sentence in addition to its analysis of
 	// the full document. If `true` (the default), the service returns results for each sentence.
-	Sentences *bool
+	Sentences *bool `json:"-"`
 
 	// **`2017-09-21`:** Deprecated. The service continues to accept the parameter for backward-compatibility, but the
 	// parameter no longer affects the response.
@@ -688,7 +688,7 @@ type ToneOptions struct {
 	// **`2016-05-19`:** A comma-separated list of tones for which the service is to return its analysis of the input; the
 	// indicated tones apply both to the full document and to individual sentences of the document. You can specify one or
 	// more of the valid values. Omit the parameter to request results for all three tones.
-	Tones []string
+	Tones []string `json:"-"`
 
 	// The language of the input text for the request: English or French. Regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. The input content must match the specified language. Do not
@@ -696,12 +696,12 @@ type ToneOptions struct {
 	// **Accept-Language**.
 	// * **`2017-09-21`:** Accepts `en` or `fr`.
 	// * **`2016-05-19`:** Accepts only `en`.
-	ContentLanguage *string
+	ContentLanguage *string `json:"-"`
 
 	// The desired language of the response. For two-character arguments, regional variants are treated as their parent
 	// language; for example, `en-US` is interpreted as `en`. You can use different languages for **Content-Language** and
 	// **Accept-Language**.
-	AcceptLanguage *string
+	AcceptLanguage *string `json:"-"`
 
 	// Allows users to set headers on API requests
 	Headers map[string]string
@@ -750,45 +750,45 @@ func (*ToneAnalyzerV3) NewToneOptions() *ToneOptions {
 }
 
 // SetToneInput : Allow user to set ToneInput
-func (options *ToneOptions) SetToneInput(toneInput *ToneInput) *ToneOptions {
-	options.ToneInput = toneInput
-	return options
+func (_options *ToneOptions) SetToneInput(toneInput *ToneInput) *ToneOptions {
+	_options.ToneInput = toneInput
+	return _options
 }
 
 // SetBody : Allow user to set Body
-func (options *ToneOptions) SetBody(body string) *ToneOptions {
-	options.Body = core.StringPtr(body)
-	return options
+func (_options *ToneOptions) SetBody(body string) *ToneOptions {
+	_options.Body = core.StringPtr(body)
+	return _options
 }
 
 // SetContentType : Allow user to set ContentType
-func (options *ToneOptions) SetContentType(contentType string) *ToneOptions {
-	options.ContentType = core.StringPtr(contentType)
-	return options
+func (_options *ToneOptions) SetContentType(contentType string) *ToneOptions {
+	_options.ContentType = core.StringPtr(contentType)
+	return _options
 }
 
 // SetSentences : Allow user to set Sentences
-func (options *ToneOptions) SetSentences(sentences bool) *ToneOptions {
-	options.Sentences = core.BoolPtr(sentences)
-	return options
+func (_options *ToneOptions) SetSentences(sentences bool) *ToneOptions {
+	_options.Sentences = core.BoolPtr(sentences)
+	return _options
 }
 
 // SetTones : Allow user to set Tones
-func (options *ToneOptions) SetTones(tones []string) *ToneOptions {
-	options.Tones = tones
-	return options
+func (_options *ToneOptions) SetTones(tones []string) *ToneOptions {
+	_options.Tones = tones
+	return _options
 }
 
 // SetContentLanguage : Allow user to set ContentLanguage
-func (options *ToneOptions) SetContentLanguage(contentLanguage string) *ToneOptions {
-	options.ContentLanguage = core.StringPtr(contentLanguage)
-	return options
+func (_options *ToneOptions) SetContentLanguage(contentLanguage string) *ToneOptions {
+	_options.ContentLanguage = core.StringPtr(contentLanguage)
+	return _options
 }
 
 // SetAcceptLanguage : Allow user to set AcceptLanguage
-func (options *ToneOptions) SetAcceptLanguage(acceptLanguage string) *ToneOptions {
-	options.AcceptLanguage = core.StringPtr(acceptLanguage)
-	return options
+func (_options *ToneOptions) SetAcceptLanguage(acceptLanguage string) *ToneOptions {
+	_options.AcceptLanguage = core.StringPtr(acceptLanguage)
+	return _options
 }
 
 // SetHeaders : Allow user to set Headers
@@ -852,11 +852,11 @@ type Utterance struct {
 }
 
 // NewUtterance : Instantiate Utterance (Generic Model Constructor)
-func (*ToneAnalyzerV3) NewUtterance(text string) (model *Utterance, err error) {
-	model = &Utterance{
+func (*ToneAnalyzerV3) NewUtterance(text string) (_model *Utterance, err error) {
+	_model = &Utterance{
 		Text: core.StringPtr(text),
 	}
-	err = core.ValidateStruct(model, "required parameters")
+	err = core.ValidateStruct(_model, "required parameters")
 	return
 }
 

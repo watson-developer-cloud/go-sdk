@@ -83,6 +83,7 @@ type WebsocketRecognitionResults struct {
 	// Acknowledges that a start/end message was received, and indicates
 	// the start/end of the audio data
 	State string `json:"state,omitempty"`
+	Error string `json:"error,omitempty"`
 
 	SpeechRecognitionResults
 }

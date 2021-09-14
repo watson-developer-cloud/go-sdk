@@ -899,8 +899,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(compareDocumentsPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"file_1"}))
+					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"file_2"}))
 					Expect(req.URL.Query()["model"]).To(Equal([]string{"contracts"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -922,8 +922,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.File2 = CreateMockReader("This is a mock file.")
 				compareDocumentsOptionsModel.File1ContentType = core.StringPtr("application/pdf")
 				compareDocumentsOptionsModel.File2ContentType = core.StringPtr("application/pdf")
-				compareDocumentsOptionsModel.File1Label = core.StringPtr("testString")
-				compareDocumentsOptionsModel.File2Label = core.StringPtr("testString")
+				compareDocumentsOptionsModel.File1Label = core.StringPtr("file_1")
+				compareDocumentsOptionsModel.File2Label = core.StringPtr("file_2")
 				compareDocumentsOptionsModel.Model = core.StringPtr("contracts")
 				compareDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -957,8 +957,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"file_1"}))
+					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"file_2"}))
 					Expect(req.URL.Query()["model"]).To(Equal([]string{"contracts"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -985,8 +985,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.File2 = CreateMockReader("This is a mock file.")
 				compareDocumentsOptionsModel.File1ContentType = core.StringPtr("application/pdf")
 				compareDocumentsOptionsModel.File2ContentType = core.StringPtr("application/pdf")
-				compareDocumentsOptionsModel.File1Label = core.StringPtr("testString")
-				compareDocumentsOptionsModel.File2Label = core.StringPtr("testString")
+				compareDocumentsOptionsModel.File1Label = core.StringPtr("file_1")
+				compareDocumentsOptionsModel.File2Label = core.StringPtr("file_2")
 				compareDocumentsOptionsModel.Model = core.StringPtr("contracts")
 				compareDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1025,8 +1025,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"testString"}))
-					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["file_1_label"]).To(Equal([]string{"file_1"}))
+					Expect(req.URL.Query()["file_2_label"]).To(Equal([]string{"file_2"}))
 					Expect(req.URL.Query()["model"]).To(Equal([]string{"contracts"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -1055,8 +1055,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.File2 = CreateMockReader("This is a mock file.")
 				compareDocumentsOptionsModel.File1ContentType = core.StringPtr("application/pdf")
 				compareDocumentsOptionsModel.File2ContentType = core.StringPtr("application/pdf")
-				compareDocumentsOptionsModel.File1Label = core.StringPtr("testString")
-				compareDocumentsOptionsModel.File2Label = core.StringPtr("testString")
+				compareDocumentsOptionsModel.File1Label = core.StringPtr("file_1")
+				compareDocumentsOptionsModel.File2Label = core.StringPtr("file_2")
 				compareDocumentsOptionsModel.Model = core.StringPtr("contracts")
 				compareDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1082,8 +1082,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.File2 = CreateMockReader("This is a mock file.")
 				compareDocumentsOptionsModel.File1ContentType = core.StringPtr("application/pdf")
 				compareDocumentsOptionsModel.File2ContentType = core.StringPtr("application/pdf")
-				compareDocumentsOptionsModel.File1Label = core.StringPtr("testString")
-				compareDocumentsOptionsModel.File2Label = core.StringPtr("testString")
+				compareDocumentsOptionsModel.File1Label = core.StringPtr("file_1")
+				compareDocumentsOptionsModel.File2Label = core.StringPtr("file_2")
 				compareDocumentsOptionsModel.Model = core.StringPtr("contracts")
 				compareDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1130,8 +1130,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.File2 = CreateMockReader("This is a mock file.")
 				compareDocumentsOptionsModel.File1ContentType = core.StringPtr("application/pdf")
 				compareDocumentsOptionsModel.File2ContentType = core.StringPtr("application/pdf")
-				compareDocumentsOptionsModel.File1Label = core.StringPtr("testString")
-				compareDocumentsOptionsModel.File2Label = core.StringPtr("testString")
+				compareDocumentsOptionsModel.File1Label = core.StringPtr("file_1")
+				compareDocumentsOptionsModel.File2Label = core.StringPtr("file_2")
 				compareDocumentsOptionsModel.Model = core.StringPtr("contracts")
 				compareDocumentsOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -3492,8 +3492,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				compareDocumentsOptionsModel.SetFile2(CreateMockReader("This is a mock file."))
 				compareDocumentsOptionsModel.SetFile1ContentType("application/pdf")
 				compareDocumentsOptionsModel.SetFile2ContentType("application/pdf")
-				compareDocumentsOptionsModel.SetFile1Label("testString")
-				compareDocumentsOptionsModel.SetFile2Label("testString")
+				compareDocumentsOptionsModel.SetFile1Label("file_1")
+				compareDocumentsOptionsModel.SetFile2Label("file_2")
 				compareDocumentsOptionsModel.SetModel("contracts")
 				compareDocumentsOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(compareDocumentsOptionsModel).ToNot(BeNil())
@@ -3501,8 +3501,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 				Expect(compareDocumentsOptionsModel.File2).To(Equal(CreateMockReader("This is a mock file.")))
 				Expect(compareDocumentsOptionsModel.File1ContentType).To(Equal(core.StringPtr("application/pdf")))
 				Expect(compareDocumentsOptionsModel.File2ContentType).To(Equal(core.StringPtr("application/pdf")))
-				Expect(compareDocumentsOptionsModel.File1Label).To(Equal(core.StringPtr("testString")))
-				Expect(compareDocumentsOptionsModel.File2Label).To(Equal(core.StringPtr("testString")))
+				Expect(compareDocumentsOptionsModel.File1Label).To(Equal(core.StringPtr("file_1")))
+				Expect(compareDocumentsOptionsModel.File2Label).To(Equal(core.StringPtr("file_2")))
 				Expect(compareDocumentsOptionsModel.Model).To(Equal(core.StringPtr("contracts")))
 				Expect(compareDocumentsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -3610,8 +3610,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Invoke NewLabel successfully`, func() {
 				nature := "testString"
 				party := "testString"
-				model, err := compareComplyService.NewLabel(nature, party)
-				Expect(model).ToNot(BeNil())
+				_model, err := compareComplyService.NewLabel(nature, party)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewListBatchesOptions successfully`, func() {
@@ -3659,15 +3659,15 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Invoke NewLocation successfully`, func() {
 				begin := int64(26)
 				end := int64(26)
-				model, err := compareComplyService.NewLocation(begin, end)
-				Expect(model).ToNot(BeNil())
+				_model, err := compareComplyService.NewLocation(begin, end)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewOriginalLabelsIn successfully`, func() {
 				types := []comparecomplyv1.TypeLabel{}
 				categories := []comparecomplyv1.Category{}
-				model, err := compareComplyService.NewOriginalLabelsIn(types, categories)
-				Expect(model).ToNot(BeNil())
+				_model, err := compareComplyService.NewOriginalLabelsIn(types, categories)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateBatchOptions successfully`, func() {
@@ -3688,8 +3688,8 @@ var _ = Describe(`CompareComplyV1`, func() {
 			It(`Invoke NewUpdatedLabelsIn successfully`, func() {
 				types := []comparecomplyv1.TypeLabel{}
 				categories := []comparecomplyv1.Category{}
-				model, err := compareComplyService.NewUpdatedLabelsIn(types, categories)
-				Expect(model).ToNot(BeNil())
+				_model, err := compareComplyService.NewUpdatedLabelsIn(types, categories)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 		})

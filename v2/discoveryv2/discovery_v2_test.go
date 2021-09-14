@@ -440,7 +440,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.ProjectID = core.StringPtr("testString")
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
-				createCollectionOptionsModel.Language = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
 				createCollectionOptionsModel.Enrichments = []discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -496,7 +496,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke CreateCollection successfully with retries`, func() {
@@ -519,7 +519,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.ProjectID = core.StringPtr("testString")
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
-				createCollectionOptionsModel.Language = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
 				createCollectionOptionsModel.Enrichments = []discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -577,7 +577,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke CreateCollection successfully`, func() {
@@ -605,7 +605,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.ProjectID = core.StringPtr("testString")
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
-				createCollectionOptionsModel.Language = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
 				createCollectionOptionsModel.Enrichments = []discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -635,7 +635,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.ProjectID = core.StringPtr("testString")
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
-				createCollectionOptionsModel.Language = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
 				createCollectionOptionsModel.Enrichments = []discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -686,7 +686,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.ProjectID = core.StringPtr("testString")
 				createCollectionOptionsModel.Name = core.StringPtr("testString")
 				createCollectionOptionsModel.Description = core.StringPtr("testString")
-				createCollectionOptionsModel.Language = core.StringPtr("testString")
+				createCollectionOptionsModel.Language = core.StringPtr("en")
 				createCollectionOptionsModel.Enrichments = []discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}
 				createCollectionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -771,7 +771,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke GetCollection successfully with retries`, func() {
@@ -828,7 +828,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke GetCollection successfully`, func() {
@@ -1022,7 +1022,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke UpdateCollection successfully with retries`, func() {
@@ -1103,7 +1103,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "Language", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
+					fmt.Fprintf(res, "%s", `{"collection_id": "CollectionID", "name": "Name", "description": "Description", "created": "2019-01-01T12:00:00.000Z", "language": "en", "enrichments": [{"enrichment_id": "EnrichmentID", "fields": ["Fields"]}]}`)
 				}))
 			})
 			It(`Invoke UpdateCollection successfully`, func() {
@@ -1345,9 +1345,9 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 
 				// Construct an instance of the QueryOptions model
@@ -1450,9 +1450,9 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 
 				// Construct an instance of the QueryOptions model
@@ -1562,9 +1562,9 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 
 				// Construct an instance of the QueryOptions model
@@ -1618,9 +1618,9 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 
 				// Construct an instance of the QueryOptions model
@@ -1695,9 +1695,9 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 
 				// Construct an instance of the QueryOptions model
@@ -2973,7 +2973,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(addDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
@@ -2997,7 +2997,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.Filename = core.StringPtr("testString")
 				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.AddDocument(addDocumentOptionsModel)
@@ -3030,7 +3030,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -3059,7 +3059,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.Filename = core.StringPtr("testString")
 				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -3097,7 +3097,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -3128,7 +3128,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.Filename = core.StringPtr("testString")
 				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -3172,7 +3172,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.Filename = core.StringPtr("testString")
 				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -3220,7 +3220,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.Filename = core.StringPtr("testString")
 				addDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				addDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				addDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				addDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -3248,7 +3248,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(updateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
@@ -3273,7 +3273,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
 				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.UpdateDocument(updateDocumentOptionsModel)
@@ -3306,7 +3306,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -3336,7 +3336,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
 				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -3374,7 +3374,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("POST"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -3406,7 +3406,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
 				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -3451,7 +3451,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
 				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -3500,7 +3500,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.Filename = core.StringPtr("testString")
 				updateDocumentOptionsModel.FileContentType = core.StringPtr("application/json")
 				updateDocumentOptionsModel.Metadata = core.StringPtr("testString")
-				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				updateDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				updateDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -3528,7 +3528,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteDocumentPath))
 					Expect(req.Method).To(Equal("DELETE"))
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -3549,7 +3549,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.ProjectID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := discoveryService.DeleteDocument(deleteDocumentOptionsModel)
@@ -3582,7 +3582,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -3608,7 +3608,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.ProjectID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with a Context to test a timeout error
@@ -3646,7 +3646,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 					Expect(req.Method).To(Equal("DELETE"))
 
 					Expect(req.Header["X-Watson-Discovery-Force"]).ToNot(BeNil())
-					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["X-Watson-Discovery-Force"][0]).To(Equal(fmt.Sprintf("%v", false)))
 					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -3674,7 +3674,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.ProjectID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
@@ -3698,7 +3698,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.ProjectID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
 				err := discoveryService.SetServiceURL("")
@@ -3743,7 +3743,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.ProjectID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.CollectionID = core.StringPtr("testString")
 				deleteDocumentOptionsModel.DocumentID = core.StringPtr("testString")
-				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(true)
+				deleteDocumentOptionsModel.XWatsonDiscoveryForce = core.BoolPtr(false)
 				deleteDocumentOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation
@@ -7599,7 +7599,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				addDocumentOptionsModel.SetFilename("testString")
 				addDocumentOptionsModel.SetFileContentType("application/json")
 				addDocumentOptionsModel.SetMetadata("testString")
-				addDocumentOptionsModel.SetXWatsonDiscoveryForce(true)
+				addDocumentOptionsModel.SetXWatsonDiscoveryForce(false)
 				addDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(addDocumentOptionsModel).ToNot(BeNil())
 				Expect(addDocumentOptionsModel.ProjectID).To(Equal(core.StringPtr("testString")))
@@ -7608,7 +7608,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(addDocumentOptionsModel.Filename).To(Equal(core.StringPtr("testString")))
 				Expect(addDocumentOptionsModel.FileContentType).To(Equal(core.StringPtr("application/json")))
 				Expect(addDocumentOptionsModel.Metadata).To(Equal(core.StringPtr("testString")))
-				Expect(addDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(true)))
+				Expect(addDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(false)))
 				Expect(addDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewAnalyzeDocumentOptions successfully`, func() {
@@ -7634,8 +7634,8 @@ var _ = Describe(`DiscoveryV2`, func() {
 			})
 			It(`Invoke NewCollectionDetails successfully`, func() {
 				name := "testString"
-				model, err := discoveryService.NewCollectionDetails(name)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewCollectionDetails(name)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewCreateCollectionOptions successfully`, func() {
@@ -7654,14 +7654,14 @@ var _ = Describe(`DiscoveryV2`, func() {
 				createCollectionOptionsModel.SetProjectID("testString")
 				createCollectionOptionsModel.SetName("testString")
 				createCollectionOptionsModel.SetDescription("testString")
-				createCollectionOptionsModel.SetLanguage("testString")
+				createCollectionOptionsModel.SetLanguage("en")
 				createCollectionOptionsModel.SetEnrichments([]discoveryv2.CollectionEnrichment{*collectionEnrichmentModel})
 				createCollectionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createCollectionOptionsModel).ToNot(BeNil())
 				Expect(createCollectionOptionsModel.ProjectID).To(Equal(core.StringPtr("testString")))
 				Expect(createCollectionOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(createCollectionOptionsModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(createCollectionOptionsModel.Language).To(Equal(core.StringPtr("testString")))
+				Expect(createCollectionOptionsModel.Language).To(Equal(core.StringPtr("en")))
 				Expect(createCollectionOptionsModel.Enrichments).To(Equal([]discoveryv2.CollectionEnrichment{*collectionEnrichmentModel}))
 				Expect(createCollectionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -7827,13 +7827,13 @@ var _ = Describe(`DiscoveryV2`, func() {
 				deleteDocumentOptionsModel.SetProjectID("testString")
 				deleteDocumentOptionsModel.SetCollectionID("testString")
 				deleteDocumentOptionsModel.SetDocumentID("testString")
-				deleteDocumentOptionsModel.SetXWatsonDiscoveryForce(true)
+				deleteDocumentOptionsModel.SetXWatsonDiscoveryForce(false)
 				deleteDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(deleteDocumentOptionsModel).ToNot(BeNil())
 				Expect(deleteDocumentOptionsModel.ProjectID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteDocumentOptionsModel.CollectionID).To(Equal(core.StringPtr("testString")))
 				Expect(deleteDocumentOptionsModel.DocumentID).To(Equal(core.StringPtr("testString")))
-				Expect(deleteDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(true)))
+				Expect(deleteDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(false)))
 				Expect(deleteDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeleteEnrichmentOptions successfully`, func() {
@@ -8086,17 +8086,17 @@ var _ = Describe(`DiscoveryV2`, func() {
 				queryLargePassagesModel.PerDocument = core.BoolPtr(true)
 				queryLargePassagesModel.MaxPerDocument = core.Int64Ptr(int64(38))
 				queryLargePassagesModel.Fields = []string{"testString"}
-				queryLargePassagesModel.Count = core.Int64Ptr(int64(100))
+				queryLargePassagesModel.Count = core.Int64Ptr(int64(400))
 				queryLargePassagesModel.Characters = core.Int64Ptr(int64(50))
-				queryLargePassagesModel.FindAnswers = core.BoolPtr(true)
+				queryLargePassagesModel.FindAnswers = core.BoolPtr(false)
 				queryLargePassagesModel.MaxAnswersPerPassage = core.Int64Ptr(int64(38))
 				Expect(queryLargePassagesModel.Enabled).To(Equal(core.BoolPtr(true)))
 				Expect(queryLargePassagesModel.PerDocument).To(Equal(core.BoolPtr(true)))
 				Expect(queryLargePassagesModel.MaxPerDocument).To(Equal(core.Int64Ptr(int64(38))))
 				Expect(queryLargePassagesModel.Fields).To(Equal([]string{"testString"}))
-				Expect(queryLargePassagesModel.Count).To(Equal(core.Int64Ptr(int64(100))))
+				Expect(queryLargePassagesModel.Count).To(Equal(core.Int64Ptr(int64(400))))
 				Expect(queryLargePassagesModel.Characters).To(Equal(core.Int64Ptr(int64(50))))
-				Expect(queryLargePassagesModel.FindAnswers).To(Equal(core.BoolPtr(true)))
+				Expect(queryLargePassagesModel.FindAnswers).To(Equal(core.BoolPtr(false)))
 				Expect(queryLargePassagesModel.MaxAnswersPerPassage).To(Equal(core.Int64Ptr(int64(38))))
 
 				// Construct an instance of the QueryOptions model
@@ -8140,15 +8140,15 @@ var _ = Describe(`DiscoveryV2`, func() {
 				documentID := "testString"
 				collectionID := "testString"
 				relevance := int64(38)
-				model, err := discoveryService.NewTrainingExample(documentID, collectionID, relevance)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewTrainingExample(documentID, collectionID, relevance)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewTrainingQuery successfully`, func() {
 				naturalLanguageQuery := "testString"
 				examples := []discoveryv2.TrainingExample{}
-				model, err := discoveryService.NewTrainingQuery(naturalLanguageQuery, examples)
-				Expect(model).ToNot(BeNil())
+				_model, err := discoveryService.NewTrainingQuery(naturalLanguageQuery, examples)
+				Expect(_model).ToNot(BeNil())
 				Expect(err).To(BeNil())
 			})
 			It(`Invoke NewUpdateCollectionOptions successfully`, func() {
@@ -8191,7 +8191,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				updateDocumentOptionsModel.SetFilename("testString")
 				updateDocumentOptionsModel.SetFileContentType("application/json")
 				updateDocumentOptionsModel.SetMetadata("testString")
-				updateDocumentOptionsModel.SetXWatsonDiscoveryForce(true)
+				updateDocumentOptionsModel.SetXWatsonDiscoveryForce(false)
 				updateDocumentOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(updateDocumentOptionsModel).ToNot(BeNil())
 				Expect(updateDocumentOptionsModel.ProjectID).To(Equal(core.StringPtr("testString")))
@@ -8201,7 +8201,7 @@ var _ = Describe(`DiscoveryV2`, func() {
 				Expect(updateDocumentOptionsModel.Filename).To(Equal(core.StringPtr("testString")))
 				Expect(updateDocumentOptionsModel.FileContentType).To(Equal(core.StringPtr("application/json")))
 				Expect(updateDocumentOptionsModel.Metadata).To(Equal(core.StringPtr("testString")))
-				Expect(updateDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(true)))
+				Expect(updateDocumentOptionsModel.XWatsonDiscoveryForce).To(Equal(core.BoolPtr(false)))
 				Expect(updateDocumentOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateEnrichmentOptions successfully`, func() {

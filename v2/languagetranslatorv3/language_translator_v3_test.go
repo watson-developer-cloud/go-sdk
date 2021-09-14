@@ -37,7 +37,7 @@ import (
 var _ = Describe(`LanguageTranslatorV3`, func() {
 	var testServer *httptest.Server
 	Describe(`Service constructor tests`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		It(`Instantiate service client`, func() {
 			languageTranslatorService, serviceErr := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				Authenticator: &core.NoAuthAuthenticator{},
@@ -76,7 +76,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`Service constructor tests using external config`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
@@ -183,7 +183,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListLanguages(listLanguagesOptions *ListLanguagesOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listLanguagesPath := "/v3/languages"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -193,7 +193,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -230,7 +230,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListLanguages(listLanguagesOptions *ListLanguagesOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listLanguagesPath := "/v3/languages"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -241,7 +241,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -299,7 +299,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -393,7 +393,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`Translate(translateOptions *TranslateOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		translatePath := "/v3/translate"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -403,7 +403,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(translatePath))
 					Expect(req.Method).To(Equal("POST"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -444,7 +444,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`Translate(translateOptions *TranslateOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		translatePath := "/v3/translate"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -471,7 +471,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					}
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -549,7 +549,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					}
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -662,7 +662,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -672,7 +672,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listIdentifiableLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -709,7 +709,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListIdentifiableLanguages(listIdentifiableLanguagesOptions *ListIdentifiableLanguagesOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listIdentifiableLanguagesPath := "/v3/identifiable_languages"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -720,7 +720,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listIdentifiableLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -778,7 +778,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listIdentifiableLanguagesPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -872,7 +872,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`Identify(identifyOptions *IdentifyOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		identifyPath := "/v3/identify"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -882,7 +882,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(identifyPath))
 					Expect(req.Method).To(Equal("POST"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -920,7 +920,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`Identify(identifyOptions *IdentifyOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		identifyPath := "/v3/identify"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -947,7 +947,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					}
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -1022,7 +1022,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					}
 					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1126,7 +1126,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListModels(listModelsOptions *ListModelsOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listModelsPath := "/v3/models"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -1136,7 +1136,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listModelsPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for default query parameter
@@ -1179,7 +1179,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListModels(listModelsOptions *ListModelsOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listModelsPath := "/v3/models"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -1190,7 +1190,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listModelsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for default query parameter
@@ -1254,7 +1254,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listModelsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["source"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["target"]).To(Equal([]string{"testString"}))
 					// TODO: Add check for default query parameter
@@ -1360,7 +1360,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`CreateModel(createModelOptions *CreateModelOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		createModelPath := "/v3/models"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -1370,7 +1370,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createModelPath))
 					Expect(req.Method).To(Equal("POST"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					res.Header().Set("Content-type", "application/json")
@@ -1413,7 +1413,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`CreateModel(createModelOptions *CreateModelOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		createModelPath := "/v3/models"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -1424,7 +1424,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createModelPath))
 					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					// Sleep a short time to support a timeout test
@@ -1488,7 +1488,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(createModelPath))
 					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					Expect(req.URL.Query()["base_model_id"]).To(Equal([]string{"testString"}))
 					Expect(req.URL.Query()["name"]).To(Equal([]string{"testString"}))
 					// Set mock response
@@ -1620,7 +1620,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`DeleteModel(deleteModelOptions *DeleteModelOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		deleteModelPath := "/v3/models/testString"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -1630,7 +1630,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteModelPath))
 					Expect(req.Method).To(Equal("DELETE"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1668,7 +1668,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`DeleteModel(deleteModelOptions *DeleteModelOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		deleteModelPath := "/v3/models/testString"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -1679,7 +1679,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteModelPath))
 					Expect(req.Method).To(Equal("DELETE"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -1738,7 +1738,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteModelPath))
 					Expect(req.Method).To(Equal("DELETE"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -1842,7 +1842,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`GetModel(getModelOptions *GetModelOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		getModelPath := "/v3/models/testString"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -1852,7 +1852,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getModelPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -1890,7 +1890,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`GetModel(getModelOptions *GetModelOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		getModelPath := "/v3/models/testString"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -1901,7 +1901,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getModelPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -1960,7 +1960,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getModelPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -2064,7 +2064,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListDocuments(listDocumentsOptions *ListDocumentsOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listDocumentsPath := "/v3/documents"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -2074,7 +2074,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listDocumentsPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2111,7 +2111,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`ListDocuments(listDocumentsOptions *ListDocumentsOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		listDocumentsPath := "/v3/documents"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -2122,7 +2122,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listDocumentsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -2180,7 +2180,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(listDocumentsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -2274,7 +2274,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`TranslateDocument(translateDocumentOptions *TranslateDocumentOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		translateDocumentPath := "/v3/documents"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -2284,7 +2284,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(translateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2328,7 +2328,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`TranslateDocument(translateDocumentOptions *TranslateDocumentOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		translateDocumentPath := "/v3/documents"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -2339,7 +2339,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(translateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -2404,7 +2404,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(translateDocumentPath))
 					Expect(req.Method).To(Equal("POST"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
@@ -2526,7 +2526,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions) - Operation response error`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		getDocumentStatusPath := "/v3/documents/testString"
 		Context(`Using mock server endpoint with invalid JSON response`, func() {
 			BeforeEach(func() {
@@ -2536,7 +2536,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
 					Expect(req.Method).To(Equal("GET"))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, `} this is not valid json {`)
@@ -2574,7 +2574,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`GetDocumentStatus(getDocumentStatusOptions *GetDocumentStatusOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		getDocumentStatusPath := "/v3/documents/testString"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -2585,7 +2585,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -2644,7 +2644,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getDocumentStatusPath))
 					Expect(req.Method).To(Equal("GET"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -2748,7 +2748,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`DeleteDocument(deleteDocumentOptions *DeleteDocumentOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		deleteDocumentPath := "/v3/documents/testString"
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
@@ -2759,7 +2759,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(deleteDocumentPath))
 					Expect(req.Method).To(Equal("DELETE"))
 
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					res.WriteHeader(204)
 				}))
 			})
@@ -2820,7 +2820,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 		})
 	})
 	Describe(`GetTranslatedDocument(getTranslatedDocumentOptions *GetTranslatedDocumentOptions)`, func() {
-		version := "testString"
+		version := "2018-05-01"
 		getTranslatedDocumentPath := "/v3/documents/testString/translated_document"
 		Context(`Using mock server endpoint with timeout`, func() {
 			BeforeEach(func() {
@@ -2833,7 +2833,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 
 					Expect(req.Header["Accept"]).ToNot(BeNil())
 					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "application/powerpoint")))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
 
@@ -2895,7 +2895,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 
 					Expect(req.Header["Accept"]).ToNot(BeNil())
 					Expect(req.Header["Accept"][0]).To(Equal(fmt.Sprintf("%v", "application/powerpoint")))
-					Expect(req.URL.Query()["version"]).To(Equal([]string{"testString"}))
+					Expect(req.URL.Query()["version"]).To(Equal([]string{"2018-05-01"}))
 					// Set mock response
 					res.Header().Set("Content-type", "application/powerpoint")
 					res.WriteHeader(200)
@@ -3007,7 +3007,7 @@ var _ = Describe(`LanguageTranslatorV3`, func() {
 	})
 	Describe(`Model constructor tests`, func() {
 		Context(`Using a service client instance`, func() {
-			version := "testString"
+			version := "2018-05-01"
 			languageTranslatorService, _ := languagetranslatorv3.NewLanguageTranslatorV3(&languagetranslatorv3.LanguageTranslatorV3Options{
 				URL:           "http://languagetranslatorv3modelgenerator.com",
 				Authenticator: &core.NoAuthAuthenticator{},
