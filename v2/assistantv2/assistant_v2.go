@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2018, 2021.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3069,6 +3069,13 @@ type SearchResult struct {
 	// An object containing segments of text from search results with query-matching text highlighted using HTML `<em>`
 	// tags.
 	Highlight *SearchResultHighlight `json:"highlight,omitempty"`
+
+	// An array specifying segments of text within the result that were identified as direct answers to the search query.
+	// Currently, only the single answer with the highest confidence (if any) is returned.
+	//
+	// **Note:** This property uses the answer finding beta feature, and is available only if the search skill is connected
+	// to a Discovery v2 service instance.
+	Answers []SearchResultAnswer `json:"answers,omitempty"`
 }
 
 // UnmarshalSearchResult unmarshals an instance of SearchResult from the specified map of raw messages.
@@ -3095,6 +3102,34 @@ func UnmarshalSearchResult(m map[string]json.RawMessage, result interface{}) (er
 		return
 	}
 	err = core.UnmarshalModel(m, "highlight", &obj.Highlight, UnmarshalSearchResultHighlight)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "answers", &obj.Answers, UnmarshalSearchResultAnswer)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// SearchResultAnswer : An object specifing a segment of text that was identified as a direct answer to the search query.
+type SearchResultAnswer struct {
+	// The text of the answer.
+	Text *string `json:"text" validate:"required"`
+
+	// The confidence score for the answer, as returned by the Discovery service.
+	Confidence *float64 `json:"confidence" validate:"required"`
+}
+
+// UnmarshalSearchResultAnswer unmarshals an instance of SearchResultAnswer from the specified map of raw messages.
+func UnmarshalSearchResultAnswer(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(SearchResultAnswer)
+	err = core.UnmarshalPrimitive(m, "text", &obj.Text)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "confidence", &obj.Confidence)
 	if err != nil {
 		return
 	}
