@@ -205,7 +205,7 @@ if listEnvironmentResult != nil {
 
 ## Configuring the HTTP Client
 
-To change client configs like timeout, setting proxy, etc, pass in your own client using the `SetHTTPClient()` method. Below is an example to pass a proxy
+To change client configs like timeout, setting proxy, etc, pass in your own client using the `SetHTTPClient()` method. Documentation for how to set your http client can be found in the Go net/http docs [here](https://pkg.go.dev/net/http). Below is an example to pass a proxy
 
 ```go
 package main
