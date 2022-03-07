@@ -432,6 +432,6 @@ We'd love to highlight cool open-source projects that use this SDK! If you'd lik
 This library is licensed under the [Apache 2.0 license][license].
 
 [ibm-cloud-onboarding]: https://cloud.ibm.com/registration?target=%2Fdeveloper%2Fwatson&cm_sp=WatsonPlatform-WatsonServices-_-OnPageNavLink-IBMWatson_SDKs-_-Go
-[examples]: https://github.com/watson-developer-cloud/go-sdk/tree/master/examples
+[examples]: https://github.com/watson-developer-cloud/go-sdk/tree/master/v2/examples
 [CONTRIBUTING]: https://github.com/watson-developer-cloud/go-sdk/blob/master/.github/CONTRIBUTING.md
 [license]: http://www.apache.org/licenses/LICENSE-2.0
