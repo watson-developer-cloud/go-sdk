@@ -1,6 +1,6 @@
 module github.com/watson-developer-cloud/go-sdk/v3
 
-go 1.12
+go 1.14
 
 require (
 	github.com/IBM/go-sdk-core/v5 v5.9.2
