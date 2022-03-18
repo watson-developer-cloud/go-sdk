@@ -1,6 +1,6 @@
 # Makefile to build go-sdk library
 
-VDIR=v2
+VDIR=v3
 
 all: build test lint tidy
 
