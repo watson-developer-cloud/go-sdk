@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package visualrecognitionv3_test
