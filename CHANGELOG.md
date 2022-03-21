@@ -1,3 +1,16 @@
+# [3.0.0](https://github.com/watson-developer-cloud/go-sdk/compare/v2.2.0...v3.0.0) (2022-03-21)
+
+
+### Features
+
+* **v3:** add v3 of the sdk ([ea01cc8](https://github.com/watson-developer-cloud/go-sdk/commit/ea01cc8b65c4fac5423222e95aeab70bd11dd224))
+
+
+### BREAKING CHANGES
+
+* **v3:** removed several deprecated service wrappers, and breaking variable and operation
+name changes
+
 # [2.2.0](https://github.com/watson-developer-cloud/go-sdk/compare/v2.1.1...v2.2.0) (2021-09-14)
 
 
