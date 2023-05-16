@@ -1678,7 +1678,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
-				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
+				createJobOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1730,7 +1730,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
-				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
+				createJobOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1803,7 +1803,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
-				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
+				createJobOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 

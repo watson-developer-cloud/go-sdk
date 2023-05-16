@@ -5395,6 +5395,12 @@ func (_options *CreateJobOptions) SetBackgroundAudioSuppression(backgroundAudioS
 	return _options
 }
 
+// SetCharacterInsertionBias : Allow user to set CharacterInsertionBias
+func (_options *CreateJobOptions) SetCharacterInsertionBias(characterInsertionBias float32) *CreateJobOptions {
+	_options.CharacterInsertionBias = core.Float32Ptr(characterInsertionBias)
+	return _options
+}
+
 // SetLowLatency : Allow user to set LowLatency
 func (_options *CreateJobOptions) SetLowLatency(lowLatency bool) *CreateJobOptions {
 	_options.LowLatency = core.BoolPtr(lowLatency)
