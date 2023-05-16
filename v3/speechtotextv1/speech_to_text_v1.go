@@ -5064,6 +5064,31 @@ type CreateJobOptions struct {
 	// support](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-support).
 	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
+	// The character_insertion_bias parameter controls the service's bias for competing strings of different lengths
+	// during speech recognition. With next-generation models, the service parses audio character by character.
+	// As it does, it establishes hypotheses of previous character strings to help determine viable next characters.
+	// During this process, it collects candidate strings of different lengths.
+	//
+	// By default, each model uses a default character_insertion_bias of 0.0.
+	// This value is optimized to produce the best balance between hypotheses with different numbers of characters.
+	// The default is typically adequate for most speech recognition.
+	// However, certain use cases might benefit from favoring hypotheses with shorter or longer strings of characters.
+	// In such cases, specifying a change from the default can improve speech recognition.
+	//
+	// You can use the character_insertion_bias parameter to indicate that the service is to favor shorter or longer
+	//  strings as it considers subsequent characters for its hypotheses.
+	// The value you provide depends on the characteristics of your audio.
+	// The range of acceptable values is from -1.0 to 1.0:
+	//
+	// Negative values cause the service to prefer hypotheses with shorter strings of characters.
+	// Positive values cause the service to prefer hypotheses with longer strings of characters.
+	// As your value approaches -1.0 or 1.0, the impact of the parameter becomes more pronounced.
+	// To determine the most effective value for your scenario, start by setting the value of the parameter
+	// to a small increment, such as -0.1, -0.05, 0.05, or 0.1, and assess how the value impacts the transcription results.
+	//
+	// The parameter is not available for previous-generation models.
+	CharacterInsertionBias *float32 `json:"character_insertion_bias,omitempty"`
+
 	// If `true` for next-generation `Multimedia` and `Telephony` models that support low latency, directs the service to
 	// produce results even more quickly than it usually does. Next-generation models produce transcription results faster
 	// than previous-generation models. The `low_latency` parameter causes the models to produce results even more quickly,
