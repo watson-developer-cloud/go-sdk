@@ -610,6 +610,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
@@ -651,6 +652,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				recognizeOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.LowLatency = core.BoolPtr(false)
 				recognizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -722,6 +724,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -768,6 +771,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				recognizeOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.LowLatency = core.BoolPtr(false)
 				recognizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -845,6 +849,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -893,6 +898,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				recognizeOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.LowLatency = core.BoolPtr(false)
 				recognizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -938,6 +944,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				recognizeOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.LowLatency = core.BoolPtr(false)
 				recognizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1004,6 +1011,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				recognizeOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				recognizeOptionsModel.LowLatency = core.BoolPtr(false)
 				recognizeOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1352,6 +1360,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
@@ -1399,6 +1408,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				createJobOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
@@ -1476,6 +1486,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					// Sleep a short time to support a timeout test
 					time.Sleep(100 * time.Millisecond)
@@ -1528,6 +1539,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				createJobOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1611,6 +1623,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 					// TODO: Add check for split_transcript_at_phrase_end query parameter
 					// TODO: Add check for speech_detector_sensitivity query parameter
 					// TODO: Add check for background_audio_suppression query parameter
+					// TODO: Add check for character_insertion_bias query parameter
 					// TODO: Add check for low_latency query parameter
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
@@ -1665,6 +1678,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -1716,6 +1730,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -1788,6 +1803,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SplitTranscriptAtPhraseEnd = core.BoolPtr(false)
 				createJobOptionsModel.SpeechDetectorSensitivity = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.BackgroundAudioSuppression = core.Float32Ptr(float32(36.0))
+				recognizeOptionsModel.CharacterInsertionBias = core.Float32Ptr(float32(36.0))
 				createJobOptionsModel.LowLatency = core.BoolPtr(false)
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -7215,6 +7231,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				createJobOptionsModel.SetSplitTranscriptAtPhraseEnd(false)
 				createJobOptionsModel.SetSpeechDetectorSensitivity(float32(36.0))
 				createJobOptionsModel.SetBackgroundAudioSuppression(float32(36.0))
+				createJobOptionsModel.SetCharacterInsertionBias(float32(36.0))
 				createJobOptionsModel.SetLowLatency(false)
 				createJobOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createJobOptionsModel).ToNot(BeNil())
@@ -7249,6 +7266,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(createJobOptionsModel.SplitTranscriptAtPhraseEnd).To(Equal(core.BoolPtr(false)))
 				Expect(createJobOptionsModel.SpeechDetectorSensitivity).To(Equal(core.Float32Ptr(float32(36.0))))
 				Expect(createJobOptionsModel.BackgroundAudioSuppression).To(Equal(core.Float32Ptr(float32(36.0))))
+				Expect(createJobOptionsModel.CharacterInsertionBias).To(Equal(core.Float32Ptr(float32(36.0))))
 				Expect(createJobOptionsModel.LowLatency).To(Equal(core.BoolPtr(false)))
 				Expect(createJobOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -7541,6 +7559,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				recognizeOptionsModel.SetSplitTranscriptAtPhraseEnd(false)
 				recognizeOptionsModel.SetSpeechDetectorSensitivity(float32(36.0))
 				recognizeOptionsModel.SetBackgroundAudioSuppression(float32(36.0))
+				recognizeOptionsModel.SetCharacterInsertionBias(float32(36.0))
 				recognizeOptionsModel.SetLowLatency(false)
 				recognizeOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(recognizeOptionsModel).ToNot(BeNil())
@@ -7569,6 +7588,7 @@ var _ = Describe(`SpeechToTextV1`, func() {
 				Expect(recognizeOptionsModel.SplitTranscriptAtPhraseEnd).To(Equal(core.BoolPtr(false)))
 				Expect(recognizeOptionsModel.SpeechDetectorSensitivity).To(Equal(core.Float32Ptr(float32(36.0))))
 				Expect(recognizeOptionsModel.BackgroundAudioSuppression).To(Equal(core.Float32Ptr(float32(36.0))))
+				Expect(recognizeOptionsModel.CharacterInsertionBias).To(Equal(core.Float32Ptr(float32(36.0))))
 				Expect(recognizeOptionsModel.LowLatency).To(Equal(core.BoolPtr(false)))
 				Expect(recognizeOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
