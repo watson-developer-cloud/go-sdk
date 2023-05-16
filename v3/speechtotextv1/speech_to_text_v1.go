@@ -45,7 +45,6 @@ import (
 // names. Broadband and multimedia models have minimum sampling rates of 16 kHz. Narrowband and telephony models have
 // minimum sampling rates of 8 kHz. The next-generation models offer high throughput and greater transcription accuracy.
 //
-//
 // Effective 15 March 2022, previous-generation models for all languages other than Arabic and Japanese are deprecated.
 // The deprecated models remain available until 15 September 2022, when they will be removed from the service and the
 // documentation. You must migrate to the equivalent next-generation model by the end of service date. For more
@@ -314,7 +313,8 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 //
 // ### Streaming mode
 //
-//  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
+//	For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
+//
 // `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408) if it does
 // not receive at least 15 seconds of audio (including silence) in any 30-second period. The service also closes the
 // connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of streaming audio; use the
@@ -326,7 +326,8 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 //
 // ### Audio formats (content types)
 //
-//  The service accepts audio in the following formats (MIME types).
+//	The service accepts audio in the following formats (MIME types).
+//
 // * For formats that are labeled **Required**, you must use the `Content-Type` header with the request to specify the
 // format of the audio.
 // * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
@@ -357,12 +358,14 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the request fails.
 //
-//  **See also:** [Supported audio
+//	**See also:** [Supported audio
+//
 // formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
 //
 // ### Next-generation models
 //
-//  The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+//	The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+//
 // Next-generation models have higher throughput than the service's previous generation of `Broadband` and `Narrowband`
 // models. When you use next-generation models, the service can return transcriptions more quickly and also provide
 // noticeably better transcription accuracy.
@@ -385,7 +388,8 @@ func (speechToText *SpeechToTextV1) GetModelWithContext(ctx context.Context, get
 //
 // ### Multipart speech recognition
 //
-//  **Note:** The asynchronous HTTP interface, WebSocket interface, and Watson SDKs do not support multipart speech
+//	**Note:** The asynchronous HTTP interface, WebSocket interface, and Watson SDKs do not support multipart speech
+//
 // recognition.
 //
 // The HTTP `POST` method of the service also supports multipart speech recognition. With multipart requests, you pass
@@ -503,6 +507,9 @@ func (speechToText *SpeechToTextV1) RecognizeWithContext(ctx context.Context, re
 	}
 	if recognizeOptions.BackgroundAudioSuppression != nil {
 		builder.AddQuery("background_audio_suppression", fmt.Sprint(*recognizeOptions.BackgroundAudioSuppression))
+	}
+	if recognizeOptions.CharacterInsertionBias != nil {
+		builder.AddQuery("character_insertion_bias", fmt.Sprint(*recognizeOptions.CharacterInsertionBias))
 	}
 	if recognizeOptions.LowLatency != nil {
 		builder.AddQuery("low_latency", fmt.Sprint(*recognizeOptions.LowLatency))
@@ -706,7 +713,8 @@ func (speechToText *SpeechToTextV1) UnregisterCallbackWithContext(ctx context.Co
 //
 // ### Streaming mode
 //
-//  For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
+//	For requests to transcribe live audio as it becomes available, you must set the `Transfer-Encoding` header to
+//
 // `chunked` to use streaming mode. In streaming mode, the service closes the connection (status code 408) if it does
 // not receive at least 15 seconds of audio (including silence) in any 30-second period. The service also closes the
 // connection (status code 400) if it detects no speech for `inactivity_timeout` seconds of streaming audio; use the
@@ -718,7 +726,8 @@ func (speechToText *SpeechToTextV1) UnregisterCallbackWithContext(ctx context.Co
 //
 // ### Audio formats (content types)
 //
-//  The service accepts audio in the following formats (MIME types).
+//	The service accepts audio in the following formats (MIME types).
+//
 // * For formats that are labeled **Required**, you must use the `Content-Type` header with the request to specify the
 // format of the audio.
 // * For all other formats, you can omit the `Content-Type` header or specify `application/octet-stream` with the header
@@ -749,12 +758,14 @@ func (speechToText *SpeechToTextV1) UnregisterCallbackWithContext(ctx context.Co
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the request fails.
 //
-//  **See also:** [Supported audio
+//	**See also:** [Supported audio
+//
 // formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
 //
 // ### Next-generation models
 //
-//  The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+//	The service supports next-generation `Multimedia` (16 kHz) and `Telephony` (8 kHz) models for many languages.
+//
 // Next-generation models have higher throughput than the service's previous generation of `Broadband` and `Narrowband`
 // models. When you use next-generation models, the service can return transcriptions more quickly and also provide
 // noticeably better transcription accuracy.
@@ -1413,10 +1424,10 @@ func (speechToText *SpeechToTextV1) DeleteLanguageModelWithContext(ctx context.C
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-languageCreate#trainModel-language)
 // * [Language support for customization](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-custom-support)
 //
-//
 // ### Training failures
 //
-//  Training can fail to start for the following reasons:
+//	Training can fail to start for the following reasons:
+//
 // * The service is currently handling another request for the custom model, such as another training request or a
 // request to add a corpus or grammar to the model.
 // * No training data have been added to the custom model.
@@ -1858,8 +1869,6 @@ func (speechToText *SpeechToTextV1) GetCorpusWithContext(ctx context.Context, ge
 // words that are associated with the corpus from the custom model's words resource unless they were also added by
 // another corpus or grammar, or they were modified in some way with the [Add custom words](#addwords) or [Add a custom
 // word](#addword) method.
-//
-//
 //
 // **See also:** [Deleting a corpus from a custom language
 // model](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-manageCorpora#deleteCorpus).
@@ -2938,7 +2947,8 @@ func (speechToText *SpeechToTextV1) DeleteAcousticModelWithContext(ctx context.C
 //
 // ### Training failures
 //
-//  Training can fail to start for the following reasons:
+//	Training can fail to start for the following reasons:
+//
 // * The service is currently handling another request for the custom model, such as another training request or a
 // request to add audio resources to the model.
 // * The custom model contains less than 10 minutes or more than 200 hours of audio data.
@@ -3259,7 +3269,8 @@ func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, li
 //
 // ### Content types for audio-type resources
 //
-//  You can add an individual audio file in any format that the service supports for speech recognition. For an
+//	You can add an individual audio file in any format that the service supports for speech recognition. For an
+//
 // audio-type resource, use the `Content-Type` parameter to specify the audio format (MIME type) of the audio file,
 // including specifying the sampling rate, channels, and endianness where indicated.
 // * `audio/alaw` (Specify the sampling rate (`rate`) of the audio.)
@@ -3284,12 +3295,14 @@ func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, li
 // minimum required rate, the service down-samples the audio to the appropriate rate. If the sampling rate of the audio
 // is lower than the minimum required rate, the service labels the audio file as `invalid`.
 //
-//  **See also:** [Supported audio
+//	**See also:** [Supported audio
+//
 // formats](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-audio-formats).
 //
 // ### Content types for archive-type resources
 //
-//  You can add an archive file (**.zip** or **.tar.gz** file) that contains audio files in any format that the service
+//	You can add an archive file (**.zip** or **.tar.gz** file) that contains audio files in any format that the service
+//
 // supports for speech recognition. For an archive-type resource, use the `Content-Type` parameter to specify the media
 // type of the archive file:
 // * `application/zip` for a **.zip** file
@@ -3309,7 +3322,8 @@ func (speechToText *SpeechToTextV1) ListAudioWithContext(ctx context.Context, li
 //
 // ### Naming restrictions for embedded audio files
 //
-//  The name of an audio file that is contained in an archive-type resource can include a maximum of 128 characters.
+//	The name of an audio file that is contained in an archive-type resource can include a maximum of 128 characters.
+//
 // This includes the file extension and all elements of the name (for example, slashes).
 func (speechToText *SpeechToTextV1) AddAudio(addAudioOptions *AddAudioOptions) (response *core.DetailedResponse, err error) {
 	return speechToText.AddAudioWithContext(context.Background(), addAudioOptions)
@@ -7212,6 +7226,31 @@ type RecognizeOptions struct {
 	// support](https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-detection#detection-support).
 	BackgroundAudioSuppression *float32 `json:"background_audio_suppression,omitempty"`
 
+	// The character_insertion_bias parameter controls the service's bias for competing strings of different lengths
+	// during speech recognition. With next-generation models, the service parses audio character by character.
+	// As it does, it establishes hypotheses of previous character strings to help determine viable next characters.
+	// During this process, it collects candidate strings of different lengths.
+	//
+	// By default, each model uses a default character_insertion_bias of 0.0.
+	// This value is optimized to produce the best balance between hypotheses with different numbers of characters.
+	// The default is typically adequate for most speech recognition.
+	// However, certain use cases might benefit from favoring hypotheses with shorter or longer strings of characters.
+	// In such cases, specifying a change from the default can improve speech recognition.
+	//
+	// You can use the character_insertion_bias parameter to indicate that the service is to favor shorter or longer
+	//  strings as it considers subsequent characters for its hypotheses.
+	// The value you provide depends on the characteristics of your audio.
+	// The range of acceptable values is from -1.0 to 1.0:
+	//
+	// Negative values cause the service to prefer hypotheses with shorter strings of characters.
+	// Positive values cause the service to prefer hypotheses with longer strings of characters.
+	// As your value approaches -1.0 or 1.0, the impact of the parameter becomes more pronounced.
+	// To determine the most effective value for your scenario, start by setting the value of the parameter
+	// to a small increment, such as -0.1, -0.05, 0.05, or 0.1, and assess how the value impacts the transcription results.
+	//
+	// The parameter is not available for previous-generation models.
+	CharacterInsertionBias *float32 `json:"character_insertion_bias,omitempty"`
+
 	// If `true` for next-generation `Multimedia` and `Telephony` models that support low latency, directs the service to
 	// produce results even more quickly than it usually does. Next-generation models produce transcription results faster
 	// than previous-generation models. The `low_latency` parameter causes the models to produce results even more quickly,
@@ -7456,6 +7495,12 @@ func (_options *RecognizeOptions) SetSpeechDetectorSensitivity(speechDetectorSen
 // SetBackgroundAudioSuppression : Allow user to set BackgroundAudioSuppression
 func (_options *RecognizeOptions) SetBackgroundAudioSuppression(backgroundAudioSuppression float32) *RecognizeOptions {
 	_options.BackgroundAudioSuppression = core.Float32Ptr(backgroundAudioSuppression)
+	return _options
+}
+
+// SetCharacterInsertionBias : Allow user to set CharacterInsertionBias
+func (_options *RecognizeOptions) SetCharacterInsertionBias(characterInsertionBias float32) *RecognizeOptions {
+	_options.CharacterInsertionBias = core.Float32Ptr(characterInsertionBias)
 	return _options
 }
 
