@@ -7,10 +7,9 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![wdc-community.slack.com](https://wdc-slack-inviter.mybluemix.net/badge.svg)](http://wdc-slack-inviter.mybluemix.net/)
 
-## Deprecated builds
-[![Build Status](https://travis-ci.org/watson-developer-cloud/go-sdk.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/go-sdk)
+## Deprecation Notice
 
-Go client library to quickly get started with the various [Watson APIs](https://www.ibm.com/watson/developercloud/) services.
+This repo is being deprecated. While this repo will no longer see active support from the IBM team, contributions by the community via PRs are still welcomed and will be reviewed.
 
 ## Announcements
 ### Natural Language Classifier deprecation
